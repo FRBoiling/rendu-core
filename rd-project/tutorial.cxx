@@ -1,11 +1,8 @@
 #include <string>
 #include <iostream>
 #include "tutorial_config.h"
-#ifdef USE_MYMATH
-    #include "math_functions.h"
-#else
-    #include <cmath>
-#endif
+
+#include "math_functions.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,11 +20,9 @@ int main(int argc, char *argv[])
     }
     // double inputValue = atof(argv[1]);
     const double inputValue = std::stod(argv[1]);
-#ifdef USE_MYMATH
-    const double outputValue = mysqrt(inputValue);
-#else
-    const double outputValue = sqrt(inputValue);
-#endif
+
+    const double outputValue = mathfunctions::sqrt(inputValue);
+
     fprintf(stdout, "The square root of %g is %g\n", inputValue, outputValue);
     return 0;
 }
