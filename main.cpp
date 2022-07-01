@@ -1,23 +1,22 @@
 #include <iostream>
 
-float calc_final(float base, float ratio) {
+double calc_final(double base, double ratio) {
   return base * (1.0 + ratio);
 }
 
-void print_message(const char *name, const char *date, const char *event, int cur_year, float cur_count) {
+void print_message(const char *name, const char *date, const char *event, int cur_year, double cur_count) {
   std::cout << "【" << cur_year << date << "】" << name << event << "（月工资为：" << cur_count << "）\n";
 }
 
 const float ratio = 0.1;
 const float jump_ratio = 0.15;
 const int base_year = 2016;
-const int now_year = 2022;
 const char *name = "小花";
 
 int main(int, char **) {
-  float base_count = 18000;
+  double base_count = 18000;
   int year = 6;
-  float cur_count = base_count;
+  double cur_count = base_count;
   int cur_year = base_year;
 
   std::cout << "按照不跳涨幅" << ratio * 100 << "%,跳槽涨幅" << jump_ratio * 100 << "%算!\n";
