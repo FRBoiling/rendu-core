@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 float calc_final(float base, float ratio) {
   return base * (1.0 + ratio);
