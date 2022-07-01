@@ -10,13 +10,13 @@ void print_message(const char *name, const char *date, const char *event, int cu
 }
 
 const float ratio = 0.1;
-const float jump_ratio = 0.25;
+const float jump_ratio = 0.15;
 const int base_year = 2016;
 const int now_year = 2022;
 const char *name = "小花";
 
 int main(int, char **) {
-  float base_count = 20000;
+  float base_count = 18000;
   int year = 6;
   float cur_count = base_count;
   int cur_year = base_year;
@@ -36,7 +36,7 @@ int main(int, char **) {
     }
     cur_count = calc_final(cur_count, ratio);
     print_message(name, "年底", "涨薪了", cur_year, cur_count);
-    std::cout<<"---------------------------------------------------------------"<<std::endl;
+    std::cout << "---------------------------------------------------------------" << std::endl;
   }
 
   std::cout << "Hello, 雷森破!\n";
