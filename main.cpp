@@ -22,24 +22,24 @@ int main(int, char**) {
 
 
     std::cout << "按照不跳涨幅"<<ratio*100 <<"%,跳槽涨幅"<<jump_ratio*100 <<"%算!\n";
-    print_message(name,"小花离开了糖果",cur_year,cur_count);
+    // print_message(name,"小花离开了糖果",cur_year,cur_count);
     
-    for (int i=0;i<year;++i)
-    {
-        cur_count = calc_final(cur_count,ratio);
-       print_message()
-        cur_year++;
-        // if (cur_year%2 == 0&& cur_year< now_year) 
-        if (cur_year == now_year) 
-        {
-            std::cout <<cur_year<<"年,跳槽了\n";
-            cur_count = calc_final(cur_count,jump_ratio);
-        }
-        print_message(cur_year,cur_count);
-    }
+    // for (int i=0;i<year;++i)
+    // {
+    //     cur_count = calc_final(cur_count,ratio);
+    //    print_message()
+    //     cur_year++;
+    //     // if (cur_year%2 == 0&& cur_year< now_year) 
+    //     if (cur_year == now_year) 
+    //     {
+    //         std::cout <<cur_year<<"年,跳槽了\n";
+    //         cur_count = calc_final(cur_count,jump_ratio);
+    //     }
+    //     print_message(cur_year,cur_count);
+    // }
 
-    std::cout <<"今年是"<<cur_year<<"年\n";
-    print_message(cur_year,cur_count);
+    // std::cout <<"今年是"<<cur_year<<"年\n";
+    // print_message(cur_year,cur_count);
 
     std::cout << "Hello, 雷森破!\n";
 }
