@@ -333,7 +333,7 @@ witness_unlock(witness_tsdn_t *witness_tsdn, witness_t *witness) {
 
 	/*
 	 * Check whether owner before removal, rather than relying on
-	 * witness_assert_owner() to abort, so that unit tests can test this
+	 * witness_assert_owner() to abort, so that unit utils can test this
 	 * function's failure mode without causing undefined behavior.
 	 */
 	if (witness_owner(witness_tsd, witness)) {

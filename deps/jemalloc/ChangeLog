@@ -128,7 +128,7 @@ brevity.  Much more detail can be found in the git revision history:
   Testing:
   - Simplify the Travis script output.  (@gnzlbg)
   - Update the test scripts for FreeBSD.  (@devnexen)
-  - Add unit tests for the producer-consumer pattern.  (@interwq)
+  - Add unit utils for the producer-consumer pattern.  (@interwq)
   - Add Cirrus-CI config for FreeBSD builds.  (@jasone)
   - Add size-matching sanity checks on tcache flush.  (@davidtgoldblatt,
     @interwq)
@@ -816,7 +816,7 @@ brevity.  Much more detail can be found in the git revision history:
     + Don't assume that /bin/sh is appropriate when running size_classes.sh
       during configuration.
     + Consider __sparcv9 a synonym for __sparc64__ when defining LG_QUANTUM.
-    + Link tests to librt if it contains clock_gettime(2).
+    + Link utils to librt if it contains clock_gettime(2).
 
 * 4.0.0 (August 17, 2015)
 
@@ -1014,7 +1014,7 @@ brevity.  Much more detail can be found in the git revision history:
     systems.
   - Fix mallctl argument size mismatches (size_t vs. uint64_t) in the stats unit
     test.
-  - Fix/remove flawed alignment-related overflow tests.
+  - Fix/remove flawed alignment-related overflow utils.
   - Prevent compiler optimizations that could change backtraces in the
     prof_accum unit test.
 
