@@ -8,34 +8,13 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-CollectSourceFiles(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    UTIL_SOURCES
-)
-
-GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(utils ${UTILS_SOURCES})
-
-target_link_libraries(utils
-    PRIVATE
-    rendu-core-interface
-    # TODO：Add other libs
+# Need to pass old ${CMAKE_BINARY_DIR} as param because its different at build stage
+add_custom_target(revision_data.h ALL
+    COMMAND "${CMAKE_COMMAND}" -DBUILDDIR="${CMAKE_BINARY_DIR}" -P "${CMAKE_SOURCE_DIR}/cmake/genrev.cmake" "${CMAKE_BINARY_DIR}"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
 
-CollectIncludeDirectories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    UTILS_INCLUDES)
-
-target_include_directories(utils
-    PUBLIC
-    ${UTILS_INCLUDES}
-    PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR})
-
-catch_discover_utils(utils)
-
-set_target_properties(utils
+set_target_properties(revision_data.h
     PROPERTIES
     FOLDER
-    "utils")
+    "server")

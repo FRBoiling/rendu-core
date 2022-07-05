@@ -19,7 +19,7 @@ add_executable(utils ${UTILS_SOURCES})
 
 target_link_libraries(utils
     PRIVATE
-    trinity-core-interface
+    rendu-core-interface
     # TODO：Add other libs
     )
 

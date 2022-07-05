@@ -38,7 +38,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT NOJEM)
 
   # Create the header, so we can use it
   configure_file(
-    "${CMAKE_SOURCE_DIR}/dep/jemalloc/jemalloc_internal_defs.h.in.cmake"
+    "${CMAKE_SOURCE_DIR}/deps/jemalloc/jemalloc_internal_defs.h.in.cmake"
     "${BUILDDIR}/jemalloc_internal_defs.h"
     @ONLY
   )
@@ -97,7 +97,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT NOJEM)
 
   target_link_libraries(jemalloc
     PRIVATE
-      trinity-dependency-interface
+      rendu-dependency-interface
     PUBLIC
       threads
       valgrind

@@ -2,10 +2,10 @@
 <project version="4">
   <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="远程主机 (76194851-8591-4913-8b59-38b95c916568)">
+      <paths name="远程主机 (c69a66fb-08e2-4dcd-8282-752dc5ca7b41)">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/tmp/rendu-core" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

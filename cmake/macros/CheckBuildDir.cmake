@@ -8,18 +8,16 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# Enforce compileparameters for corebuilds under GCC
-# This to stop a few silly crashes that could have been avoided IF people
-# weren't doing some -O3 psychooptimizations etc.
+#
+# Force out-of-source build
+#
 
-if (CMAKE_COMPILER_IS_GNUCXX AND NOT MINGW)
-  add_definitions(-fno-delete-null-pointer-checks)
-endif ()
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" BUILDING_IN_SOURCE)
 
-#add_subdirectory(database)
-#add_subdirectory(proto)
-#add_subdirectory(shared)
-#add_subdirectory(bnetserver)
-#add_subdirectory(game)
-#add_subdirectory(scripts)
-#add_subdirectory(worldserver)
+if(BUILDING_IN_SOURCE)
+  message(FATAL_ERROR "
+    This project requires an out of source build. Remove the file 'CMakeCache.txt'
+    found in this directory before continuing, create a separate build directory
+    and run 'cmake path_to_project [options]' from there.
+  ")
+endif()
