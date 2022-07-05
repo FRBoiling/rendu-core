@@ -1,0 +1,10 @@
+//
+// Created by Boil on 2022/7/6.
+//
+
+#ifndef RENDU_SRC_COMMON_PRECOMPILED_HEADERS_COMMON_PCH_H_
+#define RENDU_SRC_COMMON_PRECOMPILED_HEADERS_COMMON_PCH_H_
+#include "common.h"
+#include "define.h"
+
+#endif//RENDU_SRC_COMMON_PRECOMPILED_HEADERS_COMMON_PCH_H_
