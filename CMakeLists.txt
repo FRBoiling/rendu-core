@@ -67,3 +67,18 @@ add_subdirectory(deps)
 add_subdirectory(src)
 
 add_executable(rendu_core main.cpp)
+include(CTest)
+
+if(BUILD_TESTING)
+    list(APPEND CMAKE_MODULE_PATH
+        "${Catch2_SOURCE_DIR}/contrib")
+    include(Catch)
+
+    add_subdirectory(tests)
+
+    # Catch cmakefile messes with our settings we explicitly leave up to the user
+    # restore user preference
+    if (NOT WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
+        set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
+    endif()
+endif()
