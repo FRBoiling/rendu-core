@@ -29,7 +29,7 @@ endif (USE_COREPCH)
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_definitions(-DTRINITY_API_EXPORT_COMMON)
+add_definitions(-DRENDU_API_EXPORT_COMMON)
 
 add_library(common
     ${PRIVATE_SOURCES}
@@ -63,7 +63,9 @@ target_link_libraries(common
     rendu-core-interface
     PUBLIC
     #TODO:ADD OTHER LIBS
-    jemalloc)
+    jemalloc
+    fmt
+    )
 
 add_dependencies(common revision_data.h)
 

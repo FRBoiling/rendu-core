@@ -1,5 +1,5 @@
 // This file is part of the rendu-core Project. See AUTHORS file for Copyright information
-// Created by Administrator on 2022/7/6.
+// Created by boil on 2022/7/6.
 //
 
 #ifndef RENDU_COMMON_H
@@ -11,12 +11,12 @@
 #include <string>
 #include <utility>
 
-#if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
-#  if TRINITY_COMPILER == TRINITY_COMPILER_INTEL
+#if RENDU_PLATFORM == RENDU_PLATFORM_WINDOWS
+#  if RENDU_COMPILER == RENDU_COMPILER_INTEL
 #    if !defined(BOOST_ASIO_HAS_MOVE)
 #      define BOOST_ASIO_HAS_MOVE
 #    endif // !defined(BOOST_ASIO_HAS_MOVE)
-#  endif // if TRINITY_COMPILER == TRINITY_COMPILER_INTEL
+#  endif // if RENDU_COMPILER == RENDU_COMPILER_INTEL
 #else
 #  include <sys/types.h>
 #  include <sys/ioctl.h>
@@ -27,7 +27,7 @@
 #  include <cstdlib>
 #endif
 
-#if TRINITY_COMPILER == TRINITY_COMPILER_MICROSOFT
+#if RENDU_COMPILER == RENDU_COMPILER_MICROSOFT
 
 #define atoll _atoi64
 #define llabs _abs64
@@ -106,11 +106,11 @@ enum class CascLocaleBit : uint8
   ptPT        = 16
 };
 
-//TC_COMMON_API extern char const* localeNames[TOTAL_LOCALES];
+//RD_COMMON_API extern char const* localeNames[TOTAL_LOCALES];
 //
-//TC_COMMON_API LocaleConstant GetLocaleByName(std::string const& name);
+//RD_COMMON_API LocaleConstant GetLocaleByName(std::string const& name);
 //
-//TC_COMMON_API extern CascLocaleBit WowLocaleToCascLocaleBit[TOTAL_LOCALES];
+//RD_COMMON_API extern CascLocaleBit WowLocaleToCascLocaleBit[TOTAL_LOCALES];
 
 constexpr inline bool IsValidLocale(LocaleConstant locale)
 {

@@ -2,7 +2,7 @@
 // Created by Administrator on 2022/7/6.
 //
 #include "errors.h"
-#include "StringFormat.h"
+#include "string_format.h"
 #include <cstdio>
 #include <cstdlib>
 #include <thread>
@@ -19,7 +19,7 @@
     terminates the application.
  */
 
-#if TRINITY_PLATFORM == TRINITY_PLATFORM_WINDOWS
+#if RENDU_PLATFORM == RENDU_PLATFORM_WINDOWS
 #include <Windows.h>
 #include <intrin.h>
 #define Crash(message) \
@@ -28,9 +28,9 @@
 #else
 #include <cstring>
 // should be easily accessible in gdb
-extern "C" { TC_COMMON_API char const* TrinityAssertionFailedMessage = nullptr; }
+extern "C" { RD_COMMON_API char const* renduAssertionFailedMessage = nullptr; }
 #define Crash(message) \
-    TrinityAssertionFailedMessage = strdup(message); \
+    renduAssertionFailedMessage = strdup(message); \
     *((volatile int*)nullptr) = 0; \
     exit(1);
 #endif
@@ -53,7 +53,7 @@ std::string FormatAssertionMessage(char const* format, va_list args)
 }
 }
 
-namespace Trinity
+namespace rendu
 {
 
 void Assert(char const* file, int line, char const* function, std::string debugInfo, char const* message)
@@ -138,7 +138,7 @@ void AbortHandler(int sigval)
   Crash(formattedMessage.c_str());
 }
 
-} // namespace Trinity
+} // namespace rendu
 
 std::string GetDebugInfo()
 {
