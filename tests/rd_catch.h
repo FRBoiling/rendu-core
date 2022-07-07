@@ -2,10 +2,10 @@
 // Created by Boil on 2022/7/7.
 //
 
-#ifndef RENDU_RD_CATCH_H
-#define RENDU_RD_CATCH_H
+#ifndef RENDU_TESTS_RD_CATCH_H_
+#define RENDU_TESTS_RD_CATCH_H_
 
-#include "Optional.h"
+#include "optional.h"
 #include <iostream>
 #include <typeinfo>
 
@@ -28,6 +28,4 @@ inline std::ostream& operator<<(std::ostream& os, std::nullopt_t)
 
 #include "catch2/catch.hpp"
 
-#endif
-
-#endif//RENDU_RD_CATCH_H
+#endif//RENDU_TESTS_RD_CATCH_H_
