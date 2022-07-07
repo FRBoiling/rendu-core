@@ -2,8 +2,8 @@
 // Created by Boil on 2022/7/6.
 //
 
-#ifndef RENDU_SRC_COMMON_ERRORS_H_
-#define RENDU_SRC_COMMON_ERRORS_H_
+#ifndef RENDU_SRC_COMMON_DEBUGGING_ERRORS_H_
+#define RENDU_SRC_COMMON_DEBUGGING_ERRORS_H_
 #include "define.h"
 #include <string>
 
@@ -69,4 +69,4 @@ inline T* ASSERT_NOTNULL_IMPL(T* pointer, char const* expr)
 
 #define ASSERT_NOTNULL(pointer) ASSERT_NOTNULL_IMPL(pointer, #pointer)
 
-#endif//RENDU_SRC_COMMON_ERRORS_H_
+#endif//RENDU_SRC_COMMON_DEBUGGING_ERRORS_H_

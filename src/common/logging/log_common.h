@@ -2,8 +2,8 @@
 // Created by Boil on 2022/7/6.
 //
 
-#ifndef RENDU_SRC_COMMON_LOG_COMMON_H_
-#define RENDU_SRC_COMMON_LOG_COMMON_H_
+#ifndef RENDU_SRC_COMMON_LOGGING_LOG_COMMON_H_
+#define RENDU_SRC_COMMON_LOGGING_LOG_COMMON_H_
 #include "define.h"
 // EnumUtils: DESCRIBE THIS
 enum LogLevel : uint8 {
@@ -37,4 +37,4 @@ enum AppenderFlags : uint8 {
   APPENDER_FLAGS_USE_TIMESTAMP = 0x08,  // only used by FileAppender
   APPENDER_FLAGS_MAKE_FILE_BACKUP = 0x10// only used by FileAppender
 };
-#endif//RENDU_SRC_COMMON_LOG_COMMON_H_
+#endif//RENDU_SRC_COMMON_LOGGING_LOG_COMMON_H_

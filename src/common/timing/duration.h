@@ -2,8 +2,8 @@
 // Created by Boil on 2022/7/7.
 //
 
-#ifndef RENDU_SRC_COMMON_DURATION_H_
-#define RENDU_SRC_COMMON_DURATION_H_
+#ifndef RENDU_SRC_COMMON_TIMING_DURATION_H_
+#define RENDU_SRC_COMMON_TIMING_DURATION_H_
 
 #include <chrono>
 
@@ -32,4 +32,4 @@ constexpr std::chrono::hours operator""_days(unsigned long long days)
 }
 
 
-#endif//RENDU_SRC_COMMON_DURATION_H_
+#endif//RENDU_SRC_COMMON_TIMING_DURATION_H_

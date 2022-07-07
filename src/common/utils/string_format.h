@@ -2,8 +2,8 @@
 // Created by Boil on 2022/7/6.
 //
 
-#ifndef RENDU_SRC_COMMON_STRING_FORMAT_H_
-#define RENDU_SRC_COMMON_STRING_FORMAT_H_
+#ifndef RENDU_SRC_COMMON_UTILS_STRING_FORMAT_H_
+#define RENDU_SRC_COMMON_UTILS_STRING_FORMAT_H_
 #include "fmt/printf.h"
 
 namespace rendu {
@@ -29,4 +29,4 @@ inline bool IsFormatEmptyOrNull(std::string const &fmt) {
 }
 }// namespace rendu
 
-#endif//RENDU_SRC_COMMON_STRING_FORMAT_H_
+#endif//RENDU_SRC_COMMON_UTILS_STRING_FORMAT_H_
