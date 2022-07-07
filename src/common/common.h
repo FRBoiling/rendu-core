@@ -2,8 +2,8 @@
 // Created by boil on 2022/7/6.
 //
 
-#ifndef RENDU_COMMON_H
-#define RENDU_COMMON_H
+#ifndef RENDU_SRC_COMMON_H_
+#define RENDU_SRC_COMMON_H_
 
 #include "Define.h"
 #include <array>
@@ -150,4 +150,4 @@ struct LocalizedString
 
 #define MAX_QUERY_LEN 32*1024
 
-#endif//RENDU_COMMON_H
+#endif//RENDU_SRC_COMMON_H_

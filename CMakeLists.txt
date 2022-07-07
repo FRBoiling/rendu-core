@@ -54,21 +54,17 @@ find_package(PCHSupport)
 #if(NOT WITHOUT_GIT)
 #    find_package(Git 1.7)
 #endif()
-
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
 
 # print out the results before continuing
 include(cmake/showoptions.cmake)
-
 # add dependencies
 add_subdirectory(deps)
 # add core sources
 add_subdirectory(src)
 
-add_executable(rendu_core main.cpp)
 include(CTest)
-
 if(BUILD_TESTING)
     list(APPEND CMAKE_MODULE_PATH
         "${Catch2_SOURCE_DIR}/contrib")

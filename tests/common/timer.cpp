@@ -2,7 +2,7 @@
 // Created by Boil on 2022/7/7.
 //
 #define CATCH_CONFIG_ENABLE_CHRONO_STRINGMAKER
-#include "rd_catch2.h"
+#include "rd_catch.h"
 
 #include "timer.h"
 

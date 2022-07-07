@@ -3,8 +3,8 @@
 //
 
 
-#ifndef RENDU_DEFINE_H_
-#define RENDU_DEFINE_H_
+#ifndef RENDU_SRC_COMMON_DEFINE_H_
+#define RENDU_SRC_COMMON_DEFINE_H_
 
 #include "compiler_defines.h"
 

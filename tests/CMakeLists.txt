@@ -9,8 +9,8 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 CollectSourceFiles(
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        TEST_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    TEST_SOURCES
 )
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
@@ -18,24 +18,24 @@ GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(tests ${TEST_SOURCES})
 
 target_link_libraries(tests
-        PRIVATE
-        rendu-core-interface
-        game
-        Catch2::Catch2)
+    PRIVATE
+    rendu-core-interface
+    game
+    Catch2::Catch2)
 
 CollectIncludeDirectories(
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        TEST_INCLUDES)
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    TEST_INCLUDES)
 
 target_include_directories(tests
-        PUBLIC
-        ${TEST_INCLUDES}
-        PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR})
+    PUBLIC
+    ${TEST_INCLUDES}
+    PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR})
 
 catch_discover_tests(tests)
 
 set_target_properties(tests
-        PROPERTIES
-        FOLDER
-        "tests")
+    PROPERTIES
+    FOLDER
+    "tests")

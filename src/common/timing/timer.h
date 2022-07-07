@@ -2,8 +2,8 @@
 // Created by Boil on 2022/7/6.
 //
 
-#ifndef RENDU_TIMER_H
-#define RENDU_TIMER_H
+#ifndef RENDU_SRC_COMMON_TIMER_H_
+#define RENDU_SRC_COMMON_TIMER_H_
 
 #include "define.h"
 #include "duration.h"
@@ -174,4 +174,4 @@ struct PeriodicTimer
   int32 i_expireTime;
 };
 
-#endif//RENDU_TIMER_H
+#endif//RENDU_SRC_COMMON_TIMER_H_

@@ -22,10 +22,6 @@ if(SERVERS)
 #    add_subdirectory(efsw)
 #    add_subdirectory(protobuf)
 endif()
-#
-#if(TOOLS)
-#    add_subdirectory(CascLib)
-#endif()
 
 if(BUILD_TESTING)
     include(FetchContent)

@@ -4,8 +4,6 @@
 
 #ifndef RENDU_RD_CATCH_H
 #define RENDU_RD_CATCH_H
-#ifndef TRINITY_CATCH2_H
-#define TRINITY_CATCH2_H
 
 #include "Optional.h"
 #include <iostream>
@@ -31,6 +29,5 @@ inline std::ostream& operator<<(std::ostream& os, std::nullopt_t)
 #include "catch2/catch.hpp"
 
 #endif
-
 
 #endif//RENDU_RD_CATCH_H
