@@ -4,9 +4,8 @@
 
 #ifndef RENDU_ARGUMENT_PARSER_H_
 #define RENDU_ARGUMENT_PARSER_H_
-#include <argparse/argument_template.h>
+
 #include "argument.h"
-#include "argument_enum.h"
 
 namespace argparse {
 
@@ -42,7 +41,6 @@ namespace argparse {
 
     ArgumentParser(ArgumentParser &&) noexcept = default;
 
-
     ArgumentParser &operator=(ArgumentParser &&) = default;
 
     ArgumentParser(const ArgumentParser &other)
@@ -73,7 +71,8 @@ namespace argparse {
 
     // Parameter packing
     // Call add_argument with variadic number of string arguments
-    template <typename... Targs> Argument &add_argument(Targs... f_args) {
+    template<typename... Targs>
+    Argument &add_argument(Targs... f_args) {
       using array_of_sv = std::array<std::string_view, sizeof...(Targs)>;
       auto argument = m_optional_arguments.emplace(
           std::cend(m_optional_arguments), array_of_sv{f_args...});
@@ -89,15 +88,15 @@ namespace argparse {
 
     // Parameter packed add_parents method
     // Accepts a variadic number of ArgumentParser objects
-    template <typename... Targs>
+    template<typename... Targs>
     ArgumentParser &add_parents(const Targs &...f_args) {
-      for (const ArgumentParser &parent_parser : {std::ref(f_args)...}) {
-        for (const auto &argument : parent_parser.m_positional_arguments) {
+      for (const ArgumentParser &parent_parser: {std::ref(f_args)...}) {
+        for (const auto &argument: parent_parser.m_positional_arguments) {
           auto it = m_positional_arguments.insert(
               std::cend(m_positional_arguments), argument);
           index_argument(it);
         }
-        for (const auto &argument : parent_parser.m_optional_arguments) {
+        for (const auto &argument: parent_parser.m_optional_arguments) {
           auto it = m_optional_arguments.insert(std::cend(m_optional_arguments),
                                                 argument);
           index_argument(it);
@@ -124,7 +123,7 @@ namespace argparse {
     void parse_args(const std::vector<std::string> &arguments) {
       parse_args_internal(arguments);
       // Check if all arguments are parsed
-      for ([[maybe_unused]] const auto& [unused, argument] : m_argument_map) {
+      for ([[maybe_unused]] const auto &[unused, argument]: m_argument_map) {
         argument->validate();
       }
     }
@@ -144,12 +143,22 @@ namespace argparse {
      * @throws std::logic_error if the option has no value
      * @throws std::bad_any_cast if the option is not of type T
      */
-    template <typename T = std::string> auto get(std::string_view arg_name) const
-    -> std::conditional_t<details::IsContainer<T>, T, const T&> {
+    template<typename T = std::string>
+    auto get(std::string_view arg_name) const
+    -> std::conditional_t<details::IsContainer<T>, T, const T &> {
       if (!m_is_parsed) {
         throw std::logic_error("Nothing parsed, no arguments are available.");
       }
       return (*this)[arg_name].get<T>();
+    }
+
+    template<typename E>
+    auto get_enum(std::string_view arg_name) const
+    -> E {
+      if (!m_is_parsed) {
+        throw std::logic_error("Nothing parsed, no arguments are available.");
+      }
+      return (*this)[arg_name].get_enum<E>();
     }
 
     /* Getter for options without default values.
@@ -157,7 +166,7 @@ namespace argparse {
      * @throws std::logic_error if there is no such option
      * @throws std::bad_any_cast if the option is not of type T
      */
-    template <typename T = std::string>
+    template<typename T = std::string>
     auto present(std::string_view arg_name) const -> std::optional<T> {
       return (*this)[arg_name].present<T>();
     }
@@ -203,7 +212,7 @@ namespace argparse {
       stream << "Usage: " << parser.m_program_name << " [options] ";
       std::size_t longest_arg_length = parser.get_length_of_longest_argument();
 
-      for (const auto &argument : parser.m_positional_arguments) {
+      for (const auto &argument: parser.m_positional_arguments) {
         stream << argument.m_names.front() << " ";
       }
       stream << "\n\n";
@@ -216,7 +225,7 @@ namespace argparse {
         stream << "Positional arguments:\n";
       }
 
-      for (const auto &argument : parser.m_positional_arguments) {
+      for (const auto &argument: parser.m_positional_arguments) {
         stream.width(longest_arg_length);
         stream << argument;
       }
@@ -226,7 +235,7 @@ namespace argparse {
                << "Optional arguments:\n";
       }
 
-      for (const auto &argument : parser.m_optional_arguments) {
+      for (const auto &argument: parser.m_optional_arguments) {
         stream.width(longest_arg_length);
         stream << argument;
       }
@@ -308,7 +317,7 @@ namespace argparse {
         return 0;
       }
       std::size_t max_size = 0;
-      for ([[maybe_unused]] const auto& [unused, argument] : m_argument_map) {
+      for ([[maybe_unused]] const auto &[unused, argument]: m_argument_map) {
         max_size = std::max(max_size, argument->get_arguments_length());
       }
       return max_size;
@@ -317,7 +326,7 @@ namespace argparse {
     using list_iterator = std::list<Argument>::iterator;
 
     void index_argument(list_iterator it) {
-      for (const auto &name : std::as_const(it->m_names)) {
+      for (const auto &name: std::as_const(it->m_names)) {
         m_argument_map.insert_or_assign(name, it);
       }
     }
@@ -331,8 +340,6 @@ namespace argparse {
     std::list<Argument> m_optional_arguments;
     std::map<std::string_view, list_iterator, std::less<>> m_argument_map;
   };
-
-  std::ostream & operator<<(std::ostream &stream, const ArgumentParser &parser);
 
 } // argparse
 

@@ -76,7 +76,7 @@
 #elif SFMT_MEXP == 11213
   #include "sfmt-params11213.h"
 #elif SFMT_MEXP == 19937
-  #include "SFMT-params19937.h"
+  #include "sfmt_params19937.h"
 #elif SFMT_MEXP == 44497
   #include "sfmt-params44497.h"
 #elif SFMT_MEXP == 86243

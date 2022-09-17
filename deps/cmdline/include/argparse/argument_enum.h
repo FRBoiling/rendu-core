@@ -4,6 +4,7 @@
 
 #ifndef RENDU_ARGUMENT_ENUM_H_
 #define RENDU_ARGUMENT_ENUM_H_
+
 #include "argparse/argument_template.h"
 
 namespace argparse {

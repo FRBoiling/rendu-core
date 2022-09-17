@@ -8,6 +8,7 @@ set(project-name deps)
 CollectIncludeDirectories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     public_includes
+    # Exclude
 )
 
 add_library(${target-name} INTERFACE ${public_includes})
@@ -27,6 +28,6 @@ target_compile_definitions(${target-name}
 #  target_compile_definitions(${target-name} INTERFACE -DRAPIDJSON_NEON)
 #endif ()
 
+set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(${target-name} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-#set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})

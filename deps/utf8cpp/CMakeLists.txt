@@ -18,11 +18,6 @@ CollectIncludeDirectories(
 
 add_library(${target-name} INTERFACE ${private_sources} ${public_includes})
 
-target_link_libraries(${target-name}
-    INTERFACE rendu-dependency-interface
-    #    PUBLIC
-    )
-
+set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(${target-name} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-#set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})

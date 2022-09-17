@@ -7,6 +7,7 @@
 
 #include "iterator_pair.h"
 #include <iterator>
+#include "define.h"
 
 using namespace rendu_enum;
 using namespace rendu_enum::bitwise_operators;

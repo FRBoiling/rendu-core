@@ -22,9 +22,9 @@ extern "C" {
 #endif
 #include <string.h>
 #include <assert.h>
-#include "../include/SFMT.h"
-#include "../include/SFMT-params.h"
-#include "../include/SFMT-common.h"
+#include "sfmt.h"
+#include "sfmt-params.h"
+#include "sfmt_common.h"
 
 #if defined(__BIG_ENDIAN__) && !defined(__amd64) && !defined(BIG_ENDIAN64)
 #define BIG_ENDIAN64 1
@@ -65,7 +65,7 @@ inline static void swap(w128_t *array, int size);
     #include "sfmt-sse2.h"
   #endif
 #elif defined(HAVE_NEON)
-  #include "sfmt-neon.h"
+  #include "sfmt_neon.h"
 #endif
 
 /**

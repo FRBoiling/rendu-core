@@ -260,7 +260,7 @@ LIBPROTOBUF_EXPORT int UnescapeCEscapeSequences(const char* source, char* dest,
 //    This does the same thing as UnescapeCEscapeSequences, but creates
 //    a new string. The caller does not need to worry about allocating
 //    a dest buffer. This should be used for non performance critical
-//    tasks such as printing debug messages. It is safe for src and dest
+//    tasks such as printing debug messages. It is safe for include and dest
 //    to be the same.
 //
 //    The second call stores its errors in a supplied string vector.
@@ -277,9 +277,9 @@ LIBPROTOBUF_EXPORT string UnescapeCEscapeString(const string& src);
 
 // ----------------------------------------------------------------------
 // CEscapeString()
-//    Copies 'src' to 'dest', escaping dangerous characters using
+//    Copies 'include' to 'dest', escaping dangerous characters using
 //    C-style escape sequences. This is very useful for preparing query
-//    flags. 'src' and 'dest' should not overlap.
+//    flags. 'include' and 'dest' should not overlap.
 //    Returns the number of bytes written to 'dest' (not including the \0)
 //    or -1 if there was insufficient space.
 //

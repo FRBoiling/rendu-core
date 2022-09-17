@@ -5,14 +5,18 @@
 #ifndef RENDU_ARGUMENT_H_
 #define RENDU_ARGUMENT_H_
 
-#include <argparse/argument_template.h>
-#include "argument_parser.h"
+#include "argument_template.h"
 #include "argument_enum.h"
 
 namespace argparse {
 
+  class ArgumentParser;
+
   class Argument {
     friend class ArgumentParser;
+
+    friend auto operator<<(std::ostream &stream, const ArgumentParser &parser)
+    -> std::ostream &;
 
     template<std::size_t N, std::size_t... I>
     explicit Argument(std::array<std::string_view, N> &&a,
@@ -87,18 +91,18 @@ namespace argparse {
         return ((c == x) || ...);
       };
 
-      if constexpr (is_one_of(Shape, 'd') && details::standard_integer < T >) {
+      if constexpr (is_one_of(Shape, 'd') && details::standard_integer<T>) {
         action(details::parse_number<T, details::radix_10>());
-      } else if constexpr (is_one_of(Shape, 'i') && details::standard_integer < T >) {
+      } else if constexpr (is_one_of(Shape, 'i') && details::standard_integer<T>) {
         action(details::parse_number<T>());
       } else if constexpr (is_one_of(Shape, 'u') &&
-                           details::standard_unsigned_integer < T >) {
+                           details::standard_unsigned_integer<T>) {
         action(details::parse_number<T, details::radix_10>());
       } else if constexpr (is_one_of(Shape, 'o') &&
-                           details::standard_unsigned_integer < T >) {
+                           details::standard_unsigned_integer<T>) {
         action(details::parse_number<T, details::radix_8>());
       } else if constexpr (is_one_of(Shape, 'x', 'X') &&
-                           details::standard_unsigned_integer < T >) {
+                           details::standard_unsigned_integer<T>) {
         action(details::parse_number<T, details::radix_16>());
       } else if constexpr (is_one_of(Shape, 'a', 'A') &&
                            std::is_floating_point_v<T>) {
@@ -264,7 +268,7 @@ namespace argparse {
      */
     template<typename T>
     bool operator==(const T &rhs) const {
-      if constexpr (!details::IsContainer < T >) {
+      if constexpr (!details::IsContainer<T>) {
         return get<T>() == rhs;
       } else {
         auto lhs = get<T>();
@@ -518,9 +522,9 @@ namespace argparse {
      * @throws std::logic_error in case of incompatible types
      */
     template<typename T>
-    auto get() const-> std::conditional_t<details::IsContainer <T>, T, const T &> {
+    auto get() const -> std::conditional_t<details::IsContainer<T>, T, const T &> {
       if (!m_values.empty()) {
-        if constexpr (details::IsContainer < T >) {
+        if constexpr (details::IsContainer<T>) {
           return any_cast_container<T>(m_values);
         } else {
           return *std::any_cast<T>(&m_values.front());
@@ -529,7 +533,7 @@ namespace argparse {
       if (m_default_value.has_value()) {
         return *std::any_cast<T>(&m_default_value);
       }
-      if constexpr (details::IsContainer < T >) {
+      if constexpr (details::IsContainer<T>) {
         if (!m_accepts_optional_like_value) {
           return any_cast_container<T>(m_values);
         }
@@ -538,10 +542,8 @@ namespace argparse {
       throw std::logic_error("No value provided for '" + m_names.back() + "'.");
     }
 
-
     template<typename E>
-    auto get_enum() const
-    -> E {
+    auto get_enum() const -> E {
       if (rendu_enum::is_scoped_enum<E>()) {
         if (!m_values.empty()) {
           auto value = *std::any_cast<int>(&m_values.front());
@@ -557,6 +559,7 @@ namespace argparse {
       throw std::logic_error("No enum value provided for '" + m_names.back() + "'.");
     }
 
+
     /*
      * Get argument value given a type.
      * @pre The object has no default value.
@@ -570,7 +573,7 @@ namespace argparse {
       if (m_values.empty()) {
         return std::nullopt;
       }
-      if constexpr (details::IsContainer < T >) {
+      if constexpr (details::IsContainer<T>) {
         return any_cast_container<T>(m_values);
       }
       return std::any_cast<T>(m_values.front());
@@ -587,27 +590,24 @@ namespace argparse {
       return result;
     }
 
-    bool m_accepts_optional_like_value = false;
-    bool m_is_optional: true;
-    bool m_is_required: true;
-    bool m_is_repeatable: true;
-    bool m_is_used: true; // True if the optional argument is used by user
-
-    NArgsRange m_num_args_range{1, 1};
-
     std::vector<std::string> m_names;
-    std::vector<std::any> m_values;
-
     std::string_view m_used_name;
     std::string m_help;
     std::any m_default_value;
     std::string m_default_value_repr;
     std::any m_implicit_value;
-
+    using valued_action = std::function<std::any(const std::string &)>;
+    using void_action = std::function<void(const std::string &)>;
     std::variant<valued_action, void_action> m_action{
         std::in_place_type<valued_action>,
         [](const std::string &value) { return value; }};
-
+    std::vector<std::any> m_values;
+    NArgsRange m_num_args_range{1, 1};
+    bool m_accepts_optional_like_value = false;
+    bool m_is_optional: true;
+    bool m_is_required: true;
+    bool m_is_repeatable: true;
+    bool m_is_used: true; // True if the optional argument is used by user
   };
 
 } // argparse

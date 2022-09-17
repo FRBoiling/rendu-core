@@ -6,7 +6,7 @@
 #include "errors.h"
 #include "log.h"
 #include "string_format.h"
-#include "google/protobuf/message.h"
+#include <google/protobuf/message.h>
 #include "rapidjson/reader.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"

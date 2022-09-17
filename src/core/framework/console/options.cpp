@@ -5,9 +5,10 @@
 #include "options.h"
 #include <iostream>
 #include <ostream>
-#include <argparse/argparse.hpp>
 #include "smart_enum.h"
 #include "string_format.h"
+#include "argparse/argument_template.h"
+#include "argparse/argument_parser.h"
 
 template<>
 struct fmt::formatter<Options> : formatter<std::string> {
