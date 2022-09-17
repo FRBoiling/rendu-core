@@ -23,7 +23,7 @@ extern "C" {
 #include <string.h>
 #include <assert.h>
 #include "sfmt.h"
-#include "sfmt-params.h"
+#include "sfmt_params.h"
 #include "sfmt_common.h"
 
 #if defined(__BIG_ENDIAN__) && !defined(__amd64) && !defined(BIG_ENDIAN64)

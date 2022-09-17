@@ -20,6 +20,8 @@ target_link_libraries(${EXEC_NAME}
     rendu-interface
     PUBLIC
     sfmt
+    defines
+    spdlog
     #TODO:BOIL 添加依赖项
     )
 
