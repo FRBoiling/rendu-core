@@ -38,8 +38,6 @@ include(cmake/showoptions.cmake)
 # turn off PCH totally if enabled (hidden setting, mainly for devs)
 ## find git binary
 find_package(Git 1.7)
-## find mysql client binary (needed by genrev)
-find_package(MySQL OPTIONAL_COMPONENTS binary)
 ## find pch binary
 find_package(PCHSupport)
 if (NOPCH)
@@ -63,9 +61,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set RPATH-handing (CMake parameters)
 set(CMAKE_SKIP_BUILD_RPATH 0)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
+#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
+#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}

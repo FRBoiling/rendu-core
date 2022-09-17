@@ -34,7 +34,7 @@ target_compile_definitions(${target-name}
 
 target_link_libraries(${target-name}
     PRIVATE rendu-dependency-interface
-    PUBLIC utf8cpp
+#    PUBLIC utf8cpp
     )
 
 target_include_directories(${target-name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

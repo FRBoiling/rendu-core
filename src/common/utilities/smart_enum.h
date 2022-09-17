@@ -7,10 +7,9 @@
 
 #include "iterator_pair.h"
 #include <iterator>
-#include <magic_enum.hpp>
-#include <magic_enum_fuse.hpp>
-using namespace magic_enum;
-using namespace magic_enum::bitwise_operators;
+
+using namespace rendu_enum;
+using namespace rendu_enum::bitwise_operators;
 
 class EnumUtils {
 public:
@@ -37,7 +36,7 @@ public:
   template<typename Enum>
   static bool IsValid(Enum value) {
     try {
-      return magic_enum::enum_contains(value);
+      return rendu_enum::enum_contains(value);
     } catch (...) {
       return false;
     }

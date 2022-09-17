@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(EXEC_NAME example_magic_enum)
+set(EXEC_NAME example_cmdline)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -19,7 +19,7 @@ target_link_libraries(${EXEC_NAME}
     PRIVATE
     rendu-interface
     PUBLIC
-    magic_enum
+    rd_cmdline
     #TODO:BOIL 添加依赖项
     )
 

@@ -47,12 +47,11 @@ target_link_libraries(${target-name}
     PRIVATE
     rendu-interface
     PUBLIC
-    fmt
+    defines
     utf8cpp
     sfmt
     readline
     spdlog
-    magic_enum
     argparse
     #TODO:添加reps库
     )

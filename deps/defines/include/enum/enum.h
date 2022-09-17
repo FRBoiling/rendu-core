@@ -1,62 +1,21 @@
-//  __  __             _        ______                          _____
-// |  \/  |           (_)      |  ____|                        / ____|_     _
-// | \  / | __ _  __ _ _  ___  | |__   _ __  _   _ _ __ ___   | |   _| |_ _| |_
-// | |\/| |/ _` |/ _` | |/ __| |  __| | '_ \| | | | '_ ` _ \  | |  |_   _|_   _|
-// | |  | | (_| | (_| | | (__  | |____| | | | |_| | | | | | | | |____|_|   |_|
-// |_|  |_|\__,_|\__, |_|\___| |______|_| |_|\__,_|_| |_| |_|  \_____|
-//                __/ | https://github.com/Neargye/magic_enum
-//               |___/  version 0.8.1
-//
-// Licensed under the MIT License <http://opensource.org/licenses/MIT>.
-// SPDX-License-Identifier: MIT
-// Copyright (c) 2019 - 2022 Daniil Goncharov <neargye@gmail.com>.
-//
-// Permission is hereby  granted, free of charge, to any  person obtaining a copy
-// of this software and associated  documentation files (the "Software"), to deal
-// in the Software  without restriction, including without  limitation the rights
-// to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
-// copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
-// IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
-// FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
-// AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
-// LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+/*
+* Created by boil on 2022/9/17.
+*/
 
-#ifndef NEARGYE_MAGIC_ENUM_HPP
-#define NEARGYE_MAGIC_ENUM_HPP
+#ifndef RENDU_ENUM_H__
+#define RENDU_ENUM_H__
 
-#define MAGIC_ENUM_VERSION_MAJOR 0
-#define MAGIC_ENUM_VERSION_MINOR 8
-#define MAGIC_ENUM_VERSION_PATCH 1
-
-#include <array>
-#include <cassert>
-#include <cstdint>
-#include <cstddef>
-#include <iosfwd>
-#include <limits>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
-#if defined(MAGIC_ENUM_CONFIG_FILE)
-#include MAGIC_ENUM_CONFIG_FILE
+#if defined(RENDU_ENUM_CONFIG_FILE)
+#include RENDU_ENUM_CONFIG_FILE
 #endif
 
-#if !defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
+#if !defined(RENDU_ENUM_USING_ALIAS_OPTIONAL)
 #include <optional>
 #endif
-#if !defined(MAGIC_ENUM_USING_ALIAS_STRING)
+#if !defined(RENDU_ENUM_USING_ALIAS_STRING)
 #include <string>
 #endif
-#if !defined(MAGIC_ENUM_USING_ALIAS_STRING_VIEW)
+#if !defined(RENDU_ENUM_USING_ALIAS_STRING_VIEW)
 #include <string_view>
 #endif
 
@@ -77,66 +36,66 @@
 
 // Checks magic_enum compiler compatibility.
 #if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1910
-#  undef  MAGIC_ENUM_SUPPORTED
-#  define MAGIC_ENUM_SUPPORTED 1
+#  undef  RENDU_ENUM_SUPPORTED
+#  define RENDU_ENUM_SUPPORTED 1
 #endif
 
 // Checks magic_enum compiler aliases compatibility.
 #if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1920
-#  undef  MAGIC_ENUM_SUPPORTED_ALIASES
-#  define MAGIC_ENUM_SUPPORTED_ALIASES 1
+#  undef  RENDU_ENUM_SUPPORTED_ALIASES
+#  define RENDU_ENUM_SUPPORTED_ALIASES 1
 #endif
 
-// Enum value must be greater or equals than MAGIC_ENUM_RANGE_MIN. By default MAGIC_ENUM_RANGE_MIN = -128.
-// If need another min range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN.
-#if !defined(MAGIC_ENUM_RANGE_MIN)
-#  define MAGIC_ENUM_RANGE_MIN -128
+// Enum value must be greater or equals than RENDU_ENUM_RANGE_MIN. By default RENDU_ENUM_RANGE_MIN = -128.
+// If need another min range for all enum types by default, redefine the macro RENDU_ENUM_RANGE_MIN.
+#if !defined(RENDU_ENUM_RANGE_MIN)
+#  define RENDU_ENUM_RANGE_MIN -128
 #endif
 
-// Enum value must be less or equals than MAGIC_ENUM_RANGE_MAX. By default MAGIC_ENUM_RANGE_MAX = 128.
-// If need another max range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MAX.
-#if !defined(MAGIC_ENUM_RANGE_MAX)
-#  define MAGIC_ENUM_RANGE_MAX 128
+// Enum value must be less or equals than RENDU_ENUM_RANGE_MAX. By default RENDU_ENUM_RANGE_MAX = 128.
+// If need another max range for all enum types by default, redefine the macro RENDU_ENUM_RANGE_MAX.
+#if !defined(RENDU_ENUM_RANGE_MAX)
+#  define RENDU_ENUM_RANGE_MAX 128
 #endif
 
-namespace magic_enum {
+namespace rendu_enum {
 
-// If need another optional type, define the macro MAGIC_ENUM_USING_ALIAS_OPTIONAL.
-#if defined(MAGIC_ENUM_USING_ALIAS_OPTIONAL)
-MAGIC_ENUM_USING_ALIAS_OPTIONAL
+// If need another optional type, define the macro RENDU_ENUM_USING_ALIAS_OPTIONAL.
+#if defined(RENDU_ENUM_USING_ALIAS_OPTIONAL)
+RENDU_ENUM_USING_ALIAS_OPTIONAL
 #else
 using std::optional;
 #endif
 
-// If need another string_view type, define the macro MAGIC_ENUM_USING_ALIAS_STRING_VIEW.
-#if defined(MAGIC_ENUM_USING_ALIAS_STRING_VIEW)
-MAGIC_ENUM_USING_ALIAS_STRING_VIEW
+// If need another string_view type, define the macro RENDU_ENUM_USING_ALIAS_STRING_VIEW.
+#if defined(RENDU_ENUM_USING_ALIAS_STRING_VIEW)
+RENDU_ENUM_USING_ALIAS_STRING_VIEW
 #else
 using std::string_view;
 #endif
 
-// If need another string type, define the macro MAGIC_ENUM_USING_ALIAS_STRING.
-#if defined(MAGIC_ENUM_USING_ALIAS_STRING)
-MAGIC_ENUM_USING_ALIAS_STRING
+// If need another string type, define the macro RENDU_ENUM_USING_ALIAS_STRING.
+#if defined(RENDU_ENUM_USING_ALIAS_STRING)
+RENDU_ENUM_USING_ALIAS_STRING
 #else
 using std::string;
 #endif
 
 namespace customize {
 
-// Enum value must be in range [MAGIC_ENUM_RANGE_MIN, MAGIC_ENUM_RANGE_MAX]. By default MAGIC_ENUM_RANGE_MIN = -128, MAGIC_ENUM_RANGE_MAX = 128.
-// If need another range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN and MAGIC_ENUM_RANGE_MAX.
+// Enum value must be in range [RENDU_ENUM_RANGE_MIN, RENDU_ENUM_RANGE_MAX]. By default RENDU_ENUM_RANGE_MIN = -128, RENDU_ENUM_RANGE_MAX = 128.
+// If need another range for all enum types by default, redefine the macro RENDU_ENUM_RANGE_MIN and RENDU_ENUM_RANGE_MAX.
 // If need another range for specific enum type, add specialization enum_range for necessary enum type.
 template <typename E>
 struct enum_range {
   static_assert(std::is_enum_v<E>, "magic_enum::customize::enum_range requires enum type.");
-  static constexpr int min = MAGIC_ENUM_RANGE_MIN;
-  static constexpr int max = MAGIC_ENUM_RANGE_MAX;
+  static constexpr int min = RENDU_ENUM_RANGE_MIN;
+  static constexpr int max = RENDU_ENUM_RANGE_MAX;
   static_assert(max > min, "magic_enum::customize::enum_range requires max > min.");
 };
 
-static_assert(MAGIC_ENUM_RANGE_MAX > MAGIC_ENUM_RANGE_MIN, "MAGIC_ENUM_RANGE_MAX must be greater than MAGIC_ENUM_RANGE_MIN.");
-static_assert((MAGIC_ENUM_RANGE_MAX - MAGIC_ENUM_RANGE_MIN) < (std::numeric_limits<std::uint16_t>::max)(), "MAGIC_ENUM_RANGE must be less than UINT16_MAX.");
+static_assert(RENDU_ENUM_RANGE_MAX > RENDU_ENUM_RANGE_MIN, "RENDU_ENUM_RANGE_MAX must be greater than RENDU_ENUM_RANGE_MIN.");
+static_assert((RENDU_ENUM_RANGE_MAX - RENDU_ENUM_RANGE_MIN) < (std::numeric_limits<std::uint16_t>::max)(), "RENDU_ENUM_RANGE must be less than UINT16_MAX.");
 
 namespace detail {
 enum class default_customize_tag {};
@@ -174,7 +133,7 @@ inline constexpr bool always_false_v = false;
 
 template <typename T>
 struct supported
-#if defined(MAGIC_ENUM_SUPPORTED) && MAGIC_ENUM_SUPPORTED || defined(MAGIC_ENUM_NO_CHECK_SUPPORT)
+#if defined(RENDU_ENUM_SUPPORTED) && RENDU_ENUM_SUPPORTED || defined(RENDU_ENUM_NO_CHECK_SUPPORT)
     : std::true_type {};
 #else
     : std::false_type {};
@@ -187,13 +146,13 @@ template <typename T>
 struct has_is_flags<T, std::void_t<decltype(customize::enum_range<T>::is_flags)>> : std::bool_constant<std::is_same_v<bool, std::decay_t<decltype(customize::enum_range<T>::is_flags)>>> {};
 
 template <typename T, typename = void>
-struct range_min : std::integral_constant<int, MAGIC_ENUM_RANGE_MIN> {};
+struct range_min : std::integral_constant<int, RENDU_ENUM_RANGE_MIN> {};
 
 template <typename T>
 struct range_min<T, std::void_t<decltype(customize::enum_range<T>::min)>> : std::integral_constant<decltype(customize::enum_range<T>::min), customize::enum_range<T>::min> {};
 
 template <typename T, typename = void>
-struct range_max : std::integral_constant<int, MAGIC_ENUM_RANGE_MAX> {};
+struct range_max : std::integral_constant<int, RENDU_ENUM_RANGE_MAX> {};
 
 template <typename T>
 struct range_max<T, std::void_t<decltype(customize::enum_range<T>::max)>> : std::integral_constant<decltype(customize::enum_range<T>::max), customize::enum_range<T>::max> {};
@@ -237,7 +196,7 @@ constexpr string_view pretty_name(string_view name) noexcept {
     if (!((name[i - 1] >= '0' && name[i - 1] <= '9') ||
           (name[i - 1] >= 'a' && name[i - 1] <= 'z') ||
           (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
-#if defined(MAGIC_ENUM_ENABLE_NONASCII)
+#if defined(RENDU_ENUM_ENABLE_NONASCII)
           (name[i - 1] & 0x80) ||
 #endif
           (name[i - 1] == '_'))) {
@@ -248,7 +207,7 @@ constexpr string_view pretty_name(string_view name) noexcept {
 
   if (name.size() > 0 && ((name[0] >= 'a' && name[0] <= 'z') ||
                           (name[0] >= 'A' && name[0] <= 'Z') ||
-#if defined(MAGIC_ENUM_ENABLE_NONASCII)
+#if defined(RENDU_ENUM_ENABLE_NONASCII)
                           (name[0]) & 0x80) ||
 #endif
                           (name[0] == '_'))) {
@@ -266,7 +225,7 @@ class case_insensitive {
  public:
   template <typename L, typename R>
   constexpr auto operator()([[maybe_unused]] L lhs, [[maybe_unused]] R rhs) const noexcept -> std::enable_if_t<std::is_same_v<std::decay_t<L>, char> && std::is_same_v<std::decay_t<R>, char>, bool> {
-#if defined(MAGIC_ENUM_ENABLE_NONASCII)
+#if defined(RENDU_ENUM_ENABLE_NONASCII)
     static_assert(always_false_v<L, R>, "magic_enum::case_insensitive not supported Non-ASCII feature.");
     return false;
 #else
@@ -589,7 +548,7 @@ constexpr bool is_flags_enum() noexcept {
   } else if constexpr (std::is_same_v<U, bool>) { // bool special case
     return false;
   } else {
-#if defined(MAGIC_ENUM_NO_CHECK_FLAGS)
+#if defined(RENDU_ENUM_NO_CHECK_FLAGS)
     return false;
 #else
     constexpr auto flags_values = values<E, true>();
@@ -717,7 +676,7 @@ struct underlying_type {};
 template <typename T>
 struct underlying_type<T, true> : std::underlying_type<std::decay_t<T>> {};
 
-#if defined(MAGIC_ENUM_NO_HASH)
+#if defined(RENDU_ENUM_NO_HASH)
 template <typename T>
 inline constexpr bool has_hash = false;
 #else
@@ -876,7 +835,7 @@ constexpr bool no_duplicate() noexcept {
   return true;
 }
 
-#define MAGIC_ENUM_FOR_EACH_256(T) T(0)T(1)T(2)T(3)T(4)T(5)T(6)T(7)T(8)T(9)T(10)T(11)T(12)T(13)T(14)T(15)T(16)T(17)T(18)T(19)T(20)T(21)T(22)T(23)T(24)T(25)T(26)T(27)T(28)T(29)T(30)T(31)          \
+#define RENDU_ENUM_FOR_EACH_256(T) T(0)T(1)T(2)T(3)T(4)T(5)T(6)T(7)T(8)T(9)T(10)T(11)T(12)T(13)T(14)T(15)T(16)T(17)T(18)T(19)T(20)T(21)T(22)T(23)T(24)T(25)T(26)T(27)T(28)T(29)T(30)T(31)          \
   T(32)T(33)T(34)T(35)T(36)T(37)T(38)T(39)T(40)T(41)T(42)T(43)T(44)T(45)T(46)T(47)T(48)T(49)T(50)T(51)T(52)T(53)T(54)T(55)T(56)T(57)T(58)T(59)T(60)T(61)T(62)T(63)                                 \
   T(64)T(65)T(66)T(67)T(68)T(69)T(70)T(71)T(72)T(73)T(74)T(75)T(76)T(77)T(78)T(79)T(80)T(81)T(82)T(83)T(84)T(85)T(86)T(87)T(88)T(89)T(90)T(91)T(92)T(93)T(94)T(95)                                 \
   T(96)T(97)T(98)T(99)T(100)T(101)T(102)T(103)T(104)T(105)T(106)T(107)T(108)T(109)T(110)T(111)T(112)T(113)T(114)T(115)T(116)T(117)T(118)T(119)T(120)T(121)T(122)T(123)T(124)T(125)T(126)T(127)     \
@@ -885,7 +844,7 @@ constexpr bool no_duplicate() noexcept {
   T(192)T(193)T(194)T(195)T(196)T(197)T(198)T(199)T(200)T(201)T(202)T(203)T(204)T(205)T(206)T(207)T(208)T(209)T(210)T(211)T(212)T(213)T(214)T(215)T(216)T(217)T(218)T(219)T(220)T(221)T(222)T(223) \
   T(224)T(225)T(226)T(227)T(228)T(229)T(230)T(231)T(232)T(233)T(234)T(235)T(236)T(237)T(238)T(239)T(240)T(241)T(242)T(243)T(244)T(245)T(246)T(247)T(248)T(249)T(250)T(251)T(252)T(253)T(254)T(255)
 
-#define MAGIC_ENUM_CASE(val)                                                                                                      \
+#define RENDU_ENUM_CASE(val)                                                                                                      \
   case cases[val]:                                                                                                                \
     if constexpr ((val) + Page < size) {                                                                                          \
       if (!pred(values[val + Page], searched)) {                                                                                  \
@@ -925,7 +884,7 @@ constexpr std::invoke_result_t<ResultGetterType> constexpr_switch(
   constexpr std::array cases = calculate_cases<GlobValues, hash_t>(Page);
 
   switch (hash_v<hash_t>(searched)) {
-    MAGIC_ENUM_FOR_EACH_256(MAGIC_ENUM_CASE)
+    RENDU_ENUM_FOR_EACH_256(RENDU_ENUM_CASE)
     default:
       if constexpr (size > 256 + Page) {
         return constexpr_switch<GlobValues, CallValue, Page + 256, Hash>(std::forward<Lambda>(lambda), searched, std::forward<ResultGetterType>(def));
@@ -935,8 +894,8 @@ constexpr std::invoke_result_t<ResultGetterType> constexpr_switch(
   return def();
 }
 
-#undef MAGIC_ENUM_FOR_EACH_256
-#undef MAGIC_ENUM_CASE
+#undef RENDU_ENUM_FOR_EACH_256
+#undef RENDU_ENUM_CASE
 #endif
 
 template <typename E, typename Lambda, std::size_t... I>
@@ -1064,7 +1023,7 @@ template <typename E>
   if constexpr (detail::count_v<D> == 0) {
     return {}; // Empty enum.
   } else if constexpr (detail::is_sparse_v<D> || detail::is_flags_v<D>) {
-#if defined(MAGIC_ENUM_NO_HASH)
+#if defined(RENDU_ENUM_NO_HASH)
     for (std::size_t i = 0; i < detail::count_v<D>; ++i) {
       if (enum_value<D>(i) == value) {
         return i;
@@ -1189,7 +1148,7 @@ template <typename E>
       }
       return {}; // Invalid value or out of range.
     } else {
-#if defined(MAGIC_ENUM_NO_HASH)
+#if defined(RENDU_ENUM_NO_HASH)
       for (std::size_t i = 0; i < detail::count_v<D>; ++i) {
         if (value == static_cast<U>(enum_value<D>(i))) {
           return static_cast<D>(value);
@@ -1249,7 +1208,7 @@ template <typename E, typename BinaryPredicate = std::equal_to<>>
     return {}; // Invalid value or out of range.
   } else if constexpr (detail::count_v<D> > 0) {
     if constexpr (detail::is_default_predicate<BinaryPredicate>()) {
-#if defined(MAGIC_ENUM_NO_HASH)
+#if defined(RENDU_ENUM_NO_HASH)
       for (std::size_t i = 0; i < detail::count_v<D>; ++i) {
         if (detail::cmp_equal(value, detail::names_v<D>[i], p)) {
           return enum_value<D>(i);
@@ -1303,7 +1262,7 @@ template <typename E, typename BinaryPredicate = std::equal_to<>>
 template <typename Result = void, typename E, typename Lambda>
 constexpr auto enum_switch(Lambda&& lambda, E value) -> detail::enable_if_t<E, Result> {
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   return detail::constexpr_switch<&detail::values_v<D>, detail::case_call_t::value>(
       std::forward<Lambda>(lambda),
@@ -1314,7 +1273,7 @@ constexpr auto enum_switch(Lambda&& lambda, E value) -> detail::enable_if_t<E, R
 template <typename Result, typename E, typename Lambda>
 constexpr auto enum_switch(Lambda&& lambda, E value, Result&& result) -> detail::enable_if_t<E, Result> {
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   return detail::constexpr_switch<&detail::values_v<D>, detail::case_call_t::value>(
       std::forward<Lambda>(lambda),
@@ -1326,7 +1285,7 @@ template <typename E, typename Result = void, typename BinaryPredicate = std::eq
 constexpr auto enum_switch(Lambda&& lambda, string_view name, BinaryPredicate&& p = {}) -> detail::enable_if_t<E, Result, BinaryPredicate> {
   static_assert(std::is_invocable_r_v<bool, BinaryPredicate, char, char>, "magic_enum::enum_switch requires bool(char, char) invocable predicate.");
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   if (const auto v = enum_cast<D>(name, std::forward<BinaryPredicate>(p))) {
     return enum_switch<Result, D>(std::forward<Lambda>(lambda), *v);
@@ -1338,7 +1297,7 @@ template <typename E, typename Result, typename BinaryPredicate = std::equal_to<
 constexpr auto enum_switch(Lambda&& lambda, string_view name, Result&& result, BinaryPredicate&& p = {}) -> detail::enable_if_t<E, Result, BinaryPredicate> {
   static_assert(std::is_invocable_r_v<bool, BinaryPredicate, char, char>, "magic_enum::enum_switch requires bool(char, char) invocable predicate.");
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   if (const auto v = enum_cast<D>(name, std::forward<BinaryPredicate>(p))) {
     return enum_switch<Result, D>(std::forward<Lambda>(lambda), *v, std::forward<Result>(result));
@@ -1349,7 +1308,7 @@ constexpr auto enum_switch(Lambda&& lambda, string_view name, Result&& result, B
 template <typename E, typename Result = void, typename Lambda>
 constexpr auto enum_switch(Lambda&& lambda, underlying_type_t<E> value) -> detail::enable_if_t<E, Result> {
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   if (const auto v = enum_cast<D>(value)) {
     return enum_switch<Result, D>(std::forward<Lambda>(lambda), *v);
@@ -1360,7 +1319,7 @@ constexpr auto enum_switch(Lambda&& lambda, underlying_type_t<E> value) -> detai
 template <typename E, typename Result, typename Lambda>
 constexpr auto enum_switch(Lambda&& lambda, underlying_type_t<E> value, Result&& result) -> detail::enable_if_t<E, Result> {
   using D = std::decay_t<E>;
-  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined MAGIC_ENUM_NO_HASH");
+  static_assert(detail::has_hash<D>, "magic_enum::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
   if (const auto v = enum_cast<D>(value)) {
     return enum_switch<Result, D>(std::forward<Lambda>(lambda), *v, std::forward<Result>(result));
@@ -1480,4 +1439,4 @@ constexpr E& operator^=(E& lhs, E rhs) noexcept {
 #  pragma warning(pop)
 #endif
 
-#endif // NEARGYE_MAGIC_ENUM_HPP
+#endif // RENDU_ENUM_H__

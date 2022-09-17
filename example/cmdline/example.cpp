@@ -2,8 +2,9 @@
 * Created by boil on 2022/9/10.
 */
 
-#include <argparse/argparse.hpp>
 #include <string>
+#include <argparse/argument_parser.h>
+
 //例如： 1 2 3 -abc 4.14 5.718 -gh 6 7
 int main(int argc, char **argv) {
   argparse::ArgumentParser program("test");
@@ -30,9 +31,6 @@ int main(int argc, char **argv) {
   program.add_argument("-g").required()
       .default_value(0)
       .scan<'i', int>();
-  program.add_argument("-h").required()
-      .default_value(0)
-      .scan<'i', int>();
 
   try {
     program.parse_args(argc, argv);
@@ -48,7 +46,6 @@ int main(int argc, char **argv) {
   auto c = program.get<std::vector<float>>("-c");                 // {4.14f, 5.718f}
   auto files = program.get<std::vector<std::string>>("--files");  // {"a.txt", "b.txt", "c.txt"}
   auto g = program.get<int>("-g");             // 6
-  auto h = program.get<int>("-h");             // 7
 
   std::cout<<program;
 }
