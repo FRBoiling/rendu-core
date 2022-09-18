@@ -2,18 +2,17 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(EXEC_NAME example_sfmt)
+set(EXEC_NAME example_defines)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
     private_sources
+    # Exclude
 )
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(${EXEC_NAME}
-    ${private_sources}
-    )
+add_executable(${EXEC_NAME} ${private_sources})
 
 target_link_libraries(${EXEC_NAME}
     PRIVATE
@@ -21,14 +20,8 @@ target_link_libraries(${EXEC_NAME}
     PUBLIC
     spdlog
     defines
-    sfmt
     #TODO:BOIL 添加依赖项
     )
-
-CollectIncludeDirectories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    public_includes
-)
 
 target_include_directories(${EXEC_NAME}
     PUBLIC
