@@ -4,8 +4,13 @@
 
 #ifndef RENDU_LOG_H_
 #define RENDU_LOG_H_
+
 #include <spdlog/spdlog.h>
-#include "spdlog/pattern_formatter.h"
+#include <spdlog/pattern_formatter.h>
+#include <spdlog/sinks/daily_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+
+
 
 #define RD_LOG_DEBUG SPDLOG_DEBUG
 #define RD_LOG_TRACE SPDLOG_TRACE
