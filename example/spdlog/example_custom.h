@@ -135,5 +135,4 @@ void custom_example() {
 
 
 
-
 #endif //RENDU_EXAMPLE_CUSTOM_H_

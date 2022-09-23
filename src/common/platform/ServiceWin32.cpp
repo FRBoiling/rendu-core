@@ -240,7 +240,7 @@ bool WinServiceRun()
 
     if (!StartServiceCtrlDispatcher(serviceTable))
     {
-        RD_LOG_ERROR("server.worldserver", "StartService Failed. Error [%u]", uint32(::GetLastError()));
+        RD_ERROR("server.worldserver", "StartService Failed. Error [%u]", uint32(::GetLastError()));
         return false;
     }
     return true;
