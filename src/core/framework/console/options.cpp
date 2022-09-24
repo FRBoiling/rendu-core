@@ -5,7 +5,7 @@
 #include "options.h"
 #include <iostream>
 #include <ostream>
-#include "smart_enum.h"
+#include "enum_utils.h"
 #include "argparse/argument_parser.h"
 
 void ParserArguments(argparse::ArgumentParser parser) {

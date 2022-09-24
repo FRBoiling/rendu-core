@@ -7,7 +7,7 @@
 #include "log_system.h"
 #include "config_system.h"
 #include "event_system.h"
-#include "smart_enum.h"
+#include "enum_utils.h"
 #include "banner.h"
 
 enum class Color{

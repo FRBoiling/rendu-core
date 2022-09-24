@@ -1,9 +1,10 @@
 /*
-* Created by boil on 2022/9/10.
+* Created by boil on 2022/9/24.
 */
 
-#include <string>
+#pragma once
 #include <iostream>
+#include "enum/enum_utils.h"
 
 enum NormalEnum{
   One = 1,
@@ -17,6 +18,8 @@ enum class ClassEnum{
   Three = 33,
 };
 
-int main(int argc, char **argv) {
+
+void enum_example(){
   std::cout<< Two << std::endl;
+  std::cout << rendu::EnumUtils::ToString(ClassEnum::Two) << std::endl;
 }

@@ -47,12 +47,6 @@ target_link_libraries(${target-name}
     PRIVATE
     rendu-interface
     PUBLIC
-    defines
-    cmdline
-    spdlog
-    utf8cpp
-    sfmt
-    readline
     #TODO:添加reps库
     )
 

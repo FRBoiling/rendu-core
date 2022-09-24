@@ -43,7 +43,6 @@ private:
   Log() = default;
 
   ~Log() {
-    spdlog::drop_all(); // 释放所有logger
   }
 
 private:
