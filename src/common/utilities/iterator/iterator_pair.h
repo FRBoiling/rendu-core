@@ -30,23 +30,6 @@ namespace rendu {
     std::pair<iterator, iterator> _iterators;
   };
 
-  namespace Containers {
-    template<typename iterator>
-    constexpr rendu::IteratorPair<iterator> MakeIteratorPair(iterator first, iterator second) {
-      return {first, second};
-    }
-
-    template<typename iterator>
-    constexpr rendu::IteratorPair<iterator> MakeIteratorPair(std::pair<iterator, iterator> iterators) {
-      return iterators;
-    }
-
-    template<class M>
-    inline auto MapEqualRange(M &map, typename M::key_type const &key) -> IteratorPair<decltype(map.begin())> {
-      return {map.equal_range(key)};
-    }
-  }
-  //! namespace Containers
 }
 //! namespace rendu
 

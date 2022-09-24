@@ -6,6 +6,7 @@
 #define RENDU_UTIL_H_
 
 #include "singleton.h"
-#include "iterator_pair.h"
+#include "enum/enum_utils.h"
+#include "iterator/iterator_pair_utils.h"
 
 #endif //RENDU_UTIL_H_

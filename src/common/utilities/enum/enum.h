@@ -8,103 +8,16 @@
 #include "enum_struct.h"
 
 namespace rendu {
-
-// Enum value must be in range [RENDU_ENUM_RANGE_MIN, RENDU_ENUM_RANGE_MAX]. By default RENDU_ENUM_RANGE_MIN = -128, RENDU_ENUM_RANGE_MAX = 128.
-// If need another range for all enum types by default, redefine the macro RENDU_ENUM_RANGE_MIN and RENDU_ENUM_RANGE_MAX.
-// If need another range for specific enum type, add specialization enum_range for necessary enum type.
-
-
   static_assert(RENDU_ENUM_RANGE_MAX > RENDU_ENUM_RANGE_MIN,
                 "RENDU_ENUM_RANGE_MAX must be greater than RENDU_ENUM_RANGE_MIN.");
   static_assert((RENDU_ENUM_RANGE_MAX - RENDU_ENUM_RANGE_MIN) < (std::numeric_limits<std::uint16_t>::max)(),
                 "RENDU_ENUM_RANGE must be less than UINT16_MAX.");
-
   template<auto V, typename E = std::decay_t<decltype(V)>, std::enable_if_t<std::is_enum_v<E>, int> = 0>
   using enum_constant = std::integral_constant<E, V>;
 
   template<typename... T>
   inline constexpr bool always_false_v = false;
 
-
-  template<std::uint16_t N>
-  class static_string {
-  public:
-    constexpr explicit static_string(string_view str) noexcept: static_string{str,
-                                                                              std::make_integer_sequence<std::uint16_t, N>{}} {
-      assert(str.size() == N);
-    }
-
-    constexpr const char *data() const noexcept { return chars_; }
-
-    constexpr std::uint16_t size() const noexcept { return N; }
-
-    constexpr operator string_view() const noexcept { return {data(), size()}; }
-
-  private:
-    template<std::uint16_t... I>
-    constexpr
-    static_string(string_view str, std::integer_sequence<std::uint16_t, I...>) noexcept : chars_{str[I]..., '\0'} {}
-
-    char chars_[static_cast<std::size_t>(N) + 1];
-  };
-
-  template<>
-  class static_string<0> {
-  public:
-    constexpr explicit static_string() = default;
-
-    constexpr explicit static_string(string_view) noexcept {}
-
-    constexpr const char *data() const noexcept { return nullptr; }
-
-    constexpr std::uint16_t size() const noexcept { return 0; }
-
-    constexpr operator string_view() const noexcept { return {}; }
-  };
-
-  constexpr string_view pretty_name(string_view name) noexcept {
-    for (std::size_t i = name.size(); i > 0; --i) {
-      if (!((name[i - 1] >= '0' && name[i - 1] <= '9') ||
-            (name[i - 1] >= 'a' && name[i - 1] <= 'z') ||
-            (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
-            #if defined(RENDU_ENUM_ENABLE_NONASCII)
-            (name[i - 1] & 0x80) ||
-            #endif
-            (name[i - 1] == '_'))) {
-        name.remove_prefix(i);
-        break;
-      }
-    }
-
-    if (name.size() > 0 && ((name[0] >= 'a' && name[0] <= 'z') ||
-                            (name[0] >= 'A' && name[0] <= 'Z') ||
-                            #if defined(RENDU_ENUM_ENABLE_NONASCII)
-                            (name[0]) & 0x80) ||
-                            #endif
-                            (name[0] == '_'))) {
-      return name;
-    }
-
-    return {}; // Invalid name.
-  }
-
-  class case_insensitive {
-    static constexpr char to_lower(char c) noexcept {
-      return (c >= 'A' && c <= 'Z') ? static_cast<char>(c + ('a' - 'A')) : c;
-    }
-
-  public:
-    template<typename L, typename R>
-    constexpr auto operator()([[maybe_unused]] L lhs, [[maybe_unused]] R rhs) const noexcept -> std::enable_if_t<
-        std::is_same_v<std::decay_t<L>, char> && std::is_same_v<std::decay_t<R>, char>, bool> {
-#if defined(RENDU_ENUM_ENABLE_NONASCII)
-      static_assert(always_false_v<L, R>, "rendu::case_insensitive not supported Non-ASCII feature.");
-      return false;
-#else
-      return to_lower(lhs) == to_lower(rhs);
-#endif
-    }
-  };
 
   constexpr std::size_t find(string_view str, char c) noexcept {
 #if defined(__clang__) && __clang_major__ < 9 && defined(__GLIBCXX__) || defined(_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
@@ -211,11 +124,37 @@ namespace rendu {
   template<typename T>
   inline constexpr bool is_enum_v = std::is_enum_v<T> && std::is_same_v<T, std::decay_t<T>>;
 
+  constexpr string_view pretty_name(string_view name) noexcept {
+    for (std::size_t i = name.size(); i > 0; --i) {
+      if (!((name[i - 1] >= '0' && name[i - 1] <= '9') ||
+            (name[i - 1] >= 'a' && name[i - 1] <= 'z') ||
+            (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
+            #if defined(RENDU_ENUM_ENABLE_NONASCII)
+            (name[i - 1] & 0x80) ||
+            #endif
+            (name[i - 1] == '_'))) {
+        name.remove_prefix(i);
+        break;
+      }
+    }
+
+    if (name.size() > 0 && ((name[0] >= 'a' && name[0] <= 'z') ||
+                            (name[0] >= 'A' && name[0] <= 'Z') ||
+                            #if defined(RENDU_ENUM_ENABLE_NONASCII)
+                            (name[0]) & 0x80) ||
+                            #endif
+                            (name[0] == '_'))) {
+      return name;
+    }
+
+    return {}; // Invalid name.
+  }
+
   template<typename E>
   constexpr auto n() noexcept {
     static_assert(is_enum_v<E>, "rendu::n requires enum type.");
 
-    if constexpr (supported<E>::value) {
+    if constexpr (Supported<E>::value) {
 #if defined(__clang__) || defined(__GNUC__)
       constexpr auto name = pretty_name({__PRETTY_FUNCTION__, sizeof(__PRETTY_FUNCTION__) - 2});
 #elif defined(_MSC_VER)
@@ -223,9 +162,9 @@ namespace rendu {
 #else
       constexpr auto name = string_view{};
 #endif
-      return static_string<name.size()>{name};
+      return StaticString<name.size()>{name};
     } else {
-      return static_string<0>{}; // Unsupported compiler or Invalid customize.
+      return StaticString<0>{}; // Unsupported compiler or Invalid customize.
     }
   }
 
@@ -242,7 +181,7 @@ namespace rendu {
   constexpr auto n() noexcept {
     static_assert(is_enum_v<E>, "rendu::n requires enum type.");
 
-    if constexpr (supported<E>::value) {
+    if constexpr (Supported<E>::value) {
 #if defined(__clang__) || defined(__GNUC__)
       constexpr auto name = pretty_name({__PRETTY_FUNCTION__, sizeof(__PRETTY_FUNCTION__) - 2});
 #elif defined(_MSC_VER)
@@ -250,9 +189,9 @@ namespace rendu {
 #else
       constexpr auto name = string_view{};
 #endif
-      return static_string<name.size()>{name};
+      return StaticString<name.size()>{name};
     } else {
-      return static_string<0>{}; // Unsupported compiler or Invalid customize.
+      return StaticString<0>{}; // Unsupported compiler or Invalid customize.
     }
   }
 
@@ -315,7 +254,7 @@ namespace rendu {
     if constexpr (IsFlags) {
       return 0;
     } else {
-      constexpr auto lhs = range_min<E>::value;
+      constexpr auto lhs = RangeMin<E>::value;
       constexpr auto rhs = (std::numeric_limits<U>::min)();
 
       if constexpr (cmp_less(rhs, lhs)) {
@@ -333,7 +272,7 @@ namespace rendu {
     if constexpr (IsFlags) {
       return std::numeric_limits<U>::digits - 1;
     } else {
-      constexpr auto lhs = range_max<E>::value;
+      constexpr auto lhs = RangeMax<E>::value;
       constexpr auto rhs = (std::numeric_limits<U>::max)();
 
       if constexpr (cmp_less(lhs, rhs)) {
@@ -399,8 +338,8 @@ namespace rendu {
   constexpr bool is_flags_enum() noexcept {
     static_assert(is_enum_v<E>, "rendu::is_flags_enum requires enum type.");
 
-    if constexpr (has_is_flags<E>::value) {
-      return enum_range<E>::is_flags;
+    if constexpr (HasIsFlags<E>::value) {
+      return EnumRange<E>::is_flags;
     } else if constexpr (std::is_same_v<U, bool>) { // bool special case
       return false;
     } else {
@@ -501,7 +440,7 @@ namespace rendu {
 
 
   template<typename T, typename R, typename BinaryPredicate = std::equal_to<>>
-  using enable_if_t = typename enable_if_enum<
+  using enable_if_t = typename EnableIfEnum<
       std::is_enum_v<std::decay_t<T>> && std::is_invocable_r_v<bool, BinaryPredicate, char, char>, R>::type;
 
   template<typename T, std::enable_if_t<std::is_enum_v<std::decay_t<T>>, int> = 0>
@@ -563,9 +502,6 @@ namespace rendu {
     }
   }
 
-  enum class case_call_t {
-    index, value
-  };
 
   template<typename T = void>
   inline constexpr auto default_result_type_lambda = []() noexcept(std::is_nothrow_default_constructible_v<T>) { return T{}; };
@@ -611,13 +547,13 @@ namespace rendu {
       if (!pred(values[val + Page], searched)) {                                                                                  \
         break;                                                                                                                    \
       }                                                                                                                           \
-      if constexpr (CallValue == case_call_t::index) {                                                                            \
+      if constexpr (CallValue == CaseCallT::index) {                                                                            \
         if constexpr (std::is_invocable_r_v<result_t, Lambda, std::integral_constant<std::size_t, val + Page>>) {                 \
           return invoke_r<result_t>(std::forward<Lambda>(lambda), std::integral_constant<std::size_t, val + Page>{});     \
         } else if constexpr (std::is_invocable_v<Lambda, std::integral_constant<std::size_t, val + Page>>) {                      \
           assert(false && "rendu::constexpr_switch wrong result type.");                                             \
         }                                                                                                                         \
-      } else if constexpr (CallValue == case_call_t::value) {                                                                     \
+      } else if constexpr (CallValue == CaseCallT::value) {                                                                     \
         if constexpr (std::is_invocable_r_v<result_t, Lambda, enum_constant<values[val + Page]>>) {                               \
           return invoke_r<result_t>(std::forward<Lambda>(lambda), enum_constant<values[val + Page]>{});                   \
         } else if constexpr (std::is_invocable_r_v<result_t, Lambda, enum_constant<values[val + Page]>>) {                        \
@@ -628,9 +564,9 @@ namespace rendu {
     } else [[fallthrough]];
 
   template<auto *GlobValues,
-      case_call_t CallValue,
+      CaseCallT CallValue,
       std::size_t Page = 0,
-      typename Hash = constexpr_hash_t<typename std::decay_t<decltype(*GlobValues)>::value_type>,
+      typename Hash = ConstexprHashT<typename std::decay_t<decltype(*GlobValues)>::value_type>,
       typename Lambda, typename ResultGetterType = decltype(default_result_type_lambda<>),
       typename BinaryPredicate = std::equal_to<>>
   constexpr std::invoke_result_t<ResultGetterType> constexpr_switch(
@@ -683,20 +619,20 @@ namespace rendu {
   }
 
 
-// Checks is rendu supported compiler.
-  inline constexpr bool is_magic_enum_supported = supported<void>::value;
+// Checks is rendu Supported compiler.
+  inline constexpr bool is_magic_enum_supported = Supported<void>::value;
 
   template<typename T>
   using Enum = enum_concept<T>;
 
   template<typename T>
-  inline constexpr bool is_unscoped_enum_v = is_unscoped_enum<T>::value;
+  inline constexpr bool is_unscoped_enum_v = IsUnscopedEnum<T>::value;
 
   template<typename T>
-  inline constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
+  inline constexpr bool is_scoped_enum_v = IsScopedEnum<T>::value;
 
   template<typename T>
-  using underlying_type_t = typename underlying_type<T>::type;
+  using underlying_type_t = typename UnderlyingType<T>::type;
 
 // Returns type name of enum.
   template<typename E>
@@ -735,7 +671,7 @@ namespace rendu {
     using D = std::decay_t<E>;
     static_assert(I < count_v<D>, "rendu::enum_value out of range.");
 
-    return enum_value < D > (I);
+    return enum_value<D>(I);
   }
 
 // Returns std::array with enum values, sorted by enum value.
@@ -774,7 +710,7 @@ namespace rendu {
       }
       return {}; // Invalid value or out of range.
 #else
-      return constexpr_switch<&values_v<D>, case_call_t::index>(
+      return constexpr_switch<&values_v<D>, CaseCallT::index>(
           [](std::size_t i) { return optional<std::size_t>{i}; },
           value,
           default_result_type_lambda<optional<std::size_t>>);
@@ -888,7 +824,7 @@ namespace rendu {
         }
         return {}; // Invalid value or out of range.
 #else
-        return constexpr_switch<&values_v<D>, case_call_t::value>(
+        return constexpr_switch<&values_v<D>, CaseCallT::value>(
             [](D v) { return optional<D>{v}; },
             static_cast<D>(value),
             default_result_type_lambda<optional<D>>);
@@ -948,7 +884,7 @@ namespace rendu {
         }
         return {}; // Invalid value or out of range.
 #else
-        return constexpr_switch<&names_v<D>, case_call_t::index>(
+        return constexpr_switch<&names_v<D>, CaseCallT::index>(
             [](std::size_t i) { return optional<D>{values_v<D>[i]}; },
             value,
             default_result_type_lambda<optional<D>>,
@@ -995,7 +931,7 @@ namespace rendu {
     using D = std::decay_t<E>;
     static_assert(has_hash<D>, "rendu::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
-    return constexpr_switch<&values_v<D>, case_call_t::value>(
+    return constexpr_switch<&values_v<D>, CaseCallT::value>(
         std::forward<Lambda>(lambda),
         value,
         default_result_type_lambda<Result>);
@@ -1006,7 +942,7 @@ namespace rendu {
     using D = std::decay_t<E>;
     static_assert(has_hash<D>, "rendu::enum_switch requires no defined RENDU_ENUM_NO_HASH");
 
-    return constexpr_switch<&values_v<D>, case_call_t::value>(
+    return constexpr_switch<&values_v<D>, CaseCallT::value>(
         std::forward<Lambda>(lambda),
         value,
         [&result] { return std::forward<Result>(result); });
@@ -1082,7 +1018,7 @@ namespace rendu {
     using D = std::decay_t<E>;
     using U = underlying_type_t<D>;
 
-    if constexpr (supported<D>::value) {
+    if constexpr (Supported<D>::value) {
       if (const auto name = enum_flags_name<D>(value); !name.empty()) {
         for (const auto c: name) {
           os.put(c);

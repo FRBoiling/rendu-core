@@ -10,92 +10,92 @@
 namespace rendu {
 
   template<typename E>
-  struct enum_range {
-    static_assert(std::is_enum_v<E>, "rendu::enum_range requires enum type.");
+  struct EnumRange {
+    static_assert(std::is_enum_v<E>, "rendu::EnumRange requires enum type.");
     static constexpr int min = RENDU_ENUM_RANGE_MIN;
     static constexpr int max = RENDU_ENUM_RANGE_MAX;
-    static_assert(max > min, "rendu::enum_range requires max > min.");
+    static_assert(max > min, "rendu::EnumRange requires max > min.");
   };
 
   template<typename T, typename = void>
-  struct has_is_flags : std::false_type {
+  struct HasIsFlags : std::false_type {
   };
   template<typename T>
-  struct has_is_flags<T, std::void_t<decltype(enum_range<T>::is_flags)>>
-      : std::bool_constant<std::is_same_v<bool, std::decay_t<decltype(enum_range<T>::is_flags)>>> {
+  struct HasIsFlags<T, std::void_t<decltype(EnumRange<T>::is_flags)>>
+      : std::bool_constant<std::is_same_v<bool, std::decay_t<decltype(EnumRange<T>::is_flags)>>> {
   };
 
   template<typename T, typename = void>
-  struct range_min : std::integral_constant<int, RENDU_ENUM_RANGE_MIN> {
+  struct RangeMin : std::integral_constant<int, RENDU_ENUM_RANGE_MIN> {
   };
   template<typename T>
-  struct range_min<T, std::void_t<decltype(enum_range<T>::min)>>
-      : std::integral_constant<decltype(enum_range<T>::min), enum_range<T>::min> {
+  struct RangeMin<T, std::void_t<decltype(EnumRange<T>::min)>>
+      : std::integral_constant<decltype(EnumRange<T>::min), EnumRange<T>::min> {
   };
 
   template<typename T, typename = void>
-  struct range_max : std::integral_constant<int, RENDU_ENUM_RANGE_MAX> {
+  struct RangeMax : std::integral_constant<int, RENDU_ENUM_RANGE_MAX> {
   };
   template<typename T>
-  struct range_max<T, std::void_t<decltype(enum_range<T>::max)>>
-      : std::integral_constant<decltype(enum_range<T>::max), enum_range<T>::max> {
+  struct RangeMax<T, std::void_t<decltype(EnumRange<T>::max)>>
+      : std::integral_constant<decltype(EnumRange<T>::max), EnumRange<T>::max> {
   };
 
   template<typename T>
-  struct supported: std::true_type {};
+  struct Supported: std::true_type {};
 
 
   template<bool, typename R>
-  struct enable_if_enum {
+  struct EnableIfEnum {
   };
   template<typename R>
-  struct enable_if_enum<true, R> {
+  struct EnableIfEnum<true, R> {
     using type = R;
-    static_assert(supported<R>::value,
+    static_assert(Supported<R>::value,
                   "rendu unsupported compiler.");
   };
 
   template<typename T, bool = std::is_enum_v<T>>
-  struct is_scoped_enum : std::false_type {
+  struct IsScopedEnum : std::false_type {
   };
   template<typename T>
-  struct is_scoped_enum<T, true> : std::bool_constant<!std::is_convertible_v<T, std::underlying_type_t<T>>> {
+  struct IsScopedEnum<T, true> : std::bool_constant<!std::is_convertible_v<T, std::underlying_type_t<T>>> {
   };
 
 
   template<typename T, bool = std::is_enum_v<T>>
-  struct is_unscoped_enum : std::false_type {
+  struct IsUnscopedEnum : std::false_type {
   };
   template<typename T>
-  struct is_unscoped_enum<T, true> : std::bool_constant<std::is_convertible_v<T, std::underlying_type_t<T>>> {
+  struct IsUnscopedEnum<T, true> : std::bool_constant<std::is_convertible_v<T, std::underlying_type_t<T>>> {
   };
 
 
   template<typename T, bool = std::is_enum_v<std::decay_t<T>>>
-  struct underlying_type {
+  struct UnderlyingType {
   };
   template<typename T>
-  struct underlying_type<T, true> : std::underlying_type<std::decay_t<T>> {
+  struct UnderlyingType<T, true> : std::underlying_type<std::decay_t<T>> {
   };
 
 
   template<typename Value, typename = void>
-  struct constexpr_hash_t;
+  struct ConstexprHashT;
   template<typename Value>
-  struct constexpr_hash_t<Value, std::enable_if_t<std::is_enum_v<Value>>> {
+  struct ConstexprHashT<Value, std::enable_if_t<std::is_enum_v<Value>>> {
     constexpr auto operator()(Value value) const noexcept {
-      using U = typename underlying_type<Value>::type;
+      using U = typename UnderlyingType<Value>::type;
       if constexpr (std::is_same_v<U, bool>) { // bool special case
         return static_cast<std::size_t>(value);
       } else {
         return static_cast<U>(value);
       }
     }
-    using secondary_hash = constexpr_hash_t;
+    using secondary_hash = ConstexprHashT;
   };
 
   template<typename Value>
-  struct constexpr_hash_t<Value, std::enable_if_t<std::is_same_v<Value, string_view>>> {
+  struct ConstexprHashT<Value, std::enable_if_t<std::is_same_v<Value, string_view>>> {
     static constexpr std::uint32_t crc_table[256]{
         0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L, 0x706af48fL, 0xe963a535L, 0x9e6495a3L,
         0x0edb8832L, 0x79dcb8a4L, 0xe0d5e91eL, 0x97d2d988L, 0x09b64c2bL, 0x7eb17cbdL, 0xe7b82d07L, 0x90bf1d91L,
@@ -150,6 +150,59 @@ namespace rendu {
       }
     };
   };
+
+
+  template <std::uint16_t N>
+  class StaticString {
+  public:
+    constexpr explicit StaticString(string_view str) noexcept : StaticString{str, std::make_integer_sequence<std::uint16_t, N>{}} {
+      assert(str.size() == N);
+    }
+
+    constexpr const char* data() const noexcept { return chars_; }
+
+    constexpr std::uint16_t size() const noexcept { return N; }
+
+    constexpr operator string_view() const noexcept { return {data(), size()}; }
+
+  private:
+    template <std::uint16_t... I>
+    constexpr StaticString(string_view str, std::integer_sequence<std::uint16_t, I...>) noexcept : chars_{str[I]..., '\0'} {}
+
+    char chars_[static_cast<std::size_t>(N) + 1];
+  };
+
+  template <>
+  class StaticString<0> {
+  public:
+    constexpr explicit StaticString() = default;
+
+    constexpr explicit StaticString(string_view) noexcept {}
+
+    constexpr const char* data() const noexcept { return nullptr; }
+
+    constexpr std::uint16_t size() const noexcept { return 0; }
+
+    constexpr operator string_view() const noexcept { return {}; }
+  };
+
+  enum class CaseCallT {
+    index, value
+  };
+
+  class CaseInsensitive {
+    static constexpr char to_lower(char c) noexcept {
+      return (c >= 'A' && c <= 'Z') ? static_cast<char>(c + ('a' - 'A')) : c;
+    }
+
+  public:
+    template<typename L, typename R>
+    constexpr auto operator()([[maybe_unused]] L lhs, [[maybe_unused]] R rhs) const noexcept -> std::enable_if_t<
+        std::is_same_v<std::decay_t<L>, char> && std::is_same_v<std::decay_t<R>, char>, bool> {
+      return to_lower(lhs) == to_lower(rhs);
+    }
+  };
+
 
 }//namespace rendu
 
