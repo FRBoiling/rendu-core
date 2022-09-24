@@ -6,9 +6,9 @@
 #include <spdlog/fmt/ostr.h> // support for user defined types
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/daily_file_sink.h>
+#include <spdlog/pattern_formatter.h>
 #include <cstdio>
 #include <chrono>
-#include <spdlog/pattern_formatter.h>
 
 class Log {
 public:
@@ -17,30 +17,23 @@ public:
     return m_instance;
   }
 
-  [[nodiscard]] auto get_logger() const {
+  auto get_logger() const {
     return this->logger_;
   }
 
-  void init(const std::string &flag, int mode, const std::string &path) {
-    init(flag, spdlog::level::trace, path);
-  }
-
-  void init(const std::string &flag, spdlog::level::level_enum level, const std::string &log_root_path) {
+  void init(std::string flag, spdlog::level::level_enum level) {
     this->init_console();
-    std::string log_file_path = flag + ".log";
-    this->init_file(log_root_path, log_file_path);
+    this->init_file();
     this->sinks_.push_back(this->console_sink_);
     this->sinks_.push_back(this->file_sink_);
     this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
     this->logger_->set_level(level);
-    //    this->console_sink_->set_pattern("%+");
-    this->logger_->flush_on(spdlog::level::trace); // 设置立刻刷新日志到 disk
-    spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
-    spdlog::register_logger(this->logger_); // 注册logger
+    //    this->logger_->set_pattern("%+");
   }
 
 private:
-  Log() = default;
+  Log() {
+  }
 
   ~Log() {
     spdlog::drop_all(); // 释放所有logger
@@ -52,12 +45,12 @@ private:
     this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
   }
 
-  void init_file(const std::string &log_root_path, const std::string &log_file_path) {
-
+  void init_file() {
+    std::string log_root_path = "logs/";
+    std::string log_file_path = "custom.log";
     int rotation_h = 5; // 分割时间
     int rotation_m = 59;
-    this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_root_path + log_file_path,
-                                                                           rotation_h,
+    this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_root_path + log_file_path, rotation_h,
                                                                            rotation_m);
     this->file_sink_->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%n][%l][thread:%t][%!,%s:%#] %v");
   }
@@ -70,8 +63,7 @@ private:
 
 }; // Log
 
-#define RD_INIT(flag, level, path) Log::instance().init(flag,level,path)
-
+#define RD_INIT(flag, level) Log::instance().init(flag,level)
 #define RD_LOGGER_TRACE(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::trace, __VA_ARGS__)
 #define RD_TRACE(...) RD_LOGGER_TRACE(Log::instance().get_logger(), __VA_ARGS__)
 

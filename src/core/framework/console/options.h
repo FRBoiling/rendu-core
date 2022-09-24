@@ -8,6 +8,10 @@
 #include "singleton.h"
 #include "program.h"
 
+#include "argparse/argument_template.h"
+#include "string_format.h"
+#include "smart_enum.h"
+
 enum class ProgramType;
 
 class Options : public Singleton<Options> {

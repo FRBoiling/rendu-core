@@ -6,24 +6,7 @@
 #include <iostream>
 #include <ostream>
 #include "smart_enum.h"
-#include "string_format.h"
-#include "argparse/argument_template.h"
 #include "argparse/argument_parser.h"
-
-template<>
-struct fmt::formatter<Options> : formatter<std::string> {
-  auto format(Options options, format_context &ctx) -> decltype(ctx.out()) {
-    return format_to(ctx.out(),
-                     "  [程序类型：{}]-[区：{}][服：{}][进程编号：{}]-[运行模式：{}]\n  [配置文件目录：{}]",
-                     EnumUtils::ToString(options.m_program_type),
-                     options.m_zone_id,
-                     options.m_server_id,
-                     options.m_process_num,
-                     options.m_run_mode,
-                     options.m_config_path
-    );
-  }
-};
 
 void ParserArguments(argparse::ArgumentParser parser) {
   sOptions.m_program_type = parser.get_enum<ProgramType>("-p");
@@ -33,12 +16,11 @@ void ParserArguments(argparse::ArgumentParser parser) {
   sOptions.m_config_path = parser.get<std::string>("-c");
   sOptions.m_run_mode = parser.get<int>("-m");
 
-  sOptions.m_program_name = rendu::StringFormat("{}_{}_{}_{}",
+  sOptions.m_program_name = rendu::StringFormat("{}-{}-{}-{}",
                                                 EnumUtils::ToString(sOptions.m_program_type),
                                                 sOptions.m_zone_id,
                                                 sOptions.m_server_id,
                                                 sOptions.m_process_num);
-  RD_LOG_INFO("options show:\n{}", sOptions);
 }
 
 int Options::Initialize(int argc, char **argv) {

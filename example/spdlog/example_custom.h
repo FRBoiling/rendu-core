@@ -12,7 +12,20 @@
 #include <spdlog/sinks/daily_file_sink.h>
 #include <cstdio>
 #include <chrono>
+#include "spdlog/pattern_formatter.h"
+#include "spdlog/stopwatch.h"
 
+class CustomFormatterFlag : public spdlog::custom_flag_formatter {
+public:
+  void format(const spdlog::details::log_msg &, const std::tm &, spdlog::memory_buf_t &dest) override {
+    std::string some_txt = "custom-flag";
+    dest.append(some_txt.data(), some_txt.data() + some_txt.size());
+  }
+
+  std::unique_ptr<custom_flag_formatter> clone() const override {
+    return spdlog::details::make_unique<CustomFormatterFlag>();
+  }
+};
 class CustomLog {
 
 public:
@@ -48,24 +61,46 @@ private:
   }
 
   void init_logger() {
+    auto file_formatter = std::make_unique<spdlog::pattern_formatter>();
+    file_formatter->add_flag<CustomFormatterFlag>('*').set_pattern("[%n] [%*] [%^%l%$] %v");
+    std::unique_ptr<spdlog::pattern_formatter> console_formatter = std::make_unique<spdlog::pattern_formatter>();
+    console_formatter->add_flag<CustomFormatterFlag>('*').set_pattern("[%^%l%$] %v");
+
+    this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    this->console_sink_->set_level(spdlog::level::trace);
+    this->console_sink_->set_formatter(std::move(console_formatter));
 
     this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
         this->log_root_path + this->log_file_path, this->rotation_h, this->rotation_m);
-    this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    this->file_sink_ ->set_level(spdlog::level::trace);
 
-    this->file_sink_->set_level(spdlog::level::trace);
-    this->console_sink_->set_level(spdlog::level::trace);
-
-    this->sinks_.push_back(this->file_sink_); // file
-    this->sinks_.push_back(this->console_sink_); // console
+    this->sinks_.push_back(this->console_sink_);
+    this->sinks_.push_back(this->file_sink_);
 
     this->logger_ = std::make_shared<spdlog::logger>("log_demo", begin(this->sinks_), end(this->sinks_));
-    this->logger_->set_pattern("[%l] [%Y-%m-%d %H:%M:%S,%e] [Process:%P] - %v");
     this->logger_->set_level(spdlog::level::trace);
-    //    this->logger_->flush_on(spdlog::level::trace); // 设置立刻刷新日志到 disk
+//    this->logger_->set_pattern("[%Y-%m-%d %H:%M:%S,%e][%^%l%$][Process:%P] - %v");
+
+//    this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+//    this->console_sink_->set_level(spdlog::level::debug);
+//    this->console_sink_->set_pattern("[multi_sink_example] [%^%l%$] %v");
+//
+//    this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
+//        this->log_root_path + this->log_file_path, this->rotation_h, this->rotation_m);
+//    this->file_sink_->set_level(spdlog::level::trace);
+//
+//    this->sinks_.push_back(this->console_sink_);
+//    this->sinks_.push_back(this->file_sink_);
+//
+////    spdlog::logger logger("multi_sink", {this->console_sink_, this->file_sink_});
+////    logger.set_level(spdlog::level::debug);
+//    this->logger_ = std::make_shared<spdlog::logger>("log_demo", begin(this->sinks_), end(this->sinks_));
+//    this->logger_->set_pattern("[%l] [%Y-%m-%d %H:%M:%S,%e] [Process:%P] - %v");
+//    this->logger_->set_level(spdlog::level::trace);
+//    this->logger_->flush_on(spdlog::level::trace); // 设置立刻刷新日志到 disk
 //    spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
 //    spdlog::register_logger(this->logger_); // 注册logger
-    spdlog::set_default_logger(this->logger_);
+////    spdlog::set_default_logger(this->logger_);
 
   }
 
@@ -81,20 +116,23 @@ private:
 
 }; // CustomLog
 
-
 void custom_example() {
-#
-  CustomLog::instance();
-  int i = 0;
-  while (true){
-    i++;
-    SPDLOG_TRACE("message #################{}",i);
-    SPDLOG_DEBUG("message #################{}",i);
-    SPDLOG_WARN("message #################{}",i);
-    SPDLOG_INFO("message #################{}",i);
-    SPDLOG_ERROR("message #################{}",i);
+  spdlog::stopwatch sw;
+//  std::this_thread::sleep_for(std::chrono::milliseconds(123));
+  for (int i = 0; i < 1000; ++i) {
+    CustomLog::instance().get_logger()->trace("this should appear in both console and file");
+    CustomLog::instance().get_logger()->debug("this should appear in both console and file");
+    CustomLog::instance().get_logger()->info("this should appear in both console and file");
+    CustomLog::instance().get_logger()->warn("this should appear in both console and file");
+    CustomLog::instance().get_logger()->error("this should appear in both console and file");
+    CustomLog::instance().get_logger()->critical("this should appear in both console and file");
   }
+  spdlog::info("---------------------{}----------------------", sw);
+
+//  sLog->warn("this should appear in both console and file");
+//  sLog->info("this message should not appear in the console, only in the file");
 }
+
 
 
 #endif //RENDU_EXAMPLE_CUSTOM_H_

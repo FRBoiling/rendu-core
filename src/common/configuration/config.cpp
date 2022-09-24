@@ -189,24 +189,24 @@
 //    if (envVar) {
 //      Optional<T> castedVar = rendu::StringTo<T>(*envVar);
 //      if (!castedVar) {
-//        RD_LOG_ERROR("servers.loading",
+//        RD_ERROR("servers.loading",
 //                     "Bad value defined for name %s in environment variables, going to use default instead",
 //                     name.c_str());
 //        return def;
 //      }
 //
 //      if (!quiet)
-//        RD_LOG_WARN("servers.loading", "Missing name %s in config file %s, recovered with environment '%s' value.",
+//        RD_WARN("servers.loading", "Missing name %s in config file %s, recovered with environment '%s' value.",
 //                    name.c_str(), _filename.c_str(), envVar->c_str());
 //
 //      return *castedVar;
 //    } else if (!quiet) {
-//      RD_LOG_WARN("servers.loading", "Missing name %s in config file %s, add \"%s = %s\" to this file",
+//      RD_WARN("servers.loading", "Missing name %s in config file %s, add \"%s = %s\" to this file",
 //                  name.c_str(), _filename.c_str(), name.c_str(), std::to_string(def).c_str());
 //    }
 //  }
 //  catch (bpt::ptree_bad_data const &) {
-//    RD_LOG_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use %s instead",
+//    RD_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use %s instead",
 //                 name.c_str(), _filename.c_str(), std::to_string(def).c_str());
 //  }
 //
@@ -222,17 +222,17 @@
 //    Optional<std::string> envVar = EnvVarForIniKey(name);
 //    if (envVar) {
 //      if (!quiet)
-//        RD_LOG_WARN("servers.loading", "Missing name %s in config file %s, recovered with environment '%s' value.",
+//        RD_WARN("servers.loading", "Missing name %s in config file %s, recovered with environment '%s' value.",
 //                    name.c_str(), _filename.c_str(), envVar->c_str());
 //
 //      return *envVar;
 //    } else if (!quiet) {
-//      RD_LOG_WARN("servers.loading", "Missing name %s in config file %s, add \"%s = %s\" to this file",
+//      RD_WARN("servers.loading", "Missing name %s in config file %s, add \"%s = %s\" to this file",
 //                  name.c_str(), _filename.c_str(), name.c_str(), def.c_str());
 //    }
 //  }
 //  catch (bpt::ptree_bad_data const &) {
-//    RD_LOG_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use %s instead",
+//    RD_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use %s instead",
 //                 name.c_str(), _filename.c_str(), def.c_str());
 //  }
 //
@@ -252,7 +252,7 @@
 //  if (boolVal)
 //    return *boolVal;
 //  else {
-//    RD_LOG_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use '%s' instead",
+//    RD_ERROR("servers.loading", "Bad value defined for name %s in config file %s, going to use '%s' instead",
 //                 name.c_str(), _filename.c_str(), def ? "true" : "false");
 //    return def;
 //  }

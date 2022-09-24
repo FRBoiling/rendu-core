@@ -7,7 +7,6 @@
 #include "errors.h"
 #include "git_revision.h"
 #include "log.h"
-#include "log_message.h"
 #include "string_convert.h"
 #include "util.h"
 #include "smart_enum.h"
