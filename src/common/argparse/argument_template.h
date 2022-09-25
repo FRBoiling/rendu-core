@@ -324,7 +324,7 @@ namespace rendu {
 
   } // namespace details
 
-} // rendu
+} // namespace rendu
 
 
 #endif //RENDU_ARGUMENT_TEMPLATE_H_

@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
   try {
-    args_example(argc,argv);
+    args_example1(argc,argv);
     log_example();
     enum_example();
     RD_INFO("hello world");

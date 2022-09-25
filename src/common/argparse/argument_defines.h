@@ -5,7 +5,7 @@
 #ifndef RENDU_ARGUMENT_DEFINES_H_
 #define RENDU_ARGUMENT_DEFINES_H_
 
-#include "argparse/argument_template.h"
+#include "argument_template.h"
 
 namespace rendu {
   enum class default_arguments : unsigned int {
