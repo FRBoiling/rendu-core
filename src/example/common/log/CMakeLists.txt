@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(EXEC_NAME example_defines)
+set(EXEC_NAME example_log)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
