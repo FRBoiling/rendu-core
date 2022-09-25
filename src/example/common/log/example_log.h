@@ -3,12 +3,17 @@
 */
 
 #pragma once
+
+#include "example_log.h"
+
 #include "log.h"
-#include "example_enum.h"
+#include "enum.h"
+using namespace rendu;
 
 void example_log(){
   RD_INIT("custom",spdlog::level::trace,"logs/");
-  RD_TRACE("------{1}-{0}-{0}------", enum_name(ClassEnum::One),enum_name(ClassEnum::Two),enum_name(ClassEnum::Three));
+  RD_TRACE("------{1}-{0}-{0}------", enum_name(spdlog::level::trace),enum_name(spdlog::level::debug),enum_name
+  (spdlog::level::info));
 
   RD_TRACE("---------1---------");
   RD_DEBUG("---------2---------");

@@ -4,8 +4,7 @@
 
 #pragma once
 #include <iostream>
-#include "enum/enum_utils.h"
-
+#include "enum/enum.h"
 using namespace rendu;
 
 enum NormalEnum{

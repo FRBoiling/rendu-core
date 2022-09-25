@@ -48,6 +48,7 @@ target_link_libraries(${target-name}
     rendu-interface
     PUBLIC
     spdlog
+    sfmt
     #TODO:添加reps库
     )
 
