@@ -64,6 +64,7 @@ private:
   std::shared_ptr<spdlog::sinks::daily_file_sink_mt> file_sink_; // file
 };
 
-#define TLOG(__VA_ARGS__) LogTrace::instance().get_logger()->trace(__VA_ARGS__)
+#define RD_TLOG(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::trace, __VA_ARGS__)
+#define TLOG(...) RD_TLOG(Log::instance().get_logger(), __VA_ARGS__)
 
 #endif //RENDU_LOG_TRACE_H_

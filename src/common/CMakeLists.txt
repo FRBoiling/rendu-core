@@ -47,33 +47,22 @@ target_link_libraries(${target-name}
     PRIVATE
     rendu-interface
     PUBLIC
-    defines
-    cmdline
     spdlog
-    utf8cpp
     sfmt
-    readline
     #TODO:添加reps库
     )
 
 add_dependencies(${target-name} revision_data.h)
 
+target_compile_definitions(${target-name}
+    PUBLIC
+    -DSPDLOG_COMPILED_LIB
+    -DRENDU_
+    )
 set_target_properties(${target-name}
     PROPERTIES
     FOLDER
     ${project-name})
-
-if (BUILD_SHARED_LIBS)
-  if (UNIX)
-    install(TARGETS ${target-name}
-        LIBRARY
-        DESTINATION lib)
-  elseif (WIN32)
-    install(TARGETS ${target-name}
-        RUNTIME
-        DESTINATION "${CMAKE_INSTALL_PREFIX}")
-  endif ()
-endif ()
 
 # Generate precompiled header
 if (USE_COREPCH)
