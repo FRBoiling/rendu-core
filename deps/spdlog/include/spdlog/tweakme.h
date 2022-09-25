@@ -3,7 +3,6 @@
 
 #pragma once
 
-#define SPDLOG_COMPILED_LIB
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Edit this file to squeeze more performance, and to customize supported

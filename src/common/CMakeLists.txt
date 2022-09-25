@@ -47,6 +47,7 @@ target_link_libraries(${target-name}
     PRIVATE
     rendu-interface
     PUBLIC
+    spdlog
     #TODO:添加reps库
     )
 

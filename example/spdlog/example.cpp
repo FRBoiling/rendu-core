@@ -11,7 +11,7 @@ int main(int, char *[]) {
 //  custom_example();
 //  spdlog::set_pattern("%+");
   RD_INIT("custom",spdlog::level::trace);
-  TLOG("---------tlog---1------");
+  TLOG("---------{}---------",spdlog::level::debug);
   RD_TRACE("---------1---------");
   RD_DEBUG("---------2---------");
   RD_WARN("---------3---------");
