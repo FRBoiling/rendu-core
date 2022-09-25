@@ -12,6 +12,8 @@
 #include "rapidjson/writer.h"
 #include <stack>
 
+using namespace rendu;
+
 class Serializer {
 public:
   Serializer() : _writer(_buffer) {}

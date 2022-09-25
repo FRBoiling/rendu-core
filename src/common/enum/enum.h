@@ -2,8 +2,8 @@
 * Created by boil on 2022/9/17.
 */
 
-#ifndef RENDU_ENUM_H__
-#define RENDU_ENUM_H__
+#ifndef RENDU_ENUM_H_
+#define RENDU_ENUM_H_
 
 #include "enum_detail.h"
 
@@ -431,4 +431,4 @@ namespace rendu {
 #  pragma warning(pop)
 #endif
 
-#endif // RENDU_ENUM_H__
+#endif // RENDU_ENUM_H_

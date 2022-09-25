@@ -8,3 +8,4 @@
 #include "git_revision.h"
 #include "log.h"
 #include "utils.h"
+#include "run_mode.h"

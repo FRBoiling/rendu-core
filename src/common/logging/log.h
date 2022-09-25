@@ -1,6 +1,8 @@
 /*
 * Created by boil on 2022/9/9.
 */
+#ifndef RENDU_LOG_H_
+#define RENDU_LOG_H_
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h> // support for user defined types
@@ -9,66 +11,79 @@
 #include <cstdio>
 #include <chrono>
 #include <spdlog/pattern_formatter.h>
-#include "spdlog/stopwatch.h"
+#include <spdlog/stopwatch.h>
+#include "run_mode.h"
 
-class Log {
-public:
-  static Log &instance() {
-    static Log m_instance;
-    return m_instance;
-  }
+namespace rendu {
 
-  [[nodiscard]] auto get_logger() const {
-    return this->logger_;
-  }
+  class Log {
+  public:
+    static Log &instance() {
+      static Log m_instance;
+      return m_instance;
+    }
 
-  void init(const std::string &flag, int mode, const std::string &path) {
-    init(flag, spdlog::level::trace, path);
-  }
+    [[nodiscard]] auto get_logger() const {
+      return this->logger_;
+    }
 
-  void init(const std::string &flag, spdlog::level::level_enum level, const std::string &log_root_path) {
-    this->init_console();
-    std::string log_file_path = flag + ".log";
-    this->init_file(log_root_path, log_file_path);
-    this->sinks_.push_back(this->console_sink_);
-    this->sinks_.push_back(this->file_sink_);
-    this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
-    this->logger_->set_level(level);
-    //    this->console_sink_->set_pattern("%+");
-    this->logger_->flush_on(spdlog::level::trace); // 设置立刻刷新日志到 disk
-    spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
-    spdlog::register_logger(this->logger_); // 注册logger
-  }
+    void init(const std::string &flag,const RunMode mode, const std::string &path) {
+      spdlog::level::level_enum log_level = spdlog::level::trace;
+      switch (mode) {
+        case RunMode::Develop:
+          log_level = spdlog::level::trace;
+          break;
+        case RunMode::Online:
+        case RunMode::Pressure:
+          log_level = spdlog::level::info;
+          break;
+      }
+      init(flag, log_level, path);
+    }
 
-private:
-  Log() = default;
+    void init(const std::string &flag, spdlog::level::level_enum level, const std::string &log_root_path) {
+      this->init_console();
+      std::string log_file_path = flag + ".log";
+      this->init_file(log_root_path, log_file_path);
+      this->sinks_.push_back(this->console_sink_);
+      this->sinks_.push_back(this->file_sink_);
+      this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
+      this->logger_->set_level(level);
+      //    this->console_sink_->set_pattern("%+");
+      this->logger_->flush_on(level); // 设置立刻刷新日志到 disk
+      spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
+      spdlog::register_logger(this->logger_); // 注册logger
+    }
 
-  ~Log() {
-  }
+  private:
+    Log() = default;
 
-private:
-  void init_console() {
-    this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
-  }
+    ~Log() {
+    }
 
-  void init_file(const std::string &log_root_path, const std::string &log_file_path) {
+  private:
+    void init_console() {
+      this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+      this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
+    }
 
-    int rotation_h = 5; // 分割时间
-    int rotation_m = 59;
-    this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_root_path + log_file_path,
-                                                                           rotation_h,
-                                                                           rotation_m);
-    this->file_sink_->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%n][%l][thread:%t][%!,%s:%#] %v");
-  }
+    void init_file(const std::string &log_root_path, const std::string &log_file_path) {
 
-private:
-  std::shared_ptr<spdlog::logger> logger_;
-  std::vector<spdlog::sink_ptr> sinks_;
-  std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_; // console
-  std::shared_ptr<spdlog::sinks::daily_file_sink_mt> file_sink_; // file
+      int rotation_h = 5; // 分割时间
+      int rotation_m = 59;
+      this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_root_path + log_file_path,
+                                                                             rotation_h,
+                                                                             rotation_m);
+      this->file_sink_->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%n][%l][thread:%t][%!,%s:%#] %v");
+    }
 
-}; // Log
+  private:
+    std::shared_ptr<spdlog::logger> logger_;
+    std::vector<spdlog::sink_ptr> sinks_;
+    std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_; // console
+    std::shared_ptr<spdlog::sinks::daily_file_sink_mt> file_sink_; // file
+
+  }; // Log
 
 #define RD_INIT(flag, level, path) Log::instance().init(flag,level,path)
 
@@ -92,3 +107,6 @@ private:
 #define RD_LOGGER_CRITICAL(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::critical, __VA_ARGS__)
 #define RD_CRITICAL(...) RD_LOGGER_CRITICAL(Log::instance().get_logger(), __VA_ARGS__)
 
+}//namespace rendu
+
+#endif // RENDU_LOG_H_

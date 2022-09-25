@@ -5,7 +5,7 @@
 #include "options.h"
 #include <iostream>
 #include <ostream>
-#include "enum_utils.h"
+#include "enum.h"
 
 using namespace rendu;
 
@@ -15,7 +15,7 @@ void ParserArguments(ArgumentParser parser) {
   sOptions.m_server_id = parser.get<int>("-s");
   sOptions.m_process_num = parser.get<int>("-n");
   sOptions.m_config_path = parser.get<std::string>("-c");
-  sOptions.m_run_mode = parser.get<int>("-m");
+  sOptions.m_run_mode = parser.get_enum<RunMode>("-m");
 
   sOptions.m_program_name = rendu::StringFormat("{}-{}-{}-{}",
                                                 enum_name(sOptions.m_program_type),
@@ -26,7 +26,7 @@ void ParserArguments(ArgumentParser parser) {
 
 int Options::Initialize(int argc, char **argv) {
 
-  rendu::ArgumentParser parser("allowed options");
+  ArgumentParser parser("allowed options");
   parser.add_argument("--program", "-p").help("程序类型").required()
       .default_value(ProgramType::All).scan<'i', int>();
   parser.add_argument("--zone", "-z").help("区").required()
@@ -38,7 +38,7 @@ int Options::Initialize(int argc, char **argv) {
   parser.add_argument("--config", "-c").help("配置文件目录").required()
       .default_value(std::string("../config"));
   parser.add_argument("--mode", "-m").help("运行模式, 0正式 1开发 2压测").required()
-      .scan<'i', int>().default_value(0).scan<'i', int>();
+      .default_value(RunMode::Online).scan<'i', int>();
 
   try {
     parser.parse_args(argc, argv);

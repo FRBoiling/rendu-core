@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "program.h"
 #include "define.h"
+using namespace rendu;
 
 #if RENDU_PLATFORM != RENDU_PLATFORM_WINDOWS
 #include <readline/readline.h>
