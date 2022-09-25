@@ -32,15 +32,32 @@ void enum_example(){
 
   std::cout<< tt << std::endl;
 
-  auto three = EnumUtils::FromIndex<ClassEnum>(2);
-  std::cout << EnumUtils::ToString(three) << std::endl;
-  auto index = EnumUtils::ToIndex(ClassEnum::One);
+
+
+  auto one = enum_value<ClassEnum>(0);
+  auto two = enum_cast<ClassEnum>(44);
+  if (!two){
+    two = enum_cast<ClassEnum>(33).value();
+    std::cout << two << std::endl;
+  }
+
+  auto index = enum_index(ClassEnum::One).value();
+
+  enum_for_each<ClassEnum>([](auto val) {
+    constexpr underlying_type_t<NormalEnum> v = enum_integer(val());
+    std::cout << v<< std::endl;
+  });
+
+  std::cout << enum_name(one) << std::endl;
+  std::cout << enum_flags_name(one) << std::endl;
 
   int n_one = (int)ClassEnum::One;
-  ClassEnum e_one = (ClassEnum)11;
+  auto e_one = (ClassEnum)11;
 
   int n_n_one = One;
-  NormalEnum e_n_one = (NormalEnum)1;
+  auto e_n_one = (NormalEnum)1;
+
 //  auto one = EnumUtils::FromIndex<NormalEnum>(Three);
+
 
 }

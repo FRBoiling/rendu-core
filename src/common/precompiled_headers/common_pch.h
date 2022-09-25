@@ -7,4 +7,4 @@
 #include "errors.h"
 #include "git_revision.h"
 #include "log.h"
-#include "util.h"
+#include "utils.h"

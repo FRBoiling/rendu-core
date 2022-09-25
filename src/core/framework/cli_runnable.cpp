@@ -3,7 +3,7 @@
 ***********************************/
 
 #include "cli_runnable.h"
-#include "util.h"
+#include "utils.h"
 #include "program.h"
 
 #if RENDU_PLATFORM != RENDU_PLATFORM_WINDOWS

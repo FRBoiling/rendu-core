@@ -5,7 +5,7 @@
 #include "example_string.h"
 #include "example_enum.h"
 
-int main(int, char *[]) {
+int main(int argc, char **argv) {
   try {
     log_example();
     enum_example();
