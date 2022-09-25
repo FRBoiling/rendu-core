@@ -16,7 +16,7 @@ add_executable(${EXEC_NAME} ${private_sources})
 
 target_link_libraries(${EXEC_NAME}
     PRIVATE
-    rendu-interface
+    rendu-core-interface
     PUBLIC
     common
     #TODO:BOIL 添加依赖项

@@ -70,7 +70,7 @@
 //    }
 //  };
 //
-//#ifdef TRINITY_NEED_CHARCONV_WORKAROUND
+//#ifdef RENDU_NEED_CHARCONV_WORKAROUND
 //  /*
 //        If this is defined, std::from_chars will cause linkage errors for 64-bit types.
 //        (This is a bug in clang-7.)
@@ -155,7 +155,7 @@
 //    }
 //  };
 //
-//#if TRINITY_COMPILER == TRINITY_COMPILER_MICROSOFT
+//#if RENDU_COMPILER == RENDU_COMPILER_MICROSOFT
 //  template <typename T>
 //  struct For<T, std::enable_if_t<std::is_floating_point_v<T>>>
 //  {

@@ -543,7 +543,7 @@ namespace rendu {
 
     template<typename E>
     auto get_enum() const -> E {
-      if (is_scoped_enum<E>()) {
+      if (is_scoped_enum_v<E>) {
         if (!m_values.empty()) {
           auto value = *std::any_cast<int>(&m_values.front());
           auto enum_object = enum_cast<E>(value);

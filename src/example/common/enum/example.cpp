@@ -5,6 +5,7 @@
 
 int main(int argc, char **argv) {
   try {
+    RD_INIT("test",RunMode::Develop,"logs/");
     example_enum();
     RD_INFO("hello world");
   }

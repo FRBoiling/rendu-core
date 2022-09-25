@@ -9,3 +9,4 @@
 #include "log.h"
 #include "utils.h"
 #include "run_mode.h"
+#include "string_format.h"

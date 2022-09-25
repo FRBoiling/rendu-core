@@ -9,13 +9,8 @@ CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
     private_sources
     # Exclude
-    ${CMAKE_CURRENT_SOURCE_DIR}/debugging
     ${CMAKE_CURRENT_SOURCE_DIR}/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers)
-
-list(APPEND private_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/debugging/errors.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/debugging/errors.h)
 
 if (USE_COREPCH)
   set(PRIVATE_PCH_HEADER precompiled_headers/${target-name}_pch.h)
@@ -45,7 +40,7 @@ target_include_directories(${target-name}
 
 target_link_libraries(${target-name}
     PRIVATE
-    rendu-interface
+    rendu-core-interface
     PUBLIC
     spdlog
     sfmt

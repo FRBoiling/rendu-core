@@ -6,6 +6,7 @@
 #define RENDU_ARGUMENT_DEFINES_H_
 
 #include "argument_template.h"
+#include "enum.h"
 
 namespace rendu {
   enum class default_arguments : unsigned int {

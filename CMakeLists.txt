@@ -72,17 +72,20 @@ AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests
 )
 
-# 测试模块构建
-# **********************************
-if (BUILD_TESTING)
-  include(CTest)
-  list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/contrib")
+include(CTest)
+if(BUILD_TESTING)
+  list(APPEND CMAKE_MODULE_PATH
+      "${Catch2_SOURCE_DIR}/contrib")
   include(Catch)
+
   add_subdirectory(tests)
-  # Catch cmakefile messes with our settings we explicitly leave up to the user restore user preference
+
+  # Catch cmakefile messes with our settings we explicitly leave up to the user
+  # restore user preference
   if (NOT WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
     set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
-  endif ()
-endif ()
+  endif()
+endif()

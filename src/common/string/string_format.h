@@ -5,19 +5,21 @@
 #ifndef RENDU_STRING_FORMAT_H_
 #define RENDU_STRING_FORMAT_H_
 
+#include "spdlog/fmt/bundled/printf.h"
+
 namespace rendu
 {
   /// Default rd string format function.
   template<typename Format, typename... Args>
-  inline std::string StringFormat(Format&& fmt, Args&&... args)
+  inline std::string StringFormat(Format&& fmt_str, Args&&... args)
   {
     try
     {
-      return fmt::format(std::forward<Format>(fmt), std::forward<Args>(args)...);
+      return fmt::sprintf(std::forward<Format>(fmt_str), std::forward<Args>(args)...);
     }
     catch (const fmt::format_error& formatError)
     {
-      std::string error = "An error occurred formatting string \"" + std::string(fmt) + "\" : " + std::string(formatError.what());
+      std::string error = "An error occurred formatting string \"" + std::string(fmt_str) + "\" : " + std::string(formatError.what());
       return error;
     }
   }

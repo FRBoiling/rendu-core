@@ -99,7 +99,7 @@ int test_normal() {
 
   char *szSex = "\xe7\x94\xb7\x00";
   std::basic_string<wchar_t> sex;
-  utf8::utf8to16(szSex, szSex + strlen(szSex), back_inserter(sex));
+//  utf8::utf8to16(szSex, szSex + strlen(szSex), back_inserter(sex));
 
   if (sex != L"男") {
     std::cout << "unicode char utf16 error" << std::endl;

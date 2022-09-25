@@ -7,6 +7,7 @@
 #include "enum/enum_utils.h"
 #include "log.h"
 using namespace rendu;
+using namespace rendu::iostream_operators;
 
 enum NormalEnum{
   One = 1,
@@ -31,8 +32,6 @@ void example_enum(){
   int tt = Three + NormalEnum::Three;
 
   std::cout<< tt << std::endl;
-
-
 
   auto one = enum_value<ClassEnum>(0);
   auto two = enum_cast<ClassEnum>(44);

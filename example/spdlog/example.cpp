@@ -7,7 +7,9 @@
 #include "log_trace.h"
 
 int main(int, char *[]) {
-//  spdlog_example();
+
+
+  //  spdlog_example();
 //  custom_example();
 //  spdlog::set_pattern("%+");
   RD_INIT("custom",spdlog::level::trace);
