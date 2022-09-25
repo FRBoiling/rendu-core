@@ -44,7 +44,6 @@ namespace rendu {
       init_file(flag, path);
       this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
       this->logger_->set_level(level);
-      //    this->console_sink_->set_pattern("%+");
       this->logger_->flush_on(level); // 设置立刻刷新日志到 disk
       spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
       spdlog::register_logger(this->logger_); // 注册logger
@@ -58,6 +57,7 @@ namespace rendu {
     void init_console(const std::string &flag) {
       this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
       this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
+      //    this->console_sink_->set_pattern("%+");
       this->sinks_.push_back(this->console_sink_);
     }
 
