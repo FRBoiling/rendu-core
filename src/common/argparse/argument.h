@@ -9,7 +9,6 @@
 #include "argument_defines.h"
 
 namespace rendu {
-
   class ArgumentParser;
 
   class Argument {

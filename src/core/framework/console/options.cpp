@@ -6,9 +6,10 @@
 #include <iostream>
 #include <ostream>
 #include "enum_utils.h"
-#include "argparse/argument_parser.h"
 
-void ParserArguments(rendu::ArgumentParser parser) {
+using namespace rendu;
+
+void ParserArguments(ArgumentParser parser) {
   sOptions.m_program_type = parser.get_enum<ProgramType>("-p");
   sOptions.m_zone_id = parser.get<int>("-z");
   sOptions.m_server_id = parser.get<int>("-s");
@@ -17,7 +18,7 @@ void ParserArguments(rendu::ArgumentParser parser) {
   sOptions.m_run_mode = parser.get<int>("-m");
 
   sOptions.m_program_name = rendu::StringFormat("{}-{}-{}-{}",
-                                                EnumUtils::ToString(sOptions.m_program_type),
+                                                enum_name(sOptions.m_program_type),
                                                 sOptions.m_zone_id,
                                                 sOptions.m_server_id,
                                                 sOptions.m_process_num);

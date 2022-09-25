@@ -20,7 +20,6 @@ target_link_libraries(${EXEC_NAME}
     rendu-interface
     PUBLIC
     spdlog
-    defines
     protobuf
     #TODO:BOIL 添加依赖项
     )

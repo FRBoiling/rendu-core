@@ -416,6 +416,11 @@ namespace rendu {
     }
   }
 
+  template<typename T>
+  using is_scoped_enum = detail::is_scoped_enum<T>;
+  template<typename T>
+  using is_unscoped_enum = detail::is_unscoped_enum<T>;
+
 } // namespace rendu
 
 #if defined(__clang__)

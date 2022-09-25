@@ -4,13 +4,15 @@
 #include "program.h"
 #include "banner.h"
 
+using namespace rendu;
+
 void Program::Initialize() {
   RD_INIT("custom",sOptions.m_run_mode,"logs/");
-  rendu::banner::Show();
+  banner::Show();
   RD_INFO("initialize...");
 
   RD_INFO("initialize success!");
-  RD_INFO("ProgramState is {}", EnumUtils::ToString(_state));
+  RD_INFO("ProgramState is {}", enum_name(_state));
   _state = ProgramState::INITIALIZED;
 }
 

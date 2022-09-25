@@ -5,6 +5,7 @@
 #include "cli_runnable.h"
 #include "utils.h"
 #include "program.h"
+#include "define.h"
 
 #if RENDU_PLATFORM != RENDU_PLATFORM_WINDOWS
 #include <readline/readline.h>
@@ -137,14 +138,14 @@ void CliThread()
 
         if (!command.empty())
         {
-            Optional<std::size_t> nextLineIndex = RemoveCRLF(command);
-            if (nextLineIndex && *nextLineIndex == 0)
-            {
-#if RENDU_PLATFORM == RENDU_PLATFORM_WINDOWS
-                PrintCliPrefix();
-#endif
-                continue;
-            }
+//            Optional<std::size_t> nextLineIndex = RemoveCRLF(command);
+//            if (nextLineIndex && *nextLineIndex == 0)
+//            {
+//#if RENDU_PLATFORM == RENDU_PLATFORM_WINDOWS
+//                PrintCliPrefix();
+//#endif
+//                continue;
+//            }
 
             fflush(stdout);
 //            sWorld->QueueCliCommand(new CliCommandHolder(nullptr, command.c_str(), &utf8print, &commandFinished));

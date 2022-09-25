@@ -42,8 +42,6 @@
 #include <utility>
 #include <variant>
 
-#include "enum/enum.h"
-
 #define RENDU_LITTLEENDIAN 0
 #define RENDU_BIGENDIAN    1
 

@@ -25,8 +25,7 @@ void example_random() {
 //    spdlog::info("--->{}", a);
 //  }
 
-  spdlog::stopwatch sw;
-
+  RD_STOPWATCH sw;
   spdlog::info("-------0------");
   for (int i = 0; i < 100; ++i) {
     auto a = rand32();

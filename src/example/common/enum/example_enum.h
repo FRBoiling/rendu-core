@@ -4,7 +4,8 @@
 
 #pragma once
 #include <iostream>
-#include "enum/enum.h"
+#include "enum/enum_utils.h"
+#include "log.h"
 using namespace rendu;
 
 enum NormalEnum{
@@ -22,7 +23,7 @@ enum class ClassEnum{
 
 void example_enum(){
   std::cout<< One << std::endl;
-  std::cout<< ClassEnum::One << std::endl;
+  std::cout<< enum_name(ClassEnum::One) << std::endl;
 
   std::cout << EnumUtils::ToString(Two) << std::endl;
   std::cout << EnumUtils::ToString(ClassEnum::Two) << std::endl;

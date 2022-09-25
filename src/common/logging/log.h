@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <chrono>
 #include <spdlog/pattern_formatter.h>
+#include "spdlog/stopwatch.h"
 
 class Log {
 public:
@@ -70,6 +71,8 @@ private:
 }; // Log
 
 #define RD_INIT(flag, level, path) Log::instance().init(flag,level,path)
+
+#define RD_STOPWATCH spdlog::stopwatch
 
 #define RD_LOGGER_TRACE(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::trace, __VA_ARGS__)
 #define RD_TRACE(...) RD_LOGGER_TRACE(Log::instance().get_logger(), __VA_ARGS__)

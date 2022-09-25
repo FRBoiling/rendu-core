@@ -9,7 +9,7 @@
 #include <cassert>
 
 // checks whether the content of a file is valid UTF-8 encoded text without reading the content into the memory
-bool valid_utf8_file(const char *file_name) {
+bool valid_utf8_file(const std::string file_name) {
   std::ifstream ifs(file_name);
   if (!ifs)
     return false; // even better, throw here
@@ -28,7 +28,7 @@ void fix_utf8_string(std::string &str) {
 }
 
 int test_utf8_file() {
-  char *test_file_path = "test_utf8.txt";
+  std::string test_file_path( "test_utf8.txt");
   // Open the test file(contains UTF-8 encoded text)
   std::ifstream fs8(test_file_path);
   if (!fs8.is_open()) {
@@ -70,7 +70,7 @@ int test_utf8_file() {
   }
 }
 
-int test_normal(){
+int test_normal() {
   std::string str = "ABCD";
   std::vector<unsigned short> utf16result;
   auto aa = utf8::utf8to16(str.begin(), str.end(), std::back_inserter(utf16result));
@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
   auto end_it = utf8::find_invalid(str.begin(), str.end());
   //如果指针不是字符串的结尾,那么说明这个字符串的编码不全是utf8格式
   if (end_it != str.end()) {
-    std:: cout << "invalid utf-8 encoding detected at line." << std::endl;
+    std::cout << "invalid utf-8 encoding detected at line." << std::endl;
     std::cout << "this part is fine" << std::string(str.begin(), end_it);
   }
   //utf8字符串的长度
