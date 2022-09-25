@@ -20,6 +20,7 @@ target_link_libraries(${EXEC_NAME}
     PUBLIC
     spdlog
     defines
+    cmdline
     #TODO:BOIL 添加依赖项
     )
 
