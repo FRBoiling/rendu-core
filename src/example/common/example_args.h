@@ -5,7 +5,7 @@
 #include "argument_parser.h"
 using namespace rendu;
 //-abc 4.14 5.718
-void args_example1(int argc, char **argv) {
+void example_args(int argc, char **argv) {
   ArgumentParser program("test");
 
   program.add_argument("-a")
@@ -41,7 +41,7 @@ void args_example1(int argc, char **argv) {
 }
 
 //例如： 1 2 3 -abc 4.14 5.718
-void args_example(int argc, char **argv){
+void example_args(int argc, char **argv){
   ArgumentParser program("test");
 
   program.add_argument("numbers")

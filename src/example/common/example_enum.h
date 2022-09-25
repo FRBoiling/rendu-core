@@ -21,7 +21,7 @@ enum class ClassEnum{
 };
 
 
-void enum_example(){
+void example_enum(){
   std::cout<< One << std::endl;
   std::cout<< ClassEnum::One << std::endl;
 

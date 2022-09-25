@@ -6,7 +6,7 @@
 #include "log.h"
 #include "example_enum.h"
 
-void log_example(){
+void example_log(){
   RD_INIT("custom",spdlog::level::trace,"logs/");
   RD_TRACE("------{1}-{0}-{0}------", enum_name(ClassEnum::One),enum_name(ClassEnum::Two),enum_name(ClassEnum::Three));
 

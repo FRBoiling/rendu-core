@@ -12,7 +12,7 @@ void test_random() {
 
 }
 
-void test_sfmt_random() {
+void example_random() {
   sfmt_t state;
 //  std::random_device dev;
 //  if (dev.entropy() > 0) {

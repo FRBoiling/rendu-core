@@ -7,9 +7,9 @@
 
 int main(int argc, char **argv) {
   try {
-    args_example1(argc,argv);
-    log_example();
-    enum_example();
+    example_args(argc,argv);
+    example_log();
+    example_enum();
     RD_INFO("hello world");
   }
   catch (...){
