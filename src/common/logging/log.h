@@ -56,7 +56,7 @@ namespace rendu {
   private:
     void init_console(const std::string &flag) {
       this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-      this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
+      this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%s:%#] %v");
       //    this->console_sink_->set_pattern("%+");
       this->sinks_.push_back(this->console_sink_);
     }
