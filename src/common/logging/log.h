@@ -27,26 +27,21 @@ namespace rendu {
       return this->logger_;
     }
 
-    void init(const std::string &flag,const RunMode mode, const std::string &path) {
-      spdlog::level::level_enum log_level = spdlog::level::trace;
-      switch (mode) {
+    void init(const std::string &flag, const RunMode mode, const std::string &path) {
+      spdlog::level::level_enum level = spdlog::level::trace;
+      run_mode_ = mode;
+      switch (run_mode_) {
         case RunMode::Develop:
-          log_level = spdlog::level::trace;
+          level = spdlog::level::trace;
+          init_console(flag);
           break;
         case RunMode::Online:
         case RunMode::Pressure:
-          log_level = spdlog::level::info;
+          level = spdlog::level::info;
           break;
       }
-      init(flag, log_level, path);
-    }
 
-    void init(const std::string &flag, spdlog::level::level_enum level, const std::string &log_root_path) {
-      this->init_console();
-      std::string log_file_path = flag + ".log";
-      this->init_file(log_root_path, log_file_path);
-      this->sinks_.push_back(this->console_sink_);
-      this->sinks_.push_back(this->file_sink_);
+      init_file(flag, path);
       this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
       this->logger_->set_level(level);
       //    this->console_sink_->set_pattern("%+");
@@ -55,29 +50,30 @@ namespace rendu {
       spdlog::register_logger(this->logger_); // 注册logger
     }
 
+
   private:
     Log() = default;
 
-    ~Log() {
-    }
-
   private:
-    void init_console() {
+    void init_console(const std::string &flag) {
       this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
       this->console_sink_->set_pattern("[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%!,%s:%#] %v");
+      this->sinks_.push_back(this->console_sink_);
     }
 
-    void init_file(const std::string &log_root_path, const std::string &log_file_path) {
-
+    void init_file(const std::string &flag, const std::string &log_root_path) {
       int rotation_h = 5; // 分割时间
       int rotation_m = 59;
+      std::string log_file_path = flag + ".log";
       this->file_sink_ = std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_root_path + log_file_path,
                                                                              rotation_h,
                                                                              rotation_m);
       this->file_sink_->set_pattern("[%Y-%m-%d %H:%M:%S.%e][%n][%l][thread:%t][%!,%s:%#] %v");
+      this->sinks_.push_back(this->file_sink_);
     }
 
   private:
+    RunMode run_mode_{RunMode::Develop};
     std::shared_ptr<spdlog::logger> logger_;
     std::vector<spdlog::sink_ptr> sinks_;
     std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_; // console
