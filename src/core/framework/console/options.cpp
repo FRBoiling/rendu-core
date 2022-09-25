@@ -8,7 +8,7 @@
 #include "enum_utils.h"
 #include "argparse/argument_parser.h"
 
-void ParserArguments(argparse::ArgumentParser parser) {
+void ParserArguments(rendu::ArgumentParser parser) {
   sOptions.m_program_type = parser.get_enum<ProgramType>("-p");
   sOptions.m_zone_id = parser.get<int>("-z");
   sOptions.m_server_id = parser.get<int>("-s");
@@ -25,7 +25,7 @@ void ParserArguments(argparse::ArgumentParser parser) {
 
 int Options::Initialize(int argc, char **argv) {
 
-  argparse::ArgumentParser parser("allowed options");
+  rendu::ArgumentParser parser("allowed options");
   parser.add_argument("--program", "-p").help("程序类型").required()
       .default_value(ProgramType::All).scan<'i', int>();
   parser.add_argument("--zone", "-z").help("区").required()

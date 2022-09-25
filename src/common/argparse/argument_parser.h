@@ -7,7 +7,7 @@
 
 #include "argument.h"
 
-namespace argparse {
+namespace rendu {
 
   class ArgumentParser {
   public:
@@ -341,6 +341,6 @@ namespace argparse {
     std::map<std::string_view, list_iterator, std::less<>> m_argument_map;
   };
 
-} // argparse
+}//namespace rendu
 
 #endif //RENDU_ARGUMENT_PARSER_H_

@@ -30,7 +30,7 @@
 #include <vector>
 #include <define.h>
 
-namespace argparse {
+namespace rendu {
   using valued_action = std::function<std::any(const std::string &)>;
   using void_action = std::function<void(const std::string &)>;
 
@@ -102,8 +102,8 @@ namespace argparse {
         std::stringstream out;
         out << val;
         return out.str();
-      } else if (rendu_enum::enum_contains<T>(val)) {
-        return rendu_enum::enum_flags_name(val);
+      } else if (enum_contains<T>(val)) {
+        return enum_flags_name(val);
       } else {
         return "<not representable>";
       }
@@ -324,7 +324,7 @@ namespace argparse {
 
   } // namespace details
 
-} // argparse
+} // rendu
 
 
 #endif //RENDU_ARGUMENT_TEMPLATE_H_

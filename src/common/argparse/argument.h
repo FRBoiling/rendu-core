@@ -6,9 +6,9 @@
 #define RENDU_ARGUMENT_H_
 
 #include "argument_template.h"
-#include "argument_enum.h"
+#include "argument_defines.h"
 
-namespace argparse {
+namespace rendu {
 
   class ArgumentParser;
 
@@ -544,10 +544,10 @@ namespace argparse {
 
     template<typename E>
     auto get_enum() const -> E {
-      if (rendu_enum::is_scoped_enum<E>()) {
+      if (is_scoped_enum<E>()) {
         if (!m_values.empty()) {
           auto value = *std::any_cast<int>(&m_values.front());
-          auto enum_object = rendu_enum::enum_cast<E>(value);
+          auto enum_object = enum_cast<E>(value);
           if (enum_object.has_value()) {
             return enum_object.value();
           }
@@ -610,6 +610,6 @@ namespace argparse {
     bool m_is_used: true; // True if the optional argument is used by user
   };
 
-} // argparse
+} // rendu
 
 #endif //RENDU_ARGUMENT_H_

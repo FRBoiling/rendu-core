@@ -37,7 +37,6 @@
 #endif
 
 namespace rendu {
-
   using std::optional;
   using std::string_view;
   using std::string;
