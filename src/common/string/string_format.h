@@ -15,7 +15,7 @@ namespace rendu
   {
     try
     {
-      return fmt::sprintf(std::forward<Format>(fmt_str), std::forward<Args>(args)...);
+      return fmt::format(std::forward<Format>(fmt_str), std::forward<Args>(args)...);
     }
     catch (const fmt::format_error& formatError)
     {
