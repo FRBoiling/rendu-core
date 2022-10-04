@@ -40,7 +40,7 @@ target_link_libraries(${target-name}
     rendu-core-interface
     common
     PUBLIC
-    protobuf
+    libprotobuf
     rapidjson
     #TODO:添加reps库
     )

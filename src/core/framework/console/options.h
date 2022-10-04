@@ -8,6 +8,7 @@
 #include "singleton.h"
 #include "program.h"
 #include "run_mode.h"
+#include <string>
 
 namespace rendu {
 
