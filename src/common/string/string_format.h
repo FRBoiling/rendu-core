@@ -6,7 +6,6 @@
 #define RENDU_STRING_FORMAT_H_
 
 #include "spdlog/fmt/bundled/printf.h"
-
 namespace rendu
 {
   /// Default rd string format function.
