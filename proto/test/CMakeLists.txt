@@ -33,6 +33,7 @@ add_library(${target-name} ${srcs_var} ${hdrs_var})
 target_link_libraries(${target-name}
     INTERFACE rendu-dependency-interface
     #    PUBLIC
+    libprotobuf libprotoc
     )
 set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(${target-name} PUBLIC ${hdrs_var})
