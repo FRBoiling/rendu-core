@@ -13,7 +13,7 @@ namespace google {
   namespace protobuf {
     namespace compiler {
 
-      int ProtobufMain(int argc, char* argv[]) {
+      int ProtobufMain(int argc, char *argv[]) {
 
         CommandLineInterface cli;
         cli.AllowPlugins("protoc-");
@@ -40,6 +40,6 @@ namespace google {
   }  // namespace protobuf
 }  // namespace google
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   return PROTOBUF_NAMESPACE_ID::compiler::ProtobufMain(argc, argv);
 }

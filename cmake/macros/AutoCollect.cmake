@@ -15,6 +15,7 @@ function(CollectSourceFiles current_dir variable)
   list(FIND ARGN ${current_dir} IS_EXCLUDED)
   if (IS_EXCLUDED EQUAL -1)
     file(GLOB COLLECTED_SOURCES
+        ${current_dir}/*.proto
         ${current_dir}/*.c
         ${current_dir}/*.cc
         ${current_dir}/*.cpp

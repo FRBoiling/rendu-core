@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(EXEC_NAME proto_generate)
+set(EXEC_NAME ${PROTOBUF_PROTOC_EXECUTABLE})
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -11,11 +11,11 @@ CollectSourceFiles(
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(${EXEC_NAME}
+add_executable(${PROTOBUF_PROTOC_EXECUTABLE}
     ${private_sources}
     )
 
-target_link_libraries(${EXEC_NAME}
+target_link_libraries(${PROTOBUF_PROTOC_EXECUTABLE}
     PRIVATE
     rendu-core-interface
     PUBLIC
@@ -28,7 +28,7 @@ CollectIncludeDirectories(
     public_includes
 )
 
-target_include_directories(${EXEC_NAME}
+target_include_directories(${PROTOBUF_PROTOC_EXECUTABLE}
     PUBLIC
     ${public_includes}
     PRIVATE

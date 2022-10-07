@@ -1,0 +1,15 @@
+syntax = "proto2";
+import "unittest_optimize_for.proto";
+
+package protobuf_unittest;
+
+// We optimize for speed here, but we are importing a proto that is optimized
+// for code size.
+option optimize_for = SPEED;
+
+message TestEmbedOptimizedForSize {
+  // Test that embedding a message which has optimize_for = CODE_SIZE into
+  // one optimized for speed works.
+  optional TestOptimizedForSize optional_message = 1;
+  repeated TestOptimizedForSize repeated_message = 2;
+}
