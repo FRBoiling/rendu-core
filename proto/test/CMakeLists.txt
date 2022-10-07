@@ -4,16 +4,10 @@
 
 
 set(output_dir ${PROTO_ROOT}/out)
-set(protoc_include ${PROTO_ROOT}/test/unittest)
-set(protoc_sources ${PROTO_ROOT}/test/proto3)
+set(source_dir ${PROTO_ROOT}/test/unittest)
 
 CollectSourceFiles(
-    ${protoc_include}
-    private_sources
-)
-
-CollectSourceFiles(
-    ${protoc_sources}
+    ${source_dir}
     private_sources
 )
 
@@ -26,7 +20,7 @@ foreach(fil ${private_sources})
 
   add_custom_command(
       OUTPUT ${fil_we}.pb.cc ${fil_we}.pb.h
-      COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out ${output_dir} -I${PROTO_ROOT} ${abs_fil}
+      COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out ${output_dir} -I${source_dir} ${abs_fil}
       DEPENDS ${abs_fil}
       COMMENT "Running C++ protocol buffer compiler on ${fil}" VERBATIM )
 endforeach()
