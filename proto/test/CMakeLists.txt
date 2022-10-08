@@ -25,19 +25,5 @@ foreach(fil ${private_sources})
       COMMENT "Running C++ protocol buffer compiler on ${fil}" VERBATIM )
 endforeach()
 
-set(target-name out_model)
-set(project-name deps)
-
+set(target-name proto_out)
 add_library(${target-name} ${srcs_var} ${hdrs_var})
-
-target_link_libraries(${target-name}
-    INTERFACE rendu-dependency-interface
-    #    PUBLIC
-    libprotobuf libprotoc
-    )
-set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(${target-name} PUBLIC ${hdrs_var})
-set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})
-
-
-

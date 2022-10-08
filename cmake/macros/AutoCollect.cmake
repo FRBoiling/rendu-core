@@ -18,11 +18,13 @@ function(CollectSourceFiles current_dir variable)
         ${current_dir}/*.proto
         ${current_dir}/*.c
         ${current_dir}/*.cc
+        ${current_dir}/*.pb.cc
         ${current_dir}/*.cpp
         ${current_dir}/*.inl
         ${current_dir}/*.inc
         ${current_dir}/*.def
         ${current_dir}/*.h
+        ${current_dir}/*.pb.h
         ${current_dir}/*.hh
         ${current_dir}/*.hpp)
     list(APPEND ${variable} ${COLLECTED_SOURCES})
