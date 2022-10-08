@@ -6,6 +6,7 @@
 set(input_dir ${CMAKE_CURRENT_SOURCE_DIR})
 #设置输出路径
 set(output_dir ${CMAKE_BINARY_DIR}/proto/test_out)
+
 if(EXISTS ${output_dir} AND IS_DIRECTORY ${output_dir})
 else()
   file(MAKE_DIRECTORY ${output_dir})
@@ -48,4 +49,5 @@ add_custom_target(generate_message ALL
     VERBATIM
     )
 
-
+# 拷贝文件夹
+execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${output_dir}/google ${PROTO_ROOT}/test_out/google/)

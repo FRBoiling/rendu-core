@@ -8,4 +8,5 @@ set(PROTO_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_out
 )
