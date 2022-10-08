@@ -2,11 +2,10 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
+set(source_dir ${PROTO_ROOT}/test)
+set(output_dir ${PROTO_ROOT}/test)
 
-set(output_dir ${PROTO_ROOT}/out)
-set(source_dir ${PROTO_ROOT}/test/unittest)
-
-CollectSourceFiles(
+CollectProtoFiles(
     ${source_dir}
     private_sources
 )
@@ -25,5 +24,4 @@ foreach(fil ${private_sources})
       COMMENT "Running C++ protocol buffer compiler on ${fil}" VERBATIM )
 endforeach()
 
-set(target-name proto_out)
-add_library(${target-name} ${srcs_var} ${hdrs_var})
+add_library(proto_test_generate_out ${srcs_var} ${hdrs_var})
