@@ -3,7 +3,7 @@
 #**********************************
 
 set(EXEC_NAME template)
-set(project-name cores)
+set(project-name core)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -5,7 +5,7 @@
 #设置输入路径
 set(input_dir ${CMAKE_CURRENT_SOURCE_DIR})
 #设置输出路径
-set(output_dir ${CMAKE_BINARY_DIR}/proto/test_out)
+set(output_dir ${CMAKE_BINARY_DIR}/proto/core)
 
 if(EXISTS ${output_dir} AND IS_DIRECTORY ${output_dir})
 else()
@@ -43,11 +43,11 @@ endforeach()
 set_source_files_properties(${OutPut_SRCS} ${OutPut_HDRS} PROPERTIES GENERATED TRUE)
 
 # 添加自定义target
-add_custom_target(generate_message ALL
+add_custom_target(generate_model ALL
     DEPENDS ${OutPut_SRCS} ${OutPut_HDRS}
-    COMMENT "generate test_out target"
+    COMMENT "generate core model target"
     VERBATIM
     )
 
 ## 拷贝文件夹
-#execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${output_dir}/google ${PROTO_ROOT}/test_out/google/)
+#execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${output_dir}/model ${CORE_DIR}/model)

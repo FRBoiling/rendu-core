@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 set(target-name framework)
-set(project-name cores)
+set(project-name core)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}

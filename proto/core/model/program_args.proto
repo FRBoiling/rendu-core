@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package rendu.model;
+
+enum ProgramType {
+  All = 0;
+  Hall = 1;
+  World = 2;
+}
+
+enum RunModeType{
+    Online = 0;
+    Develop = 1;
+    Pressure = 2;
+}
+
+message ProgramOption {
+  // The fully qualified name of this interface, including package name
+  // followed by the interface's simple name.
+  string name = 1;
+  int32 group_id = 2;
+  int32 zone_id = 3;
+  int32 process_num = 4;
+  ProgramType type  = 5;
+  RunModeType run_mode = 6;
+}
+
