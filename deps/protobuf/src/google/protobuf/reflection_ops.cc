@@ -31,21 +31,22 @@
 // Author: kenton@google.com (Kenton Varda)
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
-#include <google/protobuf/reflection_ops.h>
+#include "google/protobuf/reflection_ops.h"
 
 #include <string>
 #include <vector>
 
-#include <google/protobuf/stubs/logging.h>
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/descriptor.pb.h>
-#include <google/protobuf/map_field.h>
-#include <google/protobuf/map_field_inl.h>
-#include <google/protobuf/unknown_field_set.h>
+#include "google/protobuf/stubs/logging.h"
+#include "google/protobuf/stubs/common.h"
+#include "absl/strings/str_cat.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/descriptor.pb.h"
+#include "google/protobuf/map_field.h"
+#include "google/protobuf/map_field_inl.h"
+#include "google/protobuf/unknown_field_set.h"
 
 // Must be included last.
-#include <google/protobuf/port_def.inc>
+#include "google/protobuf/port_def.inc"
 
 namespace google {
 namespace protobuf {
@@ -170,8 +171,10 @@ void ReflectionOps::Merge(const Message& from, Message* to) {
     }
   }
 
-  to_reflection->MutableUnknownFields(to)->MergeFrom(
-      from_reflection->GetUnknownFields(from));
+  if (!from_reflection->GetUnknownFields(from).empty()) {
+    to_reflection->MutableUnknownFields(to)->MergeFrom(
+        from_reflection->GetUnknownFields(from));
+  }
 }
 
 void ReflectionOps::Clear(Message* message) {
@@ -372,7 +375,7 @@ static std::string SubMessagePrefix(const std::string& prefix,
   }
   if (index != -1) {
     result.append("[");
-    result.append(StrCat(index));
+    result.append(absl::StrCat(index));
     result.append("]");
   }
   result.append(".");
@@ -454,4 +457,4 @@ void GenericSwap(Message* lhs, Message* rhs) {
 }  // namespace protobuf
 }  // namespace google
 
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"

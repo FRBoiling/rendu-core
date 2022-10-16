@@ -3,7 +3,7 @@
 */
 
 #include "event_system.h"
-
+using namespace rendu;
 void EventSystem::Destroy() {
 
 }
@@ -11,11 +11,6 @@ void EventSystem::Destroy() {
 void EventSystem::Register() {
 
 }
-
-const std::type_info &EventSystem::GetType() {
-  return typeid(this);
-}
-
 
 
 

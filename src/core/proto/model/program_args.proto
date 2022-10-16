@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package rendu.model;
+
+message TestProtoGen {
+  // The fully qualified name of this interface, including package name
+  // followed by the interface's simple name.
+  string config_path = 1;
+}
+

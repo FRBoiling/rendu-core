@@ -36,14 +36,15 @@
 #include <type_traits>
 #include <utility>
 
-#include <google/protobuf/stubs/logging.h>
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/arena.h>
-#include <google/protobuf/port.h>
-#include <google/protobuf/explicitly_constructed.h>
+#include "google/protobuf/stubs/logging.h"
+#include "google/protobuf/stubs/common.h"
+#include "google/protobuf/arena.h"
+#include "google/protobuf/port.h"
+#include "absl/strings/string_view.h"
+#include "google/protobuf/explicitly_constructed.h"
 
 // must be last:
-#include <google/protobuf/port_def.inc>
+#include "google/protobuf/port_def.inc"
 
 #ifdef SWIG
 #error "You cannot SWIG proto headers"
@@ -96,13 +97,12 @@ class PROTOBUF_EXPORT LazyString {
 
 class TaggedStringPtr {
  public:
-  // Bit flags qualifying string properties. We can use up to 3 bits as
-  // ptr_ is guaranteed and enforced to be aligned on 8 byte boundaries.
+  // Bit flags qualifying string properties. We can use 2 bits as
+  // ptr_ is guaranteed and enforced to be aligned on 4 byte boundaries.
   enum Flags {
     kArenaBit = 0x1,      // ptr is arena allocated
-    kAllocatedBit = 0x2,  // ptr is heap allocated
-    kMutableBit = 0x4,    // ptr contents are fully mutable
-    kMask = 0x7           // Bit mask
+    kMutableBit = 0x2,    // ptr contents are fully mutable
+    kMask = 0x3           // Bit mask
   };
 
   // Composed logical types
@@ -112,7 +112,7 @@ class TaggedStringPtr {
 
     // Allocated strings are mutable and (as the name implies) owned.
     // A heap allocated string must be deleted.
-    kAllocated = kAllocatedBit | kMutableBit,
+    kAllocated = kMutableBit,
 
     // Mutable arena strings are strings where the string instance is owned
     // by the arena, but the string contents itself are owned by the string
@@ -166,8 +166,16 @@ class TaggedStringPtr {
   // Returns true if the current string is an immutable default value.
   inline bool IsDefault() const { return (as_int() & kMask) == kDefault; }
 
-  // Returns true if the current string is a heap allocated mutable value.
-  inline bool IsAllocated() const { return as_int() & kAllocatedBit; }
+  // If the current string is a heap-allocated mutable value, returns a pointer
+  // to it.  Returns nullptr otherwise.
+  inline std::string *GetIfAllocated() const {
+    auto allocated = as_int() ^ kAllocated;
+    if (allocated & kMask) return nullptr;
+
+    auto ptr = reinterpret_cast<std::string*>(allocated);
+    PROTOBUF_ASSUME(ptr != nullptr);
+    return ptr;
+  }
 
   // Returns true if the current string is an arena allocated value.
   // This means it's either a mutable or fixed size arena string.
@@ -224,8 +232,8 @@ static_assert(std::is_trivial<TaggedStringPtr>::value,
 // Because ArenaStringPtr is used in oneof unions, its constructor is a NOP and
 // the field is always manually initialized via method calls.
 //
-// See TaggedPtr for more information about the types of string values being
-// held, and the mutable and ownership invariants for each type.
+// See TaggedStringPtr for more information about the types of string values
+// being held, and the mutable and ownership invariants for each type.
 struct PROTOBUF_EXPORT ArenaStringPtr {
   ArenaStringPtr() = default;
   constexpr ArenaStringPtr(ExplicitlyConstructedArenaString* default_value,
@@ -252,12 +260,12 @@ struct PROTOBUF_EXPORT ArenaStringPtr {
   // instance known to not carry any heap allocated value.
   inline void InitAllocated(std::string* str, Arena* arena);
 
-  void Set(ConstStringParam value, Arena* arena);
+  void Set(absl::string_view value, Arena* arena);
   void Set(std::string&& value, Arena* arena);
   void Set(const char* s, Arena* arena);
   void Set(const char* s, size_t n, Arena* arena);
 
-  void SetBytes(ConstStringParam value, Arena* arena);
+  void SetBytes(absl::string_view value, Arena* arena);
   void SetBytes(std::string&& value, Arena* arena);
   void SetBytes(const char* s, Arena* arena);
   void SetBytes(const void* p, size_t n, Arena* arena);
@@ -399,14 +407,14 @@ inline void ArenaStringPtr::InitAllocated(std::string* str, Arena* arena) {
 }
 
 inline void ArenaStringPtr::Set(const char* s, Arena* arena) {
-  Set(ConstStringParam{s}, arena);
+  Set(absl::string_view{s}, arena);
 }
 
 inline void ArenaStringPtr::Set(const char* s, size_t n, Arena* arena) {
-  Set(ConstStringParam{s, n}, arena);
+  Set(absl::string_view{s, n}, arena);
 }
 
-inline void ArenaStringPtr::SetBytes(ConstStringParam value, Arena* arena) {
+inline void ArenaStringPtr::SetBytes(absl::string_view value, Arena* arena) {
   Set(value, arena);
 }
 
@@ -419,7 +427,7 @@ inline void ArenaStringPtr::SetBytes(const char* s, Arena* arena) {
 }
 
 inline void ArenaStringPtr::SetBytes(const void* p, size_t n, Arena* arena) {
-  Set(ConstStringParam{static_cast<const char*>(p), n}, arena);
+  Set(absl::string_view{static_cast<const char*>(p), n}, arena);
 }
 
 // Make sure rhs_arena allocated rhs, and lhs_arena allocated lhs.
@@ -468,6 +476,6 @@ inline std::string* ArenaStringPtr::UnsafeMutablePointer() {
 }  // namespace protobuf
 }  // namespace google
 
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
 
 #endif  // GOOGLE_PROTOBUF_ARENASTRING_H__

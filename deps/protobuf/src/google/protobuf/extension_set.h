@@ -46,16 +46,17 @@
 #include <utility>
 #include <vector>
 
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/stubs/logging.h>
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/port.h>
-#include <google/protobuf/parse_context.h>
-#include <google/protobuf/repeated_field.h>
-#include <google/protobuf/wire_format_lite.h>
+#include "google/protobuf/stubs/common.h"
+#include "google/protobuf/stubs/logging.h"
+#include "google/protobuf/port.h"
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/port.h"
+#include "google/protobuf/parse_context.h"
+#include "google/protobuf/repeated_field.h"
+#include "google/protobuf/wire_format_lite.h"
 
 // clang-format off
-#include <google/protobuf/port_def.inc>  // Must be last
+#include "google/protobuf/port_def.inc"  // Must be last
 // clang-format on
 
 #ifdef SWIG
@@ -147,26 +148,20 @@ struct ExtensionInfo {
   LazyEagerVerifyFnType lazy_eager_verify_func = nullptr;
 };
 
-// Abstract interface for an object which looks up extension definitions.  Used
-// when parsing.
-class PROTOBUF_EXPORT ExtensionFinder {
- public:
-  virtual ~ExtensionFinder();
+// An ExtensionFinder is an object which looks up extension definitions.  It
+// must implement this method:
+//
+// bool Find(int number, ExtensionInfo* output);
 
-  // Find the extension with the given containing type and number.
-  virtual bool Find(int number, ExtensionInfo* output) = 0;
-};
-
-// Implementation of ExtensionFinder which finds extensions defined in .proto
-// files which have been compiled into the binary.
-class PROTOBUF_EXPORT GeneratedExtensionFinder : public ExtensionFinder {
+// GeneratedExtensionFinder is an ExtensionFinder which finds extensions
+// defined in .proto files which have been compiled into the binary.
+class PROTOBUF_EXPORT GeneratedExtensionFinder {
  public:
   explicit GeneratedExtensionFinder(const MessageLite* extendee)
       : extendee_(extendee) {}
-  ~GeneratedExtensionFinder() override {}
 
   // Returns true and fills in *output if found, otherwise returns false.
-  bool Find(int number, ExtensionInfo* output) override;
+  bool Find(int number, ExtensionInfo* output);
 
  private:
   const MessageLite* extendee_;
@@ -191,6 +186,8 @@ class PROTOBUF_EXPORT ExtensionSet {
   constexpr ExtensionSet();
   explicit ExtensionSet(Arena* arena);
   ExtensionSet(ArenaInitialized, Arena* arena) : ExtensionSet(arena) {}
+  ExtensionSet(const ExtensionSet&) = delete;
+  ExtensionSet& operator=(const ExtensionSet&) = delete;
   ~ExtensionSet();
 
   // These are called at startup by protocol-compiler-generated code to
@@ -544,6 +541,8 @@ class PROTOBUF_EXPORT ExtensionSet {
   class PROTOBUF_EXPORT LazyMessageExtension {
    public:
     LazyMessageExtension() {}
+    LazyMessageExtension(const LazyMessageExtension&) = delete;
+    LazyMessageExtension& operator=(const LazyMessageExtension&) = delete;
     virtual ~LazyMessageExtension() {}
 
     virtual LazyMessageExtension* New(Arena* arena) const = 0;
@@ -580,8 +579,6 @@ class PROTOBUF_EXPORT ExtensionSet {
 
    private:
     virtual void UnusedKeyMethod();  // Dummy key method to avoid weak vtable.
-
-    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(LazyMessageExtension);
   };
   // Give access to function defined below to see LazyMessageExtension.
   friend LazyMessageExtension* MaybeCreateLazyExtension(Arena* arena);
@@ -746,22 +743,71 @@ class PROTOBUF_EXPORT ExtensionSet {
                                   const Extension& other_extension,
                                   Arena* other_arena);
 
+  inline static bool is_packable(WireFormatLite::WireType type) {
+    switch (type) {
+      case WireFormatLite::WIRETYPE_VARINT:
+      case WireFormatLite::WIRETYPE_FIXED64:
+      case WireFormatLite::WIRETYPE_FIXED32:
+        return true;
+      case WireFormatLite::WIRETYPE_LENGTH_DELIMITED:
+      case WireFormatLite::WIRETYPE_START_GROUP:
+      case WireFormatLite::WIRETYPE_END_GROUP:
+        return false;
+
+        // Do not add a default statement. Let the compiler complain when
+        // someone
+        // adds a new wire type.
+    }
+    PROTOBUF_ASSUME(false);  // switch handles all possible enum values
+    return false;
+  }
+
   // Returns true and fills field_number and extension if extension is found.
   // Note to support packed repeated field compatibility, it also fills whether
   // the tag on wire is packed, which can be different from
   // extension->is_packed (whether packed=true is specified).
+  template <typename ExtensionFinder>
   bool FindExtensionInfoFromTag(uint32_t tag, ExtensionFinder* extension_finder,
                                 int* field_number, ExtensionInfo* extension,
-                                bool* was_packed_on_wire);
+                                bool* was_packed_on_wire) {
+    *field_number = WireFormatLite::GetTagFieldNumber(tag);
+    WireFormatLite::WireType wire_type = WireFormatLite::GetTagWireType(tag);
+    return FindExtensionInfoFromFieldNumber(wire_type, *field_number,
+                                            extension_finder, extension,
+                                            was_packed_on_wire);
+  }
 
   // Returns true and fills extension if extension is found.
   // Note to support packed repeated field compatibility, it also fills whether
   // the tag on wire is packed, which can be different from
   // extension->is_packed (whether packed=true is specified).
+  template <typename ExtensionFinder>
   bool FindExtensionInfoFromFieldNumber(int wire_type, int field_number,
                                         ExtensionFinder* extension_finder,
                                         ExtensionInfo* extension,
-                                        bool* was_packed_on_wire) const;
+                                        bool* was_packed_on_wire) const {
+    if (!extension_finder->Find(field_number, extension)) {
+      return false;
+    }
+
+    GOOGLE_DCHECK(extension->type > 0 &&
+           extension->type <= WireFormatLite::MAX_FIELD_TYPE);
+    auto real_type = static_cast<WireFormatLite::FieldType>(extension->type);
+
+    WireFormatLite::WireType expected_wire_type =
+        WireFormatLite::WireTypeForFieldType(real_type);
+
+    // Check if this is a packed field.
+    *was_packed_on_wire = false;
+    if (extension->is_repeated &&
+        wire_type == WireFormatLite::WIRETYPE_LENGTH_DELIMITED &&
+        is_packable(expected_wire_type)) {
+      *was_packed_on_wire = true;
+      return true;
+    }
+    // Otherwise the wire type must match.
+    return expected_wire_type == wire_type;
+  }
 
   // Find the prototype for a LazyMessage from the extension registry. Returns
   // null if the extension is not found.
@@ -865,8 +911,6 @@ class PROTOBUF_EXPORT ExtensionSet {
   } map_;
 
   static void DeleteFlatMap(const KeyValue* flat, uint16_t flat_capacity);
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(ExtensionSet);
 };
 
 constexpr ExtensionSet::ExtensionSet()
@@ -1219,6 +1263,8 @@ class EnumTypeTraits {
   template <typename ExtendeeT>
   static void Register(int number, FieldType type, bool is_packed,
                        LazyEagerVerifyFnType fn) {
+    // Avoid -Wunused-parameter
+    (void)fn;
     ExtensionSet::RegisterEnumExtension(&ExtendeeT::default_instance(), number,
                                         type, false, is_packed, IsValid);
   }
@@ -1285,6 +1331,8 @@ class RepeatedEnumTypeTraits {
   template <typename ExtendeeT>
   static void Register(int number, FieldType type, bool is_packed,
                        LazyEagerVerifyFnType fn) {
+    // Avoid -Wunused-parameter
+    (void)fn;
     ExtensionSet::RegisterEnumExtension(&ExtendeeT::default_instance(), number,
                                         type, true, is_packed, IsValid);
   }
@@ -1513,6 +1561,6 @@ void LinkExtensionReflection(
 }  // namespace protobuf
 }  // namespace google
 
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
 
 #endif  // GOOGLE_PROTOBUF_EXTENSION_SET_H__

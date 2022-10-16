@@ -1,19 +1,25 @@
+#**********************************
+#  Created by boil on 2022/10/19.
+#**********************************
+
 #[=======================================================================[.rst:
 FindReadline
 -----------
 
 Find The GNU Readline Library.
 
-导入的目标
+Imported Targets
 ^^^^^^^^^^^^^^^^
-这个模块定义了以下内容: prop_tgt:`IMPORTED` targets:
+
+This module defines the following :prop_tgt:`IMPORTED` targets:
 
 ``Readline::Readline``
   The Readline library, if found.
 
-结果变量
+Result Variables
 ^^^^^^^^^^^^^^^^
-这个模块将在你的项目中设置以下变量:
+
+This module will set the following variables in your project:
 
 ``READLINE_FOUND``
   System has The GNU Readline Library.
@@ -22,25 +28,18 @@ Find The GNU Readline Library.
 ``READLINE_LIBRARY``
   The Readline library.
 
-提示
-^^^^^^^^^^^^^^^^
-设置READLINE_ROOT_DIR为Readline安装的根目录。
+Hints
+^^^^^
+
+Set ``READLINE_ROOT_DIR`` to the root directory of Readline installation.
 #]=======================================================================]
-
-set(_READLINE_ROOT_HINTS
-  ${READLINE_ROOT_DIR}
-  ENV READLINE_ROOT_DIR
-)
-
-if(HOMEBREW_PREFIX)
-  list(APPEND _READLINE_ROOT_HINTS "${HOMEBREW_PREFIX}/opt/readline")
-endif()
 
 find_path(READLINE_INCLUDE_DIR
   NAMES
     readline/readline.h
   HINTS
-    ${_READLINE_ROOT_HINTS}
+    ${READLINE_ROOT_DIR}
+    ENV READLINE_ROOT_DIR
   PATH_SUFFIXES
     include)
 
@@ -48,7 +47,8 @@ find_library(READLINE_LIBRARY
   NAMES
     readline
   HINTS
-    ${_READLINE_ROOT_HINTS}
+    ${READLINE_ROOT_DIR}
+    ENV READLINE_ROOT_DIR
   PATH_SUFFIXES
     lib)
 

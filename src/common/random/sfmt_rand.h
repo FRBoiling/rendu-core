@@ -5,7 +5,7 @@
 #ifndef RENDU_SFMT_RAND_H_
 #define RENDU_SFMT_RAND_H_
 
-#include <sfmt.h>
+#include "sfmt.h"
 #include <new>
 
 namespace rendu {

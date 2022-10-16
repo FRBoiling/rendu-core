@@ -39,7 +39,7 @@ option optimize_for = LITE_RUNTIME;
 
 option java_package = "com.google.protobuf";
 
-import public "unittest_import_public_lite.proto";
+import public "google/protobuf/unittest_import_public_lite.proto";
 
 message ImportMessageLite {
   optional int32 d = 1;

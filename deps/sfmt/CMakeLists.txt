@@ -12,12 +12,12 @@ CollectSourceFiles(
 )
 
 CollectIncludeDirectories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     public_includes
     # Exclude
 )
 
-add_library(${target-name} STATIC ${private_sources} ${public_includes})
+add_library(${target-name} STATIC ${private_sources} )
 
 include(CheckCCompilerFlag)
 target_compile_definitions(${target-name} PRIVATE -DSFMT_MEXP=19937)
@@ -52,5 +52,5 @@ target_link_libraries(${target-name}
     )
 
 set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(${target-name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${target-name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})

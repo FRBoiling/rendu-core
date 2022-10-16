@@ -541,24 +541,6 @@ namespace rendu {
       throw std::logic_error("No value provided for '" + m_names.back() + "'.");
     }
 
-    template<typename E>
-    auto get_enum() const -> E {
-      if (is_scoped_enum_v<E>) {
-        if (!m_values.empty()) {
-          auto value = *std::any_cast<int>(&m_values.front());
-          auto enum_object = enum_cast<E>(value);
-          if (enum_object.has_value()) {
-            return enum_object.value();
-          }
-        }
-        if (m_default_value.has_value()) {
-          return *std::any_cast<E>(&m_default_value);
-        }
-      }
-      throw std::logic_error("No enum value provided for '" + m_names.back() + "'.");
-    }
-
-
     /*
      * Get argument value given a type.
      * @pre The object has no default value.

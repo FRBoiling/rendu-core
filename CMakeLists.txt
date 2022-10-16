@@ -3,19 +3,31 @@
 #**********************************
 
 # **********************************
-cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 set(PROJECT_NAME rendu)
 # Define the Project Name and Description
 # Set projectname (must be done AFTER setting configurationtypes)
 #project(${PROJECT_NAME} LANGUAGES CXX DESCRIPTION "moderncpp-project is a starter project for Modern C++")
-project(${PROJECT_NAME})
+project(
+    ${PROJECT_NAME}
+    DESCRIPTION "Gaming meets modern C++ - a fast and reliable entity-component system (ECS) and much more"
+    HOMEPAGE_URL "https://github.com/FRBoiling/rendu-core"
+    LANGUAGES C CXX
+)
 
 # **********************************
 # CMake policies (can not be handled elsewhere)
 cmake_policy(SET CMP0005 NEW)
-cmake_policy(SET CMP0043 NEW) # Cotire isn't used so set to NEW
+if(CMAKE_VERSION VERSION_LESS "3.16.0")
+  cmake_policy(SET CMP0043 OLD) # Disable 'Ignore COMPILE_DEFINITIONS_<Config> properties'
+else()
+  cmake_policy(SET CMP0043 NEW) # Cotire isn't used so set to NEW
+endif()
 cmake_policy(SET CMP0054 NEW) # Only interpret if() arguments as variables or keywords when unquoted - prevents intepreting if(SOME_STRING_VARIABLE MATCHES "MSVC") as if(SOME_STRING_VARIABLE MATCHES "1")
-cmake_policy(SET CMP0074 NEW) # find_package() uses <PackageName>_ROOT variables
+
+if(POLICY CMP0074)
+  cmake_policy(SET CMP0074 NEW) # find_package() uses <PackageName>_ROOT variables
+endif()
 
 # set macro-directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/macros")
@@ -65,29 +77,33 @@ set(CMAKE_SKIP_BUILD_RPATH 0)
 #set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 
-set(CORE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+set(TOOLS_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
     ${CMAKE_CURRENT_SOURCE_DIR}/.git
+    ${CMAKE_CURRENT_SOURCE_DIR}/.vs
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build—debug
+    ${CMAKE_CURRENT_SOURCE_DIR}/out
     ${CMAKE_CURRENT_SOURCE_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/tests
 )
 
-include(CTest)
-if(BUILD_TESTING)
-  list(APPEND CMAKE_MODULE_PATH
-      "${Catch2_SOURCE_DIR}/contrib")
-  include(Catch)
-
-  add_subdirectory(tests)
-
-  # Catch cmakefile messes with our settings we explicitly leave up to the user
-  # restore user preference
-  if (NOT WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
-    set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
-  endif()
-endif()
+#if(BUILD_TESTING)
+#  include(CTest)
+#
+#  list(APPEND CMAKE_MODULE_PATH
+#      "${Catch2_SOURCE_DIR}/contrib")
+#  include(Catch)
+#
+#  add_subdirectory(tests)
+#
+#  # Catch cmakefile messes with our settings we explicitly leave up to the user
+#  # restore user preference
+#  if (NOT WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
+#    set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
+#  endif()
+#endif()

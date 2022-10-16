@@ -152,15 +152,6 @@ namespace rendu {
       return (*this)[arg_name].get<T>();
     }
 
-    template<typename E>
-    auto get_enum(std::string_view arg_name) const
-    -> E {
-      if (!m_is_parsed) {
-        throw std::logic_error("Nothing parsed, no arguments are available.");
-      }
-      return (*this)[arg_name].get_enum<E>();
-    }
-
     /* Getter for options without default values.
      * @pre The option has no default value.
      * @throws std::logic_error if there is no such option

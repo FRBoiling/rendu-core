@@ -48,6 +48,7 @@ target_link_libraries(${target-name}
     rendu-core-interface
     PUBLIC
     common
+    model
     shared
     ${target-name}-interface)
 

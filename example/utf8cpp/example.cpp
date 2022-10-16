@@ -1,13 +1,14 @@
-/*
+﻿/*
 * Created by boil on 2022/9/12.
 */
-#include <utf8/utf8.h>
+#include <utf8.h>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <cassert>
 
+# pragma warning (disable:4819)
 // checks whether the content of a file is valid UTF-8 encoded text without reading the content into the memory
 bool valid_utf8_file(const std::string file_name) {
   std::ifstream ifs(file_name);
@@ -97,7 +98,7 @@ int test_normal() {
   utf8::utf16to8(utf16string, utf16string + 5, back_inserter(utf8result));
   assert(utf8result.size() == 10);
 
-  char *szSex = "\xe7\x94\xb7\x00";
+  const char *szSex = "\xe7\x94\xb7\x00";
   std::basic_string<wchar_t> sex;
 //  utf8::utf8to16(szSex, szSex + strlen(szSex), back_inserter(sex));
 
