@@ -601,7 +601,7 @@ public:
         return Parse<kParseDefaultFlags>(is, handler);
     }
 
-    //! Initialize JSON text token-by-token parsing
+    //! Parse JSON text token-by-token parsing
     /*!
      */
     void IterativeParseInit() {

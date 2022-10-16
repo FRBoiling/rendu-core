@@ -6,7 +6,7 @@
 
 #include "example_log.h"
 
-#include "log.h"
+#include "a_logger.h"
 #include "enum.h"
 using namespace rendu;
 

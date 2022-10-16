@@ -8,7 +8,7 @@
 #include <map>
 #include "component.h"
 #include "system.h"
-#include "options.h"
+#include "options_system.h"
 #include "singleton.h"
 
 namespace rendu {
@@ -21,15 +21,10 @@ namespace rendu {
     STOPPED         //已经停止
   };
 
-  enum class ProgramType {
-    All = 0,
-    Hall = 1,
-    World = 2,
-  };
 
   class Program : public Singleton<Program> {
   public:
-    void Initialize();
+    void Initialize(int argc, char **argv);
 
     void Run();
 
@@ -37,7 +32,7 @@ namespace rendu {
 
     void Exit();
 
-    void AddSystem(ISystem &system);
+    ISystem& AddSystem(ISystem &system);
 
   private:
 
@@ -47,13 +42,11 @@ namespace rendu {
 
     void Update();
 
-    void LateUpdate();
-
     ProgramState _state;
-    std::map<size_t, ISystem *> _systems;
+    std::map<size_t, ISystem *> _updates;
   };
 
-#define sProgram Program::GetInstance()
+#define sProgram Program::get_inst()
 }//namespace rendu
 
 #endif //RENDU_PROGRAM_H_

@@ -11,14 +11,9 @@
 using namespace rendu;
 /// Launch the rendu core program
 extern int main(int argc, char **argv) {
-  if (sOptions.Initialize(argc, argv) == 0) {
-    return 0;
-  }
-  sProgram.Initialize();
-
-  sProgram.AddSystem(LogSystem::GetInstance());
-  sProgram.AddSystem(ConfigSystem::GetInstance());
-  sProgram.AddSystem(EventSystem::GetInstance());
+  sProgram.Initialize(argc,argv);
+  sProgram.AddSystem(ConfigSystem::get_inst());
+//  sProgram.AddSystem(EventSystem::get_inst());
   sProgram.Run();
   return 0;
 }

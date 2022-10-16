@@ -4,7 +4,7 @@
 
 #include "protobuf_json.h"
 #include "errors.h"
-#include "log.h"
+#include "a_logger.h"
 #include "string_format.h"
 #include <google/protobuf/message.h>
 #include "rapidjson/reader.h"

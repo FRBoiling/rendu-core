@@ -47,6 +47,7 @@ void example_enum(){
     std::cout << v<< std::endl;
   });
 
+
   std::cout << enum_name(one) << std::endl;
   std::cout << enum_flags_name(one) << std::endl;
 

@@ -1,12 +1,13 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-
+set(target-name generate_model)
+#set(project-name deps)
 #设置输入路径
 set(input_dir ${CMAKE_CURRENT_SOURCE_DIR})
 #设置输出路径
 set(output_dir ${CMAKE_BINARY_DIR}/proto/core)
-
+message(---->${CMAKE_BINARY_DIR}/proto/core)
 if(EXISTS ${output_dir} AND IS_DIRECTORY ${output_dir})
 else()
   file(MAKE_DIRECTORY ${output_dir})
@@ -43,11 +44,10 @@ endforeach()
 set_source_files_properties(${OutPut_SRCS} ${OutPut_HDRS} PROPERTIES GENERATED TRUE)
 
 # 添加自定义target
-add_custom_target(generate_model ALL
+add_custom_target(${target-name} ALL
     DEPENDS ${OutPut_SRCS} ${OutPut_HDRS}
     COMMENT "generate core model target"
     VERBATIM
     )
 
-## 拷贝文件夹
-#execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${output_dir}/model ${CORE_DIR}/model)
+
