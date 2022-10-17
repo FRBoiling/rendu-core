@@ -12,7 +12,9 @@ using namespace rendu;
 /// Launch the rendu core program
 extern int main(int argc, char **argv) {
   sProgram.Initialize(argc,argv);
+  sProgram.AddSystem(LogSystem::get_inst());
   sProgram.AddSystem(ConfigSystem::get_inst());
+  sProgram.AddSystem(EventSystem::get_inst());
 //  sProgram.AddSystem(EventSystem::get_inst());
   sProgram.Run();
   return 0;

@@ -13,12 +13,18 @@
 namespace rendu {
   using namespace model;
 
-  class LogSystem : public ISystem, public Singleton<LogSystem> {
+  class LogSystem : public Singleton<LogSystem>,public ISystem {
   public:
     void Initialize(const std::string &flag, RunModeType mode, const std::string &path);
     void Register() override;
 
     void Destroy() override;
+
+    void Update(uint64 dt) override;
+
+    void Exit() override;
+
+    const std::type_info &GetType() override;
   };
 
 #define sLogger LogSystem::get_inst()

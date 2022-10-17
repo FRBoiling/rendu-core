@@ -17,14 +17,19 @@ namespace rendu {
 
   class ALogger {
   public:
-    ALogger() = default;
-
+    ALogger() =default;
+    explicit ALogger(const std::string &flag) :level_(spdlog::level::info){
+      init(flag,level_, "", true,"%+");
+    }
+    virtual ~ALogger(){
+      spdlog::shutdown();
+    }
     [[nodiscard]] std::shared_ptr<spdlog::logger> get_logger() const {
       return this->logger_;
     }
   protected:
     void init(const std::string &flag, spdlog::level::level_enum& level, const std::string &log_path, bool console,
-              std::string &pattern_str);
+              const std::string &pattern_str);
 
     void init_console(const std::string &flag);
 

@@ -23,7 +23,7 @@ namespace rendu{
   }
 
   void ALogger::init(const string &flag, spdlog::level::level_enum& level, const string &log_path, bool console,
-                     string &pattern_str) {
+                     const string &pattern_str) {
     level_ = level;
     if (!pattern_str.empty()) {
       console_pattern_ = pattern_str;
@@ -40,6 +40,7 @@ namespace rendu{
     spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
     spdlog::register_logger(this->logger_); // 注册logger
   }
+
 
 }
 

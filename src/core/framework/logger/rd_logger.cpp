@@ -4,7 +4,7 @@
 
 #include "rd_logger.h"
 
-void rendu::RDLogger::init(const std::string &flag, rendu::RunModeType mode, const std::string &path) {
+void rendu::RDLogger::init(const std::string &flag, RunModeType mode, const std::string &path) {
   run_mode_ = mode;
   spdlog::level::level_enum level;
   switch (run_mode_) {

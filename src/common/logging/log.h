@@ -7,17 +7,12 @@
 #include "a_logger.h"
 #include "singleton.h"
 
-namespace rendu{
-  class Log : public Singleton<Log> {
-  public:
-    Log() {
-    }
-
+namespace rendu {
+  class Log : public Singleton<Log>{
   private:
-    ALogger logger_;
+    ALogger logger_{"default"};
   public:
     std::shared_ptr<spdlog::logger> get_logger() { return logger_.get_logger(); }
-
     void set_logger(ALogger &logger) { logger_ = logger; }
 
 //    template<typename... Args>
@@ -46,6 +41,8 @@ namespace rendu{
 //    }
   };
 
+#define RD_LOG_INIT(logger)  Log::get_inst().set_logger(logger);
+
 #define RD_LOGGER_TRACE(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::trace, __VA_ARGS__)
 #define RD_LOGGER_DEBUG(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::debug, __VA_ARGS__)
 #define RD_LOGGER_INFO(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::info, __VA_ARGS__)
@@ -54,6 +51,7 @@ namespace rendu{
 #define RD_LOGGER_CRITICAL(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::critical, __VA_ARGS__)
 
 #define RD_STOPWATCH spdlog::stopwatch
+#define RD_LOGGER_INIT(logger) Log::get_inst().set_logger(logger);
 #define RD_TRACE(...) RD_LOGGER_TRACE(Log::get_inst().get_logger(), __VA_ARGS__)
 #define RD_DEBUG(...) RD_LOGGER_DEBUG(Log::get_inst().get_logger(), __VA_ARGS__)
 #define RD_INFO(...) RD_LOGGER_INFO(Log::get_inst().get_logger(), __VA_ARGS__)

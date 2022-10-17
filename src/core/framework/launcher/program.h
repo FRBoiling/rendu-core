@@ -13,37 +13,30 @@
 
 namespace rendu {
 
-  enum class ProgramState {
-    IDLE = 0,           //闲置
-    INITIALIZED,    //已经初始化
-    RUNNING,        //正在运行
-    STOPPING,       //正在停止
-    STOPPED         //已经停止
-  };
 
+  class Program : public Singleton<Program>, public ISystem {
+  public:
 
-  class Program : public Singleton<Program> {
   public:
     void Initialize(int argc, char **argv);
 
+    ISystem &AddSystem(ISystem &system);
+
     void Run();
 
-    bool IsStopped();
+    bool IsRunning();
 
-    void Exit();
+    void Register() override;
 
-    ISystem& AddSystem(ISystem &system);
+    void Update(uint64 dt) override;
+
+    void Exit() override;
+
+    void Destroy() override;
 
   private:
-
-    void Start();
-
-    void Stop();
-
-    void Update();
-
-    ProgramState _state;
-    std::map<size_t, ISystem *> _updates;
+    SystemState state_;
+    std::map<size_t, ISystem *> systems_;
   };
 
 #define sProgram Program::get_inst()

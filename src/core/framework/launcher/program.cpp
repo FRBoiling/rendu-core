@@ -3,70 +3,69 @@
 */
 #include "program.h"
 #include "log_system.h"
-#include "enum.h"
 #include "options_system.h"
 
 using namespace rendu;
 
 void Program::Initialize(int argc, char **argv) {
-  sOptions.Parse(argc,argv);
-  sLogger.Initialize(sOptions.m_program_option.name(), sOptions.m_program_option.run_mode(), "");
-  sOptions.Show();
-  RD_INFO("initialize...");
-
-  RD_INFO("initialize success!");
-  RD_INFO("ProgramState is {}", rendu::enum_name(_state));
-  _state = ProgramState::INITIALIZED;
+  sOptions.Parse(argc, argv);
 }
 
-bool Program::IsStopped() {
-  return _state == ProgramState::STOPPED;
-}
-
-void Program::Exit() {
-  RD_INFO("exit ....!");
-  _state = ProgramState::STOPPING;
+bool Program::IsRunning() {
+  return state_ == SystemState::Running;
 }
 
 void Program::Run() {
-  Start();
-  while (!IsStopped()) {
-    Update();
+  Register();
+  while (IsRunning()) {
+    Update(1);
   }
-  Stop();
+  Destroy();
   RD_INFO("exit success!");
 }
 
-void Program::Start() {
-  if (_state == ProgramState::INITIALIZED) {
-    RD_INFO("start...");
-    //TODO:BOIL
-    RD_INFO("start success!");
-    _state = ProgramState::RUNNING;
-  }
-}
-
-void Program::Stop() {
-  if (_state == ProgramState::STOPPED) {
-    _state = ProgramState::STOPPING;
+void Program::Destroy() {
+  if (state_ == SystemState::Exit) {
+    state_ = SystemState::Destroy;
     RD_INFO("stop...\n");
     //TODO:BOIL
     RD_INFO("stop success!\n");
   }
 }
 
-void Program::Update() {
-
-}
-
-ISystem& Program::AddSystem(ISystem &system) {
+ISystem &Program::AddSystem(ISystem &system) {
   auto hash_code = system.GetType().hash_code();
-  if (_updates.contains(hash_code)) {
-        RD_DEBUG("AddSystem fail ! The {} already exist.", system.ToString());
+  if (systems_.contains(hash_code)) {
+    RD_DEBUG("AddSystem fail ! The {} already exist.", system.ToString());
   }
-  _updates[hash_code] = &system;
+
+  systems_[hash_code] = &system;
   RD_DEBUG("AddSystem {} success !", system.ToString());
   return system;
+}
+
+void Program::Register() {
+  for(auto it : systems_){
+    it.second->Register();
+    RD_DEBUG("{}--{} Register",it.first ,it.second->ToString());
+  }
+  sOptions.Show();
+  state_ = SystemState::Running;
+  RD_INFO("Register success !  current systems count is {} .", systems_.size());
+}
+
+void Program::Update(uint64 dt) {
+  for(auto it : systems_){
+    it.second->Update(dt);
+    RD_DEBUG("{}--{} Update",it.first ,it.second->ToString());
+  }
+}
+
+void Program::Exit() {
+  for(auto it : systems_){
+    it.second->Exit();
+    RD_DEBUG("{}--{} Exit",it.first ,it.second->ToString());
+  }
 }
 
 

@@ -8,14 +8,20 @@
 #include "system.h"
 #include "singleton.h"
 
-class ConfigSystem : public Singleton<ConfigSystem>, public ISystem {
-public:
-  void Register() override;
+namespace rendu {
+  class ConfigSystem : public Singleton<ConfigSystem>, public ISystem {
+  public:
+    void Register() override;
 
-  void Destroy() override;
+    void Destroy() override;
 
-  const std::type_info &GetType() override;
-};
+    const std::type_info &GetType() override;
 
+    void Update(uint64 dt) override;
+
+    void Exit() override;
+
+  };
+}//namespace rendu
 
 #endif //RENDU_CONFIG_SYSTEM_H_

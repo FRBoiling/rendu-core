@@ -8,6 +8,8 @@
 #include "system.h"
 #include "singleton.h"
 
+namespace rendu{
+
 class EventSystem : public Singleton<EventSystem>, public ISystem {
 
 public:
@@ -16,7 +18,12 @@ public:
   void Destroy() override;
 
   const std::type_info &GetType() override;
+
+  void Update(uint64 dt) override;
+
+  void Exit() override;
 };
 
+}//namespace rendu
 
 #endif //RENDU_EVENT_SYSTEM_H_

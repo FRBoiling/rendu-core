@@ -10,6 +10,8 @@
 namespace rendu {
   class RDLogger : public ALogger {
   public:
+    RDLogger() :ALogger(){};
+  public:
     void init(const std::string &flag, RunModeType mode, const std::string &path);
   private:
     RunModeType run_mode_{RunModeType::Develop};

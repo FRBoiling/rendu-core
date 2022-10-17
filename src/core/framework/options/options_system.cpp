@@ -79,12 +79,3 @@ int OptionsSystem::Parse(int argc, char **argv) {
                                                         m_program_option.process_num()));
   return 1;
 }
-
-
-void OptionsSystem::Register() {
-
-}
-
-void OptionsSystem::Destroy() {
-
-}

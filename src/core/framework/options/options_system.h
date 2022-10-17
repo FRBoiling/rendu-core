@@ -12,24 +12,19 @@
 
 namespace rendu {
   using namespace model;
-
-  class OptionsSystem : public Singleton<OptionsSystem> ,public ISystem{
+  class OptionsSystem : public Singleton<OptionsSystem> {
 
   public:
     int Parse(int argc, char **argv);
-  private:
-    void Register() override;
-
-    void Destroy() override;
 
   public:
-    model::ProgramOption m_program_option;
+    ProgramOption m_program_option;
+
     void Show();
   };
 
 #define sOptions OptionsSystem::get_inst()
 }//namespace rendu
-
 
 
 
