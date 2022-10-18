@@ -10,12 +10,23 @@
 namespace rendu {
   class Logger : public BaseLogger {
   public:
-    Logger() : BaseLogger(){};
-  public:
-    void init(const std::string &flag, RunModeType mode, const std::string &path);
+    Logger(const std::string &flag, RunModeType run_mode, const std::string &path)
+        : BaseLogger(flag), run_mode_(run_mode) {
+      pattern_str_ = "";
+      switch (run_mode_) {
+        case RunModeType::Develop:
+          BaseLogger::init(spdlog::level::trace, path, true, "");
+          break;
+        case RunModeType::Online:
+        case RunModeType::Pressure:
+          BaseLogger::init(spdlog::level::info, path, false, "");
+          break;
+      }
+    }
+
   private:
-    RunModeType run_mode_{RunModeType::Develop};
     std::string pattern_str_;
+    RunModeType run_mode_;
   };
 }//namespace rendu
 

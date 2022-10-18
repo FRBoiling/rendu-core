@@ -5,9 +5,9 @@
 #include "logger.h"
 
 using namespace rendu;
-void LogSystem::Initialize(const std::string &flag, RunModeType mode, const std::string &path) {
-  logger_.init(flag, mode, path);
-  Log::get_inst().set_logger(logger_);
+void LogSystem::Initialize(const std::string &flag, RunModeType mode,const std::string &path) {
+  logger_ = std::make_shared<Logger>(flag,mode,path);
+//  RD_LOG_INIT(logger_);
 }
 
 void LogSystem::Register() {
@@ -16,6 +16,14 @@ void LogSystem::Register() {
 
 void LogSystem::Destroy() {
 
+}
+
+string LogSystem::Name() {
+  return Type().name();
+}
+
+const std::type_info &LogSystem::Type() {
+  return typeid(this);
 }
 
 

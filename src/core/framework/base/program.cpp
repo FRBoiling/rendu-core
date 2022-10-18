@@ -13,13 +13,12 @@ Program program;
 void rendu::Run() {
   program.Register();
 
-//  while (program.IsRunning()) {
-//    program.Update();
-//  }
+  while (program.IsRunning()) {
+    program.Update();
+  }
   program.Destroy();
   RD_INFO("exit success!");
 }
-
 
 BaseSystem &rendu::AddSingleton(BaseSystem &system) {
   return program.AddSingleton(system);

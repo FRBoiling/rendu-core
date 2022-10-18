@@ -10,6 +10,7 @@
 #include <spdlog/sinks/daily_file_sink.h>
 #include <cstdio>
 #include <chrono>
+#include <utility>
 #include <spdlog/pattern_formatter.h>
 #include <spdlog/stopwatch.h>
 
@@ -17,25 +18,23 @@ namespace rendu {
 
   class BaseLogger {
   public:
-    BaseLogger() : level_(spdlog::level::info) {};
-    explicit BaseLogger(const std::string &flag) : level_(spdlog::level::info){
-      init(flag,level_, "", true,"%+");
+    explicit BaseLogger(std::string flag):flag_(std::move(flag)), level_(spdlog::level::trace){
     }
-    virtual ~BaseLogger(){
-      spdlog::shutdown();
-    }
+    virtual ~BaseLogger()= default;
     [[nodiscard]] std::shared_ptr<spdlog::logger> get_logger() const {
       return this->logger_;
     }
   protected:
-    void init(const std::string &flag, spdlog::level::level_enum& level, const std::string &log_path, bool console,
+    void init(spdlog::level::level_enum level, const std::string &log_path, bool console,
               const std::string &pattern_str);
 
     void init_console(const std::string &flag);
 
     void init_file(const std::string &flag, const std::string &log_root_path);
-  private:
+
+    std::string flag_;
     spdlog::level::level_enum level_;
+  private:
     std::shared_ptr<spdlog::logger> logger_;
     std::vector<spdlog::sink_ptr> sinks_;
     std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_; // console

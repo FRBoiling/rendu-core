@@ -16,12 +16,16 @@ namespace rendu {
 
   class LogSystem : public Singleton<LogSystem>,public BaseSystem {
   public:
-    void Initialize(const std::string &flag, RunModeType mode, const std::string &path);
+    void Initialize(const std::string &flag, RunModeType mode, const std::string& path);
     void Register() override;
     void Destroy() override;
 
+    std::string Name() override;
+
+    const std::type_info &Type() override;
+
   private:
-    Logger logger_;
+    std::shared_ptr<Logger> logger_;
   };
 
 #define sLogger LogSystem::get_inst()

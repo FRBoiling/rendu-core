@@ -22,7 +22,7 @@ namespace rendu{
     this->sinks_.push_back(this->file_sink_);
   }
 
-  void BaseLogger::init(const string &flag, spdlog::level::level_enum& level, const string &log_path, bool console,
+  void BaseLogger::init(spdlog::level::level_enum level, const string &log_path, bool console,
                         const string &pattern_str) {
     level_ = level;
     if (!pattern_str.empty()) {
@@ -31,10 +31,10 @@ namespace rendu{
     }
 
     if (console) {
-      init_console(flag);
+      init_console(flag_);
     }
-    init_file(flag, log_path);
-    this->logger_ = std::make_shared<spdlog::logger>(flag, begin(this->sinks_), end(this->sinks_));
+    init_file(flag_, log_path);
+    this->logger_ = std::make_shared<spdlog::logger>(flag_, begin(this->sinks_), end(this->sinks_));
     this->logger_->set_level(level_);
     this->logger_->flush_on(level_); // 设置立刻刷新日志到 disk
     spdlog::flush_every(std::chrono::seconds(10)); // 每隔10秒刷新一次日志
