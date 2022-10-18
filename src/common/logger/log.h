@@ -4,41 +4,41 @@
 #ifndef RENDU_LOG_H_
 #define RENDU_LOG_H_
 
-#include "a_logger.h"
+#include "base_logger.h"
 #include "singleton.h"
 
 namespace rendu {
   class Log : public Singleton<Log>{
   private:
-    ALogger logger_{"default"};
+    BaseLogger logger_{"default"};
   public:
     std::shared_ptr<spdlog::logger> get_logger() { return logger_.get_logger(); }
-    void set_logger(ALogger &logger) { logger_ = logger; }
+    void set_logger(BaseLogger &logger) { logger_ = logger; }
 
-//    template<typename... Args>
-//    void TRACE(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//        logger_.get_logger()->template trace(fmt, std::forward<Args>(args)...);
-//    }
-//    template<typename... Args>
-//    void DEBUG(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//      logger_.get_logger()->template debug(fmt, std::forward<Args>(args)...);
-//    }
-//    template<typename... Args>
-//    void INFO(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//      logger_.get_logger()->template info(fmt, std::forward<Args>(args)...);
-//    }
-//    template<typename... Args>
-//    void WARN(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//      logger_.get_logger()->template warn(fmt, std::forward<Args>(args)...);
-//    }
-//    template<typename... Args>
-//    void ERROR(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//      logger_.get_logger()->template error(fmt, std::forward<Args>(args)...);
-//    }
-//    template<typename... Args>
-//    void CRITICAL(spdlog::format_string_t<Args...> fmt, Args &&... args){
-//      logger_.get_logger()->template critical(fmt, std::forward<Args>(args)...);
-//    }
+    template<typename... Args>
+    void TRACE(spdlog::format_string_t<Args...> fmt, Args &&... args){
+        logger_.get_logger()->template trace(fmt, std::forward<Args>(args)...);
+    }
+    template<typename... Args>
+    void DEBUG(spdlog::format_string_t<Args...> fmt, Args &&... args){
+      logger_.get_logger()->template debug(fmt, std::forward<Args>(args)...);
+    }
+    template<typename... Args>
+    void INFO(spdlog::format_string_t<Args...> fmt, Args &&... args){
+      logger_.get_logger()->template info(fmt, std::forward<Args>(args)...);
+    }
+    template<typename... Args>
+    void WARN(spdlog::format_string_t<Args...> fmt, Args &&... args){
+      logger_.get_logger()->template warn(fmt, std::forward<Args>(args)...);
+    }
+    template<typename... Args>
+    void ERROR(spdlog::format_string_t<Args...> fmt, Args &&... args){
+      logger_.get_logger()->template error(fmt, std::forward<Args>(args)...);
+    }
+    template<typename... Args>
+    void CRITICAL(spdlog::format_string_t<Args...> fmt, Args &&... args){
+      logger_.get_logger()->template critical(fmt, std::forward<Args>(args)...);
+    }
   };
 
 #define RD_LOG_INIT(logger)  Log::get_inst().set_logger(logger);

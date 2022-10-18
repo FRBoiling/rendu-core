@@ -1,17 +1,17 @@
 /*
 * Created by boil on 2022/10/16.
 */
-#include "a_logger.h"
+#include "base_logger.h"
 
 namespace rendu{
-  void ALogger::init_console(const string &flag) {
+  void BaseLogger::init_console(const string &flag) {
     this->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     this->console_sink_->set_pattern(console_pattern_);
     //    this->console_sink_->set_pattern("%+");
     this->sinks_.push_back(this->console_sink_);
   }
 
-  void ALogger::init_file(const string &flag, const string &log_root_path) {
+  void BaseLogger::init_file(const string &flag, const string &log_root_path) {
     int rotation_h = 5; // 分割时间
     int rotation_m = 59;
     std::string log_file_path = flag + ".log";
@@ -22,8 +22,8 @@ namespace rendu{
     this->sinks_.push_back(this->file_sink_);
   }
 
-  void ALogger::init(const string &flag, spdlog::level::level_enum& level, const string &log_path, bool console,
-                     const string &pattern_str) {
+  void BaseLogger::init(const string &flag, spdlog::level::level_enum& level, const string &log_path, bool console,
+                        const string &pattern_str) {
     level_ = level;
     if (!pattern_str.empty()) {
       console_pattern_ = pattern_str;

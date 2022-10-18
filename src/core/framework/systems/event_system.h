@@ -5,23 +5,17 @@
 #ifndef RENDU_EVENT_SYSTEM_H_
 #define RENDU_EVENT_SYSTEM_H_
 
-#include "system.h"
+#include "base_system.h"
 #include "singleton.h"
 
 namespace rendu{
 
-class EventSystem : public Singleton<EventSystem>, public ISystem {
+class EventSystem : public Singleton<EventSystem>, public BaseSystem {
 
 public:
   void Register() override;
 
   void Destroy() override;
-
-  const std::type_info &GetType() override;
-
-  void Update(uint64 dt) override;
-
-  void Exit() override;
 };
 
 }//namespace rendu

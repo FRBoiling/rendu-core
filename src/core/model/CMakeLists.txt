@@ -5,9 +5,9 @@
 set(target-name model)
 set(project-name core)
 
-## 拷贝文件夹
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/proto/core/model
-    ${CMAKE_CURRENT_SOURCE_DIR})
+### 拷贝文件夹
+#execute_process( COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/proto/core/model
+#    ${CMAKE_CURRENT_SOURCE_DIR})
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}

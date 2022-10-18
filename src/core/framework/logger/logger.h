@@ -2,15 +2,15 @@
 * Created by boil on 2022/10/16.
 */
 
-#ifndef RENDU_RD_LOGGER_H_
-#define RENDU_RD_LOGGER_H_
+#ifndef RENDU_LOGGER_H_
+#define RENDU_LOGGER_H_
 
-#include "a_logger.h"
+#include "base_logger.h"
 
 namespace rendu {
-  class RDLogger : public ALogger {
+  class Logger : public BaseLogger {
   public:
-    RDLogger() :ALogger(){};
+    Logger() : BaseLogger(){};
   public:
     void init(const std::string &flag, RunModeType mode, const std::string &path);
   private:
@@ -21,4 +21,4 @@ namespace rendu {
 
 
 
-#endif //RENDU_RD_LOGGER_H_
+#endif //RENDU_LOGGER_H_

@@ -1,8 +1,8 @@
 /*
 * Created by boil on 2022/9/9.
 */
-#ifndef RENDU_A_LOGGER_H_
-#define RENDU_A_LOGGER_H_
+#ifndef RENDU_BASE_LOGGER_H_
+#define RENDU_BASE_LOGGER_H_
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h> // support for user defined types
@@ -15,13 +15,13 @@
 
 namespace rendu {
 
-  class ALogger {
+  class BaseLogger {
   public:
-    ALogger() =default;
-    explicit ALogger(const std::string &flag) :level_(spdlog::level::info){
+    BaseLogger() : level_(spdlog::level::info) {};
+    explicit BaseLogger(const std::string &flag) : level_(spdlog::level::info){
       init(flag,level_, "", true,"%+");
     }
-    virtual ~ALogger(){
+    virtual ~BaseLogger(){
       spdlog::shutdown();
     }
     [[nodiscard]] std::shared_ptr<spdlog::logger> get_logger() const {
@@ -47,4 +47,4 @@ namespace rendu {
 
 }//namespace rendu
 
-#endif // RENDU_A_LOGGER_H_
+#endif // RENDU_BASE_LOGGER_H_
