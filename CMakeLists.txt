@@ -3,7 +3,7 @@
 #**********************************
 
 # **********************************
-cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.23.2 FATAL_ERROR)
 set(PROJECT_NAME rendu)
 # Define the Project Name and Description
 # Set projectname (must be done AFTER setting configurationtypes)
@@ -70,9 +70,11 @@ AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
     ${CMAKE_CURRENT_SOURCE_DIR}/.git
+    ${CMAKE_CURRENT_SOURCE_DIR}/.vs
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
+    ${CMAKE_CURRENT_SOURCE_DIR}/out
     ${CMAKE_CURRENT_SOURCE_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/tests
 )

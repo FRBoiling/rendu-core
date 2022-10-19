@@ -7,7 +7,6 @@ set(target-name generate_model)
 set(input_dir ${CMAKE_CURRENT_SOURCE_DIR})
 #设置输出路径
 set(output_dir ${CMAKE_BINARY_DIR}/proto/core)
-message(---->${CMAKE_BINARY_DIR}/proto/core)
 if(EXISTS ${output_dir} AND IS_DIRECTORY ${output_dir})
 else()
   file(MAKE_DIRECTORY ${output_dir})

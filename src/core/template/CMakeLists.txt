@@ -13,12 +13,6 @@ CollectSourceFiles(
 
 list(APPEND private_sources ${sources_windows})
 
-if (WIN32)
-  if (MSVC)
-    list(APPEND private_sources ${EXEC_NAME}.rc)
-  endif ()
-endif ()
-
 if (USE_COREPCH)
   set(PRIVATE_PCH_HEADER precompiled_headers/${EXEC_NAME}_pch.h)
 endif ()
