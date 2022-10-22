@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/tools/proto_generate/proto_buff_tool)
+set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/tools/proto_generate/proto_generate_tool)
 set(proto_model_output_dir ${CMAKE_BINARY_DIR}/src/core/model/)
 
 if(EXISTS ${proto_model_output_dir} AND IS_DIRECTORY ${proto_model_output_dir})

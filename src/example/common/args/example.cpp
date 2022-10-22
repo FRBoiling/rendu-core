@@ -2,7 +2,7 @@
 * Created by boil on 2022/9/12.
 */
 #include "example_args.h"
-#include "a_logger.h"
+#include "log.h"
 
 int main(int argc, char **argv) {
   try {

@@ -86,7 +86,7 @@ AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build—debug
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
     ${CMAKE_CURRENT_SOURCE_DIR}/out
     ${CMAKE_CURRENT_SOURCE_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/tests

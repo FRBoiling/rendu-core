@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(PROTOBUF_PROTOC_EXECUTABLE proto_buff_tool)
+set(PROTOBUF_PROTOC_EXECUTABLE proto_generate_tool)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -3,7 +3,7 @@
 */
 #include <iostream>
 #include "random.h"
-#include "a_logger.h"
+#include "log.h"
 #include "enum.h"
 
 using namespace rendu;
