@@ -6,8 +6,10 @@
 #define RENDU_LOGGER_H_
 
 #include "base_logger.h"
+#include "run_mode.h"
 
 namespace rendu {
+
   class Logger : public BaseLogger {
   public:
     Logger(const std::string &flag, RunModeType run_mode, const std::string &path)

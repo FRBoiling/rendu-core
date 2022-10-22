@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Created by boil on 2022/10/18.
 */
 
@@ -10,8 +10,8 @@
 
 namespace rendu {
 
-  RD_COMMON_API void Show();
-  RD_COMMON_API void Parse(int argc, char **argv,Options& options);
+	RD_FRAMEWORK_API void Show();
+	RD_FRAMEWORK_API void Parse(int argc, char **argv,Options& options);
 
 }//namespace rendu
 

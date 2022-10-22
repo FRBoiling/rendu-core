@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Created by boil on 2022/8/27.
 */
 
@@ -9,25 +9,25 @@
 #include "define.h"
 #include "base_component.h"
 #include "base_system.h"
-#include "options.h"
 #include "singleton.h"
 #include "interface_update.h"
+#include "logger.h"
 
 namespace rendu {
-  RD_COMMON_API void Run();
+  RD_FRAMEWORK_API void Run();
 
-  RD_COMMON_API BaseSystem &AddSingleton(BaseSystem &system);
+  RD_FRAMEWORK_API void Initialize(int argc, char **argv);
 
-  class Program : public BaseSystem {
+  RD_FRAMEWORK_API BaseSystem &AddSingleton(BaseSystem &system);
+
+  class Program : public BaseSystem, public IUpdate {
 
   public:
     BaseSystem &AddSingleton(BaseSystem &system);
 
-    void Initialize(int argc, char **argv);
-
     bool IsRunning();
 
-    void Update();
+    void Update() override;
 
     void Register() override;
 

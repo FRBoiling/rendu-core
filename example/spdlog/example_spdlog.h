@@ -84,7 +84,7 @@ void binary_example() {
     buf.push_back(static_cast<char>(i & 0xff));
   }
   spdlog::info("Binary example: {}", spdlog::to_hex(buf));
-  spdlog::info("Another binary example:{:n}", spdlog::to_hex(std::begin(buf), std::begin(buf) + 10));
+  //spdlog::info("Another binary example:{:n}", spdlog::to_hex(std::begin(buf), std::begin(buf) + 10));
   // more examples:
   // logger->info("uppercase: {:X}", spdlog::to_hex(buf));
   // logger->info("uppercase, no delimiters: {:Xs}", spdlog::to_hex(buf));
@@ -177,7 +177,7 @@ namespace fmt {
   template<>
   struct formatter<my_type> : formatter<std::string> {
     auto format(my_type my, format_context &ctx) -> decltype(ctx.out()) {
-      return format_to(ctx.out(), "[my_type i={}]", my.i);
+      return fmt::format_to(ctx.out(), "[my_type i={}]", my.i);
     }
   };
 }
@@ -343,6 +343,7 @@ int spdlog_example() {
     std::printf("Log initialization failed: %s\n", ex.what());
     return 1;
   }
+  return 0;
 }
 
 #endif //RENDU_EXAMPLE_SPDLOG_H_

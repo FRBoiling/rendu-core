@@ -3,13 +3,11 @@
 #**********************************
 
 set(target-name common)
-set(project-name cores)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
     private_sources
     # Exclude
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers)
 
 if (USE_COREPCH)
@@ -49,15 +47,9 @@ target_link_libraries(${target-name}
 
 add_dependencies(${target-name} revision_data.h)
 
-target_compile_definitions(${target-name}
-    PUBLIC
-    -DSPDLOG_COMPILED_LIB
-    -DRENDU_
-    )
-set_target_properties(${target-name}
-    PROPERTIES
-    FOLDER
-    ${project-name})
+#target_compile_definitions(${target-name}
+#    PUBLIC
+#    )
 
 # Generate precompiled header
 if (USE_COREPCH)

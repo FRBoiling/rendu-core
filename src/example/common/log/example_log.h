@@ -11,7 +11,6 @@
 using namespace rendu;
 
 void example_log(){
-  RD_INIT("custom",RunMode::Develop,"logs/");
   RD_TRACE("------{1}-{0}-{0}------", enum_name(spdlog::level::trace),enum_name(spdlog::level::debug),enum_name
   (spdlog::level::info));
 

@@ -5,10 +5,26 @@
 #include "example_custom.h"
 #include "log.h"
 #include "log_trace.h"
+#include "spdlog/fmt/fmt.h"
+
+template <typename... T>
+std::string StringFormat(fmt::format_string<T...> fmt_str, T&&... args) {
+  try
+  {
+    return vformat(fmt_str, fmt::make_format_args(args...));
+  }
+  catch (const fmt::format_error& formatError)
+  {
+//    std::string error = "An error occurred formatting string \"" + std::string(fmt_str) + "\" : " + std::string
+//        (formatError.what());
+    return "";
+  }
+}
 
 int main(int, char *[]) {
 
-
+  std::string message = StringFormat("The answer is {}.{}", 42,"1");
+  printf("%s", message.c_str());
   //  spdlog_example();
 //  custom_example();
 //  spdlog::set_pattern("%+");

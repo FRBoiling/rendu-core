@@ -24,9 +24,9 @@ namespace rendu {
     [[nodiscard]] std::shared_ptr<spdlog::logger> get_logger() const {
       return this->logger_;
     }
-  protected:
     void init(spdlog::level::level_enum level, const std::string &log_path, bool console,
               const std::string &pattern_str);
+  protected:
 
     void init_console(const std::string &flag);
 

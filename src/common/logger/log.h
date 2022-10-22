@@ -52,7 +52,7 @@ namespace rendu {
 #define RD_LOGGER_CRITICAL(logger, ...) SPDLOG_LOGGER_CALL(logger, spdlog::level::critical, __VA_ARGS__)
 
 #define RD_STOPWATCH spdlog::stopwatch
-#define RD_LOGGER_INIT(logger) Log::get_inst().set_logger(logger);
+#define RD_LOGGER_INIT(logger) Log::get_inst().set_logger(logger)
 #define RD_TRACE(...) RD_LOGGER_TRACE(Log::get_inst().get_logger(), __VA_ARGS__)
 #define RD_DEBUG(...) RD_LOGGER_DEBUG(Log::get_inst().get_logger(), __VA_ARGS__)
 #define RD_INFO(...) RD_LOGGER_INFO(Log::get_inst().get_logger(), __VA_ARGS__)

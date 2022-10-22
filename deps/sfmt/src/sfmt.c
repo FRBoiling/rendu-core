@@ -52,7 +52,7 @@ inline static void swap(w128_t *array, int size);
 #endif
 
 #if defined(HAVE_ALTIVEC)
-  #include "sfmt-alti.h"
+  #include "sfmt_alti.h"
 #elif defined(HAVE_SSE2)
 /**
  * parameters used by sse2.
@@ -60,7 +60,7 @@ inline static void swap(w128_t *array, int size);
   static const w128_t sse2_param_mask = {{SFMT_MSK1, SFMT_MSK2,
                                           SFMT_MSK3, SFMT_MSK4}};
   #if defined(_MSC_VER)
-    #include "sfmt-sse2-msc.h"
+    #include "sfmt_sse2_msc.h"
   #else
     #include "sfmt_sse2.h"
   #endif

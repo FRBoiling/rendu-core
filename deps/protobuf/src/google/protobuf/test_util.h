@@ -35,17 +35,17 @@
 #ifndef GOOGLE_PROTOBUF_TEST_UTIL_H__
 #define GOOGLE_PROTOBUF_TEST_UTIL_H__
 
-#include <google/protobuf/unittest.pb.h>
+#include "google/protobuf/unittest.pb.h"
 
 #define UNITTEST ::protobuf_unittest
 #define UNITTEST_IMPORT ::protobuf_unittest_import
 // Must be included when the preprocessor symbols above are defined.
-#include <google/protobuf/test_util.inc>
+#include "google/protobuf/test_util.inc"
 #undef UNITTEST
 #undef UNITTEST_IMPORT
 
 // Must be included last.
-#include <google/protobuf/port_def.inc>
+#include "google/protobuf/port_def.inc"
 
 namespace google {
 namespace protobuf {
@@ -63,6 +63,8 @@ class ReflectionTester {
   // the latter case, ReflectionTester searches for extension fields in
   // its file.
   explicit ReflectionTester(const Descriptor* base_descriptor);
+  ReflectionTester(const ReflectionTester&) = delete;
+  ReflectionTester& operator=(const ReflectionTester&) = delete;
 
   void SetAllFieldsViaReflection(Message* message);
   void ModifyRepeatedFieldsViaReflection(Message* message);
@@ -120,8 +122,6 @@ class ReflectionTester {
   void ExpectAllFieldsSetViaReflection1(const Message& message);
   void ExpectAllFieldsSetViaReflection2(const Message& message);
   void ExpectAllFieldsSetViaReflection3(const Message& message);
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(ReflectionTester);
 };
 
 inline TestUtil::ReflectionTester::ReflectionTester(
@@ -238,6 +238,10 @@ inline void TestUtil::ReflectionTester::SetAllFieldsViaReflection(
   sub_message = reflection->MutableMessage(message, F("optional_lazy_message"));
   sub_message->GetReflection()->SetInt32(sub_message, nested_b_, 127);
 
+  sub_message = reflection->MutableMessage(
+      message, F("optional_unverified_lazy_message"));
+  sub_message->GetReflection()->SetInt32(sub_message, nested_b_, 128);
+
   // -----------------------------------------------------------------
 
   reflection->AddInt32(message, F("repeated_int32"), 201);
@@ -348,7 +352,7 @@ inline void TestUtil::ReflectionTester::SetOneofViaReflection(
   Message* sub_message = reflection->MutableMessage(
       message, descriptor->FindFieldByName("foo_lazy_message"));
   sub_message->GetReflection()->SetInt64(
-      sub_message, sub_message->GetDescriptor()->FindFieldByName("qux_int"),
+      sub_message, sub_message->GetDescriptor()->FindFieldByName("moo_int"),
       100);
 
   reflection->SetString(message, descriptor->FindFieldByName("bar_cord"),
@@ -376,7 +380,7 @@ inline void TestUtil::ReflectionTester::ExpectOneofSetViaReflection(
       message, descriptor->FindFieldByName("foo_lazy_message"));
   EXPECT_EQ(100, sub_message->GetReflection()->GetInt64(
                      *sub_message,
-                     sub_message->GetDescriptor()->FindFieldByName("qux_int")));
+                     sub_message->GetDescriptor()->FindFieldByName("moo_int")));
 
   EXPECT_EQ("101", reflection->GetString(
                        message, descriptor->FindFieldByName("bar_cord")));
@@ -468,6 +472,8 @@ inline void TestUtil::ReflectionTester::ExpectAllFieldsSetViaReflection1(
   EXPECT_TRUE(
       reflection->HasField(message, F("optional_public_import_message")));
   EXPECT_TRUE(reflection->HasField(message, F("optional_lazy_message")));
+  EXPECT_TRUE(
+      reflection->HasField(message, F("optional_unverified_lazy_message")));
 
   sub_message = &reflection->GetMessage(message, F("optionalgroup"));
   EXPECT_TRUE(sub_message->GetReflection()->HasField(*sub_message, group_a_));
@@ -481,6 +487,9 @@ inline void TestUtil::ReflectionTester::ExpectAllFieldsSetViaReflection1(
       &reflection->GetMessage(message, F("optional_public_import_message"));
   EXPECT_TRUE(sub_message->GetReflection()->HasField(*sub_message, import_e_));
   sub_message = &reflection->GetMessage(message, F("optional_lazy_message"));
+  EXPECT_TRUE(sub_message->GetReflection()->HasField(*sub_message, nested_b_));
+  sub_message =
+      &reflection->GetMessage(message, F("optional_unverified_lazy_message"));
   EXPECT_TRUE(sub_message->GetReflection()->HasField(*sub_message, nested_b_));
 
   EXPECT_TRUE(reflection->HasField(message, F("optional_nested_enum")));
@@ -529,6 +538,10 @@ inline void TestUtil::ReflectionTester::ExpectAllFieldsSetViaReflection1(
             sub_message->GetReflection()->GetInt32(*sub_message, import_e_));
   sub_message = &reflection->GetMessage(message, F("optional_lazy_message"));
   EXPECT_EQ(127,
+            sub_message->GetReflection()->GetInt32(*sub_message, nested_b_));
+  sub_message =
+      &reflection->GetMessage(message, F("optional_unverified_lazy_message"));
+  EXPECT_EQ(128,
             sub_message->GetReflection()->GetInt32(*sub_message, nested_b_));
 
   EXPECT_EQ(nested_baz_,
@@ -897,6 +910,8 @@ inline void TestUtil::ReflectionTester::ExpectClearViaReflection(
   EXPECT_FALSE(
       reflection->HasField(message, F("optional_public_import_message")));
   EXPECT_FALSE(reflection->HasField(message, F("optional_lazy_message")));
+  EXPECT_FALSE(
+      reflection->HasField(message, F("optional_unverified_lazy_message")));
 
   EXPECT_FALSE(reflection->HasField(message, F("optional_nested_enum")));
   EXPECT_FALSE(reflection->HasField(message, F("optional_foreign_enum")));
@@ -947,6 +962,10 @@ inline void TestUtil::ReflectionTester::ExpectClearViaReflection(
   EXPECT_FALSE(sub_message->GetReflection()->HasField(*sub_message, import_e_));
   EXPECT_EQ(0, sub_message->GetReflection()->GetInt32(*sub_message, import_e_));
   sub_message = &reflection->GetMessage(message, F("optional_lazy_message"));
+  EXPECT_FALSE(sub_message->GetReflection()->HasField(*sub_message, nested_b_));
+  EXPECT_EQ(0, sub_message->GetReflection()->GetInt32(*sub_message, nested_b_));
+  sub_message =
+      &reflection->GetMessage(message, F("optional_unverified_lazy_message"));
   EXPECT_FALSE(sub_message->GetReflection()->HasField(*sub_message, nested_b_));
   EXPECT_EQ(0, sub_message->GetReflection()->GetInt32(*sub_message, nested_b_));
 
@@ -1204,7 +1223,7 @@ inline void TestUtil::ReflectionTester::ExpectMessagesReleasedViaReflection(
       "optional_foreign_message",
       "optional_import_message",
   };
-  for (int i = 0; i < GOOGLE_ARRAYSIZE(fields); i++) {
+  for (int i = 0; i < ABSL_ARRAYSIZE(fields); i++) {
     Message* released = reflection->ReleaseMessage(message, F(fields[i]));
     switch (expected_release_state) {
       case IS_NULL:
@@ -1253,6 +1272,6 @@ inline void ExpectAllFieldsAndExtensionsInOrder(const std::string& serialized) {
 }  // namespace protobuf
 }  // namespace google
 
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
 
 #endif  // GOOGLE_PROTOBUF_TEST_UTIL_H__

@@ -1,68 +1,65 @@
 #**********************************
-#  Created by boil on 2022/8/14.
+#  Created by boil on 2022/10/20.
 #**********************************
-
 set(target-name shared)
 set(project-name core)
 
 CollectSourceFiles(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    private_sources
+    PRIVATE_SOURCES
     # Exclude
     ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers)
 
-if (USE_COREPCH)
-  set(PRIVATE_PCH_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers/${target-name}_pch.h)
-endif ()
+if(USE_COREPCH)
+  set(PRIVATE_PCH_HEADER precompiled_headers/${target-name}_pch.h)
+endif()
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_definitions(-DRENDU_API_EXPORT_SHARED)
 
-add_library(${target-name}
-    ${private_sources}
+add_library(shared
+    ${PRIVATE_PCH_SOURCE}
+    ${PRIVATE_SOURCES}
     )
 
 CollectIncludeDirectories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    public_includes
+    PUBLIC_INCLUDES
     # Exclude
     ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers)
 
-target_include_directories(${target-name}
+target_include_directories(shared
     PUBLIC
-    ${public_includes}
+    ${PUBLIC_INCLUDES}
     PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(${target-name}
+target_link_libraries(shared
     PRIVATE
     rendu-core-interface
-    common
     PUBLIC
-    libprotobuf
-    rapidjson
-    #TODO:添加reps库
+    common
     )
 
-set_target_properties(${target-name}
+set_target_properties(shared
     PROPERTIES
     FOLDER
-    ${project-name})
+    "server")
 
-if (BUILD_SHARED_LIBS)
-  if (UNIX)
+if(BUILD_SHARED_LIBS)
+  if(UNIX)
     install(TARGETS shared
         LIBRARY
         DESTINATION lib)
-  elseif (WIN32)
+  elseif(WIN32)
     install(TARGETS shared
         RUNTIME
         DESTINATION "${CMAKE_INSTALL_PREFIX}")
-  endif ()
-endif ()
+  endif()
+endif()
 
 # Generate precompiled header
-if (USE_COREPCH)
-  add_cxx_pch(${target-name} ${PRIVATE_PCH_HEADER})
-endif ()
+if(USE_COREPCH)
+  add_cxx_pch(shared ${PRIVATE_PCH_HEADER})
+endif()
