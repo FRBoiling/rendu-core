@@ -110,7 +110,7 @@ namespace rendu
 
       template <typename T = Context>
       static T& GetInstance() noexcept {
-        HELENA_ASSERT(m_Context, "Context not initilized");
+        RENDU_ASSERT(m_Context, "Context not initilized");
         return *static_cast<T*>(m_Context.get());
       }
 
@@ -140,14 +140,14 @@ namespace rendu
       /**
       * @brief Initialize context of Engine
       * @tparam T Context type
-      * @tparam Args Types of arguments used to construct
-      * @param args Arguments for context initialization
+      * @tparam Args types of arguments used to construct
+      * @param args arguments for context initialization
       * @note The context can be inherited
       */
       template <typename T = Context, typename... Args>
       requires std::is_base_of_v<Context, T> && std::is_constructible_v<T, Args...>
       static void Initialize([[maybe_unused]] Args&&... args) {
-        HELENA_ASSERT(!m_Context, "Context already initialized!");
+        RENDU_ASSERT(!m_Context, "Context already initialized!");
         m_Context = std::make_shared<T>(std::forward<Args>(args)...);
       }
 
@@ -160,8 +160,8 @@ namespace rendu
       template <typename T = Context>
       requires std::is_base_of_v<Context, T>
       static void Initialize(const std::shared_ptr<T>& ctx) noexcept {
-        HELENA_ASSERT(ctx, "Context is empty!");
-        HELENA_ASSERT(!m_Context || (ctx && m_Context == ctx), "Context already initialized!");
+        RENDU_ASSERT(ctx, "Context is empty!");
+        RENDU_ASSERT(!m_Context || (ctx && m_Context == ctx), "Context already initialized!");
         m_Context = ctx;
       }
 
@@ -173,7 +173,7 @@ namespace rendu
       template <typename T = Context>
       requires std::is_base_of_v<Context, T>
       [[nodiscard]] static std::shared_ptr<T> Get() noexcept {
-        HELENA_ASSERT(m_Context, "Context not initialized");
+        RENDU_ASSERT(m_Context, "Context not initialized");
         return std::static_pointer_cast<T>(m_Context);
       }
 
@@ -228,7 +228,7 @@ namespace rendu
       }
 
     private:
-      Types::VectorAny<UKSystems, Traits::Cacheline> m_Systems;
+      Types::VectorAny<UKSystems, traits::Cacheline> m_Systems;
       Types::VectorUnique<UKEventStorage, std::vector<CallbackStorage>> m_Events;
 
       Callback m_Callback;
@@ -250,11 +250,11 @@ namespace rendu
     };
 
   private:
-#if defined(HELENA_PLATFORM_WIN)
+#if defined(RENDU_PLATFORM_WIN)
     static BOOL WINAPI CtrlHandler([[maybe_unused]] DWORD dwCtrlType);
         static LONG WINAPI MiniDumpSEH(EXCEPTION_POINTERS* pException);
 
-#elif defined(HELENA_PLATFORM_LINUX)
+#elif defined(RENDU_PLATFORM_LINUX)
     static void SigHandler([[maybe_unused]] int signal);
 #endif
 
@@ -265,13 +265,13 @@ namespace rendu
     * @brief Heartbeat of the engine
     *
     * @code{.cpp}
-    * while(Helena::Engine::Heartbeat()) {}
+    * while(rendu::Engine::Heartbeat()) {}
     * @endcode
     *
     * @return True if successful or false if an error is detected or called shutdown
     * @note
     * You have to call heartbeat in a loop to keep the framework running
-    * Use the definition of HELENA_ENGINE_NO SLEEP to prevent sleep by 1 ms
+    * Use the definition of RENDU_ENGINE_NO SLEEP to prevent sleep by 1 ms
     * The thread will not sleep if your operations consume a lot of CPU time
     */
     [[nodiscard]] static bool Heartbeat();
@@ -293,14 +293,14 @@ namespace rendu
     * @brief Shutdown the engine (thread safe)
     *
     * @code{.cpp}
-    * Helena::Engine::Shutdown(); // no error
-    * Helena::Engine::Shutdown("Unknown error");
-    * Helena::Engine::Shutdown("Error code: {}, text: {}", 55, "examples");
+    * rendu::Engine::Shutdown(); // no error
+    * rendu::Engine::Shutdown("Unknown error");
+    * rendu::Engine::Shutdown("Error code: {}, text: {}", 55, "examples");
     * @endcode
     *
-    * @tparam Args Types of arguments
+    * @tparam Args types of arguments
     * @param msg Reason message
-    * @param args Arguments for formatting the message
+    * @param args arguments for formatting the message
     * @note If the error message is not empty, an error message will be displayed in the console
     * @warning If there is no console, the message will not be displayed
     */
@@ -320,12 +320,12 @@ namespace rendu
     *
     * @code{.cpp}
     * struct MySystem {};
-    * Helena::Engine::RegisterSystem<MySystem>();
+    * rendu::Engine::RegisterSystem<MySystem>();
     * @endcode
     *
     * @tparam T Type of system
-    * @tparam Args Types of arguments
-    * @param args Arguments for system initialization
+    * @tparam Args types of arguments
+    * @param args arguments for system initialization
     */
     template <typename T, typename... Args>
     static void RegisterSystem([[maybe_unused]] Args&&... args);
@@ -337,13 +337,13 @@ namespace rendu
     * struct MySystemA{};
     * struct MySystemB{};
     *
-    * Helena::Engine::RegisterSystem<MySystemA, MySystemB>();
-    * if(Helena::Engine::HasSystem<MySystemA, MySystemB>()) {
+    * rendu::Engine::RegisterSystem<MySystemA, MySystemB>();
+    * if(rendu::Engine::HasSystem<MySystemA, MySystemB>()) {
     *   // ok
     * }
     * @endcode
     *
-    * @tparam T Types of systems
+    * @tparam T types of systems
     * @return True if all types of systems exist, or false
     */
     template <typename... T>
@@ -356,13 +356,13 @@ namespace rendu
     * struct MySystemA{};
     * struct MySystemB{};
     *
-    * Helena::Engine::RegisterSystem<MySystemA>();
-    * if(Helena::Engine::AnySystem<MySystemA, MySystemB>()) {
+    * rendu::Engine::RegisterSystem<MySystemA>();
+    * if(rendu::Engine::AnySystem<MySystemA, MySystemB>()) {
     *   // ok
     * }
     * @endcode
     *
-    * @tparam T Types of systems
+    * @tparam T types of systems
     * @return True if any types of systems exist, or false
     */
     template <typename... T>
@@ -375,13 +375,13 @@ namespace rendu
     * struct MySystemA{};
     * struct MySystemB{};
     *
-    * Helena::Engine::RegisterSystem<MySystemA>();
-    * Helena::Engine::RegisterSystem<MySystemB>();
+    * rendu::Engine::RegisterSystem<MySystemA>();
+    * rendu::Engine::RegisterSystem<MySystemB>();
     *
-    * const auto& [systemA, systemB] = Helena::Engine::GetSystem<MySystemA, MySystemB>();
+    * const auto& [systemA, systemB] = rendu::Engine::GetSystem<MySystemA, MySystemB>();
     * @endcode
     *
-    * @tparam T Types of systems
+    * @tparam T types of systems
     * @return Reference to a system or tuple if multiple types of systems are passed
     */
     template <typename... T>
@@ -394,13 +394,13 @@ namespace rendu
     * struct MySystemA{};
     * struct MySystemB{};
     *
-    * Helena::Engine::RegisterSystem<MySystemA>();
-    * Helena::Engine::RegisterSystem<MySystemB>();
+    * rendu::Engine::RegisterSystem<MySystemA>();
+    * rendu::Engine::RegisterSystem<MySystemB>();
     *
-    * Helena::Engine::RemoveSystem<MySystemA, MySystemB>();
+    * rendu::Engine::RemoveSystem<MySystemA, MySystemB>();
     * @endcode
     *
-    * @tparam T Types of systems
+    * @tparam T types of systems
     */
     template <typename... T>
     static void RemoveSystem();
@@ -413,11 +413,11 @@ namespace rendu
     *   // The event is called when the engine is initialized
     * }
     *
-    * Helena::Engine::SubscribeEvent<Helena::Events::Engine::Init>(&OnInit);
+    * rendu::Engine::SubscribeEvent<rendu::Events::Engine::Init>(&OnInit);
     * @endcode
     *
     * @tparam Event Type of event
-    * @tparam Args Types of arguments
+    * @tparam Args types of arguments
     * @param callback Callback function
     */
     template <typename Event, typename... Args>
@@ -432,12 +432,12 @@ namespace rendu
     *       // The event is called when the engine is initialized
     *   }
     * };
-    * Helena::Engine::SubscribeEvent<Helena::Events::Engine::Init>(&MySystem::OnInit);
+    * rendu::Engine::SubscribeEvent<rendu::Events::Engine::Init>(&MySystem::OnInit);
     * @endcode
     *
     * @tparam Event Type of event
     * @tparam System Type of system
-    * @tparam Args Types of events
+    * @tparam Args types of events
     * @param callback Callback function
     */
     template <typename Event, typename System, typename... Args>
@@ -452,12 +452,12 @@ namespace rendu
     *       // The event is called when the engine is initialized
     *   }
     * };
-    * Helena::Engine::SubscribeEvent<Helena::Events::Engine::Init>(&MySystem::OnInit);
+    * rendu::Engine::SubscribeEvent<rendu::Events::Engine::Init>(&MySystem::OnInit);
     * @endcode
     *
     * @tparam Event Type of event
-    * @tparam Args Types of arguments
-    * @param args Arguments for construct the event
+    * @tparam Args types of arguments
+    * @param args arguments for construct the event
     */
     template <typename Event, typename... Args>
     static void SignalEvent([[maybe_unused]] Args&&... args);
@@ -472,11 +472,11 @@ namespace rendu
     *   }
     * };
     *
-    * Helena::Engine::UnsubscribeEvent<Helena::Events::Engine::Init>(&OnInit);
+    * rendu::Engine::UnsubscribeEvent<rendu::Events::Engine::Init>(&OnInit);
     * @endcode
     *
     * @tparam Event Type of event
-    * @tparam Args Types of arguments
+    * @tparam Args types of arguments
     * @param callback Callback function
     */
     template <typename Event, typename... Args>
@@ -492,12 +492,12 @@ namespace rendu
     *   }
     * };
     *
-    * Helena::Engine::UnsubscribeEvent<Helena::Events::Engine::Init>(&MySystem::OnInit);
+    * rendu::Engine::UnsubscribeEvent<rendu::Events::Engine::Init>(&MySystem::OnInit);
     * @endcode
     *
     * @tparam Event Type of event
     * @tparam System Type of system
-    * @tparam Args Types of arguments
+    * @tparam Args types of arguments
     * @param callback Callback function
     */
     template <typename Event, typename System, typename... Args>

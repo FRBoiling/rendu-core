@@ -1,11 +1,8 @@
-#|--------------------------------
-#| rendu-core rendu project
-#|--------------------------------
 
-set(RENDU_APP ${rendu_key})
-#AddSubdirectory(
-#    ${CMAKE_CURRENT_SOURCE_DIR}
-#    # Exclude
-#    #    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog
-#    #    ${CMAKE_CURRENT_SOURCE_DIR}/fmt
-#)
+message(STATUS "Building rendu ...")
+AddSubdirectory(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    # Exclude
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/gtest
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/catch2
+)

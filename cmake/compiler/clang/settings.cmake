@@ -16,7 +16,7 @@ endif()
 
 # This tests for a bug in clang-7 that causes linkage to fail for 64-bit from_chars (in some configurations)
 # If the clang requirement is bumped to >= clang-8, you can remove this check, as well as
-# the associated ifdef block in src/common/Utilities/StringConvert.h
+# the associated ifdef block in src/common/utils/StringConvert.h
 include(CheckCXXSourceCompiles)
 
 check_cxx_source_compiles("

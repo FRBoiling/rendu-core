@@ -12,7 +12,7 @@ set(CXX_EXTENSIONS OFF)
 add_library(rendu-feature-interface INTERFACE)
 target_compile_features(rendu-feature-interface
   INTERFACE
-    cxx_std_17)
+    cxx_std_20)
 
 # 一个接口库，使警告级别对其他目标可用。这个接口目标是通过平台特定的脚本设置的
 add_library(rendu-warning-interface INTERFACE)

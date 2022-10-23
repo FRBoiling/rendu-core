@@ -2,11 +2,14 @@
 #  Created by boil on 2022/10/19.
 #**********************************
 
+set(RENDU_PROJECT_OUTDIR ${RENDU_PROJECT_DIR}/Bin/Bin)
+set(RENDU_PROJECT_BINDIR ${RENDU_PROJECT_DIR}/Bin)
+
 option(SERVERS          "Build worldserver and authserver"                            1)
 
 set(SCRIPTS_AVAILABLE_OPTIONS none static dynamic minimal-static minimal-dynamic)
 
-# Log a fatal error when the value of the SCRIPTS variable isn't a valid option.
+# log a fatal error when the value of the SCRIPTS variable isn't a valid option.
 if(SCRIPTS)
   list(FIND SCRIPTS_AVAILABLE_OPTIONS "${SCRIPTS}" SCRIPTS_INDEX)
   if(${SCRIPTS_INDEX} EQUAL -1)
@@ -51,6 +54,6 @@ set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierar
 option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
 option(BUILD_TESTING    "Build test suite" 0)
 
-if(UNIX)
+if(WINDOWS)
   option(USE_LD_GOLD    "Use GNU gold linker"                                        0)
 endif()
