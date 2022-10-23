@@ -4,9 +4,7 @@
 #include <cstdint>
 #include <string_view>
 #include <algorithm>
-#include "fmt/format.h"
 #include "fmt/color.h"
-
 namespace rendu::traits {
   template<typename T>
   concept DefinitionLogger = requires {

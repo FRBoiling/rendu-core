@@ -122,8 +122,6 @@ endif ()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake")
 
-include(cxx14)
-include(JoinPaths)
 
 list(FIND CMAKE_CXX_COMPILE_FEATURES "cxx_variadic_templates" index)
 if (${index} GREATER -1)
@@ -175,7 +173,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(PEDANTIC_COMPILE_FLAGS -Wall -Wextra -pedantic -Wconversion -Wundef
       -Wdeprecated -Wweak-vtables -Wshadow
       -Wno-gnu-zero-variadic-macro-arguments)
-  check_cxx_compiler_flag(-Wzero-as-null-pointer-constant HAS_NULLPTR_WARNING)
+#  check_cxx_compiler_flag(-Wzero-as-null-pointer-constant HAS_NULLPTR_WARNING)
   if (HAS_NULLPTR_WARNING)
     set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS}
         -Wzero-as-null-pointer-constant)
