@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(rendu-core VERSION 1.0.2 LANGUAGES CXX)
+project(rendu-core VERSION 2.0.0 LANGUAGES CXX)
 set(rendu_key rendu)
 set(deps_key deps)
 set(tests_key tests)
