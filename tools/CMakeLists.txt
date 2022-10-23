@@ -5,8 +5,7 @@
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/fmt
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/proto_generate
 )
 
 

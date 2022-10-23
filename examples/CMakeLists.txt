@@ -1,10 +1,10 @@
 #|--------------------------------
-#| rendu-core tests project
+#| rendu-core examples project
 #|--------------------------------
 
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
-#    ${CMAKE_CURRENT_SOURCE_DIR}/gtest
-#    ${CMAKE_CURRENT_SOURCE_DIR}/catch2
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/fmt
 )
