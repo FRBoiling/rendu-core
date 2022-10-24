@@ -5,6 +5,7 @@ set(target-name protobuf)
 set(project-name deps)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
+list(APPEND RENDU_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
 message("")
 message(STATUS "Building " ${target-name} "...")
