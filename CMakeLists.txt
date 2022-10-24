@@ -54,7 +54,7 @@ include(cmake/genrev.cmake)
 # print out the results before continuing
 include(cmake/showoptions.cmake)
 
-#find_package(PCHSupport)
+find_package(PCHSupport)
 
 # add dependencies
 add_subdirectory(deps)
@@ -66,6 +66,3 @@ add_subdirectory(tools)
 add_subdirectory(examples)
 # add tests project
 add_subdirectory(tests)
-# add tools project
-add_subdirectory(tools)
-
