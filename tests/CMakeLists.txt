@@ -1,7 +1,10 @@
+#**********************************
+#  Created by boil on 2022/10/24.
+#**********************************
 #|--------------------------------
-#| rendu-core tests project
+#| rendu-core tests module
 #|--------------------------------
-
+message("")
 if(RENDU_FLAG_TESTS)
   message(STATUS "Building tests ...")
   AddSubdirectory(

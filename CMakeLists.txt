@@ -38,33 +38,24 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 # set macro-directory
 list(APPEND CMAKE_MODULE_PATH
     "${CMAKE_SOURCE_DIR}/cmake/macros")
-
+include(ConfigureScripts)
 include(CheckCXXSourceRuns)
 include(CheckIncludeFiles)
-include(ConfigureScripts)
-# set default buildoptions and print them
-include(cmake/options.cmake)
-# turn off PCH totally if enabled (hidden setting, mainly for devs)
-if (NOPCH)
-  set(USE_COREPCH 0)
-  set(USE_SCRIPTPCH 0)
-endif ()
-
 include(ConfigureBaseTargets)
-include(Checkplatform)
-
+include(CheckPlatform)
 include(GroupSources)
 include(AutoCollect)
 include(AutoAddSubdirectory)
-find_package(PCHSupport)
-if (NOT WITHOUT_GIT)
-  find_package(Git 1.7)
-endif ()
 
+# set default buildoptions and print them
+include(cmake/options.cmake)
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
 # print out the results before continuing
 include(cmake/showoptions.cmake)
+
+
+find_package(PCHSupport)
 
 # add dependencies
 add_subdirectory(deps)

@@ -27,18 +27,6 @@ message("")
 
 # Show infomation about the options selected during configuration
 
-if (SERVERS)
-  message("* Build world/auth       : Yes (default)")
-else ()
-  message("* Build world/authserver : No")
-endif ()
-
-if (SCRIPTS AND (NOT SCRIPTS STREQUAL "none"))
-  message("* Build with scripts     : Yes (${SCRIPTS})")
-else ()
-  message("* Build with scripts     : No")
-endif ()
-
 if (TOOLS)
   message("* Build map/vmap tools   : Yes (default)")
   add_definitions(-DNO_CORE_FUNCS)
@@ -56,12 +44,6 @@ if (USE_COREPCH)
   message("* Build core w/PCH       : Yes (default)")
 else ()
   message("* Build core w/PCH       : No")
-endif ()
-
-if (USE_SCRIPTPCH)
-  message("* Build scripts w/PCH    : Yes (default)")
-else ()
-  message("* Build scripts w/PCH    : No")
 endif ()
 
 if (WITH_WARNINGS)

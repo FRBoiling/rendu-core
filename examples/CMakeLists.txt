@@ -1,11 +1,10 @@
+#**********************************
+#  Created by boil on 2022/10/24.
+#**********************************
 #|--------------------------------
 #| rendu-core examples project
 #|--------------------------------
-
-
-#|--------------------------------
-#| Build with examples
-#|--------------------------------
+message("")
 if(RENDU_FLAG_EXAMPLES)
   message(STATUS "Building examples...")
   AddSubdirectory(

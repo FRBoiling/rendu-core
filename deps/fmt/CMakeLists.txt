@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.1...3.18)
+message("")
+message(STATUS "Building fmt...")
 
 # Fallback for using newer policies on CMake <3.12.
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
@@ -112,8 +114,6 @@ math(EXPR CPACK_PACKAGE_VERSION_PATCH ${CMAKE_MATCH_3})
 join(FMT_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.
                  ${CPACK_PACKAGE_VERSION_PATCH})
 message(STATUS "Version: ${FMT_VERSION}")
-
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 if (NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)

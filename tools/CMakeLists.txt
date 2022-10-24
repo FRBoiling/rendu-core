@@ -1,7 +1,11 @@
 #**********************************
-#  Created by boil on 2022/8/14.
+#  Created by boil on 2022/10/24.
 #**********************************
-
+#|--------------------------------
+#| rendu-core tools module
+#|--------------------------------
+message("")
+message(STATUS "Building tools ...")
 AddSubdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude

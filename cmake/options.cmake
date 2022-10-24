@@ -2,36 +2,9 @@
 #  Created by boil on 2022/10/19.
 #**********************************
 
-set(RENDU_PROJECT_OUTDIR ${RENDU_PROJECT_DIR}/Bin/Bin)
-set(RENDU_PROJECT_BINDIR ${RENDU_PROJECT_DIR}/Bin)
+set(RENDU_PROJECT_OUTDIR ${RENDU_PROJECT_DIR}/Build)
+set(RENDU_PROJECT_BINDIR ${RENDU_PROJECT_OUTDIR}/Bin)
 
-option(SERVERS          "Build worldserver and authserver"                            1)
-
-set(SCRIPTS_AVAILABLE_OPTIONS none static dynamic minimal-static minimal-dynamic)
-
-# log a fatal error when the value of the SCRIPTS variable isn't a valid option.
-if(SCRIPTS)
-  list(FIND SCRIPTS_AVAILABLE_OPTIONS "${SCRIPTS}" SCRIPTS_INDEX)
-  if(${SCRIPTS_INDEX} EQUAL -1)
-    message(FATAL_ERROR "The value (${SCRIPTS}) of your SCRIPTS variable is invalid! "
-                        "Allowed values are: ${SCRIPTS_AVAILABLE_OPTIONS} if you still "
-                        "have problems search on forum for TCE00019.")
-  endif()
-endif()
-
-set(SCRIPTS "static" CACHE STRING "Build core with scripts")
-set_property(CACHE SCRIPTS PROPERTY STRINGS ${SCRIPTS_AVAILABLE_OPTIONS})
-
-# Build a list of all script modules when -DSCRIPT="custom" is selected
-GetScriptModuleList(SCRIPT_MODULE_LIST)
-foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
-  ScriptModuleNameToVariable(${SCRIPT_MODULE} SCRIPT_MODULE_VARIABLE)
-  set(${SCRIPT_MODULE_VARIABLE} "default" CACHE STRING "Build type of the ${SCRIPT_MODULE} module.")
-  set_property(CACHE ${SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
-endforeach()
-
-option(TOOLS            "Build map/vmap/mmap extraction/assembler tools"              1)
-option(USE_SCRIPTPCH    "Use precompiled headers when compiling scripts"              1)
 option(USE_COREPCH      "Use precompiled headers when compiling servers"              1)
 option(WITH_DYNAMIC_LINKING "Enable dynamic library linking."                         0)
 IsDynamicLinkingRequired(WITH_DYNAMIC_LINKING_FORCED)
@@ -44,11 +17,6 @@ else()
   set(BUILD_SHARED_LIBS OFF)
 endif()
 option(WITH_WARNINGS    "Show all warnings during compile"                            0)
-option(WITH_COREDEBUG   "Include additional debug-code in core"                       0)
-option(WITH_STRICT_DATABASE_TYPE_CHECKS "Enable strict checking of database field value accessors" 0)
-option(WITHOUT_METRICS  "Disable metrics reporting (i.e. InfluxDB and Grafana)"       0)
-option(WITH_DETAILED_METRICS  "Enable detailed metrics reporting (i.e. time each session takes to update)" 0)
-option(COPY_CONF        "Copy authserver and worldserver .conf.dist files to the project dir"      1)
 set(WITH_SOURCE_TREE    "hierarchical" CACHE STRING "Build the source tree for IDE's.")
 set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)
 option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
