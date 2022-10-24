@@ -22,6 +22,11 @@ CollectHeaderFiles(
     # Exclude
 )
 
+list(APPEND project_copts
+    -Wno-sign-conversion
+    ${RENDU_DEFAULT_COPTS}
+    )
+
 rendu_cc_library(${target-name} ${project-name}
     NAME
     ${target-name}
@@ -30,8 +35,10 @@ rendu_cc_library(${target-name} ${project-name}
     SRCS
     ${${target-name}_sources}
     COPTS
-    ${RENDU_DEFAULT_COPTS}
+    ${project_copts}
     DEPS
-    PUBLIC
+    DEFINES
+    LINKOPTS
+    DEPS
     )
 
