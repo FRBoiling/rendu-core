@@ -11,7 +11,6 @@ list(APPEND RENDU_COMMON_INCLUDE_DIRS ${header_dir})
 message("")
 message(STATUS "Building " ${target-name} "...")
 
-
 CollectSourceFiles(
     ${sources_dir}
     ${target-name}_sources
@@ -23,6 +22,12 @@ CollectHeaderFiles(
    ${target-name}_headers
     # Exclude
 )
+
+
+list(APPEND ${FMT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
+
+    )
 rendu_cc_library(${target-name} ${project-name}
     NAME
     ${target-name}
@@ -33,6 +38,5 @@ rendu_cc_library(${target-name} ${project-name}
     COPTS
     ${RENDU_DEFAULT_COPTS}
     DEPS
-    PUBLIC
     )
 
