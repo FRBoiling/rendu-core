@@ -9,7 +9,6 @@ set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 message("")
 message(STATUS "Building " ${target-name} "...")
 
-
 CollectSourceFiles(
     ${sources_dir}
     ${target-name}_sources
@@ -52,9 +51,20 @@ endif ()
 
 target_link_libraries(${target-name}
     PRIVATE rendu-dependency-interface
-#    PUBLIC
+    PUBLIC
+    absl::strings
     )
 
+CollectIncludeDirectories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  PUBLIC_INCLUDES
+  # Exclude
+ )
+target_include_directories(${target-name}
+  PUBLIC
+    ${PUBLIC_INCLUDES}
+  PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(${target-name} PUBLIC ${header_dir})
 set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})
