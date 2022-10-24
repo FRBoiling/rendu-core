@@ -1,7 +1,7 @@
 #|--------------------------------
 #| rendu-core rendu project
 #|--------------------------------
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required (VERSION 3.14)
 
 # add this options before PROJECT keyword
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -26,11 +26,11 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif ()
 
-# Set RPATH-handing (CMake parameters)
-set(CMAKE_SKIP_BUILD_RPATH 0)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
+## Set RPATH-handing (CMake parameters)
+#set(CMAKE_SKIP_BUILD_RPATH 0)
+#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
+#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 
 #|--------------------------------
 #| rendu-core Framework Configuration
@@ -54,8 +54,7 @@ include(cmake/genrev.cmake)
 # print out the results before continuing
 include(cmake/showoptions.cmake)
 
-
-find_package(PCHSupport)
+#find_package(PCHSupport)
 
 # add dependencies
 add_subdirectory(deps)
@@ -67,4 +66,6 @@ add_subdirectory(tools)
 add_subdirectory(examples)
 # add tests project
 add_subdirectory(tests)
+# add tools project
+add_subdirectory(tools)
 
