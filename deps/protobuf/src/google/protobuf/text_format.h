@@ -39,22 +39,19 @@
 #define GOOGLE_PROTOBUF_TEXT_FORMAT_H__
 
 
-#include <atomic>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "google/protobuf/port.h"
-#include "absl/strings/string_view.h"
-#include "google/protobuf/descriptor.h"
-#include "google/protobuf/message.h"
-#include "google/protobuf/message_lite.h"
-#include "google/protobuf/port.h"
-
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/port.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/message.h>
+#include <google/protobuf/message_lite.h>
 
 // Must be included last.
-#include "google/protobuf/port_def.inc"
+#include <google/protobuf/port_def.inc>
 
 #ifdef SWIG
 #error "You cannot SWIG proto headers"
@@ -62,16 +59,6 @@
 
 namespace google {
 namespace protobuf {
-
-namespace internal {
-PROTOBUF_EXPORT extern const char kDebugStringSilentMarker[1];
-PROTOBUF_EXPORT extern const char kDebugStringSilentMarkerForDetection[3];
-
-PROTOBUF_EXPORT extern std::atomic<bool> enable_debug_text_redaction_marker;
-PROTOBUF_EXPORT extern std::atomic<bool> enable_debug_text_random_marker;
-PROTOBUF_EXPORT extern std::atomic<bool> enable_debug_text_format_marker;
-
-}  // namespace internal
 
 namespace io {
 class ErrorCollector;  // tokenizer.h
@@ -84,9 +71,6 @@ class ErrorCollector;  // tokenizer.h
 // This class is really a namespace that contains only static methods.
 class PROTOBUF_EXPORT TextFormat {
  public:
-  TextFormat(const TextFormat&) = delete;
-  TextFormat& operator=(const TextFormat&) = delete;
-
   // Outputs a textual representation of the given message to the given
   // output stream. Returns false if printing fails.
   static bool Print(const Message& message, io::ZeroCopyOutputStream* output);
@@ -142,8 +126,6 @@ class PROTOBUF_EXPORT TextFormat {
   class PROTOBUF_EXPORT FastFieldValuePrinter {
    public:
     FastFieldValuePrinter();
-    FastFieldValuePrinter(const FastFieldValuePrinter&) = delete;
-    FastFieldValuePrinter& operator=(const FastFieldValuePrinter&) = delete;
     virtual ~FastFieldValuePrinter();
     virtual void PrintBool(bool val, BaseTextGenerator* generator) const;
     virtual void PrintInt32(int32_t val, BaseTextGenerator* generator) const;
@@ -180,14 +162,15 @@ class PROTOBUF_EXPORT TextFormat {
     virtual void PrintMessageEnd(const Message& message, int field_index,
                                  int field_count, bool single_line_mode,
                                  BaseTextGenerator* generator) const;
+
+   private:
+    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(FastFieldValuePrinter);
   };
 
   // Deprecated: please use FastFieldValuePrinter instead.
   class PROTOBUF_EXPORT FieldValuePrinter {
    public:
     FieldValuePrinter();
-    FieldValuePrinter(const FieldValuePrinter&) = delete;
-    FieldValuePrinter& operator=(const FieldValuePrinter&) = delete;
     virtual ~FieldValuePrinter();
     virtual std::string PrintBool(bool val) const;
     virtual std::string PrintInt32(int32_t val) const;
@@ -211,16 +194,18 @@ class PROTOBUF_EXPORT TextFormat {
 
    private:
     FastFieldValuePrinter delegate_;
+    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(FieldValuePrinter);
   };
 
   class PROTOBUF_EXPORT MessagePrinter {
    public:
     MessagePrinter() {}
-    MessagePrinter(const MessagePrinter&) = delete;
-    MessagePrinter& operator=(const MessagePrinter&) = delete;
     virtual ~MessagePrinter() {}
     virtual void Print(const Message& message, bool single_line_mode,
                        BaseTextGenerator* generator) const = 0;
+
+   private:
+    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(MessagePrinter);
   };
 
   // Interface that Printers or Parsers can use to find extensions, or types
@@ -386,17 +371,8 @@ class PROTOBUF_EXPORT TextFormat {
     friend std::string Message::ShortDebugString() const;
     friend std::string Message::Utf8DebugString() const;
 
-    // Sets whether silent markers will be inserted.
+    // Sets whether *DebugString should insert a silent marker.
     void SetInsertSilentMarker(bool v) { insert_silent_marker_ = v; }
-
-    // Sets whether strings will be redacted and thus unparsable.
-    void SetRedactDebugString(bool redact) { redact_debug_string_ = redact; }
-
-    // Sets whether the output string should be made non-deterministic.
-    // This discourages equality checks based on serialized string comparisons.
-    void SetRandomizeDebugString(bool randomize) {
-      randomize_debug_string_ = randomize;
-    }
 
     // Forward declaration of an internal class used to print the text
     // output to the OutputStream (see text_format.cc for implementation).
@@ -461,8 +437,6 @@ class PROTOBUF_EXPORT TextFormat {
     bool use_field_number_;
     bool use_short_repeated_primitives_;
     bool insert_silent_marker_;
-    bool redact_debug_string_;
-    bool randomize_debug_string_;
     bool hide_unknown_fields_;
     bool print_message_fields_in_index_order_;
     bool expand_any_;
@@ -482,28 +456,29 @@ class PROTOBUF_EXPORT TextFormat {
   };
 
   // Parses a text-format protocol message from the given input stream to
-  // the given message object. This function parses the human-readable
-  // serialization format written by Print(). Returns true on success. The
-  // message is cleared first, even if the function fails -- See Merge() to
-  // avoid this behavior.
+  // the given message object. This function parses the human-readable format
+  // written by Print(). Returns true on success. The message is cleared first,
+  // even if the function fails -- See Merge() to avoid this behavior.
   //
   // Example input: "user {\n id: 123 extra { gender: MALE language: 'en' }\n}"
   //
-  // One common use for this function is parsing handwritten strings in test
-  // code.
+  // One use for this function is parsing handwritten strings in test code.
+  // Another use is to parse the output from google::protobuf::Message::DebugString()
+  // (or ShortDebugString()), because these functions output using
+  // google::protobuf::TextFormat::Print().
   //
   // If you would like to read a protocol buffer serialized in the
   // (non-human-readable) binary wire format, see
   // google::protobuf::MessageLite::ParseFromString().
   static bool Parse(io::ZeroCopyInputStream* input, Message* output);
   // Like Parse(), but reads directly from a string.
-  static bool ParseFromString(absl::string_view input, Message* output);
+  static bool ParseFromString(ConstStringParam input, Message* output);
 
   // Like Parse(), but the data is merged into the given message, as if
   // using Message::MergeFrom().
   static bool Merge(io::ZeroCopyInputStream* input, Message* output);
   // Like Merge(), but reads directly from a string.
-  static bool MergeFromString(absl::string_view input, Message* output);
+  static bool MergeFromString(ConstStringParam input, Message* output);
 
   // Parse the given text as a single field value and store it into the
   // given field of the given message. If the field is a repeated field,
@@ -592,11 +567,11 @@ class PROTOBUF_EXPORT TextFormat {
     // Like TextFormat::Parse().
     bool Parse(io::ZeroCopyInputStream* input, Message* output);
     // Like TextFormat::ParseFromString().
-    bool ParseFromString(absl::string_view input, Message* output);
+    bool ParseFromString(ConstStringParam input, Message* output);
     // Like TextFormat::Merge().
     bool Merge(io::ZeroCopyInputStream* input, Message* output);
     // Like TextFormat::MergeFromString().
-    bool MergeFromString(absl::string_view input, Message* output);
+    bool MergeFromString(ConstStringParam input, Message* output);
 
     // Set where to report parse errors.  If nullptr (the default), errors will
     // be printed to stderr.
@@ -691,6 +666,8 @@ class PROTOBUF_EXPORT TextFormat {
                                     ParseLocationRange location);
   static inline ParseInfoTree* CreateNested(ParseInfoTree* info_tree,
                                             const FieldDescriptor* field);
+
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(TextFormat);
 };
 
 inline void TextFormat::RecordLocation(ParseInfoTree* info_tree,
@@ -707,6 +684,6 @@ inline TextFormat::ParseInfoTree* TextFormat::CreateNested(
 }  // namespace protobuf
 }  // namespace google
 
-#include "google/protobuf/port_undef.inc"
+#include <google/protobuf/port_undef.inc>
 
 #endif  // GOOGLE_PROTOBUF_TEXT_FORMAT_H__

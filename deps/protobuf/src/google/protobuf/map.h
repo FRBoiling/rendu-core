@@ -55,19 +55,19 @@
 #include <mach/mach_time.h>
 #endif
 
-#include "google/protobuf/stubs/common.h"
-#include "google/protobuf/arena.h"
-#include "google/protobuf/generated_enum_util.h"
-#include "google/protobuf/map_type_handler.h"
-#include "google/protobuf/port.h"
-
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/arena.h>
+#include <google/protobuf/generated_enum_util.h>
+#include <google/protobuf/map_type_handler.h>
+#include <google/protobuf/port.h>
+#include <google/protobuf/stubs/hash.h>
 
 #ifdef SWIG
 #error "You cannot SWIG proto headers"
 #endif
 
 // Must be included last.
-#include "google/protobuf/port_def.inc"
+#include <google/protobuf/port_def.inc>
 
 namespace google {
 namespace protobuf {
@@ -333,11 +333,6 @@ inline size_t SpaceUsedInValues(const void*) { return 0; }
 
 }  // namespace internal
 
-#ifdef PROTOBUF_FUTURE_MAP_PAIR_UPGRADE
-// This is the class for Map's internal value_type.
-template <typename Key, typename T>
-using MapPair = std::pair<const Key, T>;
-#else
 // This is the class for Map's internal value_type. Instead of using
 // std::pair as value_type, we use this class which provides us more control of
 // its process of construction and destruction.
@@ -368,7 +363,6 @@ struct PROTOBUF_ATTRIBUTE_STANDALONE_DEBUG MapPair {
   friend class Arena;
   friend class Map<Key, T>;
 };
-#endif
 
 // Map is an associative container type used to store protobuf map
 // fields.  Each Map instance may or may not use a different hash function, a
@@ -385,7 +379,6 @@ class Map {
  public:
   using key_type = Key;
   using mapped_type = T;
-  using init_type = std::pair<Key, T>;
   using value_type = MapPair<Key, T>;
 
   using pointer = value_type*;
@@ -428,22 +421,6 @@ class Map {
   ~Map() {}
 
  private:
-  template <typename P>
-  struct SameAsElementReference
-      : std::is_same<typename std::remove_cv<
-                         typename std::remove_reference<reference>::type>::type,
-                     typename std::remove_cv<
-                         typename std::remove_reference<P>::type>::type> {};
-
-  template <class P>
-  using RequiresInsertable =
-      typename std::enable_if<std::is_convertible<P, init_type>::value ||
-                                  SameAsElementReference<P>::value,
-                              int>::type;
-  template <class P>
-  using RequiresNotInit =
-      typename std::enable_if<!std::is_same<P, init_type>::value, int>::type;
-
   using Allocator = internal::MapAllocator<void*>;
 
   // InnerMap is a generic hash-based map.  It doesn't contain any
@@ -488,9 +465,6 @@ class Map {
           index_of_first_non_null_(internal::kGlobalEmptyTableSize),
           table_(const_cast<void**>(internal::kGlobalEmptyTable)),
           alloc_(arena) {}
-
-    InnerMap(const InnerMap&) = delete;
-    InnerMap& operator=(const InnerMap&) = delete;
 
     ~InnerMap() {
       if (alloc_.arena() == nullptr &&
@@ -718,30 +692,40 @@ class Map {
       return FindHelper(k).first;
     }
 
-    // Inserts a new element into the container if there is no element with the
-    // key in the container.
-    // The new element is:
-    //  (1) Constructed in-place with the given args, if mapped_type is not
-    //      arena constructible.
-    //  (2) Constructed in-place with the arena and then assigned with a
-    //      mapped_type temporary constructed with the given args, otherwise.
-    template <typename K, typename... Args>
-    std::pair<iterator, bool> try_emplace(K&& k, Args&&... args) {
-      return ArenaAwareTryEmplace(Arena::is_arena_constructable<mapped_type>(),
-                                  std::forward<K>(k),
-                                  std::forward<Args>(args)...);
-    }
-
-    // Inserts the key into the map, if not present. In that case, the value
-    // will be value initialized.
+    // Insert the key into the map, if not present. In that case, the value will
+    // be value initialized.
     template <typename K>
     std::pair<iterator, bool> insert(K&& k) {
-      return try_emplace(std::forward<K>(k));
+      std::pair<const_iterator, size_type> p = FindHelper(k);
+      // Case 1: key was already present.
+      if (p.first.node_ != nullptr)
+        return std::make_pair(iterator(p.first), false);
+      // Case 2: insert.
+      if (ResizeIfLoadIsOutOfRange(num_elements_ + 1)) {
+        p = FindHelper(k);
+      }
+      const size_type b = p.second;  // bucket number
+      // If K is not key_type, make the conversion to key_type explicit.
+      using TypeToInit = typename std::conditional<
+          std::is_same<typename std::decay<K>::type, key_type>::value, K&&,
+          key_type>::type;
+      Node* node = Alloc<Node>(1);
+      // Even when arena is nullptr, CreateInArenaStorage is still used to
+      // ensure the arena of submessage will be consistent. Otherwise,
+      // submessage may have its own arena when message-owned arena is enabled.
+      Arena::CreateInArenaStorage(const_cast<Key*>(&node->kv.first),
+                                  alloc_.arena(),
+                                  static_cast<TypeToInit>(std::forward<K>(k)));
+      Arena::CreateInArenaStorage(&node->kv.second, alloc_.arena());
+
+      iterator result = InsertUnique(b, node);
+      ++num_elements_;
+      return std::make_pair(result, true);
     }
 
     template <typename K>
     value_type& operator[](K&& k) {
-      return *try_emplace(std::forward<K>(k)).first;
+      return *insert(std::forward<K>(k)).first;
     }
 
     void erase(iterator it) {
@@ -783,79 +767,6 @@ class Map {
     }
 
    private:
-    template <typename K, typename... Args>
-    std::pair<iterator, bool> TryEmplaceInternal(K&& k, Args&&... args) {
-      std::pair<const_iterator, size_type> p = FindHelper(k);
-      // Case 1: key was already present.
-      if (p.first.node_ != nullptr)
-        return std::make_pair(iterator(p.first), false);
-      // Case 2: insert.
-      if (ResizeIfLoadIsOutOfRange(num_elements_ + 1)) {
-        p = FindHelper(k);
-      }
-      const size_type b = p.second;  // bucket number
-      // If K is not key_type, make the conversion to key_type explicit.
-      using TypeToInit = typename std::conditional<
-          std::is_same<typename std::decay<K>::type, key_type>::value, K&&,
-          key_type>::type;
-      Node* node = Alloc<Node>(1);
-      // Even when arena is nullptr, CreateInArenaStorage is still used to
-      // ensure the arena of submessage will be consistent. Otherwise,
-      // submessage may have its own arena when message-owned arena is enabled.
-      // Note: This only works if `Key` is not arena constructible.
-      Arena::CreateInArenaStorage(const_cast<Key*>(&node->kv.first),
-                                  alloc_.arena(),
-                                  static_cast<TypeToInit>(std::forward<K>(k)));
-      // Note: if `T` is arena constructible, `Args` needs to be empty.
-      Arena::CreateInArenaStorage(&node->kv.second, alloc_.arena(),
-                                  std::forward<Args>(args)...);
-
-      iterator result = InsertUnique(b, node);
-      ++num_elements_;
-      return std::make_pair(result, true);
-    }
-
-    // A helper function to perform an assignment of `mapped_type`.
-    // If the first argument is true, then it is a regular assignment.
-    // Otherwise, we first create a temporary and then perform an assignment.
-    template <typename V>
-    static void AssignMapped(std::true_type, mapped_type& mapped, V&& v) {
-      mapped = std::forward<V>(v);
-    }
-    template <typename... Args>
-    static void AssignMapped(std::false_type, mapped_type& mapped,
-                             Args&&... args) {
-      mapped = mapped_type(std::forward<Args>(args)...);
-    }
-
-    // Case 1: `mapped_type` is arena constructible. A temporary object is
-    // created and then (if `Args` are not empty) assigned to a mapped value
-    // that was created with the arena.
-    template <typename K>
-    std::pair<iterator, bool> ArenaAwareTryEmplace(std::true_type, K&& k) {
-      // case 1.1: "default" constructed (e.g. from arena only).
-      return TryEmplaceInternal(std::forward<K>(k));
-    }
-    template <typename K, typename... Args>
-    std::pair<iterator, bool> ArenaAwareTryEmplace(std::true_type, K&& k,
-                                                   Args&&... args) {
-      // case 1.2: "default" constructed + copy/move assignment
-      auto p = TryEmplaceInternal(std::forward<K>(k));
-      if (p.second) {
-        AssignMapped(std::is_same<void(typename std::decay<Args>::type...),
-                                  void(mapped_type)>(),
-                     p.first->second, std::forward<Args>(args)...);
-      }
-      return p;
-    }
-    // Case 2: `mapped_type` is not arena constructible. Using in-place
-    // construction.
-    template <typename... Args>
-    std::pair<iterator, bool> ArenaAwareTryEmplace(std::false_type,
-                                                   Args&&... args) {
-      return TryEmplaceInternal(std::forward<Args>(args)...);
-    }
-
     const_iterator find(const Key& k, TreeIterator* it) const {
       return FindHelper(k, it).first;
     }
@@ -1207,6 +1118,7 @@ class Map {
     size_type index_of_first_non_null_;
     void** table_;  // an array with num_buckets_ entries
     Allocator alloc_;
+    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(InnerMap);
   };  // end of class InnerMap
 
   template <typename LookupKey>
@@ -1295,6 +1207,7 @@ class Map {
   const_iterator cbegin() const { return begin(); }
   const_iterator cend() const { return end(); }
 
+  // Capacity
   size_type size() const { return elements_.size(); }
   bool empty() const { return size() == 0; }
 
@@ -1369,37 +1282,24 @@ class Map {
   }
 
   // insert
-  template <typename K, typename... Args>
-  std::pair<iterator, bool> try_emplace(K&& k, Args&&... args) {
-    auto p =
-        elements_.try_emplace(std::forward<K>(k), std::forward<Args>(args)...);
+  std::pair<iterator, bool> insert(const value_type& value) {
+    std::pair<typename InnerMap::iterator, bool> p =
+        elements_.insert(value.first);
+    if (p.second) {
+      p.first->second = value.second;
+    }
     return std::pair<iterator, bool>(iterator(p.first), p.second);
-  }
-  std::pair<iterator, bool> insert(init_type&& value) {
-    return try_emplace(std::move(value.first), std::move(value.second));
-  }
-  template <typename P, RequiresInsertable<P> = 0>
-  std::pair<iterator, bool> insert(P&& value) {
-    return try_emplace(std::forward<P>(value).first,
-                       std::forward<P>(value).second);
-  }
-  template <typename... Args>
-  std::pair<iterator, bool> emplace(Args&&... args) {
-    return EmplaceInternal(Rank0{}, std::forward<Args>(args)...);
   }
   template <class InputIt>
   void insert(InputIt first, InputIt last) {
-    for (; first != last; ++first) {
-      auto&& pair = *first;
-      try_emplace(pair.first, pair.second);
+    for (InputIt it = first; it != last; ++it) {
+      iterator exist_it = find(it->first);
+      if (exist_it == end()) {
+        operator[](it->first) = it->second;
+      }
     }
   }
-  void insert(std::initializer_list<init_type> values) {
-    insert(values.begin(), values.end());
-  }
-  template <typename P, RequiresNotInit<P> = 0,
-            RequiresInsertable<const P&> = 0>
-  void insert(std::initializer_list<P> values) {
+  void insert(std::initializer_list<value_type> values) {
     insert(values.begin(), values.end());
   }
 
@@ -1437,7 +1337,7 @@ class Map {
 
   void swap(Map& other) {
     if (arena() == other.arena()) {
-      InternalSwap(&other);
+      InternalSwap(other);
     } else {
       // TODO(zuguang): optimize this. The temporary copy can be allocated
       // in the same arena as the other message, and the "other = copy" can
@@ -1448,7 +1348,7 @@ class Map {
     }
   }
 
-  void InternalSwap(Map* other) { elements_.Swap(&other->elements_); }
+  void InternalSwap(Map& other) { elements_.Swap(&other.elements_); }
 
   // Access to hasher.  Currently this returns a copy, but it may
   // be modified to return a const reference in the future.
@@ -1460,23 +1360,6 @@ class Map {
   }
 
  private:
-  struct Rank1 {};
-  struct Rank0 : Rank1 {};
-
-  // We try to construct `init_type` from `Args` with a fall back to
-  // `value_type`. The latter is less desired as it unconditionally makes a copy
-  // of `value_type::first`.
-  template <typename... Args>
-  auto EmplaceInternal(Rank0, Args&&... args) ->
-      typename std::enable_if<std::is_constructible<init_type, Args...>::value,
-                              std::pair<iterator, bool>>::type {
-    return insert(init_type(std::forward<Args>(args)...));
-  }
-  template <typename... Args>
-  std::pair<iterator, bool> EmplaceInternal(Rank1, Args&&... args) {
-    return insert(value_type(std::forward<Args>(args)...));
-  }
-
   Arena* arena() const { return elements_.arena(); }
   InnerMap elements_;
 
@@ -1492,6 +1375,6 @@ class Map {
 }  // namespace protobuf
 }  // namespace google
 
-#include "google/protobuf/port_undef.inc"
+#include <google/protobuf/port_undef.inc>
 
 #endif  // GOOGLE_PROTOBUF_MAP_H__

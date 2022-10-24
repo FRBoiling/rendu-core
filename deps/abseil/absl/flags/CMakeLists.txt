@@ -15,15 +15,15 @@
 #
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_path_util
   HDRS
     "internal/path_util.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::strings
@@ -31,7 +31,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_program_name
   SRCS
@@ -39,9 +39,9 @@ absl_cc_library(
   HDRS
     "internal/program_name.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -51,7 +51,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_config
   SRCS
@@ -60,9 +60,9 @@ absl_cc_library(
     "config.h"
     "usage_config.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::flags_path_util
@@ -72,7 +72,7 @@ absl_cc_library(
     absl::synchronization
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_marshalling
   SRCS
@@ -80,9 +80,9 @@ absl_cc_library(
   HDRS
     "marshalling.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -93,7 +93,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_commandlineflag_internal
   SRCS
@@ -101,16 +101,16 @@ absl_cc_library(
   HDRS
     "internal/commandlineflag.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::dynamic_annotations
     absl::fast_type_id
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_commandlineflag
   SRCS
@@ -118,9 +118,9 @@ absl_cc_library(
   HDRS
     "commandlineflag.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::fast_type_id
@@ -130,7 +130,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_private_handle_accessor
   SRCS
@@ -138,9 +138,9 @@ absl_cc_library(
   HDRS
     "internal/private_handle_accessor.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::flags_commandlineflag
@@ -148,7 +148,7 @@ absl_cc_library(
     absl::strings
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_reflection
   SRCS
@@ -157,9 +157,9 @@ absl_cc_library(
     "reflection.h"
     "internal/registry.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::flags_commandlineflag
@@ -171,7 +171,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_internal
   SRCS
@@ -180,9 +180,9 @@ absl_cc_library(
     "internal/flag.h"
     "internal/sequence_lock.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::base
     absl::config
@@ -196,7 +196,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags
   SRCS
@@ -206,9 +206,9 @@ absl_cc_library(
     "flag.h"
     "internal/flag_msvc.inc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::flags_commandlineflag
@@ -221,7 +221,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_usage_internal
   SRCS
@@ -229,9 +229,9 @@ absl_cc_library(
   HDRS
     "internal/usage.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::flags_config
@@ -247,7 +247,7 @@ absl_cc_library(
     absl::synchronization
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_usage
   SRCS
@@ -255,9 +255,9 @@ absl_cc_library(
   HDRS
     "usage.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -266,7 +266,7 @@ absl_cc_library(
     absl::synchronization
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     flags_parse
   SRCS
@@ -275,9 +275,9 @@ absl_cc_library(
     "internal/parse.h"
     "parse.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -297,13 +297,13 @@ absl_cc_library(
 ############################################################################
 # Unit tests in alpahabetical order.
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_commandlineflag_test
   SRCS
     "commandlineflag_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags
     absl::flags_commandlineflag
@@ -316,26 +316,26 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_config_test
   SRCS
     "config_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_config
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_flag_test
   SRCS
     "flag_test.cc"
     "flag_test_defs.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::core_headers
     absl::flags
@@ -348,25 +348,25 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_marshalling_test
   SRCS
     "marshalling_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_marshalling
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_parse_test
   SRCS
     "parse_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags
     absl::flags_parse
@@ -379,38 +379,38 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_path_util_test
   SRCS
     "internal/path_util_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_path_util
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_program_name_test
   SRCS
     "internal/program_name_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_program_name
     absl::strings
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_reflection_test
   SRCS
     "reflection_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_commandlineflag_internal
     absl::flags
@@ -421,13 +421,13 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_sequence_lock_test
   SRCS
     "internal/sequence_lock_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::base
     absl::flags_internal
@@ -435,13 +435,13 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_usage_config_test
   SRCS
     "usage_config_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_config
     absl::flags_path_util
@@ -450,13 +450,13 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flags_usage_test
   SRCS
     "internal/usage_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags_config
     absl::flags

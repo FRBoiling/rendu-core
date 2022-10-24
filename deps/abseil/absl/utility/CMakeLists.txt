@@ -14,13 +14,13 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     utility
   HDRS
     "utility.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base_internal
     absl::config
@@ -28,13 +28,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     utility_test
   SRCS
     "utility_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::utility
     absl::core_headers

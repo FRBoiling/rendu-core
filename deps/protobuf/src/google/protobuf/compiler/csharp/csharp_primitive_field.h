@@ -31,8 +31,10 @@
 #ifndef GOOGLE_PROTOBUF_COMPILER_CSHARP_PRIMITIVE_FIELD_H__
 #define GOOGLE_PROTOBUF_COMPILER_CSHARP_PRIMITIVE_FIELD_H__
 
-#include "google/protobuf/compiler/code_generator.h"
-#include "google/protobuf/compiler/csharp/csharp_field_base.h"
+#include <string>
+
+#include <google/protobuf/compiler/code_generator.h>
+#include <google/protobuf/compiler/csharp/csharp_field_base.h>
 
 namespace google {
 namespace protobuf {

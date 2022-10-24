@@ -17,111 +17,111 @@
 find_library(LIBRT rt)
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     atomic_hook
-  HDRS
+    HDRS
     "internal/atomic_hook.h"
-  DEPS
+    DEPS
     absl::config
     absl::core_headers
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     errno_saver
-  HDRS
+    HDRS
     "internal/errno_saver.h"
-  DEPS
+    DEPS
     absl::config
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     log_severity
-  HDRS
+    HDRS
     "log_severity.h"
-  SRCS
+    SRCS
     "log_severity.cc"
-  DEPS
+    DEPS
     absl::core_headers
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     raw_logging_internal
-  HDRS
+    HDRS
     "internal/raw_logging.h"
-  SRCS
+    SRCS
     "internal/raw_logging.cc"
-  DEPS
+    DEPS
     absl::atomic_hook
     absl::config
     absl::core_headers
     absl::errno_saver
     absl::log_severity
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     spinlock_wait
-  HDRS
+    HDRS
     "internal/spinlock_wait.h"
-  SRCS
+    SRCS
     "internal/spinlock_akaros.inc"
     "internal/spinlock_linux.inc"
     "internal/spinlock_posix.inc"
     "internal/spinlock_wait.cc"
     "internal/spinlock_win32.inc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::base_internal
     absl::core_headers
     absl::errno_saver
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     config
-  HDRS
+    HDRS
     "config.h"
     "options.h"
     "policy_checks.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  PUBLIC
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    PUBLIC
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     dynamic_annotations
-  HDRS
+    HDRS
     "dynamic_annotations.h"
-  SRCS
+    SRCS
     "internal/dynamic_annotations.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     core_headers
-  HDRS
+    HDRS
     "attributes.h"
     "const_init.h"
     "macros.h"
@@ -129,25 +129,25 @@ absl_cc_library(
     "port.h"
     "thread_annotations.h"
     "internal/thread_annotations.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
-  PUBLIC
-)
+    PUBLIC
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     malloc_internal
-  HDRS
+    HDRS
     "internal/direct_mmap.h"
     "internal/low_level_alloc.h"
-  SRCS
+    SRCS
     "internal/low_level_alloc.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::base
     absl::base_internal
     absl::config
@@ -155,29 +155,29 @@ absl_cc_library(
     absl::dynamic_annotations
     absl::raw_logging_internal
     Threads::Threads
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     base_internal
-  HDRS
+    HDRS
     "internal/hide_ptr.h"
     "internal/identity.h"
     "internal/inline_variable.h"
     "internal/invoke.h"
     "internal/scheduling_mode.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::type_traits
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     base
-  HDRS
+    HDRS
     "call_once.h"
     "casts.h"
     "internal/cycleclock.h"
@@ -190,19 +190,19 @@ absl_cc_library(
     "internal/tsan_mutex_interface.h"
     "internal/unscaledcycleclock.h"
     "internal/unscaledcycleclock_config.h"
-  SRCS
+    SRCS
     "internal/cycleclock.cc"
     "internal/spinlock.cc"
     "internal/sysinfo.cc"
     "internal/thread_identity.cc"
     "internal/unscaledcycleclock.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
     $<$<BOOL:${LIBRT}>:-lrt>
     $<$<BOOL:${MINGW}>:-ladvapi32>
-  DEPS
+    DEPS
     absl::atomic_hook
     absl::base_internal
     absl::config
@@ -213,59 +213,59 @@ absl_cc_library(
     absl::spinlock_wait
     absl::type_traits
     Threads::Threads
-  PUBLIC
-)
+    PUBLIC
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     throw_delegate
-  HDRS
+    HDRS
     "internal/throw_delegate.h"
-  SRCS
+    SRCS
     "internal/throw_delegate.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::raw_logging_internal
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     exception_testing
-  HDRS
+    HDRS
     "internal/exception_testing.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     GTest::gtest
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     pretty_function
-  HDRS
+    HDRS
     "internal/pretty_function.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-)
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     exception_safety_testing
-  HDRS
+    HDRS
     "internal/exception_safety_testing.h"
-  SRCS
+    SRCS
     "internal/exception_safety_testing.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::config
     absl::pretty_function
     absl::memory
@@ -273,413 +273,413 @@ absl_cc_library(
     absl::strings
     absl::utility
     GTest::gtest
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     absl_exception_safety_testing_test
-  SRCS
+    SRCS
     "exception_safety_testing_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::exception_safety_testing
     absl::memory
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     atomic_hook_test_helper
-  SRCS
+    SRCS
     "internal/atomic_hook_test_helper.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::atomic_hook
     absl::core_headers
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     atomic_hook_test
-  SRCS
+    SRCS
     "internal/atomic_hook_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::atomic_hook_test_helper
     absl::atomic_hook
     absl::core_headers
     GTest::gmock
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     bit_cast_test
-  SRCS
+    SRCS
     "bit_cast_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::core_headers
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     errno_saver_test
-  SRCS
+    SRCS
     "internal/errno_saver_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::errno_saver
     absl::strerror
     GTest::gmock
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     throw_delegate_test
-  SRCS
+    SRCS
     "throw_delegate_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::config
     absl::throw_delegate
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     inline_variable_test
-  SRCS
+    SRCS
     "internal/inline_variable_testing.h"
     "inline_variable_test.cc"
     "inline_variable_test_a.cc"
     "inline_variable_test_b.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base_internal
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     invoke_test
-  SRCS
+    SRCS
     "invoke_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base_internal
     absl::memory
     absl::strings
     GTest::gmock
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     spinlock_test_common
-  SRCS
+    SRCS
     "spinlock_test_common.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::config
     absl::base_internal
     absl::core_headers
     absl::synchronization
     GTest::gtest
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # On bazel BUILD this target use "alwayslink = 1" which is not implemented here
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     spinlock_test
-  SRCS
+    SRCS
     "spinlock_test_common.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::base_internal
     absl::config
     absl::core_headers
     absl::synchronization
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     endian
-  HDRS
+    HDRS
     "internal/endian.h"
     "internal/unaligned_access.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::base
     absl::config
     absl::core_headers
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     endian_test
-  SRCS
+    SRCS
     "internal/endian_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::config
     absl::endian
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     config_test
-  SRCS
+    SRCS
     "config_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::config
     absl::synchronization
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     call_once_test
-  SRCS
+    SRCS
     "call_once_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::core_headers
     absl::synchronization
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     raw_logging_test
-  SRCS
+    SRCS
     "raw_logging_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::raw_logging_internal
     absl::strings
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     sysinfo_test
-  SRCS
+    SRCS
     "internal/sysinfo_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::synchronization
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     low_level_alloc_test
-  SRCS
+    SRCS
     "internal/low_level_alloc_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::malloc_internal
     absl::node_hash_map
     Threads::Threads
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     thread_identity_test
-  SRCS
+    SRCS
     "internal/thread_identity_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
     absl::core_headers
     absl::synchronization
     Threads::Threads
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     scoped_set_env
-  SRCS
+    SRCS
     "internal/scoped_set_env.cc"
-  HDRS
+    HDRS
     "internal/scoped_set_env.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::raw_logging_internal
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     scoped_set_env_test
-  SRCS
+    SRCS
     "internal/scoped_set_env_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::scoped_set_env
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     cmake_thread_test
-  SRCS
+    SRCS
     "internal/cmake_thread_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::base
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     log_severity_test
-  SRCS
+    SRCS
     "log_severity_test.cc"
-  DEPS
+    DEPS
     absl::flags_internal
     absl::flags_marshalling
     absl::log_severity
     absl::strings
     GTest::gmock
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     strerror
-  SRCS
+    SRCS
     "internal/strerror.cc"
-  HDRS
+    HDRS
     "internal/strerror.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::config
     absl::core_headers
     absl::errno_saver
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     strerror_test
-  SRCS
+    SRCS
     "internal/strerror_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::strerror
     absl::strings
     GTest::gmock
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     fast_type_id
-  HDRS
+    HDRS
     "internal/fast_type_id.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::config
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     fast_type_id_test
-  SRCS
+    SRCS
     "internal/fast_type_id_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::fast_type_id
     GTest::gtest_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     prefetch
-  HDRS
+    HDRS
     "internal/prefetch.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::config
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     prefetch_test
-  SRCS
+    SRCS
     "internal/prefetch_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::prefetch
     GTest::gtest_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     optimization_test
-  SRCS
+    SRCS
     "optimization_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::core_headers
     absl::optional
     GTest::gtest_main
-)
+    )

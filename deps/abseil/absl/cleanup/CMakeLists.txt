@@ -13,13 +13,13 @@
 # limitations under the License.
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     cleanup_internal
   HDRS
     "internal/cleanup.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base_internal
     absl::core_headers
@@ -27,13 +27,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     cleanup
   HDRS
     "cleanup.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::cleanup_internal
     absl::config
@@ -41,13 +41,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     cleanup_test
   SRCS
     "cleanup_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::cleanup
     absl::config

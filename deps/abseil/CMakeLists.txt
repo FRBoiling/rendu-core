@@ -60,32 +60,21 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # when absl is included as subproject (i.e. using add_subdirectory(abseil-cpp))
 # in the source tree of a project that uses it, install rules are disabled.
 if(NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-  option(ABSL_ENABLE_INSTALL "Enable install rule" OFF)
+  option(RENDU_ENABLE_INSTALL "Enable install rule" OFF)
 else()
-  option(ABSL_ENABLE_INSTALL "Enable install rule" ON)
+  option(RENDU_ENABLE_INSTALL "Enable install rule" ON)
 endif()
 
-option(ABSL_PROPAGATE_CXX_STD
+option(RENDU_PROPAGATE_CXX_STD
   "Use CMake C++ standard meta features (e.g. cxx_std_14) that propagate to targets that link to Abseil"
   ON)  # TODO: Default to ON for CMake 3.8 and greater.
-if((${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.8) AND (NOT ABSL_PROPAGATE_CXX_STD))
-  message(WARNING "A future Abseil release will default ABSL_PROPAGATE_CXX_STD to ON for CMake 3.8 and up. We recommend enabling this option to ensure your project still builds correctly.")
+if((${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.8) AND (NOT RENDU_PROPAGATE_CXX_STD))
+  message(WARNING "A future Abseil release will default RENDU_PROPAGATE_CXX_STD to ON for CMake 3.8 and up. We recommend enabling this option to ensure your project still builds correctly.")
 endif()
 
-option(ABSL_USE_SYSTEM_INCLUDES
+option(RENDU_USE_SYSTEM_INCLUDES
   "Silence warnings in Abseil headers by marking them as SYSTEM includes"
   OFF)
-
-list(APPEND CMAKE_MODULE_PATH
-  ${CMAKE_CURRENT_LIST_DIR}/CMake
-  ${CMAKE_CURRENT_LIST_DIR}/absl/copts
-)
-
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-include(AbseilDll)
-include(AbseilHelpers)
-
 
 ##
 ## Using absl targets
@@ -99,12 +88,12 @@ include(AbseilHelpers)
 
 
 # include current path
-list(APPEND ABSL_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+list(APPEND RENDU_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  set(ABSL_USING_CLANG ON)
+  set(RENDU_USING_CLANG ON)
 else()
-  set(ABSL_USING_CLANG OFF)
+  set(RENDU_USING_CLANG OFF)
 endif()
 
 # find dependencies
@@ -113,35 +102,35 @@ find_package(Threads REQUIRED)
 
 include(CMakeDependentOption)
 
-#option(ABSL_BUILD_TESTING
+#option(RENDU_BUILD_TESTING
 #  "If ON, Abseil will build all of Abseil's own tests." OFF)
 #
-#option(ABSL_BUILD_TEST_HELPERS
+#option(RENDU_BUILD_TEST_HELPERS
 #  "If ON, Abseil will build libraries that you can use to write tests against Abseil code. This option requires that Abseil is configured to use GoogleTest."
 #  OFF)
 #
-#option(ABSL_USE_EXTERNAL_GOOGLETEST
+#option(RENDU_USE_EXTERNAL_GOOGLETEST
 #  "If ON, Abseil will assume that the targets for GoogleTest are already provided by the including project. This makes sense when Abseil is used with add_subdirectory." OFF)
 #
-#cmake_dependent_option(ABSL_FIND_GOOGLETEST
+#cmake_dependent_option(RENDU_FIND_GOOGLETEST
 #  "If ON, Abseil will use find_package(GTest) rather than assuming that GoogleTest is already provided by the including project."
 #  OFF
-#  "ABSL_USE_EXTERNAL_GOOGLETEST"
+#  "RENDU_USE_EXTERNAL_GOOGLETEST"
 #  OFF)
 #
 #
-#option(ABSL_USE_GOOGLETEST_HEAD
+#option(RENDU_USE_GOOGLETEST_HEAD
 #  "If ON, abseil will download HEAD from GoogleTest at config time." OFF)
 #
-#set(ABSL_GOOGLETEST_DOWNLOAD_URL "" CACHE STRING "If set, download GoogleTest from this URL")
+#set(RENDU_GOOGLETEST_DOWNLOAD_URL "" CACHE STRING "If set, download GoogleTest from this URL")
 #
-#set(ABSL_LOCAL_GOOGLETEST_DIR "/usr/src/googletest" CACHE PATH
-#  "If ABSL_USE_GOOGLETEST_HEAD is OFF and ABSL_GOOGLETEST_URL is not set, specifies the directory of a local GoogleTest checkout."
+#set(RENDU_LOCAL_GOOGLETEST_DIR "/usr/src/googletest" CACHE PATH
+#  "If RENDU_USE_GOOGLETEST_HEAD is OFF and RENDU_GOOGLETEST_URL is not set, specifies the directory of a local GoogleTest checkout."
 #  )
 #
-#if((BUILD_TESTING AND ABSL_BUILD_TESTING) OR ABSL_BUILD_TEST_HELPERS)
-#  if (ABSL_USE_EXTERNAL_GOOGLETEST)
-#    if (ABSL_FIND_GOOGLETEST)
+#if((BUILD_TESTING AND RENDU_BUILD_TESTING) OR RENDU_BUILD_TEST_HELPERS)
+#  if (RENDU_USE_EXTERNAL_GOOGLETEST)
+#    if (RENDU_FIND_GOOGLETEST)
 #      find_package(GTest REQUIRED)
 #    elseif(NOT TARGET GTest::gtest)
 #      if(TARGET gtest)
@@ -151,23 +140,23 @@ include(CMakeDependentOption)
 #        add_library(GTest::gmock ALIAS gmock)
 #        add_library(GTest::gmock_main ALIAS gmock_main)
 #      else()
-#        message(FATAL_ERROR "ABSL_USE_EXTERNAL_GOOGLETEST is ON and ABSL_FIND_GOOGLETEST is OFF, which means that the top-level project must build the Google Test project. However, the target gtest was not found.")
+#        message(FATAL_ERROR "RENDU_USE_EXTERNAL_GOOGLETEST is ON and RENDU_FIND_GOOGLETEST is OFF, which means that the top-level project must build the Google Test project. However, the target gtest was not found.")
 #      endif()
 #    endif()
 #  else()
 #    set(absl_gtest_build_dir ${CMAKE_BINARY_DIR}/googletest-build)
-#    if(ABSL_USE_GOOGLETEST_HEAD AND ABSL_GOOGLETEST_DOWNLOAD_URL)
-#      message(FATAL_ERROR "Do not set both ABSL_USE_GOOGLETEST_HEAD and ABSL_GOOGLETEST_DOWNLOAD_URL")
+#    if(RENDU_USE_GOOGLETEST_HEAD AND RENDU_GOOGLETEST_DOWNLOAD_URL)
+#      message(FATAL_ERROR "Do not set both RENDU_USE_GOOGLETEST_HEAD and RENDU_GOOGLETEST_DOWNLOAD_URL")
 #    endif()
-#    if(ABSL_USE_GOOGLETEST_HEAD)
+#    if(RENDU_USE_GOOGLETEST_HEAD)
 #      set(absl_gtest_download_url "https://github.com/google/googletest/archive/main.zip")
-#    elseif(ABSL_GOOGLETEST_DOWNLOAD_URL)
-#      set(absl_gtest_download_url ${ABSL_GOOGLETEST_DOWNLOAD_URL})
+#    elseif(RENDU_GOOGLETEST_DOWNLOAD_URL)
+#      set(absl_gtest_download_url ${RENDU_GOOGLETEST_DOWNLOAD_URL})
 #    endif()
 #    if(absl_gtest_download_url)
 #      set(absl_gtest_src_dir ${CMAKE_BINARY_DIR}/googletest-src)
 #    else()
-#      set(absl_gtest_src_dir ${ABSL_LOCAL_GOOGLETEST_DIR})
+#      set(absl_gtest_src_dir ${RENDU_LOCAL_GOOGLETEST_DIR})
 #    endif()
 #    include(CMake/Googletest/DownloadGTest.cmake)
 #  endif()
@@ -175,7 +164,7 @@ include(CMakeDependentOption)
 
 add_subdirectory(absl)
 
-if(ABSL_ENABLE_INSTALL)
+if(RENDU_ENABLE_INSTALL)
   # absl:lts-remove-begin(system installation is supported for LTS releases)
   # We don't support system-wide installation
   list(APPEND SYSTEM_INSTALL_DIRS "/usr/local" "/usr" "/opt/" "/opt/local" "c:/Program Files/${PROJECT_NAME}")
@@ -226,24 +215,24 @@ if(ABSL_ENABLE_INSTALL)
       PATTERN "testdata" EXCLUDE
     )
 
-  file(READ "absl/base/options.h" ABSL_INTERNAL_OPTIONS_H_CONTENTS)
-  if (ABSL_INTERNAL_AT_LEAST_CXX17)
+  file(READ "absl/base/options.h" RENDU_INTERNAL_OPTIONS_H_CONTENTS)
+  if (RENDU_INTERNAL_AT_LEAST_CXX17)
     string(REGEX REPLACE
-      "#define ABSL_OPTION_USE_STD_([^ ]*) 2"
-      "#define ABSL_OPTION_USE_STD_\\1 1"
-      ABSL_INTERNAL_OPTIONS_H_PINNED
-      "${ABSL_INTERNAL_OPTIONS_H_CONTENTS}")
+      "#define RENDU_OPTION_USE_STD_([^ ]*) 2"
+      "#define RENDU_OPTION_USE_STD_\\1 1"
+      RENDU_INTERNAL_OPTIONS_H_PINNED
+      "${RENDU_INTERNAL_OPTIONS_H_CONTENTS}")
   else()
     string(REGEX REPLACE
-      "#define ABSL_OPTION_USE_STD_([^ ]*) 2"
-      "#define ABSL_OPTION_USE_STD_\\1 0"
-      ABSL_INTERNAL_OPTIONS_H_PINNED
-      "${ABSL_INTERNAL_OPTIONS_H_CONTENTS}")
+      "#define RENDU_OPTION_USE_STD_([^ ]*) 2"
+      "#define RENDU_OPTION_USE_STD_\\1 0"
+      RENDU_INTERNAL_OPTIONS_H_PINNED
+      "${RENDU_INTERNAL_OPTIONS_H_CONTENTS}")
   endif()
-  file(WRITE "${CMAKE_BINARY_DIR}/options-pinned.h" "${ABSL_INTERNAL_OPTIONS_H_PINNED}")
+  file(WRITE "${CMAKE_BINARY_DIR}/options-pinned.h" "${RENDU_INTERNAL_OPTIONS_H_PINNED}")
 
   install(FILES "${CMAKE_BINARY_DIR}/options-pinned.h"
          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/absl/base
          RENAME "options.h")
 
-endif()  # ABSL_ENABLE_INSTALL
+endif()  # RENDU_ENABLE_INSTALL

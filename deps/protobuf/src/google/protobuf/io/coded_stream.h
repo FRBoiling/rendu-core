@@ -109,6 +109,7 @@
 #ifndef GOOGLE_PROTOBUF_IO_CODED_STREAM_H__
 #define GOOGLE_PROTOBUF_IO_CODED_STREAM_H__
 
+
 #include <assert.h>
 
 #include <atomic>
@@ -120,22 +121,45 @@
 #include <type_traits>
 #include <utility>
 
+#ifdef _WIN32
+// Assuming windows is always little-endian.
+#if !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#define PROTOBUF_LITTLE_ENDIAN 1
+#endif
 #if defined(_MSC_VER) && _MSC_VER >= 1300 && !defined(__INTEL_COMPILER)
 // If MSVC has "/RTCc" set, it will complain about truncating casts at
 // runtime.  This file contains some intentional truncating casts.
 #pragma runtime_checks("c", off)
 #endif
-
-
-#include "google/protobuf/stubs/common.h"
-#include "google/protobuf/stubs/logging.h"
-#include "absl/numeric/bits.h"
-#include "absl/strings/string_view.h"
-#include "google/protobuf/port.h"
+#else
+#ifdef __APPLE__
+#include <machine/endian.h>  // __BYTE_ORDER
+#elif defined(__FreeBSD__)
+#include <sys/endian.h>  // __BYTE_ORDER
+#elif (defined(sun) || defined(__sun)) && (defined(__SVR4) || defined(__svr4__))
+#include <sys/isa_defs.h>  // __BYTE_ORDER
+#elif defined(_AIX) || defined(__TOS_AIX__)
+#include <sys/machine.h>  // BYTE_ORDER
+#else
+#if !defined(__QNX__)
+#include <endian.h>  // __BYTE_ORDER
+#endif
+#endif
+#if ((defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)) ||    \
+     (defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN)) && \
+    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#define PROTOBUF_LITTLE_ENDIAN 1
+#endif
+#endif
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/logging.h>
+#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/port.h>
+#include <google/protobuf/stubs/port.h>
 
 
 // Must be included last.
-#include "google/protobuf/port_def.inc"
+#include <google/protobuf/port_def.inc>
 
 namespace google {
 namespace protobuf {
@@ -177,8 +201,6 @@ class PROTOBUF_EXPORT CodedInputStream {
   // faster than using an ArrayInputStream.  PushLimit(size) is implied by
   // this constructor.
   explicit CodedInputStream(const uint8_t* buffer, int size);
-  CodedInputStream(const CodedInputStream&) = delete;
-  CodedInputStream& operator=(const CodedInputStream&) = delete;
 
   // Destroy the CodedInputStream and position the underlying
   // ZeroCopyInputStream at the first unread byte.  If an error occurred while
@@ -519,6 +541,8 @@ class PROTOBUF_EXPORT CodedInputStream {
   MessageFactory* GetExtensionFactory();
 
  private:
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CodedInputStream);
+
   const uint8_t* buffer_;
   const uint8_t* buffer_end_;  // pointer to the end of the buffer.
   ZeroCopyInputStream* input_;
@@ -680,7 +704,7 @@ class PROTOBUF_EXPORT EpsCopyOutputStream {
     if (PROTOBUF_PREDICT_FALSE(end_ - ptr < size)) {
       return WriteRawFallback(data, size, ptr);
     }
-    std::memcpy(ptr, data, static_cast<unsigned int>(size));
+    std::memcpy(ptr, data, size);
     return ptr + size;
   }
   // Writes the buffer specified by data, size to the stream. Possibly by
@@ -933,8 +957,7 @@ class PROTOBUF_EXPORT EpsCopyOutputStream {
 
   template <int S>
   uint8_t* WriteRawLittleEndian(const void* data, int size, uint8_t* ptr);
-#if !defined(PROTOBUF_LITTLE_ENDIAN) || \
-    defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#ifndef PROTOBUF_LITTLE_ENDIAN
   uint8_t* WriteRawLittleEndian32(const void* data, int size, uint8_t* ptr);
   uint8_t* WriteRawLittleEndian64(const void* data, int size, uint8_t* ptr);
 #endif
@@ -981,8 +1004,7 @@ template <>
 inline uint8_t* EpsCopyOutputStream::WriteRawLittleEndian<4>(const void* data,
                                                              int size,
                                                              uint8_t* ptr) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#ifdef PROTOBUF_LITTLE_ENDIAN
   return WriteRaw(data, size, ptr);
 #else
   return WriteRawLittleEndian32(data, size, ptr);
@@ -992,8 +1014,7 @@ template <>
 inline uint8_t* EpsCopyOutputStream::WriteRawLittleEndian<8>(const void* data,
                                                              int size,
                                                              uint8_t* ptr) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#ifdef PROTOBUF_LITTLE_ENDIAN
   return WriteRaw(data, size, ptr);
 #else
   return WriteRawLittleEndian64(data, size, ptr);
@@ -1060,8 +1081,6 @@ class PROTOBUF_EXPORT CodedOutputStream {
   template <class Stream, class = typename std::enable_if<std::is_base_of<
                               ZeroCopyOutputStream, Stream>::value>::type>
   CodedOutputStream(Stream* stream, bool eager_init);
-  CodedOutputStream(const CodedOutputStream&) = delete;
-  CodedOutputStream& operator=(const CodedOutputStream&) = delete;
 
   // Destroy the CodedOutputStream and position the underlying
   // ZeroCopyOutputStream immediately after the last byte written.
@@ -1289,6 +1308,7 @@ class PROTOBUF_EXPORT CodedOutputStream {
   // REQUIRES: value >= 0x80, and that (value & 7f) has been written to *target.
   static uint8_t* WriteVarint32ToArrayOutOfLineHelper(uint32_t value,
                                                       uint8_t* target);
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(CodedOutputStream);
 };
 
 // inline methods ====================================================
@@ -1337,8 +1357,7 @@ inline bool CodedInputStream::ReadVarintSizeAsInt(int* value) {
 // static
 inline const uint8_t* CodedInputStream::ReadLittleEndian32FromArray(
     const uint8_t* buffer, uint32_t* value) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   memcpy(value, buffer, sizeof(*value));
   return buffer + sizeof(*value);
 #else
@@ -1352,8 +1371,7 @@ inline const uint8_t* CodedInputStream::ReadLittleEndian32FromArray(
 // static
 inline const uint8_t* CodedInputStream::ReadLittleEndian64FromArray(
     const uint8_t* buffer, uint64_t* value) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   memcpy(value, buffer, sizeof(*value));
   return buffer + sizeof(*value);
 #else
@@ -1371,8 +1389,7 @@ inline const uint8_t* CodedInputStream::ReadLittleEndian64FromArray(
 }
 
 inline bool CodedInputStream::ReadLittleEndian32(uint32_t* value) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   if (PROTOBUF_PREDICT_TRUE(BufferSize() >= static_cast<int>(sizeof(*value)))) {
     buffer_ = ReadLittleEndian32FromArray(buffer_, value);
     return true;
@@ -1385,8 +1402,7 @@ inline bool CodedInputStream::ReadLittleEndian32(uint32_t* value) {
 }
 
 inline bool CodedInputStream::ReadLittleEndian64(uint64_t* value) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   if (PROTOBUF_PREDICT_TRUE(BufferSize() >= static_cast<int>(sizeof(*value)))) {
     buffer_ = ReadLittleEndian64FromArray(buffer_, value);
     return true;
@@ -1673,8 +1689,7 @@ inline uint8_t* CodedOutputStream::WriteVarint32SignExtendedToArray(
 
 inline uint8_t* CodedOutputStream::WriteLittleEndian32ToArray(uint32_t value,
                                                               uint8_t* target) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   memcpy(target, &value, sizeof(value));
 #else
   target[0] = static_cast<uint8_t>(value);
@@ -1687,8 +1702,7 @@ inline uint8_t* CodedOutputStream::WriteLittleEndian32ToArray(uint32_t value,
 
 inline uint8_t* CodedOutputStream::WriteLittleEndian64ToArray(uint64_t value,
                                                               uint8_t* target) {
-#if defined(PROTOBUF_LITTLE_ENDIAN) && \
-    !defined(PROTOBUF_DISABLE_LITTLE_ENDIAN_OPT_FOR_TEST)
+#if defined(PROTOBUF_LITTLE_ENDIAN)
   memcpy(target, &value, sizeof(value));
 #else
   uint32_t part0 = static_cast<uint32_t>(value);
@@ -1729,16 +1743,15 @@ inline size_t CodedOutputStream::VarintSize32(uint32_t value) {
   // This computes value == 0 ? 1 : floor(log2(value)) / 7 + 1
   // Use an explicit multiplication to implement the divide of
   // a number in the 1..31 range.
-  //
-  // Explicit OR 0x1 to avoid calling absl::bit_width(0), which is
-  // requires a branch to check for on many platforms.
-  uint32_t log2value = absl::bit_width(value | 0x1) - 1;
+  // Explicit OR 0x1 to avoid calling Bits::Log2FloorNonZero(0), which is
+  // undefined.
+  uint32_t log2value = Bits::Log2FloorNonZero(value | 0x1);
   return static_cast<size_t>((log2value * 9 + 73) / 64);
 }
 
 inline size_t CodedOutputStream::VarintSize32PlusOne(uint32_t value) {
   // Same as above, but one more.
-  uint32_t log2value = absl::bit_width(value | 0x1) - 1;
+  uint32_t log2value = Bits::Log2FloorNonZero(value | 0x1);
   return static_cast<size_t>((log2value * 9 + 73 + 64) / 64);
 }
 
@@ -1746,16 +1759,15 @@ inline size_t CodedOutputStream::VarintSize64(uint64_t value) {
   // This computes value == 0 ? 1 : floor(log2(value)) / 7 + 1
   // Use an explicit multiplication to implement the divide of
   // a number in the 1..63 range.
-  //
-  // Explicit OR 0x1 to avoid calling absl::bit_width(0), which is
-  // requires a branch to check for on many platforms.
-  uint32_t log2value = absl::bit_width(value | 0x1) - 1;
+  // Explicit OR 0x1 to avoid calling Bits::Log2FloorNonZero(0), which is
+  // undefined.
+  uint32_t log2value = Bits::Log2FloorNonZero64(value | 0x1);
   return static_cast<size_t>((log2value * 9 + 73) / 64);
 }
 
 inline size_t CodedOutputStream::VarintSize64PlusOne(uint64_t value) {
   // Same as above, but one more.
-  uint32_t log2value = absl::bit_width(value | 0x1) - 1;
+  uint32_t log2value = Bits::Log2FloorNonZero64(value | 0x1);
   return static_cast<size_t>((log2value * 9 + 73 + 64) / 64);
 }
 
@@ -1779,7 +1791,7 @@ inline void CodedOutputStream::WriteRawMaybeAliased(const void* data,
 
 inline uint8_t* CodedOutputStream::WriteRawToArray(const void* data, int size,
                                                    uint8_t* target) {
-  memcpy(target, data, static_cast<unsigned int>(size));
+  memcpy(target, data, size);
   return target + size;
 }
 
@@ -1796,6 +1808,6 @@ inline uint8_t* CodedOutputStream::WriteStringToArray(const std::string& str,
 #pragma runtime_checks("c", restore)
 #endif  // _MSC_VER && !defined(__INTEL_COMPILER)
 
-#include "google/protobuf/port_undef.inc"
+#include <google/protobuf/port_undef.inc>
 
 #endif  // GOOGLE_PROTOBUF_IO_CODED_STREAM_H__

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     any_invocable
   SRCS
@@ -22,7 +22,7 @@ absl_cc_library(
   HDRS
     "any_invocable.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base_internal
     absl::config
@@ -32,14 +32,14 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     any_invocable_test
   SRCS
     "any_invocable_test.cc"
     "internal/any_invocable.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::any_invocable
     absl::base_internal
@@ -50,7 +50,7 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bind_front
   SRCS
@@ -58,27 +58,27 @@ absl_cc_library(
   HDRS
     "bind_front.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base_internal
     absl::compressed_tuple
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     bind_front_test
   SRCS
     "bind_front_test.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bind_front
     absl::memory
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     function_ref
   SRCS
@@ -86,7 +86,7 @@ absl_cc_library(
   HDRS
     "function_ref.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base_internal
     absl::core_headers
@@ -94,13 +94,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     function_ref_test
   SRCS
     "function_ref_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::function_ref
     absl::memory

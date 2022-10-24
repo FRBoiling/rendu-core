@@ -6,6 +6,5 @@
 #define RENDU_CORE_COMMON_PCH_H_
 
 #include "defines.h"
-#include "fmt/format.h"
 
 #endif //RENDU_CORE_COMMON_PCH_H_

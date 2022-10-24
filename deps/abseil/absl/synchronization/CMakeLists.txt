@@ -15,7 +15,7 @@
 #
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     graphcycles_internal
   HDRS
@@ -23,7 +23,7 @@ absl_cc_library(
   SRCS
     "internal/graphcycles.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base
     absl::base_internal
@@ -34,20 +34,20 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     kernel_timeout_internal
   HDRS
     "internal/kernel_timeout.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
     absl::raw_logging_internal
     absl::time
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     synchronization
   HDRS
@@ -68,7 +68,7 @@ absl_cc_library(
     "notification.cc"
     "mutex.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::graphcycles_internal
     absl::kernel_timeout_internal
@@ -87,39 +87,39 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     barrier_test
   SRCS
     "barrier_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::time
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     blocking_counter_test
   SRCS
     "blocking_counter_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::time
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     graphcycles_test
   SRCS
     "internal/graphcycles_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::graphcycles_internal
     absl::core_headers
@@ -128,26 +128,26 @@ absl_cc_test(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     thread_pool
   HDRS
     "internal/thread_pool.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::synchronization
     absl::core_headers
   TESTONLY
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     mutex_test
   SRCS
     "mutex_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::thread_pool
@@ -160,13 +160,13 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     notification_test
   SRCS
     "notification_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::time
@@ -174,13 +174,13 @@ absl_cc_test(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     per_thread_sem_test_common
   SRCS
     "internal/per_thread_sem_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::base
@@ -191,13 +191,13 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     per_thread_sem_test
   SRCS
     "internal/per_thread_sem_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::per_thread_sem_test_common
     absl::synchronization
@@ -206,13 +206,13 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     lifetime_test
   SRCS
     "lifetime_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::synchronization
     absl::core_headers

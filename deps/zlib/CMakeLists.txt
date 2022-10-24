@@ -21,40 +21,16 @@ CollectHeaderFiles(
    ${target-name}_headers
     # Exclude
 )
-add_library(${target-name} STATIC ${${target-name}_headers} ${${target-name}_sources})
 
-include(CheckCCompilerFlag)
-target_compile_definitions(${target-name} PRIVATE -DSFMT_MEXP=19937)
-if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64)|(AMD64|amd64)|(^i.86$)")
-  #SSE2 is always available
-  set(HAVE_SSE2 1)
-  if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(${target-name} PRIVATE -msse2)
-  endif ()
-  target_compile_definitions(${target-name} PRIVATE -DHAVE_SSE2)
-elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^arm")
-  check_c_compiler_flag(-mfpu=neon HAVE_NEON)
-  if (HAVE_NEON)
-    target_compile_options(${target-name} PRIVATE -mfpu=neon -ftree-vectorize)
-    target_compile_definitions(${target-name} PRIVATE -DHAVE_NEON)
-  else ()
-    message(WARNING "Neon not available - performance will be poor!")
-  endif ()
-elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch64")
-  check_c_compiler_flag(-march=armv8-a+simd HAVE_NEON)
-  if (HAVE_NEON)
-    target_compile_options(${target-name} PRIVATE -ftree-vectorize)
-    target_compile_definitions(${target-name} PRIVATE -DHAVE_NEON)
-  else ()
-    message(WARNING "Neon not available - performance will be poor!")
-  endif ()
-endif ()
-
-target_link_libraries(${target-name}
-    PRIVATE rendu-dependency-interface
-#    PUBLIC
+rendu_cc_library(${target-name} ${project-name}
+    NAME
+    ${target-name}
+    HDRS
+    ${${target-name}_headers}
+    SRCS
+    ${${target-name}_sources}
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
+    PUBLIC
     )
-
-set_target_properties(${target-name} PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(${target-name} PUBLIC ${header_dir})
-set_target_properties(${target-name} PROPERTIES FOLDER ${project-name})

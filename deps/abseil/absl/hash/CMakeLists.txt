@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     hash
   HDRS
@@ -23,7 +23,7 @@ absl_cc_library(
     "internal/hash.cc"
     "internal/hash.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::city
     absl::config
@@ -41,13 +41,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     hash_testing
   HDRS
     "hash_testing.h"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::spy_hash_state
     absl::meta
@@ -58,13 +58,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     hash_test
   SRCS
     "hash_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::cord_test_helpers
     absl::hash
@@ -86,13 +86,13 @@ absl_cc_test(
 # Note: Even though external code should not depend on this target
 # directly, it must be marked PUBLIC since it is a dependency of
 # hash_testing.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     spy_hash_state
   HDRS
     "internal/spy_hash_state.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::hash
     absl::strings
@@ -102,7 +102,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     city
   HDRS
@@ -110,27 +110,27 @@ absl_cc_library(
   SRCS
     "internal/city.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::core_headers
     absl::endian
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     city_test
   SRCS
     "internal/city_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::city
     GTest::gmock_main
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     low_level_hash
   HDRS
@@ -138,7 +138,7 @@ absl_cc_library(
   SRCS
     "internal/low_level_hash.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bits
     absl::config
@@ -146,13 +146,13 @@ absl_cc_library(
     absl::int128
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     low_level_hash_test
   SRCS
     "internal/low_level_hash_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::low_level_hash
     absl::strings

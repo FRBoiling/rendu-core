@@ -14,26 +14,26 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bits
   HDRS
     "bits.h"
     "internal/bits.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     bits_test
   SRCS
     "bits_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::bits
     absl::core_headers
@@ -41,7 +41,7 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     int128
   HDRS
@@ -51,7 +51,7 @@ absl_cc_library(
     "int128_have_intrinsic.inc"
     "int128_no_intrinsic.inc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -59,14 +59,14 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     int128_test
   SRCS
     "int128_stream_test.cc"
     "int128_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::int128
     absl::base
@@ -77,23 +77,23 @@ absl_cc_test(
 )
 
 # component target
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     numeric
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::int128
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     numeric_representation
   HDRS
     "internal/representation.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
   PUBLIC

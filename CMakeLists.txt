@@ -46,6 +46,11 @@ include(CheckPlatform)
 include(GroupSources)
 include(AutoCollect)
 include(AutoAddSubdirectory)
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
+include(RenduDll)
+include(RenduHelpers)
 
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)

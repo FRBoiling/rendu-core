@@ -15,7 +15,7 @@
 #
 
 # Internal targets
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_check_op
   SRCS
@@ -23,9 +23,9 @@ absl_cc_library(
   HDRS
     "internal/check_op.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -35,7 +35,7 @@ absl_cc_library(
     absl::strings
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_conditions
   SRCS
@@ -43,9 +43,9 @@ absl_cc_library(
   HDRS
     "internal/conditions.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::base
     absl::config
@@ -53,36 +53,36 @@ absl_cc_library(
     absl::log_internal_voidify
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_config
   SRCS
   HDRS
     "internal/config.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_flags
   SRCS
   HDRS
     "internal/flags.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::flags
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_format
   SRCS
@@ -90,9 +90,9 @@ absl_cc_library(
   HDRS
     "internal/log_format.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -105,7 +105,7 @@ absl_cc_library(
     absl::span
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_globals
   SRCS
@@ -113,9 +113,9 @@ absl_cc_library(
   HDRS
     "internal/globals.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -125,7 +125,7 @@ absl_cc_library(
     absl::time
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_message
   SRCS
@@ -133,9 +133,9 @@ absl_cc_library(
   HDRS
     "internal/log_message.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::base
     absl::config
@@ -162,7 +162,7 @@ absl_cc_library(
     absl::span
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_log_sink_set
   SRCS
@@ -170,9 +170,9 @@ absl_cc_library(
   HDRS
     "internal/log_sink_set.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
     $<$<BOOL:${ANDROID}>:-llog>
   DEPS
     absl::base
@@ -191,30 +191,30 @@ absl_cc_library(
     absl::strings
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_nullguard
   SRCS
   HDRS
     "internal/nullguard.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_nullstream
   SRCS
   HDRS
     "internal/nullstream.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -222,23 +222,23 @@ absl_cc_library(
     absl::strings
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_strip
   SRCS
   HDRS
     "internal/strip.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::log_internal_message
     absl::log_internal_nullstream
     absl::log_severity
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_test_actions
   SRCS
@@ -246,9 +246,9 @@ absl_cc_library(
   HDRS
     "internal/test_actions.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_entry
@@ -259,7 +259,7 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_test_helpers
   SRCS
@@ -267,9 +267,9 @@ absl_cc_library(
   HDRS
     "internal/test_helpers.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_globals
@@ -280,7 +280,7 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_test_matchers
   SRCS
@@ -288,9 +288,9 @@ absl_cc_library(
   HDRS
     "internal/test_matchers.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_entry
@@ -304,31 +304,31 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_internal_voidify
   SRCS
   HDRS
     "internal/voidify.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
 )
 
 # Public targets
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     check
   SRCS
   HDRS
     "check.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log_internal_check_op
@@ -338,7 +338,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     die_if_null
   SRCS
@@ -346,9 +346,9 @@ absl_cc_library(
   HDRS
     "die_if_null.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -357,7 +357,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_flags
   SRCS
@@ -365,9 +365,9 @@ absl_cc_library(
   HDRS
     "flags.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -381,7 +381,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_globals
   SRCS
@@ -389,9 +389,9 @@ absl_cc_library(
   HDRS
     "globals.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::atomic_hook
     absl::config
@@ -401,7 +401,7 @@ absl_cc_library(
     absl::strings
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_initialize
   SRCS
@@ -409,9 +409,9 @@ absl_cc_library(
   HDRS
     "initialize.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_globals
@@ -420,16 +420,16 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log
   SRCS
   HDRS
     "log.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::log_internal_conditions
     absl::log_internal_message
@@ -437,7 +437,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_entry
   SRCS
@@ -445,9 +445,9 @@ absl_cc_library(
   HDRS
     "log_entry.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -459,7 +459,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_sink
   SRCS
@@ -467,25 +467,25 @@ absl_cc_library(
   HDRS
     "log_sink.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_entry
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_sink_registry
   SRCS
   HDRS
     "log_sink_registry.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_sink
@@ -493,16 +493,16 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     log_streamer
   SRCS
   HDRS
     "log_streamer.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log
@@ -514,7 +514,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     scoped_mock_log
   SRCS
@@ -522,9 +522,9 @@ absl_cc_library(
   HDRS
     "scoped_mock_log.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::log_entry
@@ -540,15 +540,15 @@ absl_cc_library(
 )
 
 # Test targets
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     basic_log_test
   SRCS
     "basic_log_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::base
     absl::log
@@ -563,15 +563,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     check_test
   SRCS
     "check_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::check
     absl::config
@@ -581,15 +581,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     die_if_null_test
   SRCS
     "die_if_null_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::die_if_null
@@ -597,15 +597,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_flags_test
   SRCS
     "flags_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -623,15 +623,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_entry_test
   SRCS
     "log_entry_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -647,15 +647,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_globals_test
   SRCS
     "globals_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -667,15 +667,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_format_test
   SRCS
     "log_format_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::log
     absl::log_internal_config
@@ -686,15 +686,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_macro_hygiene_test
   SRCS
     "log_macro_hygiene_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -704,15 +704,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_sink_test
   SRCS
     "log_sink_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -728,15 +728,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_streamer_test
   SRCS
     "log_streamer_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::base
     absl::core_headers
@@ -751,15 +751,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_modifier_methods_test
   SRCS
     "log_modifier_methods_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::log
     absl::log_internal_test_actions
@@ -773,15 +773,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     scoped_mock_log_test
   SRCS
     "scoped_mock_log_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -798,15 +798,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_internal_stderr_log_sink_test
   SRCS
     "internal/stderr_log_sink_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::core_headers
     absl::log
@@ -817,15 +817,15 @@ absl_cc_test(
     GTest::gtest_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     log_stripping_test
   SRCS
     "stripping_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::check
     absl::flags_program_name

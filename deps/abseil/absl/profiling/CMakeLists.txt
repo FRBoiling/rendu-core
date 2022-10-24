@@ -12,32 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     sample_recorder
   HDRS
     "internal/sample_recorder.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base
     absl::synchronization
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     sample_recorder_test
   SRCS
     "internal/sample_recorder_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::sample_recorder
     absl::time
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     exponential_biased
   SRCS
@@ -45,26 +45,26 @@ absl_cc_library(
   HDRS
     "internal/exponential_biased.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::core_headers
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     exponential_biased_test
   SRCS
     "internal/exponential_biased_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::exponential_biased
     absl::strings
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     periodic_sampler
   SRCS
@@ -72,19 +72,19 @@ absl_cc_library(
   HDRS
     "internal/periodic_sampler.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
     absl::exponential_biased
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     periodic_sampler_test
   SRCS
     "internal/periodic_sampler_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::core_headers
     absl::periodic_sampler

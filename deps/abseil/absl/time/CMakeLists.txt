@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     time
   HDRS
@@ -30,7 +30,7 @@ absl_cc_library(
     "internal/get_current_time_posix.inc"
     "time.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base
     absl::civil_time
@@ -42,7 +42,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     civil_time
   HDRS
@@ -51,14 +51,14 @@ absl_cc_library(
   SRCS
   "internal/cctz/src/civil_time_detail.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
 )
 
 if(APPLE)
   find_library(CoreFoundation CoreFoundation)
 endif()
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     time_zone
   HDRS
@@ -82,13 +82,13 @@ absl_cc_library(
     "internal/cctz/src/tzfile.h"
     "internal/cctz/src/zone_info_source.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     $<$<PLATFORM_ID:Darwin>:${CoreFoundation}>
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     time_internal_test_util
   HDRS
@@ -97,7 +97,7 @@ absl_cc_library(
     "internal/test_util.cc"
     "internal/zoneinfo.inc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::time
     absl::config
@@ -107,7 +107,7 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     time_test
   SRCS
@@ -118,7 +118,7 @@ absl_cc_test(
     "time_test.cc"
     "time_zone_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::time_internal_test_util
     absl::time
@@ -128,13 +128,13 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     flag_test
   SRCS
     "flag_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::flags
     absl::flags_reflection

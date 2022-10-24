@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     any
   HDRS
     "any.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bad_any_cast
     absl::config
@@ -30,13 +30,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bad_any_cast
   HDRS
    "bad_any_cast.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bad_any_cast_impl
     absl::config
@@ -44,20 +44,20 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bad_any_cast_impl
   SRCS
    "bad_any_cast.h"
    "bad_any_cast.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::raw_logging_internal
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     span
   HDRS
@@ -65,7 +65,7 @@ absl_cc_library(
   SRCS
     "internal/span.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::algorithm
     absl::core_headers
@@ -74,7 +74,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     optional
   HDRS
@@ -82,7 +82,7 @@ absl_cc_library(
   SRCS
     "internal/optional.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bad_optional_access
     absl::base_internal
@@ -94,7 +94,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bad_optional_access
   HDRS
@@ -102,14 +102,14 @@ absl_cc_library(
   SRCS
     "bad_optional_access.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::raw_logging_internal
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     bad_variant_access
   HDRS
@@ -117,7 +117,7 @@ absl_cc_library(
   SRCS
     "bad_variant_access.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::raw_logging_internal
@@ -125,7 +125,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     conformance_testing
   HDRS
@@ -137,7 +137,7 @@ absl_cc_library(
     "internal/parentheses.h"
     "internal/transform_args.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::algorithm
     absl::debugging
@@ -148,7 +148,7 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     variant
   HDRS
@@ -156,7 +156,7 @@ absl_cc_library(
   SRCS
     "internal/variant.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::bad_variant_access
     absl::base_internal
@@ -167,13 +167,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     variant_test
   SRCS
     "variant_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::variant
     absl::config
@@ -184,39 +184,39 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     compare
   HDRS
     "compare.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
     absl::type_traits
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     compare_test
   SRCS
     "compare_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::base
     absl::compare
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     variant_exception_safety_test
   SRCS
     "variant_exception_safety_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::variant
     absl::config

@@ -16,7 +16,7 @@
 
 find_library(EXECINFO_LIBRARY execinfo)
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     stacktrace
   HDRS
@@ -34,7 +34,7 @@ absl_cc_library(
   SRCS
     "stacktrace.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
     $<$<BOOL:${EXECINFO_LIBRARY}>:${EXECINFO_LIBRARY}>
   DEPS
@@ -45,7 +45,7 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     symbolize
   HDRS
@@ -59,9 +59,9 @@ absl_cc_library(
     "symbolize_unimplemented.inc"
     "symbolize_win32.inc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
     $<$<BOOL:${MINGW}>:-ldbghelp>
   DEPS
     absl::debugging_internal
@@ -76,13 +76,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     symbolize_test
   SRCS
     "symbolize_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
     $<$<BOOL:${MSVC}>:-Z7>
   LINKOPTS
     $<$<BOOL:${MSVC}>:-DEBUG>
@@ -99,7 +99,7 @@ absl_cc_test(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     examine_stack
   HDRS
@@ -107,7 +107,7 @@ absl_cc_library(
   SRCS
     "internal/examine_stack.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::stacktrace
     absl::symbolize
@@ -116,7 +116,7 @@ absl_cc_library(
     absl::raw_logging_internal
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     failure_signal_handler
   HDRS
@@ -124,7 +124,7 @@ absl_cc_library(
   SRCS
     "failure_signal_handler.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::examine_stack
     absl::stacktrace
@@ -135,13 +135,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     failure_signal_handler_test
   SRCS
     "failure_signal_handler_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::failure_signal_handler
     absl::stacktrace
@@ -153,7 +153,7 @@ absl_cc_test(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     debugging_internal
   HDRS
@@ -165,7 +165,7 @@ absl_cc_library(
     "internal/elf_mem_image.cc"
     "internal/vdso_support.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
     absl::config
@@ -175,7 +175,7 @@ absl_cc_library(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     demangle_internal
   HDRS
@@ -183,20 +183,20 @@ absl_cc_library(
   SRCS
     "internal/demangle.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base
     absl::core_headers
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     demangle_test
   SRCS
     "internal/demangle_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::demangle_internal
     absl::stack_consumption
@@ -207,7 +207,7 @@ absl_cc_test(
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     leak_check
   HDRS
@@ -215,22 +215,22 @@ absl_cc_library(
   SRCS
     "leak_check.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::core_headers
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     leak_check_test
   SRCS
     "leak_check_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
+    ${RENDU_DEFAULT_LINKOPTS}
   DEPS
     absl::leak_check
     absl::base
@@ -238,7 +238,7 @@ absl_cc_test(
 )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     stack_consumption
   HDRS
@@ -246,7 +246,7 @@ absl_cc_library(
   SRCS
     "internal/stack_consumption.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
     absl::core_headers
@@ -254,13 +254,13 @@ absl_cc_library(
   TESTONLY
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     stack_consumption_test
   SRCS
     "internal/stack_consumption_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::stack_consumption
     absl::core_headers
@@ -269,11 +269,11 @@ absl_cc_test(
 )
 
 # component target
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     debugging
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::stacktrace
     absl::leak_check

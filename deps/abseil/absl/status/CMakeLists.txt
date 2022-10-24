@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     status
   HDRS
@@ -24,7 +24,7 @@ absl_cc_library(
     "status_payload_printer.h"
     "status_payload_printer.cc"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::atomic_hook
     absl::config
@@ -42,20 +42,20 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     status_test
   SRCS
    "status_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::status
     absl::strings
     GTest::gmock_main
 )
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     statusor
   HDRS
@@ -64,7 +64,7 @@ absl_cc_library(
     "statusor.cc"
     "internal/statusor_internal.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::base
     absl::status
@@ -77,13 +77,13 @@ absl_cc_library(
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     statusor_test
   SRCS
    "statusor_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::status
     absl::statusor

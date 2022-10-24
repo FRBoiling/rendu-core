@@ -32,30 +32,32 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
-#include "google/protobuf/extension_set.h"
+#include <google/protobuf/extension_set.h>
 
 #include <tuple>
+#include <unordered_set>
 #include <utility>
 
-#include "google/protobuf/stubs/common.h"
-#include "google/protobuf/io/coded_stream.h"
-#include "google/protobuf/io/zero_copy_stream_impl_lite.h"
-#include "google/protobuf/arena.h"
-#include "absl/container/flat_hash_set.h"
-#include "absl/hash/hash.h"
-#include "google/protobuf/extension_set_inl.h"
-#include "google/protobuf/message_lite.h"
-#include "google/protobuf/metadata_lite.h"
-#include "google/protobuf/parse_context.h"
-#include "google/protobuf/port.h"
-#include "google/protobuf/repeated_field.h"
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <google/protobuf/arena.h>
+#include <google/protobuf/extension_set_inl.h>
+#include <google/protobuf/message_lite.h>
+#include <google/protobuf/metadata_lite.h>
+#include <google/protobuf/parse_context.h>
+#include <google/protobuf/port.h>
+#include <google/protobuf/repeated_field.h>
+#include <google/protobuf/stubs/map_util.h>
+#include <google/protobuf/stubs/hash.h>
 
-// must be last.
-#include "google/protobuf/port_def.inc"
-
+// clang-format off
+#include <google/protobuf/port_def.inc>  // must be last.
+// clang-format on
 namespace google {
 namespace protobuf {
 namespace internal {
+
 namespace {
 
 inline WireFormatLite::FieldType real_type(FieldType type) {
@@ -67,8 +69,28 @@ inline WireFormatLite::CppType cpp_type(FieldType type) {
   return WireFormatLite::FieldTypeToCppType(real_type(type));
 }
 
+inline bool is_packable(WireFormatLite::WireType type) {
+  switch (type) {
+    case WireFormatLite::WIRETYPE_VARINT:
+    case WireFormatLite::WIRETYPE_FIXED64:
+    case WireFormatLite::WIRETYPE_FIXED32:
+      return true;
+    case WireFormatLite::WIRETYPE_LENGTH_DELIMITED:
+    case WireFormatLite::WIRETYPE_START_GROUP:
+    case WireFormatLite::WIRETYPE_END_GROUP:
+      return false;
+
+      // Do not add a default statement. Let the compiler complain when someone
+      // adds a new wire type.
+  }
+  GOOGLE_LOG(FATAL) << "can't reach here.";
+  return false;
+}
+
 // Registry stuff.
 
+// Note that we cannot use hetererogeneous lookup for std containers since we
+// need to support C++11.
 struct ExtensionEq {
   bool operator()(const ExtensionInfo& lhs, const ExtensionInfo& rhs) const {
     return lhs.message == rhs.message && lhs.number == rhs.number;
@@ -77,12 +99,13 @@ struct ExtensionEq {
 
 struct ExtensionHasher {
   std::size_t operator()(const ExtensionInfo& info) const {
-    return absl::HashOf(info.message, info.number);
+    return std::hash<const MessageLite*>{}(info.message) ^
+           std::hash<int>{}(info.number);
   }
 };
 
 using ExtensionRegistry =
-    absl::flat_hash_set<ExtensionInfo, ExtensionHasher, ExtensionEq>;
+    std::unordered_set<ExtensionInfo, ExtensionHasher, ExtensionEq>;
 
 static const ExtensionRegistry* global_registry = nullptr;
 
@@ -91,7 +114,7 @@ static const ExtensionRegistry* global_registry = nullptr;
 void Register(const ExtensionInfo& info) {
   static auto local_static_registry = OnShutdownDelete(new ExtensionRegistry);
   global_registry = local_static_registry;
-  if (!local_static_registry->insert(info).second) {
+  if (!InsertIfNotPresent(local_static_registry, info)) {
     GOOGLE_LOG(FATAL) << "Multiple extension registrations for type \""
                << info.message->GetTypeName() << "\", field number "
                << info.number << ".";
@@ -115,6 +138,8 @@ const ExtensionInfo* FindRegisteredExtension(const MessageLite* extendee,
 }
 
 }  // namespace
+
+ExtensionFinder::~ExtensionFinder() {}
 
 bool GeneratedExtensionFinder::Find(int number, ExtensionInfo* output) {
   const ExtensionInfo* extension = FindRegisteredExtension(extendee_, number);
@@ -924,35 +949,23 @@ void ExtensionSet::Clear() {
 }
 
 namespace {
-// Computes the size of an ExtensionSet union without actually constructing the
-// union. Note that we do not count cleared extensions from the source to be
-// part of the total, because there is no need to allocate space for those. We
-// do include cleared extensions in the destination, though, because those are
-// already allocated and will not be going away.
+// Computes the size of a std::set_union without constructing the union.
 template <typename ItX, typename ItY>
-size_t SizeOfUnion(ItX it_dest, ItX end_dest, ItY it_source, ItY end_source) {
+size_t SizeOfUnion(ItX it_xs, ItX end_xs, ItY it_ys, ItY end_ys) {
   size_t result = 0;
-  while (it_dest != end_dest && it_source != end_source) {
-    if (it_dest->first < it_source->first) {
-      ++result;
-      ++it_dest;
-    } else if (it_dest->first == it_source->first) {
-      ++result;
-      ++it_dest;
-      ++it_source;
+  while (it_xs != end_xs && it_ys != end_ys) {
+    ++result;
+    if (it_xs->first < it_ys->first) {
+      ++it_xs;
+    } else if (it_xs->first == it_ys->first) {
+      ++it_xs;
+      ++it_ys;
     } else {
-      if (!it_source->second.is_cleared) {
-        ++result;
-      }
-      ++it_source;
+      ++it_ys;
     }
   }
-  result += std::distance(it_dest, end_dest);
-  for (; it_source != end_source; ++it_source) {
-    if (!it_source->second.is_cleared) {
-      ++result;
-    }
-  }
+  result += std::distance(it_xs, end_xs);
+  result += std::distance(it_ys, end_ys);
   return result;
 }
 }  // namespace
@@ -1220,6 +1233,40 @@ bool ExtensionSet::IsInitialized() const {
     if (!it->second.IsInitialized()) return false;
   }
   return true;
+}
+
+bool ExtensionSet::FindExtensionInfoFromTag(uint32_t tag,
+                                            ExtensionFinder* extension_finder,
+                                            int* field_number,
+                                            ExtensionInfo* extension,
+                                            bool* was_packed_on_wire) {
+  *field_number = WireFormatLite::GetTagFieldNumber(tag);
+  WireFormatLite::WireType wire_type = WireFormatLite::GetTagWireType(tag);
+  return FindExtensionInfoFromFieldNumber(wire_type, *field_number,
+                                          extension_finder, extension,
+                                          was_packed_on_wire);
+}
+
+bool ExtensionSet::FindExtensionInfoFromFieldNumber(
+    int wire_type, int field_number, ExtensionFinder* extension_finder,
+    ExtensionInfo* extension, bool* was_packed_on_wire) const {
+  if (!extension_finder->Find(field_number, extension)) {
+    return false;
+  }
+
+  WireFormatLite::WireType expected_wire_type =
+      WireFormatLite::WireTypeForFieldType(real_type(extension->type));
+
+  // Check if this is a packed field.
+  *was_packed_on_wire = false;
+  if (extension->is_repeated &&
+      wire_type == WireFormatLite::WIRETYPE_LENGTH_DELIMITED &&
+      is_packable(expected_wire_type)) {
+    *was_packed_on_wire = true;
+    return true;
+  }
+  // Otherwise the wire type must match.
+  return expected_wire_type == wire_type;
 }
 
 const char* ExtensionSet::ParseField(uint64_t tag, const char* ptr,
@@ -1959,4 +2006,4 @@ LazyEagerVerifyFnType FindExtensionLazyEagerVerifyFn(
 }  // namespace protobuf
 }  // namespace google
 
-#include "google/protobuf/port_undef.inc"
+#include <google/protobuf/port_undef.inc>

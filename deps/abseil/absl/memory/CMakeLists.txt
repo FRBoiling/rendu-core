@@ -14,39 +14,39 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     memory
   HDRS
     "memory.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::core_headers
     absl::meta
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     memory_test
   SRCS
     "memory_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::memory
     absl::core_headers
     GTest::gmock_main
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     memory_exception_safety_test
   SRCS
     "memory_exception_safety_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::memory
     absl::config

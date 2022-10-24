@@ -14,19 +14,19 @@
 # limitations under the License.
 #
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     btree
-  HDRS
+    HDRS
     "btree_map.h"
     "btree_set.h"
     "internal/btree.h"
     "internal/btree_container.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::container_common
     absl::common_policy_traits
     absl::compare
@@ -41,37 +41,37 @@ absl_cc_library(
     absl::throw_delegate
     absl::type_traits
     absl::utility
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     btree_test_common
-  hdrs
+    hdrs
     "btree_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::btree
     absl::cord
     absl::flat_hash_set
     absl::strings
     absl::time
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     btree_test
-  SRCS
+    SRCS
     "btree_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  LINKOPTS
-    ${ABSL_DEFAULT_LINKOPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    LINKOPTS
+    ${RENDU_DEFAULT_LINKOPTS}
+    DEPS
     absl::algorithm_container
     absl::btree
     absl::btree_test_common
@@ -85,29 +85,29 @@ absl_cc_test(
     absl::strings
     absl::test_instance_tracker
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     compressed_tuple
-  HDRS
+    HDRS
     "internal/compressed_tuple.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::utility
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     compressed_tuple_test
-  SRCS
+    SRCS
     "internal/compressed_tuple_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::any
     absl::compressed_tuple
     absl::memory
@@ -115,16 +115,16 @@ absl_cc_test(
     absl::test_instance_tracker
     absl::utility
     GTest::gmock_main
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     fixed_array
-  HDRS
-   "fixed_array.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    HDRS
+    "fixed_array.h"
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::compressed_tuple
     absl::algorithm
     absl::config
@@ -132,17 +132,17 @@ absl_cc_library(
     absl::dynamic_annotations
     absl::throw_delegate
     absl::memory
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     fixed_array_test
-  SRCS
+    SRCS
     "fixed_array_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::fixed_array
     absl::counting_allocator
     absl::config
@@ -150,76 +150,76 @@ absl_cc_test(
     absl::hash_testing
     absl::memory
     GTest::gmock_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     fixed_array_exception_safety_test
-  SRCS
+    SRCS
     "fixed_array_exception_safety_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::fixed_array
     absl::config
     absl::exception_safety_testing
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     inlined_vector_internal
-  HDRS
-   "internal/inlined_vector.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    HDRS
+    "internal/inlined_vector.h"
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::compressed_tuple
     absl::core_headers
     absl::memory
     absl::span
     absl::type_traits
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     inlined_vector
-  HDRS
-   "inlined_vector.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    HDRS
+    "inlined_vector.h"
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::algorithm
     absl::core_headers
     absl::inlined_vector_internal
     absl::throw_delegate
     absl::memory
     absl::type_traits
-  PUBLIC
-)
+    PUBLIC
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     counting_allocator
-  HDRS
+    HDRS
     "internal/counting_allocator.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     inlined_vector_test
-  SRCS
+    SRCS
     "inlined_vector_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::counting_allocator
     absl::inlined_vector
     absl::test_instance_tracker
@@ -231,74 +231,74 @@ absl_cc_test(
     absl::raw_logging_internal
     absl::strings
     GTest::gmock_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     inlined_vector_exception_safety_test
-  SRCS
+    SRCS
     "inlined_vector_exception_safety_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::inlined_vector
     absl::config
     absl::exception_safety_testing
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     test_instance_tracker
-  HDRS
+    HDRS
     "internal/test_instance_tracker.h"
-  SRCS
+    SRCS
     "internal/test_instance_tracker.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::compare
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     test_instance_tracker_test
-  SRCS
+    SRCS
     "internal/test_instance_tracker_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::test_instance_tracker
     GTest::gmock_main
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     flat_hash_map
-  HDRS
+    HDRS
     "flat_hash_map.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::container_memory
     absl::core_headers
     absl::hash_function_defaults
     absl::raw_hash_map
     absl::algorithm_container
     absl::memory
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     flat_hash_map_test
-  SRCS
+    SRCS
     "flat_hash_map_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::flat_hash_map
     absl::hash_generator_testing
     absl::unordered_map_constructor_test
@@ -308,34 +308,34 @@ absl_cc_test(
     absl::any
     absl::raw_logging_internal
     GTest::gmock_main
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     flat_hash_set
-  HDRS
+    HDRS
     "flat_hash_set.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::container_memory
     absl::hash_function_defaults
     absl::raw_hash_set
     absl::algorithm_container
     absl::core_headers
     absl::memory
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     flat_hash_set_test
-  SRCS
+    SRCS
     "flat_hash_set_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
+    COPTS
+    ${RENDU_TEST_COPTS}
     "-DUNORDERED_SET_CXX17"
-  DEPS
+    DEPS
     absl::flat_hash_set
     absl::hash_generator_testing
     absl::unordered_set_constructor_test
@@ -346,16 +346,16 @@ absl_cc_test(
     absl::raw_logging_internal
     absl::strings
     GTest::gmock_main
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     node_hash_map
-  HDRS
+    HDRS
     "node_hash_map.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::container_memory
     absl::core_headers
     absl::hash_function_defaults
@@ -363,17 +363,17 @@ absl_cc_library(
     absl::raw_hash_map
     absl::algorithm_container
     absl::memory
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     node_hash_map_test
-  SRCS
+    SRCS
     "node_hash_map_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::node_hash_map
     absl::tracked
@@ -382,34 +382,34 @@ absl_cc_test(
     absl::unordered_map_members_test
     absl::unordered_map_modifiers_test
     GTest::gmock_main
-)
+    )
 
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     node_hash_set
-  HDRS
+    HDRS
     "node_hash_set.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::core_headers
     absl::hash_function_defaults
     absl::node_slot_policy
     absl::raw_hash_set
     absl::algorithm_container
     absl::memory
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     node_hash_set_test
-  SRCS
+    SRCS
     "node_hash_set_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
+    COPTS
+    ${RENDU_TEST_COPTS}
     "-DUNORDERED_SET_CXX17"
-  DEPS
+    DEPS
     absl::hash_generator_testing
     absl::node_hash_set
     absl::unordered_set_constructor_test
@@ -417,62 +417,62 @@ absl_cc_test(
     absl::unordered_set_members_test
     absl::unordered_set_modifiers_test
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     container_memory
-  HDRS
+    HDRS
     "internal/container_memory.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::memory
     absl::type_traits
     absl::utility
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     container_memory_test
-  SRCS
+    SRCS
     "internal/container_memory_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::container_memory
     absl::strings
     absl::test_instance_tracker
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hash_function_defaults
-  HDRS
+    HDRS
     "internal/hash_function_defaults.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::cord
     absl::hash
     absl::strings
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     hash_function_defaults_test
-  SRCS
+    SRCS
     "internal/hash_function_defaults_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::cord
     absl::cord_test_helpers
     absl::hash_function_defaults
@@ -480,224 +480,224 @@ absl_cc_test(
     absl::random_random
     absl::strings
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hash_generator_testing
-  HDRS
+    HDRS
     "internal/hash_generator_testing.h"
-  SRCS
+    SRCS
     "internal/hash_generator_testing.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_policy_testing
     absl::memory
     absl::meta
     absl::strings
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hash_policy_testing
-  HDRS
+    HDRS
     "internal/hash_policy_testing.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash
     absl::strings
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     hash_policy_testing_test
-  SRCS
+    SRCS
     "internal/hash_policy_testing_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_policy_testing
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hash_policy_traits
-  HDRS
+    HDRS
     "internal/hash_policy_traits.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::common_policy_traits
     absl::meta
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     hash_policy_traits_test
-  SRCS
+    SRCS
     "internal/hash_policy_traits_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_policy_traits
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     common_policy_traits
-  HDRS
+    HDRS
     "internal/common_policy_traits.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::meta
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     common_policy_traits_test
-  SRCS
+    SRCS
     "internal/common_policy_traits_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::common_policy_traits
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hashtablez_sampler
-  HDRS
+    HDRS
     "internal/hashtablez_sampler.h"
-  SRCS
+    SRCS
     "internal/hashtablez_sampler.cc"
     "internal/hashtablez_sampler_force_weak_definition.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::base
     absl::config
     absl::exponential_biased
     absl::sample_recorder
     absl::synchronization
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     hashtablez_sampler_test
-  SRCS
+    SRCS
     "internal/hashtablez_sampler_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::config
     absl::hashtablez_sampler
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hashtable_debug
-  HDRS
+    HDRS
     "internal/hashtable_debug.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::hashtable_debug_hooks
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     hashtable_debug_hooks
-  HDRS
+    HDRS
     "internal/hashtable_debug_hooks.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
-  PUBLIC
-)
+    PUBLIC
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     node_slot_policy
-  HDRS
+    HDRS
     "internal/node_slot_policy.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     node_slot_policy_test
-  SRCS
+    SRCS
     "internal/node_slot_policy_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_policy_traits
     absl::node_slot_policy
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     raw_hash_map
-  HDRS
+    HDRS
     "internal/raw_hash_map.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::container_memory
     absl::raw_hash_set
     absl::throw_delegate
-  PUBLIC
-)
+    PUBLIC
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     container_common
-  HDRS
+    HDRS
     "internal/common.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::type_traits
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     raw_hash_set
-  HDRS
+    HDRS
     "internal/raw_hash_set.h"
-  SRCS
+    SRCS
     "internal/raw_hash_set.cc"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::bits
     absl::compressed_tuple
     absl::config
@@ -713,17 +713,17 @@ absl_cc_library(
     absl::prefetch
     absl::utility
     absl::hashtablez_sampler
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     raw_hash_set_test
-  SRCS
+    SRCS
     "internal/raw_hash_set_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::container_memory
     absl::flat_hash_map
     absl::flat_hash_set
@@ -739,228 +739,228 @@ absl_cc_test(
     absl::raw_logging_internal
     absl::strings
     GTest::gmock_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     raw_hash_set_allocator_test
-  SRCS
+    SRCS
     "internal/raw_hash_set_allocator_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::raw_hash_set
     absl::tracked
     absl::core_headers
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     layout
-  HDRS
+    HDRS
     "internal/layout.h"
-  COPTS
-    ${ABSL_DEFAULT_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_DEFAULT_COPTS}
+    DEPS
     absl::config
     absl::core_headers
     absl::meta
     absl::strings
     absl::span
     absl::utility
-  PUBLIC
-)
+    PUBLIC
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     layout_test
-  SRCS
+    SRCS
     "internal/layout_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::layout
     absl::config
     absl::core_headers
     absl::raw_logging_internal
     absl::span
     GTest::gmock_main
-)
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     tracked
-  HDRS
+    HDRS
     "internal/tracked.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::config
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_map_constructor_test
-  HDRS
+    HDRS
     "internal/unordered_map_constructor_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_map_lookup_test
-  HDRS
+    HDRS
     "internal/unordered_map_lookup_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_map_members_test
-  HDRS
+    HDRS
     "internal/unordered_map_members_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::type_traits
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_map_modifiers_test
-  HDRS
+    HDRS
     "internal/unordered_map_modifiers_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_set_constructor_test
-  HDRS
+    HDRS
     "internal/unordered_set_constructor_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_set_lookup_test
-  HDRS
+    HDRS
     "internal/unordered_set_lookup_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_set_members_test
-  HDRS
+    HDRS
     "internal/unordered_set_members_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::type_traits
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
 # Internal-only target, do not depend on directly.
-absl_cc_library(
-  NAME
+rendu_cc_library(absl
+    NAME
     unordered_set_modifiers_test
-  HDRS
+    HDRS
     "internal/unordered_set_modifiers_test.h"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::hash_generator_testing
     absl::hash_policy_testing
     GTest::gmock
-  TESTONLY
-)
+    TESTONLY
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     unordered_set_test
-  SRCS
+    SRCS
     "internal/unordered_set_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::unordered_set_constructor_test
     absl::unordered_set_lookup_test
     absl::unordered_set_members_test
     absl::unordered_set_modifiers_test
     GTest::gmock_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     unordered_map_test
-  SRCS
+    SRCS
     "internal/unordered_map_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::unordered_map_constructor_test
     absl::unordered_map_lookup_test
     absl::unordered_map_members_test
     absl::unordered_map_modifiers_test
     GTest::gmock_main
-)
+    )
 
-absl_cc_test(
-  NAME
+rendu_cc_test(absl
+    NAME
     sample_element_size_test
-  SRCS
+    SRCS
     "sample_element_size_test.cc"
-  COPTS
-    ${ABSL_TEST_COPTS}
-  DEPS
+    COPTS
+    ${RENDU_TEST_COPTS}
+    DEPS
     absl::flat_hash_map
     absl::flat_hash_set
     absl::node_hash_map
     absl::node_hash_set
     GTest::gmock_main
-)
+    )

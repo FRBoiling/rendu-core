@@ -14,25 +14,25 @@
 # limitations under the License.
 #
 
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     type_traits
   HDRS
     "type_traits.h"
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::config
   PUBLIC
 )
 
-absl_cc_test(
+rendu_cc_test(absl
   NAME
     type_traits_test
   SRCS
     "type_traits_test.cc"
   COPTS
-    ${ABSL_TEST_COPTS}
+    ${RENDU_TEST_COPTS}
   DEPS
     absl::core_headers
     absl::type_traits
@@ -40,11 +40,11 @@ absl_cc_test(
 )
 
 # component target
-absl_cc_library(
+rendu_cc_library(absl
   NAME
     meta
   COPTS
-    ${ABSL_DEFAULT_COPTS}
+    ${RENDU_DEFAULT_COPTS}
   DEPS
     absl::type_traits
   PUBLIC
