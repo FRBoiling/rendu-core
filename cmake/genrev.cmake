@@ -17,6 +17,7 @@ if(WITHOUT_GIT)
   # No valid git commit date, use today
   string(TIMESTAMP rev_date_fallback "%Y-%m-%d %H:%M:%S" UTC)
 else()
+  find_package(Git 1.7)
   if(GIT_EXECUTABLE)
     # Retrieve repository dirty status
     execute_process(

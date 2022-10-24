@@ -47,10 +47,10 @@ include(GroupSources)
 include(AutoCollect)
 include(AutoAddSubdirectory)
 
-# set default buildoptions and print them
-include(cmake/options.cmake)
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
+# set default buildoptions and print them
+include(cmake/options.cmake)
 # print out the results before continuing
 include(cmake/showoptions.cmake)
 

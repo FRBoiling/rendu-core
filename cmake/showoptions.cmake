@@ -28,10 +28,10 @@ message("")
 # Show infomation about the options selected during configuration
 
 if (TOOLS)
-  message("* Build map/vmap tools   : Yes (default)")
+  message("* Build tools            : Yes (default)")
   add_definitions(-DNO_CORE_FUNCS)
 else ()
-  message("* Build map/vmap tools   : No")
+  message("* Build tools            : No")
 endif ()
 
 if (BUILD_TESTING)

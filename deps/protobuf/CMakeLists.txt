@@ -120,7 +120,7 @@ if(protobuf_VERSION_PRERELEASE)
 else()
   set(protobuf_VERSION "${protobuf_VERSION}.0")
 endif()
-message(STATUS "protobuf version： ${protobuf_VERSION}")
+message(STATUS "Version： ${protobuf_VERSION}")
 
 if(protobuf_VERBOSE)
   message(STATUS "Configuration script parsing status [")
