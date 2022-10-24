@@ -178,7 +178,5 @@ if (BUILD_SHARED_LIBS)
 
   WarnAboutSpacesInBuildPath()
 endif ()
-
 message("")
 message("* Build ${RENDU_PROJECT_NAME} [${RENDU_PROJECT_VERSION}] [C++${CMAKE_CXX_STANDARD}] [${CMAKE_BUILD_TYPE}]")
-message("")
