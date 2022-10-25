@@ -18,8 +18,8 @@
     #error Unsupported compiler
 #endif
 
-#if RENDU_STANDARD_VER <= 201703L
-    #error Framework support only C++20 and higher!
-#endif
+//#if RENDU_STANDARD_VER <= 201703L
+//    #error Framework support only C++20 and higher!
+//#endif
 
 #endif  // RENDU_COMMON_PLATFORM_COMPILER_H_

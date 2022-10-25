@@ -1,7 +1,7 @@
 #ifndef RENDU_TYPES_MONOSTATE_H_
 #define RENDU_TYPES_MONOSTATE_H_
 
-#include <rendu/Types/FixedBuffer.hpp>
+#include <Types/FixedBuffer.hpp>
 
 namespace rendu::types
 {

@@ -1,13 +1,13 @@
 #ifndef RENDU_TYPES_VECTORKVANY_H_
 #define RENDU_TYPES_VECTORKVANY_H_
 
-#include <rendu/traits/Add.hpp>
-#include <rendu/traits/Arguments.hpp>
-#include <rendu/traits/NameOf.hpp>
-#include <rendu/traits/Remove.hpp>
-#include <rendu/traits/SameAs.hpp>
-#include <rendu/Types/Any.hpp>
-#include <rendu/Types/UniqueIndexer.hpp>
+#include <traits/Add.hpp>
+#include <traits/Arguments.hpp>
+#include <traits/NameOf.hpp>
+#include <traits/Remove.hpp>
+#include <traits/SameAs.hpp>
+#include <Types/Any.hpp>
+#include <Types/UniqueIndexer.hpp>
 
 namespace rendu::types
 {

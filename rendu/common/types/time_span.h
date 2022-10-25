@@ -1,7 +1,7 @@
 #ifndef RENDU_TYPES_TIMESPAN_H_
 #define RENDU_TYPES_TIMESPAN_H_
 
-#include <rendu/platform/Assert.hpp>
+#include <platform/Assert.hpp>
 
 namespace rendu::types
 {

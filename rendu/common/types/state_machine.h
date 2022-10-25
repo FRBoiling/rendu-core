@@ -3,8 +3,8 @@
 
 #include <array>
 #include <variant>
-#include <rendu/traits/AnyOf.hpp>
-#include <rendu/traits/Specialization.hpp>
+#include <traits/AnyOf.hpp>
+#include <traits/Specialization.hpp>
 
 namespace rendu::types
 {

@@ -1,7 +1,7 @@
 #ifndef RENDU_TRAITS_REMOVE_H_
 #define RENDU_TRAITS_REMOVE_H_
 
-#include <rendu/traits/Conditional.hpp>
+#include <traits/conditional.h>
 
 namespace rendu::traits
 {

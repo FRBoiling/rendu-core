@@ -1,8 +1,8 @@
 #ifndef RENDU_UTILS_CAST_H_
 #define RENDU_UTILS_CAST_H_
 
-#include <rendu/traits/ScopedEnum.hpp>
-#include <rendu/Types/FixedBuffer.hpp>
+#include <traits/ScopedEnum.hpp>
+#include <Types/FixedBuffer.hpp>
 
 #include <charconv>
 #include <optional>

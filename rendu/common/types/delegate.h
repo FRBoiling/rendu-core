@@ -3,7 +3,7 @@
 #ifndef RENDU_TYPES_DELEGATE_H_
 #define RENDU_TYPES_DELEGATE_H_
 
-#include <rendu/platform/Assert.hpp>
+#include <platform/Assert.hpp>
 
 #include <tuple>
 #include <cstddef>

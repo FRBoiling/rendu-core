@@ -1,8 +1,8 @@
 #ifndef RENDU_UTIL_FORMAT_H_
 #define RENDU_UTIL_FORMAT_H_
 
-#include <rendu/Dependencies/Fmt.hpp>
-#include <rendu/Engine/Log.hpp>
+#include <Dependencies/Fmt.hpp>
+#include <Engine/Log.hpp>
 
 namespace rendu::utils
 {

@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <rendu/platform/Assert.hpp>
+#include <platform/Assert.hpp>
 
 namespace rendu::types
 {

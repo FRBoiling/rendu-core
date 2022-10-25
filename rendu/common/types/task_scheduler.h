@@ -11,8 +11,8 @@
 #include <unordered_map>
 #include <utility>
 
-#include <rendu/Engine/Log.hpp>
-#include <rendu/platform/Assert.hpp>
+#include <Engine/Log.hpp>
+#include <platform/Assert.hpp>
 
 namespace rendu::types
 {

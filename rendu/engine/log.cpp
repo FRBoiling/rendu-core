@@ -2,6 +2,7 @@
 #define RENDU_ENGINE_LOG_CPP_
 
 #include "log.h"
+#include "types/basic_logger.h"
 #include <types/basic_loggers_def.h>
 
 namespace rendu::log {

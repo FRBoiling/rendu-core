@@ -1,11 +1,11 @@
 #ifndef RENDU_COMMON_PLATFORM_ASSERT_H_
 #define RENDU_COMMON_PLATFORM_ASSERT_H_
 
-#include "basic_loggers_def.h"
+#include "types/basic_loggers_def.h"
 
 namespace rendu::log
 {
-    template <DefinitionLogger Logger, typename... Args>
+    template <traits::DefinitionLogger Logger, typename... Args>
     void Console(const Formater<Logger> format, Args&&... args) noexcept;
 
     template <typename... Args>

@@ -1,7 +1,7 @@
 #ifndef RENDU_TYPES_MODERNDESIGN_H_
 #define RENDU_TYPES_MODERNDESIGN_H_
 
-#include <rendu/Engine/Engine.hpp>
+#include <Engine/Engine.hpp>
 
 namespace rendu::types
 {

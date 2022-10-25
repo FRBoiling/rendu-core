@@ -1,7 +1,7 @@
 #ifndef RENDU_TYPES_FIXEDBUFFER_H_
 #define RENDU_TYPES_FIXEDBUFFER_H_
 
-#include <rendu/Util/Length.hpp>
+#include <Util/Length.hpp>
 
 #include <algorithm>
 #include <string_view>

@@ -2,7 +2,7 @@
 #define RENDU_TYPES_REFERENCEPOINTER_H_
 
 #include <optional>
-#include <rendu/platform/Assert.hpp>
+#include <platform/Assert.hpp>
 
 namespace rendu::types
 {

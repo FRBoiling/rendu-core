@@ -1,7 +1,7 @@
 #ifndef RENDU_TYPES_LOCATIONSTRING_H_
 #define RENDU_TYPES_LOCATIONSTRING_H_
 
-#include <rendu/Types/SourceLocation.hpp>
+#include <types/source_location.h>
 
 #include <concepts>
 

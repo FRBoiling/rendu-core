@@ -322,7 +322,7 @@ Cflags: -I\${includedir}${PC_CFLAGS}\n")
       )
 
     if (_build_type STREQUAL "dll")
-        set(RENDU_CC_LIB_DEPS abseil_dll)
+        set(RENDU_CC_LIB_DEPS ${name}_dll)
     endif()
 
     target_link_libraries(${_NAME}

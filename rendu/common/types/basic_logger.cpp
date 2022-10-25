@@ -35,7 +35,7 @@ namespace rendu::types
     }
 
     template <traits::DefinitionLogger Logger, typename... Args>
-    void BasicLogger::PrintConsole(const Log::Formater<Logger> format, [[maybe_unused]] Args&&... args)
+    void BasicLogger::PrintConsole(const log::Formater<Logger> format, [[maybe_unused]] Args&&... args)
     {
         RENDU_ASSERT(format.m_Location.GetFile());
         RENDU_ASSERT(format.m_Location.GetFunction());
@@ -57,9 +57,10 @@ namespace rendu::types
         } catch(const fmt::format_error&) {
             buffer.clear();
 
-            constexpr auto style = Log::Exception::GetStyle();
+            constexpr auto style = log::Exception::GetStyle();
             has_style = MakeColor(buffer, style);
-            const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(), Log::Exception::GetPrefix());
+            const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(),
+                                                     log::Exception::GetPrefix());
             fmt::detail::vformat_to(buffer, formatex, args1);
             fmt::detail::vformat_to(buffer, fmt::string_view{
                 "\n----------------------------------------\n"
@@ -70,9 +71,9 @@ namespace rendu::types
         } catch(const std::bad_alloc&) {
             buffer.clear();
 
-            constexpr auto style = Log::Exception::GetStyle();
+            constexpr auto style = log::Exception::GetStyle();
             has_style = MakeColor(buffer, style);
-            const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(), Log::Exception::GetPrefix());
+            const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(), log::Exception::GetPrefix());
             fmt::detail::vformat_to(buffer, formatex, args1);
             fmt::detail::vformat_to(buffer, fmt::string_view{
                 "\n----------------------------------------\n"

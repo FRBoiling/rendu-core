@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <optional>
 
-#include <rendu/Types/AlignedStorage.hpp>
+#include <Types/AlignedStorage.hpp>
 
 namespace rendu::types
 {
