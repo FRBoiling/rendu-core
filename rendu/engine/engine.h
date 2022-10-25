@@ -23,6 +23,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include "traits/cacheline.h"
 
 namespace rendu
 {
@@ -247,8 +248,8 @@ namespace rendu
       }
 
     private:
-      Types::VectorAny<UKSystems, traits::Cacheline> m_Systems;
-      Types::VectorUnique<UKEventStorage, std::vector<CallbackStorage>> m_Events;
+      types::VectorAny<UKSystems, traits::Cacheline> m_Systems;
+      types::VectorUnique<UKEventStorage, std::vector<CallbackStorage>> m_Events;
 
       Callback m_Callback;
 
@@ -324,7 +325,7 @@ namespace rendu
     * @warning If there is no console, the message will not be displayed
     */
     template <typename... Args>
-    static void Shutdown(const Types::LocationString& msg = {}, [[maybe_unused]] Args&&... args);
+    static void Shutdown(const types::LocationString& msg = {}, [[maybe_unused]] Args&&... args);
 
     /**
     * @brief Returns the last shutdown reason

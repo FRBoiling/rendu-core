@@ -6,7 +6,7 @@
 
 namespace rendu::types
 {
-    class mutex
+    class Mutex
     {
         template <typename Mutex>
         friend class std::unique_lock;
@@ -21,12 +21,12 @@ namespace rendu::types
         void unlock() noexcept { Unlock(); }
 
     public:
-        mutex() noexcept = default;
-        ~mutex() noexcept = default;
-        mutex(const mutex&) = delete;
-        mutex(mutex&&) noexcept = delete;
-        mutex& operator=(const mutex&) = delete;
-        mutex& operator=(mutex&&) noexcept = delete;
+        Mutex() noexcept = default;
+        ~Mutex() noexcept = default;
+        Mutex(const Mutex&) = delete;
+        Mutex(Mutex&&) noexcept = delete;
+        Mutex& operator=(const Mutex&) = delete;
+        Mutex& operator=(Mutex&&) noexcept = delete;
 
         void Lock() noexcept {
             while(m_Lock.test_and_set(std::memory_order_acquire)) {
