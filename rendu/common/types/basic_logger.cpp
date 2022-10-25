@@ -2,8 +2,7 @@
 #define RENDU_TYPES_BASIC_LOGGER_CPP
 
 #include "basic_logger.h"
-#include "basic_loggers_def.h"
-#include "source_location.h"
+#include "platform/assert.h"
 
 namespace rendu::types
 {

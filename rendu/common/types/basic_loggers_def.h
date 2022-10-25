@@ -1,10 +1,12 @@
 #ifndef RENDU_TYPES_BASIC_LOGGERS_DEF_H
 #define RENDU_TYPES_BASIC_LOGGERS_DEF_H
 
-#include <cstdint>
-#include <string_view>
-#include <algorithm>
-#include "fmt/color.h"
+#include <fmt/fmt.h>
+#include <types/source_location.h>
+
+#include <type_traits>
+#include <concepts>
+
 namespace rendu::traits {
   template<typename T>
   concept DefinitionLogger = requires {
@@ -50,10 +52,10 @@ namespace rendu::log {
   template<rendu::traits::DefinitionLogger Prefix>
   struct Formater {
     template<std::convertible_to<std::string_view> T>
-    constexpr Formater(const T &msg, const Types::SourceLocation location = Types::SourceLocation::Create()) noexcept
+    constexpr Formater(const T &msg, const types::SourceLocation location = types::SourceLocation::Create()) noexcept
         : m_Location{location}, m_Msg{msg} {}
 
-    Types::SourceLocation m_Location;
+    types::SourceLocation m_Location;
     std::string_view m_Msg;
   };
 

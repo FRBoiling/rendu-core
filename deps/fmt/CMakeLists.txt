@@ -24,11 +24,11 @@ CollectHeaderFiles(
 )
 
 list(APPEND project_copts
-    -Wno-sign-conversion
+    
     ${RENDU_DEFAULT_COPTS}
     )
 
-rendu_cc_library(${target-name} ${project-name}
+rendu_cc_library(${project-name} ${target-name}
     NAME
     ${target-name}
     HDRS

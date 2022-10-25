@@ -14,15 +14,18 @@ CollectSourceFiles(
     ${sources_dir}
     ${target-name}_sources
     # Exclude
+    ${sources_dir}/absl/random/internal/gaussian_distribution_gentables.cc
+    ${sources_dir}/absl/hash/internal/print_hash_of.cc
 )
 
 CollectHeaderFiles(
     ${header_dir}
     ${target-name}_headers
     # Exclude
+
 )
 
-rendu_cc_library(${target-name} ${project-name}
+rendu_cc_library(${project-name} ${target-name}
     NAME
     ${target-name}
     HDRS

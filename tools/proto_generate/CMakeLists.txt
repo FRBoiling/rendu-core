@@ -17,6 +17,6 @@ target_link_libraries(${PROTOBUF_PROTOC_EXECUTABLE}
     PRIVATE
     rendu-core-interface
     PUBLIC
-    protobuf::protobuf
+    deps::protobuf
     #TODO:BOIL 添加依赖项
     )

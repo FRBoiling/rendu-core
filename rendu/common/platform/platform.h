@@ -12,7 +12,7 @@
         #define RENDU_PLATFORM_WIN64
     #endif
 
-    #include <rendu/platform/Windows/Windows.hpp>
+    #include <platform/windows/windows.h>
 
 #elif defined(linux) || defined(__linux) || defined(__linux__) || defined(__gnu_linux__) || defined(__APPLE__)
     #define RENDU_PLATFORM_NAME    "Linux"

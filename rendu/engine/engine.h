@@ -5,6 +5,25 @@
 #ifndef RENDU_ENGINE_H_
 #define RENDU_ENGINE_H_
 
+#include <events.h>
+#include <log.h>
+#include <platform/platform.h>
+#include <platform/defines.h>
+#include <platform/assert.h>
+#include <types/vector_any.h>
+#include <types/vector_unique.h>
+#include <types/location_string.h>
+#include <types/mutex.h>
+
+#include <algorithm>
+#include <cstring>
+#include <functional>
+#include <memory>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
 namespace rendu
 {
   class Engine final
@@ -99,8 +118,8 @@ namespace rendu
 
       struct ShutdownMessage {
         std::string m_Message;
-        Types::SourceLocation m_Location;
-        Types::Mutex m_Mutex;
+        types::SourceLocation m_Location;
+        types::Mutex m_Mutex;
       };
 
       static constexpr auto DefaultTickrate = 1.f / 30.f;

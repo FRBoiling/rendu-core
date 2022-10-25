@@ -1,75 +1,46 @@
-#|--------------------------------
-#| rendu-core common project
-#|--------------------------------
+#**********************************
+#  Created by boil on 2022/9/10.
+#**********************************
+set(target-name common)
+set(project-name rendu)
+set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
+set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(PROJECT_NAME common)
+list(APPEND RENDU_COMMON_INCLUDE_DIRS ${header_dir})
+
+message("")
+message(STATUS "Building " ${target-name} "...")
 
 CollectSourceFiles(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE_SOURCES
+    ${sources_dir}
+    ${target-name}_sources
     # Exclude
-#    ${CMAKE_CURRENT_SOURCE_DIR}/platform
 )
+
 CollectHeaderFiles(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE_HEADERS
+    ${header_dir}
+    ${target-name}_headers
     # Exclude
-#    ${CMAKE_CURRENT_SOURCE_DIR}/platform
 )
 
-if(USE_COREPCH)
-  set(PRIVATE_PCH_HEADER precompiled_headers/common_pch.h)
-endif(USE_COREPCH)
+list(APPEND project_copts
 
-GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
-
-add_definitions(-DRENDU_API_EXPORT_COMMON)
-
-add_library(${PROJECT_NAME}
-    ${PRIVATE_SOURCES}
-    ${PRIVATE_HEADERS}
+    ${RENDU_DEFAULT_COPTS}
     )
 
-CollectIncludeDirectories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PUBLIC_INCLUDES
-    # Exclude
-    ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers)
-
-target_include_directories(${PROJECT_NAME}
-    PUBLIC
-    # Provide the binary dir for all child targets
-    ${CMAKE_BINARY_DIR}
-    ${PUBLIC_INCLUDES}
-    PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR})
-
-target_link_libraries(common
-    PRIVATE
-    rendu-core-interface
-    PUBLIC
-    fmt
+rendu_cc_library(${project-name} ${target-name}
+    NAME
+    ${target-name}
+    HDRS
+    ${${target-name}_headers}
+    SRCS
+    ${${target-name}_sources}
+    COPTS
+    ${project_copts}
+    DEPS
+    deps::fmt
+    DEFINES
+    LINKOPTS
+    DEPS
     )
 
-set_target_properties(${PROJECT_NAME}
-    PROPERTIES
-    FOLDER
-    fmt::fmt
-    )
-
-if(BUILD_SHARED_LIBS)
-  if(WINDOWS)
-    install(TARGETS common
-        LIBRARY
-        DESTINATION lib)
-  elseif(WIN32)
-    install(TARGETS common
-        RUNTIME
-        DESTINATION "${CMAKE_INSTALL_PREFIX}")
-  endif()
-endif()
-
-# Generate precompiled header
-if(USE_COREPCH)
-  add_cxx_pch(common ${PRIVATE_PCH_HEADER})
-endif()

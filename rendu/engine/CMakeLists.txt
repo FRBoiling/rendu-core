@@ -1,33 +1,46 @@
-#|--------------------------------
-#| rendu-core rendu project
-#|--------------------------------
+#**********************************
+#  Created by boil on 2022/9/10.
+#**********************************
+set(target-name engine)
+set(project-name rendu)
+set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
+set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(PROJECT_NAME engine)
+list(APPEND RENDU_COMMON_INCLUDE_DIRS ${header_dir})
+
+message("")
+message(STATUS "Building " ${target-name} "...")
+
 CollectSourceFiles(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    RENDU_LIB_SOURCE
+    ${sources_dir}
+    ${target-name}_sources
+    # Exclude
 )
+
 CollectHeaderFiles(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    RENDU_LIB_HEADERS
+    ${header_dir}
+    ${target-name}_headers
+    # Exclude
 )
 
-#|---------------------------------------------
-#| rendu Framework Interface target and alias
-#|---------------------------------------------
-add_library(
-    rendu
-    ${RENDU_LIB_HEADERS}
-    ${RENDU_LIB_SOURCE}
-)
-add_library(rendu::rendu ALIAS rendu)
+list(APPEND project_copts
 
-#|--------------------------------
-#| rendu Framework Dependencies
-#|--------------------------------
-target_include_directories(rendu INTERFACE ${RENDU_PROJECT_DIR})
-if(RENDU_FLAG_USE_BUNDLED_DEPS)
-  target_include_directories(rendu INTERFACE ${RENDU_PROJECT_DIR}/deps)
-else()
-  target_link_libraries(rendu INTERFACE fmt::fmt-header-only)
-endif()
+    ${RENDU_DEFAULT_COPTS}
+    )
+
+rendu_cc_library(${project-name} ${target-name}
+    NAME
+    ${target-name}
+    HDRS
+    ${${target-name}_headers}
+    SRCS
+    ${${target-name}_sources}
+    COPTS
+    ${project_copts}
+    DEPS
+    rendu::common
+    DEFINES
+    LINKOPTS
+    DEPS
+    )
+

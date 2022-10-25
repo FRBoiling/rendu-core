@@ -1,10 +1,10 @@
 #ifndef RENDU_TYPES_SOURCE_LOCATION_H_
 #define RENDU_TYPES_SOURCE_LOCATION_H_
 
+#include "platform/defines.h"
 #include <cstdint>
 #include <string_view>
 #include <algorithm>
-#include "platform/defines.h"
 
 namespace rendu::types
 {

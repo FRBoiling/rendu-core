@@ -98,7 +98,7 @@ endif()
 # )
 #
 # TODO: Implement "ALWAYSLINK"
-function(rendu_cc_library name_space project_name)
+function(rendu_cc_library project_name target_name)
   cmake_parse_arguments(RENDU_CC_LIB
     "DISABLE_INSTALL;PUBLIC;TESTONLY"
     "NAME"
@@ -115,7 +115,7 @@ function(rendu_cc_library name_space project_name)
   if(RENDU_ENABLE_INSTALL)
     set(_NAME "${RENDU_CC_LIB_NAME}")
   else()
-    set(_NAME "${name_space}_${RENDU_CC_LIB_NAME}")
+    set(_NAME "${project_name}_${RENDU_CC_LIB_NAME}")
   endif()
 
   # Check if this is a header-only library
@@ -170,18 +170,18 @@ function(rendu_cc_library name_space project_name)
   if((_build_type STREQUAL "static" OR _build_type STREQUAL "shared")
      AND RENDU_ENABLE_INSTALL)
     if(NOT RENDU_CC_LIB_TESTONLY)
-      if(${name_space}_VERSION)
-        set(PC_VERSION "${${name_space}_VERSION}")
+      if(${target_name}_VERSION)
+        set(PC_VERSION "${${target_name}_VERSION}")
       else()
         set(PC_VERSION "head")
       endif()
       foreach(dep ${RENDU_CC_LIB_DEPS})
-        if(${dep} MATCHES "^${name_space}::(.*)")
+        if(${dep} MATCHES "^${project_name}::(.*)")
 	  # Join deps with commas.
           if(PC_DEPS)
             set(PC_DEPS "${PC_DEPS},")
           endif()
-          set(PC_DEPS "${PC_DEPS} ${name_space}_${CMAKE_MATCH_1} = ${PC_VERSION}")
+          set(PC_DEPS "${PC_DEPS} ${target_name}_${CMAKE_MATCH_1} = ${PC_VERSION}")
         endif()
       endforeach()
       foreach(cflag ${RENDU_CC_LIB_COPTS})
@@ -198,20 +198,20 @@ function(rendu_cc_library name_space project_name)
         endif()
       endforeach()
       string(REPLACE ";" " " PC_LINKOPTS "${RENDU_CC_LIB_LINKOPTS}")
-      FILE(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/lib/pkgconfig/${name_space}_${_NAME}.pc" CONTENT "\
+      FILE(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/lib/pkgconfig/${project_name}_${_NAME}.pc" CONTENT "\
 prefix=${CMAKE_INSTALL_PREFIX}\n\
 exec_prefix=\${prefix}\n\
 libdir=${CMAKE_INSTALL_FULL_LIBDIR}\n\
 includedir=${CMAKE_INSTALL_FULL_INCLUDEDIR}\n\
 \n\
-Name: ${name_space}_${_NAME}\n\
+Name: ${project_name}_${_NAME}\n\
 Description: Abseil ${_NAME} library\n\
 URL: https://abseil.io/\n\
 Version: ${PC_VERSION}\n\
 Requires:${PC_DEPS}\n\
-Libs: -L\${libdir} ${PC_LINKOPTS} $<$<NOT:$<BOOL:${RENDU_CC_LIB_IS_INTERFACE}>>:-l${name_space}_${_NAME}>\n\
+Libs: -L\${libdir} ${PC_LINKOPTS} $<$<NOT:$<BOOL:${RENDU_CC_LIB_IS_INTERFACE}>>:-l${project_name}_${_NAME}>\n\
 Cflags: -I\${includedir}${PC_CFLAGS}\n")
-      INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/pkgconfig/${name_space}_${_NAME}.pc"
+      INSTALL(FILES "${CMAKE_BINARY_DIR}/lib/pkgconfig/${project_name}_${_NAME}.pc"
               DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
     endif()
   endif()
@@ -308,7 +308,7 @@ Cflags: -I\${includedir}${PC_CFLAGS}\n")
     # installed.
     if(RENDU_ENABLE_INSTALL)
       set_target_properties(${_NAME} PROPERTIES FOLDER ${project-name}
-        OUTPUT_NAME "${name_space}_${_NAME}"
+        OUTPUT_NAME "${project_name}_${_NAME}"
         SOVERSION 0
       )
     endif()
@@ -354,7 +354,7 @@ Cflags: -I\${includedir}${PC_CFLAGS}\n")
     )
   endif()
 
-    add_library(${name_space}::${RENDU_CC_LIB_NAME} ALIAS ${_NAME})
+    add_library(${project_name}::${RENDU_CC_LIB_NAME} ALIAS ${_NAME})
 endfunction()
 
 # rendu_cc_test()
@@ -394,7 +394,7 @@ endfunction()
 #     GTest::gmock
 #     GTest::gtest_main
 # )
-function(rendu_cc_test name_space)
+function(rendu_cc_test target_name)
 #  if(NOT (BUILD_TESTING AND RENDU_BUILD_TESTING))
 #    return()
 #  endif()
@@ -406,7 +406,7 @@ function(rendu_cc_test name_space)
 #    ${ARGN}
 #  )
 #
-#  set(_NAME "${name_space}_${RENDU_CC_TEST_NAME}")
+#  set(_NAME "${target_name}_${RENDU_CC_TEST_NAME}")
 #
 #  add_executable(${_NAME} "")
 #  target_sources(${_NAME} PRIVATE ${RENDU_CC_TEST_SRCS})

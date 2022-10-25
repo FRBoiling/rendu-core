@@ -1,8 +1,6 @@
 #ifndef RENDU_TYPES_BASIC_LOGGER_H_
 #define RENDU_TYPES_BASIC_LOGGER_H_
 
-#include "defines.h"
-#include "source_location.h"
 #include "basic_loggers_def.h"
 
 namespace rendu::types
