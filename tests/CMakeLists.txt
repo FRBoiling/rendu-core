@@ -4,15 +4,15 @@
 #|--------------------------------
 #| rendu-core tests module
 #|--------------------------------
-message("")
-if(RENDU_FLAG_TESTS)
-  message(STATUS "Building tests ...")
-  AddSubdirectory(
+if (RENDU_BUILD_TESTING)
+  set(project-name tests)
+  message("====== ${project-name} ======")
+  rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
-      #    ${CMAKE_CURRENT_SOURCE_DIR}/gtest
-      #    ${CMAKE_CURRENT_SOURCE_DIR}/catch2
   )
-endif()
+
+  message("")
+endif ()
 
 

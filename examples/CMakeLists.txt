@@ -4,15 +4,15 @@
 #|--------------------------------
 #| rendu-core examples project
 #|--------------------------------
-message("")
-if(RENDU_FLAG_EXAMPLES)
-  message(STATUS "Building examples...")
-  AddSubdirectory(
+if (RENDU_FLAG_EXAMPLES)
+  set(project-name example)
+  message("====== ${project-name} ======")
+  rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
-      #    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog
-      #    ${CMAKE_CURRENT_SOURCE_DIR}/fmt
   )
-endif()
+
+  message("")
+endif ()
 
 

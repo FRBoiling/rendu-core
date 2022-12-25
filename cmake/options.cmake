@@ -24,7 +24,14 @@ option(WITH_WARNINGS    "Show all warnings during compile"                      
 set(WITH_SOURCE_TREE    "hierarchical" CACHE STRING "Build the source tree for IDE's.")
 set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)
 option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
-option(BUILD_TESTING    "Build test suite" 0)
+option(BUILD_TESTING    "Build test suite"  1)
+option(BUILD_TOOLS    "Build tools"  1)
+
+if (BUILD_TESTING)
+  set(RENDU_BUILD_TESTING ON)
+  set(RENDU_USE_GOOGLETEST_HEAD   ON)
+endif ()
+option(RENDU_FLAG_EXAMPLES    "Build examples"  1)
 
 if(WINDOWS)
   option(USE_LD_GOLD    "Use GNU gold linker"                                        0)

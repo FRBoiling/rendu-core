@@ -4,12 +4,13 @@
 #|--------------------------------
 #| rendu-core tools module
 #|--------------------------------
-message("")
-message(STATUS "Building tools ...")
-AddSubdirectory(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    # Exclude
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/proto_generate
-)
+if (BUILD_TOOLS)
+  set(project-name tools)
+  message("====== ${project-name} ======")
+  rendu_add_subdirectory(
+      ${CMAKE_CURRENT_SOURCE_DIR}
+      # Exclude
+  )
 
-
+  message("")
+endif ()

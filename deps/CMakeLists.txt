@@ -1,11 +1,12 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-message("")
-message(STATUS "Building deps...")
-AddSubdirectory(
+set(project-name deps)
+message("====== ${project-name} ======")
+include(FetchContent)
+rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
-#    ${CMAKE_CURRENT_SOURCE_DIR}/protobuf
-#    ${CMAKE_CURRENT_SOURCE_DIR}/fmt
 )
+
+message("")

@@ -2,14 +2,13 @@
 #  Created by boil on 2022/9/10.
 #**********************************
 set(target-name common)
-set(project-name rendu)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 list(APPEND RENDU_COMMON_INCLUDE_DIRS ${header_dir})
 
 message("")
-message(STATUS "Building " ${target-name} "...")
+message(STATUS ">>" ${target-name})
 
 CollectSourceFiles(
     ${sources_dir}
@@ -24,7 +23,6 @@ CollectHeaderFiles(
 )
 
 list(APPEND project_copts
-
     ${RENDU_DEFAULT_COPTS}
     )
 
@@ -38,9 +36,10 @@ rendu_cc_library(${project-name} ${target-name}
     COPTS
     ${project_copts}
     DEPS
-    deps_fmt
+    fmt::fmt-header-only
     DEFINES
     LINKOPTS
     DEPS
     )
 
+message(STATUS  ${target-name}  " Make Success." )

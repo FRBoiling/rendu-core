@@ -4,11 +4,11 @@
 #|--------------------------------
 #| rendu-core rendu module
 #|--------------------------------
-message("")
-message(STATUS "Building rendu ...")
-AddSubdirectory(
+set(project-name rendu)
+message("====== ${project-name} ======")
+rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/gtest
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/catch2
 )
+
+message("")

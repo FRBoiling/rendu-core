@@ -2,11 +2,9 @@
 #| RD Application Project
 #|--------------------------------
 
-set(project-name examples)
-set(target-name main)
+set(target-name abseil)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
-list(APPEND RENDU_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 CollectSourceFiles(
         ${sources_dir}
         ${target-name}_sources
@@ -19,8 +17,8 @@ CollectHeaderFiles(
         # Exclude
 
 )
-
-rendu_cc_executable(${project-name} ${target-name}
+set(RENDU_PROPAGATE_CXX_STD ON)
+rendu_cc_test(${project-name}
         NAME
         ${target-name}
         HDRS
@@ -28,7 +26,9 @@ rendu_cc_executable(${project-name} ${target-name}
         SRCS
         ${${target-name}_sources}
         COPTS
-        ${RENDU_DEFAULT_COPTS}
+        ${RENDU_TEST_COPTS}
         DEPS
-        PUBLIC
-        )
+        absl::algorithm
+        absl::config
+        GTest::gmock_main
+)

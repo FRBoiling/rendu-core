@@ -1,6 +1,5 @@
 #ifndef RENDU_UTILS_FORMAT_H_
 #define RENDU_UTILS_FORMAT_H_
-
 namespace rendu::utils
 {
     template <typename... Args>

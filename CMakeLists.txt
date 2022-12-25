@@ -1,7 +1,7 @@
 #|--------------------------------
 #| rendu-core rendu project
 #|--------------------------------
-cmake_minimum_required (VERSION 3.14)
+cmake_minimum_required (VERSION 3.24.2)
 
 # add this options before PROJECT keyword
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -32,10 +32,12 @@ endif ()
 #set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 
+
 #|--------------------------------
 #| rendu-core Framework Configuration
 #|--------------------------------
 # set macro-directory
+
 list(APPEND CMAKE_MODULE_PATH
     "${CMAKE_SOURCE_DIR}/cmake/macros")
 include(ConfigureScripts)
@@ -45,13 +47,10 @@ include(ConfigureBaseTargets)
 include(CheckPlatform)
 include(GroupSources)
 include(AutoCollect)
-include(AutoAddSubdirectory)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-
 include(RenduDll)
 include(RenduHelpers)
-
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
 # set default buildoptions and print them
@@ -60,12 +59,11 @@ include(cmake/options.cmake)
 include(cmake/showoptions.cmake)
 
 find_package(PCHSupport)
-
 # add dependencies
 add_subdirectory(deps)
-# add core sources
+## add core sources
 add_subdirectory(rendu)
-# add tools project
+## add tools project
 add_subdirectory(tools)
 # add examples project
 add_subdirectory(examples)

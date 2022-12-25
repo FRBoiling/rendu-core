@@ -27,7 +27,7 @@ message("")
 
 # Show infomation about the options selected during configuration
 
-if (TOOLS)
+if (BUILD_TOOLS)
   message("* Build tools            : Yes (default)")
   add_definitions(-DNO_CORE_FUNCS)
 else ()
