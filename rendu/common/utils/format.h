@@ -1,13 +1,10 @@
-#ifndef RENDU_UTIL_FORMAT_H_
-#define RENDU_UTIL_FORMAT_H_
-
-#include <Dependencies/Fmt.hpp>
-#include <Engine/Log.hpp>
+#ifndef RENDU_UTILS_FORMAT_H_
+#define RENDU_UTILS_FORMAT_H_
 
 namespace rendu::utils
 {
     template <typename... Args>
-    [[nodiscard]] rendu::fmt::string Format(const std::string_view msg, Args&&... args) noexcept
+    [[nodiscard]] fmt::string Format(const std::string_view msg, Args&&... args) noexcept
     {
         try {
             if(!msg.empty()) {
@@ -31,4 +28,4 @@ namespace rendu::utils
     }
 }
 
-#endif // RENDU_UTIL_FORMAT_H_
+#endif // RENDU_UTILS_FORMAT_H_

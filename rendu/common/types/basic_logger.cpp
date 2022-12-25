@@ -1,8 +1,7 @@
-#ifndef RENDU_TYPES_BASIC_LOGGER_CPP
-#define RENDU_TYPES_BASIC_LOGGER_CPP
-
 #include "basic_logger.h"
 #include "platform/assert.h"
+#include "fmt/format.h"
+#include "fmt/chrono.h"
 
 namespace rendu::types
 {
@@ -62,12 +61,13 @@ namespace rendu::types
             const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(),
                                                      log::Exception::GetPrefix());
             fmt::detail::vformat_to(buffer, formatex, args1);
-            fmt::detail::vformat_to(buffer, fmt::string_view{
-                "\n----------------------------------------\n"
-                "|| Error: format syntax invalid!\n"
-                "|| Format: {}"
-                "\n----------------------------------------"
-                }, fmt::make_format_args(msg));
+            //TODO:BOIL
+//            fmt::detail::vformat_to(buffer, fmt::string_view{
+//                "\n----------------------------------------\n"
+//                "|| Error: format syntax invalid!\n"
+//                "|| Format: {}"
+//                "\n----------------------------------------"
+//                }, fmt::make_format_args(msg));
         } catch(const std::bad_alloc&) {
             buffer.clear();
 
@@ -75,12 +75,12 @@ namespace rendu::types
             has_style = MakeColor(buffer, style);
             const auto args1 = fmt::make_format_args(time, format.m_Location.GetFile(), format.m_Location.GetLine(), log::Exception::GetPrefix());
             fmt::detail::vformat_to(buffer, formatex, args1);
-            fmt::detail::vformat_to(buffer, fmt::string_view{
-                "\n----------------------------------------\n"
-                "|| Error: alloc memory failed!\n"
-                "|| Format: {}"
-                "\n----------------------------------------"
-                }, fmt::make_format_args(msg));
+//            fmt::detail::vformat_to(buffer, fmt::string_view{
+//                "\n----------------------------------------\n"
+//                "|| Error: alloc memory failed!\n"
+//                "|| Format: {}"
+//                "\n----------------------------------------"
+//                }, fmt::make_format_args(msg));
         }
 
         if(has_style) {
@@ -93,5 +93,3 @@ namespace rendu::types
         std::fputs(buffer.data(), stdout);
     }
 }
-
-#endif // RENDU_TYPES_BASIC_LOGGER_CPP

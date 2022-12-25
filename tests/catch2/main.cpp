@@ -3,7 +3,7 @@
 */
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include "catch2/catch.hpp"
 
 #define GET_SLOTKEY(group,slot) ((group)*1000+(slot))
 #define GET_GROUP_FROM_SLOTKEY(slot_key) ((slot_key)/1000)

@@ -1,11 +1,11 @@
 #ifndef RENDU_TYPES_BASIC_LOGGERS_DEF_H
 #define RENDU_TYPES_BASIC_LOGGERS_DEF_H
 
-#include <fmt/fmt.h>
 #include <types/source_location.h>
 
 #include <type_traits>
 #include <concepts>
+#include "fmt/color.h"
 
 namespace rendu::traits {
   template<typename T>

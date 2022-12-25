@@ -1,5 +1,5 @@
-#ifndef RENDU_TRAITS_POWEROF2_H_
-#define RENDU_TRAITS_POWEROF2_H_
+#ifndef RENDU_TRAITS_POWER_OF2_H_
+#define RENDU_TRAITS_POWER_OF2_H_
 
 #include <cstddef>
 
@@ -22,4 +22,4 @@ namespace rendu::traits
     }();
 }
 
-#endif // RENDU_TRAITS_POWEROF2_H_
+#endif // RENDU_TRAITS_POWER_OF2_H_

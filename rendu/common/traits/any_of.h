@@ -1,5 +1,5 @@
-#ifndef RENDU_TRAITS_ANYOF_H_
-#define RENDU_TRAITS_ANYOF_H_
+#ifndef RENDU_TRAITS_ANY_OF_H_
+#define RENDU_TRAITS_ANY_OF_H_
 
 #include <type_traits>
 #include <concepts>
@@ -13,4 +13,4 @@ namespace rendu::traits
 	concept AnyOf = (std::same_as<T, Types> || ...);
 }
 
-#endif // RENDU_TRAITS_ANYOF_H_
+#endif // RENDU_TRAITS_ANY_OF_H_

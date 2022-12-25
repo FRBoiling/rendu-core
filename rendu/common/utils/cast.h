@@ -1,12 +1,10 @@
 #ifndef RENDU_UTILS_CAST_H_
 #define RENDU_UTILS_CAST_H_
 
-#include <traits/ScopedEnum.hpp>
-#include <Types/FixedBuffer.hpp>
-
+#include "../traits/scoped_enum.h"
+#include "../types/fixed_buffer.h"
 #include <charconv>
 #include <optional>
-
 namespace rendu::utils
 {
     template <traits::ScopedEnum T>
@@ -28,7 +26,8 @@ namespace rendu::utils
         static_assert(!std::is_same_v<std::remove_cvref_t<T>, bool>, "std::to_chars overload for bool deleted");
         char m_Buffer[Capacity];
         const auto [ptr, err] = std::to_chars(m_Buffer, m_Buffer + Capacity, value);
-        return err != std::errc{} ? std::nullopt : std::make_optional<Types::FixedBuffer<Capacity>>(m_Buffer, ptr - m_Buffer);
+        return err != std::errc{} ? std::nullopt : std::make_optional<types::FixedBuffer<Capacity>>(m_Buffer, ptr -
+        m_Buffer);
     }
 }
 

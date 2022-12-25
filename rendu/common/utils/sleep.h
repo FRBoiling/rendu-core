@@ -1,5 +1,5 @@
-#ifndef RENDU_UTIL_SLEEP_H_
-#define RENDU_UTIL_SLEEP_H_
+#ifndef RENDU_UTILS_SLEEP_H_
+#define RENDU_UTILS_SLEEP_H_
 
 #include <cstdint>
 #include <chrono>
@@ -17,4 +17,4 @@ namespace rendu::utils
     }
 }
 
-#endif // RENDU_CORE_UTIL_SLEEP_H_
+#endif // RENDU_UTILS_SLEEP_H_

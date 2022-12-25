@@ -38,7 +38,7 @@ rendu_cc_library(${project-name} ${target-name}
     COPTS
     ${project_copts}
     DEPS
-    deps::fmt
+    deps_fmt
     DEFINES
     LINKOPTS
     DEPS

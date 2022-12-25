@@ -5,5 +5,4 @@
 #ifndef RENDU_CORE_COMMON_PCH_H_
 #define RENDU_CORE_COMMON_PCH_H_
 
-
 #endif //RENDU_CORE_COMMON_PCH_H_

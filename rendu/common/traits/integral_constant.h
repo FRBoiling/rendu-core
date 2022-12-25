@@ -1,5 +1,5 @@
-#ifndef RENDU_TRAITS_INTEGRALCONSTANT_H_
-#define RENDU_TRAITS_INTEGRALCONSTANT_H_
+#ifndef RENDU_TRAITS_INTEGRAL_CONSTANT_H_
+#define RENDU_TRAITS_INTEGRAL_CONSTANT_H_
 
 #include <type_traits>
 #include <concepts>
@@ -17,4 +17,4 @@ namespace rendu::traits
 }
 
 
-#endif // RENDU_TRAITS_INTEGRALCONSTANT_H_
+#endif // RENDU_TRAITS_INTEGRAL_CONSTANT_H_
