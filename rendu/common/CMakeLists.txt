@@ -36,7 +36,8 @@ rendu_cc_library(${project-name} ${target-name}
     COPTS
     ${project_copts}
     DEPS
-    fmt::fmt-header-only
+    fmt::fmt
+    spdlog::spdlog
     DEFINES
     LINKOPTS
     DEPS
