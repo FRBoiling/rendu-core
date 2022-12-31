@@ -4,5 +4,5 @@
 #include "log/logger.h"
 int main(int argc, char** argv)
 {
-  RD_LOG_WARN(111111);
+  RD_LOG_WARN(11111);
 }

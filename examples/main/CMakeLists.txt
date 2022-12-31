@@ -2,7 +2,6 @@
 #| RD Application Project
 #|--------------------------------
 
-set(project-name examples)
 set(target-name main)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})

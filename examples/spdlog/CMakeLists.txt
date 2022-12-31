@@ -2,7 +2,7 @@
 #| RD Application Project
 #|--------------------------------
 
-set(target-name launcher)
+set(target-name spdlog)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
 list(APPEND RENDU_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
@@ -29,6 +29,6 @@ rendu_cc_executable(${project-name} ${target-name}
     COPTS
     ${RENDU_DEFAULT_COPTS}
     DEPS
-    rendu::engine
+    spdlog::spdlog
     PUBLIC
     )
