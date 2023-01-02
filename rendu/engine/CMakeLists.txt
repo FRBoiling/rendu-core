@@ -40,7 +40,6 @@ rendu_cc_library(${project-name} ${target-name}
     rendu::common
     DEFINES
     LINKOPTS
-    DEPS
     )
 
 message(STATUS  ${target-name}  " Make Success." )

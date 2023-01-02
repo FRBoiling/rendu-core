@@ -1,12 +1,11 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
+# Use -std=c++11 instead of -std=gnu++11
+set(CXX_EXTENSIONS OFF)
 
 # 一个接口库，使目标com对其他目标可用
 add_library(rendu-compile-option-interface INTERFACE)
-
-# Use -std=c++11 instead of -std=gnu++11
-set(CXX_EXTENSIONS OFF)
 
 # 一个接口库，使目标特性对其他目标可用
 add_library(rendu-feature-interface INTERFACE)

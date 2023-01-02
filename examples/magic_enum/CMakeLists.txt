@@ -6,10 +6,9 @@
 #| RD Application Project
 #|--------------------------------
 
-set(target-name abseil)
+set(target-name magic_enum)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
-list(APPEND RENDU_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 CollectSourceFiles(
     ${sources_dir}
     ${target-name}_sources
@@ -22,6 +21,7 @@ CollectHeaderFiles(
     # Exclude
 
 )
+
 rendu_cc_executable(${project-name} ${target-name}
     NAME
     ${target-name}
@@ -32,7 +32,7 @@ rendu_cc_executable(${project-name} ${target-name}
     COPTS
     ${RENDU_DEFAULT_COPTS}
     DEPS
-    absl::algorithm
-    absl::config
+    magic_enum::magic_enum
+    protobuf::libprotobuf
     PUBLIC
     )

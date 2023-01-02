@@ -5,6 +5,8 @@
 include(RenduCopts)
 
 set(RENDU_DEFAULT_LINKOPTS "")
+# Use -std=c++11 instead of -std=gnu++11
+set(CXX_EXTENSIONS OFF)
 
 if (BUILD_SHARED_LIBS AND MSVC)
   set(RENDU_BUILD_DLL TRUE)

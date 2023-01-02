@@ -13,5 +13,4 @@ public:
   std::map<int, AComponent> m_components;
 };
 
-
 #endif //RENDU_CORE_A_ENTITY_H_

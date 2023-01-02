@@ -36,11 +36,9 @@ rendu_cc_library(${project-name} ${target-name}
     COPTS
     ${project_copts}
     DEPS
-    fmt::fmt
     spdlog::spdlog
     DEFINES
     LINKOPTS
-    DEPS
     )
 
 message(STATUS  ${target-name}  " Make Success." )

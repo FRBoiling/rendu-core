@@ -2,7 +2,6 @@
 #  Created by boil on 2022/9/10.
 #**********************************
 set(target-name fmt)
-include(FetchContent)
 message(STATUS ">>" ${target-name})
 FetchContent_Declare(
     ${target-name}
