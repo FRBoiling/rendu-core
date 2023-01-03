@@ -29,10 +29,3 @@ void AppSystem::Update() {
   }
 }
 
-void AppSystem::Run() {
-  Initialize();
-  while (IsRunning()) {
-    Update();
-  }
-  Destroy();
-}

@@ -14,12 +14,9 @@ public:
   bool Destroy() override;
 
   void Update() override;
-public:
-  void Run();
+
 public:
   AppEntity m_app_entity;
-
-  void Foo() const;
 };
 
 
