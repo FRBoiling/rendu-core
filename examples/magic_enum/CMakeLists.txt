@@ -2,10 +2,6 @@
 #| RD Application Project
 #|--------------------------------
 
-#|--------------------------------
-#| RD Application Project
-#|--------------------------------
-
 set(target-name magic_enum)
 set(header_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(sources_dir ${CMAKE_CURRENT_SOURCE_DIR})
@@ -33,5 +29,7 @@ rendu_cc_executable(${project-name} ${target-name}
     ${RENDU_DEFAULT_COPTS}
     DEPS
     magic_enum::magic_enum
+    fmt::fmt
+    spdlog::spdlog
     PUBLIC
     )

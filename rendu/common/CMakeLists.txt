@@ -37,6 +37,7 @@ rendu_cc_library(${project-name} ${target-name}
     ${project_copts}
     DEPS
     spdlog::spdlog
+    magic_enum::magic_enum
     DEFINES
     LINKOPTS
     )

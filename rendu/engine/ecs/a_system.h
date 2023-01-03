@@ -26,7 +26,7 @@ public:
 public:
   SystemState m_system_state;
 
-  bool IsRunning() const { return m_system_state == SystemState::UPDATE; }
+  bool IsRunning() const { return m_system_state < SystemState::DESTROY; }
 };
 
 #endif //RENDU_CORE_A_SYSTEM_H_

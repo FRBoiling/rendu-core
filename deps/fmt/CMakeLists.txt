@@ -38,7 +38,6 @@ CollectHeaderFiles(
 list(APPEND project_copts
     ${RENDU_DEFAULT_COPTS}
     )
-message(------>>>>>>${${target-name}_sources})
 rendu_cc_library(${target-name} ${target-name}
     NAME
     ${target-name}

@@ -8,8 +8,11 @@
 #include <iostream>
 
 #include <magic_enum.hpp>
+#include "../../rendu/common/log/logger.h"
 
 enum class Color : int { RED = -10, BLUE = 0, GREEN = 10 };
+
+std::string_view EnumToString(const Color &c1);
 
 template <typename E>
 auto to_integer(magic_enum::Enum<E> value) {
@@ -20,8 +23,10 @@ auto to_integer(magic_enum::Enum<E> value) {
 int main() {
   // Enum variable to string name.
   Color c1 = Color::RED;
-  std::string_view c1_name = magic_enum::enum_name(c1);
+  std::string_view c1_name = EnumToString(c1);
+
   std::cout << c1_name << std::endl; // RED
+
 
   // String enum name sequence.
   constexpr auto names = magic_enum::enum_names<Color>();
@@ -97,6 +102,11 @@ int main() {
   return 0;
 }
 
+std::string_view EnumToString(const Color &c1) {
+  std::string_view c1_name = magic_enum::enum_name(c1);
+  RD_LOG_INFO("Color----- {}", c1_name);
+  return c1_name;
+}
 
 
 #endif //RENDU_MAIN_H_

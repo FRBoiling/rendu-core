@@ -5,13 +5,11 @@
 #ifndef RENDU_CORE_ENUM_HELPER_H_
 #define RENDU_CORE_ENUM_HELPER_H_
 
-#include <type_traits>
-#include <functional>
-#include <string_view>
+#include "magic_enum.hpp"
 
-enum class value_type {
-  default_value,
-  flags_value
-};
+template<typename E>
+std::string_view EnumToString(const E &c1) {
+  return magic_enum::enum_name(c1);
+}
 
 #endif //RENDU_CORE_ENUM_HELPER_H_
