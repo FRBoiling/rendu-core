@@ -28,7 +28,6 @@ rendu_cc_test(${project-name}
     COPTS
     ${RENDU_TEST_COPTS}
     DEPS
-    fmt::fmt-header-only
     fmt::fmt
     GTest::gmock_main
     GTest::gtest_main

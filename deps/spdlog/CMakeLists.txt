@@ -6,10 +6,13 @@ message(STATUS ">>" ${target-name})
 FetchContent_Declare(
     ${target-name}
     URL https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.tar.gz
+    #    GIT_REPOSITORY https://gitee.com/lovelinpeach/spdlog.git
+    #    GIT_TAG v1.11.0
+    #    URL https://gitee.com/lovelinpeach/spdlog/repository/archive/v1.11.0
     FIND_PACKAGE_ARGS NAMES ${target-name}
     DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 # This will try calling find_package() first for both dependencies
 FetchContent_MakeAvailable(${target-name})
-message(STATUS  ${target-name}  " Make Success." )
+message(STATUS ${target-name} " Make Success.")
 

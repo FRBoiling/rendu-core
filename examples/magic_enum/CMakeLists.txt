@@ -33,6 +33,5 @@ rendu_cc_executable(${project-name} ${target-name}
     ${RENDU_DEFAULT_COPTS}
     DEPS
     magic_enum::magic_enum
-    protobuf::libprotobuf
     PUBLIC
     )

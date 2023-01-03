@@ -18,7 +18,7 @@ CollectHeaderFiles(
 list(APPEND project_copts
     ${RENDU_DEFAULT_COPTS}
     )
-rendu_cc_library(${project-name} ${target-name}
+rendu_cc_library(${target-name} ${target-name}
     NAME
     ${target-name}
     HDRS
