@@ -1,4 +1,7 @@
 /*
+* Created by boil on 2023/2/4.
+*/
+/*
  * @Description: 银行贷款等额本息和等额本金的还款方式
  * @Author: szq
  * @Github: https://github.com/MrQqqq
