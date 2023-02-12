@@ -16,6 +16,8 @@ rendu_add_executable(
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
     DEPS
+    rendu::core
+    rendu::common
     DEFINES
     LINKOPTS
 )

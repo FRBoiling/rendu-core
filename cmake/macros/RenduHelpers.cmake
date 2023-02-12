@@ -189,6 +189,7 @@ function(rendu_add_library)
       PRIVATE
       rendu-core-interface
       PUBLIC
+      ${RENDU_LIB_DEPS}
       )
 
   target_compile_definitions(${_NAME} PUBLIC ${RENDU_LIB_DEFINES})
@@ -215,56 +216,58 @@ function(rendu_add_library)
   if (USE_COREPCH)
     add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
   endif ()
+  add_library(${PROJECT_NAME}::${RENDU_LIB_NAME} ALIAS ${_NAME})
 endfunction()
 
 function(rendu_add_executable)
-  cmake_parse_arguments(RENDU_LIB
+  cmake_parse_arguments(RENDU_EXEC
       ""
       "NAME"
       "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;DEPS"
       ${ARGN}
       )
-  set(_NAME "${PROJECT_NAME}_${RENDU_LIB_NAME}")
+  set(_NAME "${PROJECT_NAME}_${RENDU_EXEC_NAME}")
   message(STATUS ${_NAME})
   CollectAllFiles(
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
+      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}
       PRIVATE_SOURCES
       # Exclude
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
   )
 
   list(APPEND PRIVATE_SOURCES
-      #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.cpp
-      #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.h
+      #      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.cpp
+      #      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.h
       )
 
   if (USE_COREPCH)
-    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
+    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_EXEC_NAME}_pch.h)
   endif (USE_COREPCH)
 
-  GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
+  GroupSources(${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR})
   add_executable(${_NAME} ${PRIVATE_SOURCES})
   target_link_libraries(${_NAME}
       PRIVATE
       rendu-core-interface
       PUBLIC
+      ${RENDU_EXEC_DEPS}
       )
   CollectIncludeDirectories(
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
+      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}
       PUBLIC_INCLUDES
       # Exclude
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/PrecompiledHeaders)
+      ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
   target_include_directories(${_NAME}
       PUBLIC
       # Provide the binary dir for all child targets
-      ${RENDU_LIB_CMAKE_BINARY_DIR}
+      ${RENDU_EXEC_CMAKE_BINARY_DIR}
       ${PUBLIC_INCLUDES}
       PRIVATE
-      ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
+      ${RENDU_EXEC_CMAKE_CUR_BINARY_DIR})
   set_target_properties(${_NAME}
       PROPERTIES
       FOLDER
-      ${RENDU_LIB_NAME})
+      ${RENDU_EXEC_NAME})
 
   if (BUILD_SHARED_LIBS)
     if (UNIX)
