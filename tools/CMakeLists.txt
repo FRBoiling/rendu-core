@@ -10,5 +10,4 @@ if (BUILD_TOOLS)
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
   )
-  message("")
 endif ()

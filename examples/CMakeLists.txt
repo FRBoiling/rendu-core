@@ -10,7 +10,6 @@ if (RENDU_FLAG_EXAMPLES)
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
   )
-  message("")
 endif ()
 
 
