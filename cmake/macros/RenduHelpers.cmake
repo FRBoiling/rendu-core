@@ -146,11 +146,11 @@ function(rendu_add_library)
   endif ()
 
   if (USE_COREPCH)
-  CollectHeaderFiles(
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
-      PRIVATE_PCH_HEADER
-  )
-#    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
+    CollectHeaderFiles(
+        ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+        PRIVATE_PCH_HEADER
+    )
+    #    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
@@ -220,7 +220,7 @@ function(rendu_add_library)
   if (USE_COREPCH)
     set(_header "${PRIVATE_PCH_HEADER}")
     if (_header STREQUAL "")
-    else()
+    else ()
       add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
     endif ()
   endif ()
@@ -253,7 +253,7 @@ function(rendu_add_executable)
         ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
         PRIVATE_PCH_HEADER
     )
-#    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_EXEC_NAME}_pch.h)
+    #    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_EXEC_NAME}_pch.h)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR})
@@ -296,10 +296,86 @@ function(rendu_add_executable)
   if (USE_COREPCH)
     set(_header "${PRIVATE_PCH_HEADER}")
     if (_header STREQUAL "")
-    else()
+    else ()
       add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
     endif ()
   endif ()
 endfunction(rendu_add_executable)
+
+function(rendu_add_test)
+  cmake_parse_arguments(RENDU_TEST
+      ""
+      "NAME"
+      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;DEPS"
+      ${ARGN}
+      )
+  set(_NAME "${PROJECT_NAME}_${RENDU_TEST_NAME}")
+  message(STATUS ${_NAME})
+  CollectAllFiles(
+      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}
+      PRIVATE_SOURCES
+      # Exclude
+      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+  )
+
+  list(APPEND PRIVATE_SOURCES
+      #      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.cpp
+      #      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/Debugging/Errors.h
+      )
+
+  if (USE_COREPCH)
+    CollectHeaderFiles(
+        ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+        PRIVATE_PCH_HEADER
+    )
+    #    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_TEST_NAME}_pch.h)
+  endif (USE_COREPCH)
+
+  GroupSources(${RENDU_TEST_CMAKE_CUR_SOURCE_DIR})
+  add_executable(${_NAME} ${PRIVATE_SOURCES})
+  target_link_libraries(${_NAME}
+      PRIVATE
+      rendu-core-interface
+      PUBLIC
+      ${RENDU_TEST_DEPS}
+      )
+  CollectIncludeDirectories(
+      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}
+      PUBLIC_INCLUDES
+      # Exclude
+      ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
+  target_include_directories(${_NAME}
+      PUBLIC
+      # Provide the binary dir for all child targets
+      ${RENDU_TEST_CMAKE_BINARY_DIR}
+      ${PUBLIC_INCLUDES}
+      PRIVATE
+      ${RENDU_TEST_CMAKE_CUR_BINARY_DIR})
+  set_target_properties(${_NAME}
+      PROPERTIES
+      FOLDER
+      ${RENDU_TEST_NAME})
+
+  if (BUILD_SHARED_LIBS)
+    if (UNIX)
+      install(TARGETS ${_NAME}
+          LIBRARY
+          DESTINATION lib)
+    elseif (WIN32)
+      install(TARGETS ${_NAME}
+          RUNTIME
+          DESTINATION "${CMAKE_INSTALL_PREFIX}")
+    endif ()
+  endif ()
+  # Generate precompiled header
+  if (USE_COREPCH)
+    set(_header "${PRIVATE_PCH_HEADER}")
+    if (_header STREQUAL "")
+    else ()
+      add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
+    endif ()
+  endif ()
+  add_test(NAME ${_NAME} COMMAND ${_NAME})
+endfunction(rendu_add_test)
 
 
