@@ -146,7 +146,11 @@ function(rendu_add_library)
   endif ()
 
   if (USE_COREPCH)
-    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
+  CollectHeaderFiles(
+      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+      PRIVATE_PCH_HEADER
+  )
+#    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
@@ -241,7 +245,11 @@ function(rendu_add_executable)
       )
 
   if (USE_COREPCH)
-    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_EXEC_NAME}_pch.h)
+    CollectHeaderFiles(
+        ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+        PRIVATE_PCH_HEADER
+    )
+#    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_EXEC_NAME}_pch.h)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR})
@@ -283,7 +291,10 @@ function(rendu_add_executable)
 
   # Generate precompiled header
   if (USE_COREPCH)
-    add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
+    if (${PRIVATE_PCH_HEADER} STREQUAL "" )
+    else()
+      add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
+    endif ()
   endif ()
 endfunction()
 

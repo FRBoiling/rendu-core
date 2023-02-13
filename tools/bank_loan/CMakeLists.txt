@@ -2,20 +2,17 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(PROTOBUF_PROTOC_EXECUTABLE bank_loan_tool)
-
-CollectSourceFiles(
+set(target_name bank_loan)
+rendu_add_executable(
+    NAME
+    ${target_name}
+    CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
-    private_sources
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}
+    DEPS
+    DEFINES
+    LINKOPTS
 )
-
-GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(${PROTOBUF_PROTOC_EXECUTABLE} ${private_sources})
-
-target_link_libraries(${PROTOBUF_PROTOC_EXECUTABLE}
-    PRIVATE
-    rendu-core-interface
-    PUBLIC
-    #TODO:BOIL 添加依赖项
-    )
