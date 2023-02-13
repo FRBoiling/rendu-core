@@ -9,7 +9,7 @@ function(_rendu_target_compile_features_if_available TARGET TYPE FEATURE)
   else ()
     message(WARNING "Feature ${FEATURE} is unknown for the CXX compiler")
   endif ()
-endfunction()
+endfunction(_rendu_target_compile_features_if_available)
 
 include(CheckCXXSourceCompiles)
 
@@ -56,7 +56,7 @@ function(rendu_add_subdirectory current_dir)
       endif ()
     endforeach ()
   endif ()
-endfunction()
+endfunction(rendu_add_subdirectory)
 
 # Parameters:
 # NAME: name of target (see Note)
@@ -218,10 +218,14 @@ function(rendu_add_library)
 
   # Generate precompiled header
   if (USE_COREPCH)
-    add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
+    set(_header "${PRIVATE_PCH_HEADER}")
+    if (_header STREQUAL "")
+    else()
+      add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
+    endif ()
   endif ()
   add_library(${PROJECT_NAME}::${RENDU_LIB_NAME} ALIAS ${_NAME})
-endfunction()
+endfunction(rendu_add_library)
 
 function(rendu_add_executable)
   cmake_parse_arguments(RENDU_EXEC
@@ -288,14 +292,14 @@ function(rendu_add_executable)
           DESTINATION "${CMAKE_INSTALL_PREFIX}")
     endif ()
   endif ()
-
   # Generate precompiled header
   if (USE_COREPCH)
-    if (${PRIVATE_PCH_HEADER} STREQUAL "" )
+    set(_header "${PRIVATE_PCH_HEADER}")
+    if (_header STREQUAL "")
     else()
       add_cxx_pch(${_NAME} ${PRIVATE_PCH_HEADER})
     endif ()
   endif ()
-endfunction()
+endfunction(rendu_add_executable)
 
 

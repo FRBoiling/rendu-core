@@ -33,7 +33,7 @@ function(CollectAllFiles current_dir variable)
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction()
+endfunction(CollectAllFiles)
 
 
 # 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
@@ -93,7 +93,7 @@ function(CollectHeaderFiles current_dir variable)
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction()
+endfunction(CollectHeaderFiles)
 
 # 收集所有子目录到给定的变量，用于包含所有子目录。忽略可变参数中列出的完全限定目录。
 # Use it like:
@@ -116,7 +116,7 @@ function(CollectIncludeDirectories current_dir variable)
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction()
+endfunction(CollectIncludeDirectories)
 
 # 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
 # Use it like:
@@ -143,4 +143,4 @@ function(CollectProtoFiles current_dir variable)
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction()
+endfunction(CollectProtoFiles)
