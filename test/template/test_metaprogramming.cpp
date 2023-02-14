@@ -17,5 +17,5 @@ public:
 
 //一个模板元编程一般包括：递归构造的手段、表示状态的模板参数、一个表示终点的特化以及具体实现的算法。
 TEST(TemplateTest, Metaprogramming) {
-  std::cout << Fac<5>::value; // 120
+  EXPECT_EQ(120, Fac<5>::value);
 }
