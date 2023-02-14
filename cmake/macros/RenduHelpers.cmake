@@ -154,12 +154,10 @@ function(rendu_add_library)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
-
   #  add_definitions(-DTRINITY_API_EXPORT_COMMON)
 
-
   add_library(${_NAME} ${PRIVATE_SOURCES})
-  #  if (LIB_IS_INTERFACE)
+  #  if (LIB_IS_INTERFACE) #TODO:BOIL head only
   #    target_sources(${_NAME} INTERFACE ${PRIVATE_SOURCES})
   #    target_include_directories(${_NAME}
   #        INTERFACE
