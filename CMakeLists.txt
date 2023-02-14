@@ -61,9 +61,9 @@ find_package(PCHSupport)
 add_subdirectory(deps)
 ## add core sources
 add_subdirectory(rendu)
-## add tools project
-add_subdirectory(tools)
-# add examples project
-add_subdirectory(examples)
-# add tests project
-add_subdirectory(tests)
+## add tool project
+add_subdirectory(tool)
+# add example project
+add_subdirectory(example)
+# add test project
+add_subdirectory(test)
