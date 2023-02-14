@@ -113,7 +113,7 @@ function(rendu_add_library)
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_LIB_NAME}")
 
-  message(STATUS ${_NAME})
+  message(STATUS "[lib ] " ${_NAME})
   #  message(STATUS ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
   #  message(STATUS ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
   #  message(STATUS ${RENDU_LIB_CMAKE_BINARY_DIR})
@@ -233,7 +233,7 @@ function(rendu_add_executable)
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_EXEC_NAME}")
-  message(STATUS ${_NAME})
+  message(STATUS "[exec] " ${_NAME})
   CollectAllFiles(
       ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}
       PRIVATE_SOURCES
@@ -308,7 +308,7 @@ function(rendu_add_test)
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_TEST_NAME}")
-  message(STATUS ${_NAME})
+  message(STATUS "[test] " ${_NAME})
   CollectAllFiles(
       ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}
       PRIVATE_SOURCES

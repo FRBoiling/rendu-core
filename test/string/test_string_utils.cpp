@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "utils/string_utils.h"
 
-TEST(StringViewTest, TruncSubstr) {
+TEST(StringTest, TruncSubstr) {
   const std::string_view hi("hi");
   EXPECT_EQ("", rendu::ClippedSubstr(hi, 0, 0));
   EXPECT_EQ("h", rendu::ClippedSubstr(hi, 0, 1));
@@ -15,7 +15,7 @@ TEST(StringViewTest, TruncSubstr) {
   EXPECT_EQ("", rendu::ClippedSubstr(hi, 3, 2));  // truncation
 }
 
-TEST(StringViewTest, NullSafeStringView) {
+TEST(StringTest, NullSafeStringView) {
   {
     std::string_view s = rendu::NullSafeStringView(nullptr);
     EXPECT_EQ(nullptr, s.data());
@@ -31,7 +31,7 @@ TEST(StringViewTest, NullSafeStringView) {
   }
 }
 
-TEST(StringViewTest, ConstexprNullSafeStringView) {
+TEST(StringTest, ConstexprNullSafeStringView) {
   {
     constexpr std::string_view s = rendu::NullSafeStringView(nullptr);
     EXPECT_EQ(nullptr, s.data());

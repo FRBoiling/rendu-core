@@ -1,0 +1,35 @@
+#**********************************
+#  Created by boil on 2022/8/14.
+#**********************************
+
+rendu_add_test(
+    NAME
+    template_function
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}
+    DEPS
+    gtest::gmock
+    gtest::gtest
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    template_class
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}
+    DEPS
+    gtest::gmock
+    gtest::gtest
+    DEFINES
+    LINKOPTS
+)

@@ -11,7 +11,7 @@
 #include "gtest/gtest.h"
 
 namespace {
-  TEST(StringViewTest, Ctor) {
+  TEST(StringTest, Ctor) {
     {
       // Null.
       std::string_view s10;
@@ -70,7 +70,7 @@ namespace {
 // TODO(mec): std::string_view(const std::string_view&);
   }
 
-  TEST(StringViewTest, Swap) {
+  TEST(StringTest, Swap) {
     std::string_view a("a");
     std::string_view b("bbb");
     EXPECT_TRUE(noexcept(a.swap(b)));
@@ -82,7 +82,7 @@ namespace {
     EXPECT_EQ(b, "bbb");
   }
 
-  TEST(StringViewTest, STLComparator) {
+  TEST(StringTest, STLComparator) {
     std::string s1("foo");
     std::string s2("bar");
     std::string s3("baz");
@@ -129,7 +129,7 @@ namespace {
   EXPECT_EQ(result, std::string_view((x)) op std::string_view((y))); \
   EXPECT_EQ(result, std::string_view((x)).compare(std::string_view((y))) op 0)
 
-  TEST(StringViewTest, ComparisonOperators) {
+  TEST(StringTest, ComparisonOperators) {
     COMPARE(true, ==, "", "");
     COMPARE(true, ==, "", std::string_view());
     COMPARE(true, ==, std::string_view(), "");
@@ -191,7 +191,7 @@ namespace {
     COMPARE(true, >, "bb", "aa");
   }
 
-  TEST(StringViewTest, ComparisonOperatorsByCharacterPosition) {
+  TEST(StringTest, ComparisonOperatorsByCharacterPosition) {
     std::string x;
     for (size_t i = 0; i < 256; i++) {
       x += 'a';
@@ -234,7 +234,7 @@ namespace {
     static bool same(T) { return true; }
   };
 
-  TEST(StringViewTest, NposMatchesStdStringView) {
+  TEST(StringTest, NposMatchesStdStringView) {
     EXPECT_EQ(std::string_view::npos, std::string::npos);
 
     EXPECT_TRUE(is_type<size_t>::same(std::string_view::npos));
@@ -245,7 +245,7 @@ namespace {
     EXPECT_EQ(0, test[0]);
   }
 
-  TEST(StringViewTest, STL1) {
+  TEST(StringTest, STL1) {
     const std::string_view a("abcdefghijklmnopqrstuvwxyz");
     const std::string_view b("abc");
     const std::string_view c("xyz");
@@ -310,7 +310,7 @@ namespace {
 
 // Separated from STL1() because some compilers produce an overly
 // large stack frame for the combined function.
-  TEST(StringViewTest, STL2) {
+  TEST(StringTest, STL2) {
     const std::string_view a("abcdefghijklmnopqrstuvwxyz");
     const std::string_view b("abc");
     const std::string_view c("xyz");
@@ -449,7 +449,7 @@ namespace {
   }
 
 // Continued from STL2
-  TEST(StringViewTest, STL2FindFirst) {
+  TEST(StringTest, STL2FindFirst) {
     const std::string_view a("abcdefghijklmnopqrstuvwxyz");
     const std::string_view b("abc");
     const std::string_view c("xyz");
@@ -531,7 +531,7 @@ namespace {
   }
 
 // Continued from STL2
-  TEST(StringViewTest, STL2FindLast) {
+  TEST(StringTest, STL2FindLast) {
     const std::string_view a("abcdefghijklmnopqrstuvwxyz");
     const std::string_view b("abc");
     const std::string_view c("xyz");
@@ -621,7 +621,7 @@ namespace {
   }
 
 // Continued from STL2
-  TEST(StringViewTest, STL2Substr) {
+  TEST(StringTest, STL2Substr) {
     const std::string_view a("abcdefghijklmnopqrstuvwxyz");
     const std::string_view b("abc");
     const std::string_view c("xyz");
@@ -645,7 +645,7 @@ namespace {
     EXPECT_THROW((void) a.substr(99, 2), std::out_of_range);
   }
 
-  TEST(StringViewTest, UTF8) {
+  TEST(StringTest, UTF8) {
     std::string utf8 = "\u00E1";
     std::string utf8_twice = utf8 + " " + utf8;
     size_t utf8_len = strlen(utf8.data());
@@ -653,7 +653,7 @@ namespace {
     EXPECT_EQ(utf8_len, std::string_view(utf8_twice).find_first_of(" \t"));
   }
 
-  TEST(StringViewTest, FindConformance) {
+  TEST(StringTest, FindConformance) {
     struct {
       std::string haystack;
       std::string needle;
@@ -700,7 +700,7 @@ namespace {
     }
   }
 
-  TEST(StringViewTest, Remove) {
+  TEST(StringTest, Remove) {
     std::string_view a("foobar");
     std::string s1("123");
     s1 += '\0';
@@ -729,7 +729,7 @@ namespace {
     EXPECT_EQ(c, e);
   }
 
-  TEST(StringViewTest, Set) {
+  TEST(StringTest, Set) {
     std::string_view a("foobar");
     std::string_view empty;
     std::string_view b;
@@ -746,14 +746,14 @@ namespace {
     EXPECT_EQ(b, a);
   }
 
-  TEST(StringViewTest, FrontBack) {
+  TEST(StringTest, FrontBack) {
     static const char arr[] = "abcd";
     const std::string_view csp(arr, 4);
     EXPECT_EQ(&arr[0], &csp.front());
     EXPECT_EQ(&arr[3], &csp.back());
   }
 
-  TEST(StringViewTest, FrontBackSingleChar) {
+  TEST(StringTest, FrontBackSingleChar) {
     static const char c = 'a';
     const std::string_view csp(&c, 1);
     EXPECT_EQ(&c, &csp.front());
@@ -761,13 +761,13 @@ namespace {
   }
 
 
-  TEST(StringViewTest, FrontBackEmpty) {
+  TEST(StringTest, FrontBackEmpty) {
     std::string_view sv;
     EXPECT_DEATH_IF_SUPPORTED(sv.front(), "");
     EXPECT_DEATH_IF_SUPPORTED(sv.back(), "");
   }
 
-  TEST(StringViewTest, NULLInput) {
+  TEST(StringTest, NULLInput) {
     std::string_view s;
     EXPECT_EQ(s.data(), nullptr);
     EXPECT_EQ(s.size(), 0u);
@@ -781,7 +781,7 @@ namespace {
     EXPECT_EQ("", std::string(s));
   }
 
-  TEST(StringViewTest, Comparisons2) {
+  TEST(StringTest, Comparisons2) {
 // The `compare` member has 6 overloads (v: string_view, s: const char*):
 //  (1) compare(v)
 //  (2) compare(pos1, count1, v)
@@ -825,7 +825,7 @@ namespace {
     EXPECT_LT(digits.compare(0, npos, "0123456789", 3, 5), 0);  // 6
   }
 
-  TEST(StringViewTest, At) {
+  TEST(StringTest, At) {
     std::string_view abc = "abc";
     EXPECT_EQ(abc.at(0), 'a');
     EXPECT_EQ(abc.at(1), 'b');
@@ -837,12 +837,12 @@ namespace {
   struct MyCharAlloc : std::allocator<char> {
   };
 
-  TEST(StringViewTest, ExplicitConversionOperator) {
+  TEST(StringTest, ExplicitConversionOperator) {
     std::string_view sp = "hi";
     EXPECT_EQ(sp, std::string(sp));
   }
 
-  TEST(StringViewTest, ConstexprCompiles) {
+  TEST(StringTest, ConstexprCompiles) {
     constexpr std::string_view sp;
     constexpr std::string_view cstr_len("cstr", 4);
     constexpr std::string_view cstr_strlen("foo");
@@ -916,7 +916,7 @@ namespace {
 #endif
   }
 
-  TEST(StringViewTest, ConstexprMethods) {
+  TEST(StringTest, ConstexprMethods) {
 // remove_prefix, remove_suffix, swap
     static_assert(ConstexprMethodsHelper() == '2', "");
 
@@ -928,7 +928,7 @@ namespace {
     EXPECT_EQ(bar, "bar");
   }
 
-  TEST(StringViewTest, Noexcept) {
+  TEST(StringTest, Noexcept) {
     EXPECT_TRUE((std::is_nothrow_constructible<std::string_view,
         const std::string &>::value));
     EXPECT_TRUE((std::is_nothrow_constructible<std::string_view,
@@ -962,7 +962,7 @@ namespace {
     EXPECT_TRUE(noexcept(sp.find_last_not_of('f')));
   }
 
-  TEST(StringViewTest, BoundsCheck) {
+  TEST(StringTest, BoundsCheck) {
     std::string_view h = "hello";
     EXPECT_DEATH_IF_SUPPORTED(h[5], "");
     EXPECT_DEATH_IF_SUPPORTED(h[static_cast<size_t>(-1)], "");
