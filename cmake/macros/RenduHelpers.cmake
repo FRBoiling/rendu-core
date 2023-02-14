@@ -124,7 +124,7 @@ function(rendu_add_library)
       # Exclude
       #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Debugging
       #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Platform
-      #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/PrecompiledHeaders
+            ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
   )
 
   list(APPEND PRIVATE_SOURCES
