@@ -7,7 +7,7 @@
 
 #include <cstddef>
 #include <type_traits>
-#include "define.h"
+#include "core_define.h"
 
 namespace rendu {
   namespace internal {

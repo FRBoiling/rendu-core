@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/11.
 */
 
-#ifndef RENDU_ECS_DEFINE_H_
-#define RENDU_ECS_DEFINE_H_
+#ifndef RENDU_ECS_ECS_DEFINE_H_
+#define RENDU_ECS_ECS_DEFINE_H_
 
 #ifndef RD_PACKED_PAGE
 #    define RD_PACKED_PAGE 1024
@@ -14,4 +14,4 @@
 
 #   define RD_ETO_TYPE(Type) Type
 
-#endif //RENDU_ECS_DEFINE_H_
+#endif //RENDU_ECS_ECS_DEFINE_H_

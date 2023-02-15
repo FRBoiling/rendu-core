@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <type_traits>
 #include <bit>
-#include "define.h"
+#include "ecs_define.h"
 #include "component.h"
 
 namespace rendu {

@@ -12,6 +12,7 @@ rendu_add_library(
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
     DEPS
+    rendu::common
     DEFINES
     LINKOPTS
 )

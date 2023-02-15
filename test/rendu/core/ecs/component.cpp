@@ -3,7 +3,7 @@
 */
 #include <gtest/gtest.h>
 #include "component.h"
-#include "define.h"
+#include "core_define.h"
 
 struct empty {};
 
