@@ -4,7 +4,7 @@
 
 rendu_add_test(
     NAME
-    template_function
+    template
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
@@ -18,34 +18,3 @@ rendu_add_test(
     LINKOPTS
 )
 
-rendu_add_test(
-    NAME
-    template_class
-    CMAKE_CUR_SOURCE_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    CMAKE_CUR_BINARY_DIR
-    ${CMAKE_CURRENT_BINARY_DIR}
-    CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}
-    DEPS
-    gtest::gmock
-    gtest::gtest
-    DEFINES
-    LINKOPTS
-)
-
-rendu_add_test(
-    NAME
-    test_metaprogramming
-    CMAKE_CUR_SOURCE_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    CMAKE_CUR_BINARY_DIR
-    ${CMAKE_CURRENT_BINARY_DIR}
-    CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}
-    DEPS
-    gtest::gmock
-    gtest::gtest
-    DEFINES
-    LINKOPTS
-)

@@ -1,5 +1,5 @@
 set(target-name protobuf)
-message(STATUS [lib ] ${target-name})
+message(STATUS "[lib ] " ${target-name})
 include(FetchContent)
 FetchContent_Declare(
     ${target-name}

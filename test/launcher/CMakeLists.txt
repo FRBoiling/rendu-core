@@ -4,7 +4,7 @@
 
 rendu_add_test(
     NAME
-    launcher
+    rd_launcher
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
