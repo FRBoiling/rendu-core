@@ -1,8 +1,8 @@
 #**********************************
-#  Created by boil on 2022/8/14.
+#  Created by boil on 2022/9/10.
 #**********************************
-set(target_name launcher)
-rendu_add_executable(
+set(target_name net)
+rendu_add_library(
     NAME
     ${target_name}
     CMAKE_CUR_SOURCE_DIR
@@ -12,8 +12,6 @@ rendu_add_executable(
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
     DEPS
-    rendu::core
-    rendu::common
     DEFINES
     LINKOPTS
 )

@@ -1,10 +1,10 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-set(target_name launcher)
-rendu_add_executable(
+
+rendu_add_test(
     NAME
-    ${target_name}
+    rendu_core
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
@@ -13,7 +13,9 @@ rendu_add_executable(
     ${CMAKE_BINARY_DIR}
     DEPS
     rendu::core
-    rendu::common
+    rendu::ecs
+    gtest::gmock
+    gtest::gtest
     DEFINES
     LINKOPTS
 )

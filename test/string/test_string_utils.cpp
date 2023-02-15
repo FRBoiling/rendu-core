@@ -2,7 +2,7 @@
 * Created by boil on 2023/2/14.
 */
 #include "gtest/gtest.h"
-#include "utils/string_utils.h"
+#include "utils/string_util.h"
 
 TEST(StringTest, TruncSubstr) {
   const std::string_view hi("hi");

@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/14.
 */
 
-#ifndef RENDU_CORE_STRING_UTILS_H_
-#define RENDU_CORE_STRING_UTILS_H_
+#ifndef RENDU_COMMON_UTILS_STRING_UTIL_H_
+#define RENDU_COMMON_UTILS_STRING_UTIL_H_
 
 #include <string_view>
 
@@ -21,4 +21,4 @@ namespace rendu {
 
 }//namespace rendu
 
-#endif //RENDU_CORE_STRING_UTILS_H_
+#endif //RENDU_COMMON_UTILS_STRING_UTIL_H_
