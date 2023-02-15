@@ -330,7 +330,8 @@ function(rendu_add_test)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_TEST_CMAKE_CUR_SOURCE_DIR})
-  add_executable(${_NAME} ${PRIVATE_SOURCES})
+  add_executable(${_NAME} "")
+  target_sources(${_NAME} PRIVATE ${PRIVATE_SOURCES})
   target_link_libraries(${_NAME}
       PRIVATE
       rendu-core-interface

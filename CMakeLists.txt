@@ -65,5 +65,11 @@ add_subdirectory(rendu)
 add_subdirectory(tool)
 # add example project
 add_subdirectory(example)
-# add test project
-add_subdirectory(test)
+
+if (BUILD_TESTING)
+  include(CTest)
+  enable_testing()
+  # add test project
+  add_subdirectory(test)
+endif ()
+
