@@ -1,5 +1,6 @@
 set(target-name protobuf)
 message(STATUS [lib ] ${target-name})
+include(FetchContent)
 FetchContent_Declare(
     ${target-name}
     URL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz
