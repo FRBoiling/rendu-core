@@ -178,7 +178,7 @@ function(rendu_add_library)
       ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
       PUBLIC_INCLUDES
       # Exclude
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/PrecompiledHeaders)
+      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
   target_include_directories(${_NAME}
       PUBLIC
       # Provide the binary dir for all child targets

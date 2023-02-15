@@ -11,6 +11,7 @@
 #include <bit>
 #include "ecs_define.h"
 #include "component.h"
+#include "pwd.h"
 
 namespace rendu {
   namespace internal {
