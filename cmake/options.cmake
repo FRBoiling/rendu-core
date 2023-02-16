@@ -10,7 +10,7 @@ set(CXX_EXTENSIONS OFF)
 set(RENDU_PROJECT_OUTDIR ${RENDU_PROJECT_DIR}/Build)
 set(RENDU_PROJECT_BINDIR ${RENDU_PROJECT_OUTDIR}/Bin)
 
-option(USE_COREPCH      "Use precompiled headers when compiling servers"              1)
+option(USE_COREPCH      "Use precompiled headers when compiling servers"              0)
 option(WITH_DYNAMIC_LINKING "Enable dynamic library linking."                         0)
 IsDynamicLinkingRequired(WITH_DYNAMIC_LINKING_FORCED)
 if(WITH_DYNAMIC_LINKING AND WITH_DYNAMIC_LINKING_FORCED)

@@ -187,9 +187,6 @@ function(rendu_add_library)
       ${PUBLIC_INCLUDES}
       PRIVATE
       ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
-  message(--1- ${RENDU_LIB_CMAKE_BINARY_DIR})
-  message(--3- ${PUBLIC_INCLUDES})
-  message(--2- ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
 
   target_link_libraries(${_NAME}
       PRIVATE

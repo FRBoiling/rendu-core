@@ -2,13 +2,14 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_BASE_TYPE_INFO_H_
-#define RENDU_CORE_BASE_TYPE_INFO_H_
+#ifndef RENDU_CORE_CORE_BASE_TYPE_INFO_H_
+#define RENDU_CORE_CORE_BASE_TYPE_INFO_H_
 
 #include <string_view>
 #include <type_traits>
 #include <utility>
-#include "define.h"
+#include "define/define.h"
+#include "common/define.h"
 #include "fwd.h"
 #include "base/hashed_string.h"
 #include "base/fwd.h"
@@ -268,4 +269,4 @@ template<typename Type>
 
 } // namespace rendu
 
-#endif //RENDU_CORE_BASE_TYPE_INFO_H_
+#endif //RENDU_CORE_CORE_BASE_TYPE_INFO_H_

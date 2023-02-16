@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_BASE_HASHED_STRING_H_
-#define RENDU_CORE_BASE_HASHED_STRING_H_
+#ifndef RENDU_CORE_CORE_BASE_HASHED_STRING_H_
+#define RENDU_CORE_CORE_BASE_HASHED_STRING_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -335,4 +335,4 @@ inline namespace literals {
 
 } // namespace entt
 
-#endif //RENDU_CORE_BASE_HASHED_STRING_H_
+#endif //RENDU_CORE_CORE_BASE_HASHED_STRING_H_

@@ -1,12 +1,12 @@
-/*
-* Created by boil on 2023/2/16.
-*/
+//
+// Created by boil on 2023/2/16.
+//
 
-#ifndef RENDU_NET_TCP_CONNECTOR_H_
-#define RENDU_NET_TCP_CONNECTOR_H_
+#ifndef RENDU_CORE_CORE_NET_TCP_CONNECTOR_H_
+#define RENDU_CORE_CORE_NET_TCP_CONNECTOR_H_
 
 class connector {
 
 };
 
-#endif //RENDU_NET_TCP_CONNECTOR_H_
+#endif //RENDU_CORE_CORE_NET_TCP_CONNECTOR_H_

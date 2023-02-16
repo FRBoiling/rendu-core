@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_BASE_TYPE_TRAITS_H_
-#define RENDU_CORE_BASE_TYPE_TRAITS_H_
+#ifndef RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_
+#define RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_
 
 #include <cstddef>
 #include <iterator>
@@ -758,4 +758,4 @@ using nth_argument_t = typename nth_argument<Index, Candidate>::type;
 
 } // namespace rendu
 
-#endif //RENDU_CORE_BASE_TYPE_TRAITS_H_
+#endif //RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_

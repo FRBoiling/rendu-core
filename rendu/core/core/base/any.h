@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_BASE_ANY_H_
-#define RENDU_CORE_BASE_ANY_H_
+#ifndef RENDU_CORE_CORE_BASE_ANY_H_
+#define RENDU_CORE_CORE_BASE_ANY_H__
 
 #include <cstddef>
 #include <memory>
@@ -510,4 +510,4 @@ template<std::size_t Len = basic_any<>::length, std::size_t Align = basic_any<Le
 
 } // namespace rendu
 
-#endif //RENDU_CORE_BASE_ANY_H_
+#endif //RENDU_CORE_CORE_BASE_ANY_H__
