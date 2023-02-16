@@ -114,6 +114,16 @@ namespace rendu {
     }
 
     /**
+   * @brief Returns the successor of a given identifier.
+   * @param value The identifier of which to return the successor.
+   * @return The successor of the given identifier.
+   */
+    [[nodiscard]] static constexpr value_type next(const value_type value) noexcept {
+      const auto vers = to_version(value) + 1;
+      return construct(to_entity(value), static_cast<version_type>(vers + (vers == version_mask)));
+    }
+
+    /**
      * @brief 通过entity和version构造标识符.
      * 如果未提供version，则返回逻辑删除
      * 如果未提供entity，则返回空标识符

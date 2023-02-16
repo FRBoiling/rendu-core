@@ -1,9 +1,9 @@
 /*
 * Created by boil on 2023/2/15.
 */
-#include <gtest/gtest.h>
-#include "component.h"
-#include "define.h"
+#include "gtest/gtest.h"
+#include "ecs/component.h"
+#include "define/define.h"
 
 struct empty {};
 
@@ -73,10 +73,3 @@ TEST(Component, TraitsBased) {
   static_assert(!traits_type::in_place_delete);
   static_assert(traits_type::page_size == 8u);
 }
-
-//TEST(Component, TraitsBasedTagged) {
-//  using traits_type = rendu::component_traits<traits_based>;
-//
-//  static_assert(traits_type::in_place_delete);
-//  static_assert(traits_type::page_size == 16u);
-//}

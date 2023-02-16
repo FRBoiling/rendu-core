@@ -5,6 +5,18 @@
 #ifndef RENDU_CORE_CORE_DEFINE_DEFINE_H_
 #define RENDU_CORE_CORE_DEFINE_DEFINE_H_
 
+#if defined(__cpp_exceptions) && !defined(ENTT_NOEXCEPTION)
+#    define RD_CONSTEXPR
+#    define RD_THROW throw
+#    define RD_TRY try
+#    define RD_CATCH catch(...)
+#else
+#    define RD_CONSTEXPR constexpr // use only with throwing functions (waiting for C++20)
+#    define RD_THROW
+#    define RD_TRY if(true)
+#    define RD_CATCH if(false)
+#endif
+
 #ifndef RD_ID_TYPE
 #    include <cstdint>
 #    define RD_ID_TYPE std::uint32_t
@@ -25,5 +37,14 @@
 #endif
 
 #   define RD_ETO_TYPE(Type) Type
+
+#ifndef RD_ASSERT
+#    include <cassert>
+#    define RD_ASSERT(condition, msg) assert(condition)
+#endif
+
+#ifndef RD_ASSERT_CONSTEXPR
+#    define RD_ASSERT_CONSTEXPR(condition, msg) RD_ASSERT(condition, msg)
+#endif
 
 #endif //RENDU_CORE_CORE_DEFINE_DEFINE_H_
