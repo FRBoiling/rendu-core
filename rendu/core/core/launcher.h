@@ -5,7 +5,6 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
-
 class Launcher {
 
 };

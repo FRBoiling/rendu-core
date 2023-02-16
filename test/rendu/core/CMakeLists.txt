@@ -13,7 +13,6 @@ rendu_add_test(
     ${CMAKE_BINARY_DIR}
     DEPS
     rendu::core
-    rendu::ecs
     gtest::gmock
     gtest::gtest
     DEFINES

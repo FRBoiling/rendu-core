@@ -2,16 +2,16 @@
 * Created by boil on 2023/2/15.
 */
 
-#ifndef RENDU_ECS_BASE_ENTITY_H_
-#define RENDU_ECS_BASE_ENTITY_H_
+#ifndef RENDU_CORE_ECS_ENTITY_H_
+#define RENDU_CORE_ECS_ENTITY_H_
 
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 #include <bit>
-#include "ecs_define.h"
+#include "define.h"
 #include "component.h"
-#include "pwd.h"
+#include "fwd.h"
 
 namespace rendu {
   namespace internal {
@@ -361,4 +361,4 @@ namespace rendu {
 
 } // namespace rendu
 
-#endif //RENDU_ECS_BASE_ENTITY_H_
+#endif //RENDU_CORE_ECS_ENTITY_H_

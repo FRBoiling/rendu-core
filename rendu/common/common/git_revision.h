@@ -5,6 +5,7 @@
 #ifndef RENDU_COMMON_GIT_REVISION_H_
 #define RENDU_COMMON_GIT_REVISION_H_
 
+#include "define.h"
 
 class GitRevision {
 

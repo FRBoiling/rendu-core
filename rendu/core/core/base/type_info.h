@@ -8,11 +8,10 @@
 #include <string_view>
 #include <type_traits>
 #include <utility>
-#include "common_define.h"
-#include "core_define.h"
-#include "common_pch.h"
+#include "define.h"
 #include "fwd.h"
-#include "hashed_string.h"
+#include "base/hashed_string.h"
+#include "base/fwd.h"
 
 namespace rendu {
 

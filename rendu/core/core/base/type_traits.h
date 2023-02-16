@@ -9,7 +9,7 @@
 #include <iterator>
 #include <type_traits>
 #include <utility>
-#include "core_define.h"
+#include "define.h"
 #include "fwd.h"
 
 namespace rendu {

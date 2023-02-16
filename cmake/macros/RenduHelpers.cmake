@@ -156,7 +156,7 @@ function(rendu_add_library)
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
   #  add_definitions(-DTRINITY_API_EXPORT_COMMON)
 
-  add_library(${_NAME} ${PRIVATE_SOURCES})
+  add_library(${_NAME})
   #  if (LIB_IS_INTERFACE) #TODO:BOIL head only
   #    target_sources(${_NAME} INTERFACE ${PRIVATE_SOURCES})
   #    target_include_directories(${_NAME}
@@ -179,6 +179,7 @@ function(rendu_add_library)
       PUBLIC_INCLUDES
       # Exclude
       ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
+
   target_include_directories(${_NAME}
       PUBLIC
       # Provide the binary dir for all child targets
@@ -186,6 +187,9 @@ function(rendu_add_library)
       ${PUBLIC_INCLUDES}
       PRIVATE
       ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
+  message(--1- ${RENDU_LIB_CMAKE_BINARY_DIR})
+  message(--3- ${PUBLIC_INCLUDES})
+  message(--2- ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
 
   target_link_libraries(${_NAME}
       PRIVATE

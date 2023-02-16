@@ -2,12 +2,13 @@
 * Created by boil on 2023/2/12.
 */
 
-#ifndef RENDU_ECS_BASE_COMPONENT_H_
-#define RENDU_ECS_BASE_COMPONENT_H_
+#ifndef RENDU_CORE_ECS_COMPONENT_H_
+#define RENDU_CORE_ECS_COMPONENT_H_
 
 #include <cstddef>
 #include <type_traits>
-#include "core_define.h"
+#include "define.h"
+#include "fwd.h"
 
 namespace rendu {
   namespace internal {
@@ -59,4 +60,4 @@ namespace rendu {
 
 } // namespace rendu
 
-#endif //RENDU_ECS_BASE_COMPONENT_H_
+#endif //RENDU_CORE_ECS_COMPONENT_H_
