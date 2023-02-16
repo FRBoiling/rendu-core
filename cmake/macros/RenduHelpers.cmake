@@ -62,7 +62,8 @@ endfunction(rendu_add_subdirectory)
 # NAME: name of target (see Note)
 # HDRS: List of public header files for the library
 # SRCS: List of source files for the library
-# DEPS: List of other libraries to be linked in to the binary targets
+# PUBLIC_DEPS: List of other libraries to be linked in to the binary targets
+# PRIVATE_DEPS: List of other libraries to be linked in to the binary targets
 # COPTS: List of private compile options
 # DEFINES: List of public defines
 # LINKOPTS: List of link options
@@ -108,23 +109,17 @@ function(rendu_add_library)
   cmake_parse_arguments(RENDU_LIB
       ""
       "NAME"
-      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;DEPS"
+      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC_DEPS;PRIVATE_DEPS"
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_LIB_NAME}")
 
   message(STATUS "[lib ] " ${_NAME})
-  #  message(STATUS ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
-  #  message(STATUS ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
-  #  message(STATUS ${RENDU_LIB_CMAKE_BINARY_DIR})
-
   CollectAllFiles(
       ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
       PRIVATE_SOURCES
       # Exclude
-      #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Debugging
-      #      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/Platform
-            ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
+      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
   )
 
   list(APPEND PRIVATE_SOURCES
@@ -150,7 +145,6 @@ function(rendu_add_library)
         ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
         PRIVATE_PCH_HEADER
     )
-    #    set(PRIVATE_PCH_HEADER precompiled_headers/${RENDU_LIB_NAME}_pch.h)
   endif (USE_COREPCH)
 
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
@@ -190,9 +184,10 @@ function(rendu_add_library)
 
   target_link_libraries(${_NAME}
       PRIVATE
-      rendu-core-interface
+#
+      ${RENDU_LIB_PRIVATE_DEPS}
       PUBLIC
-      ${RENDU_LIB_DEPS}
+      ${RENDU_LIB_PUBLIC_DEPS}
       )
 
   target_compile_definitions(${_NAME} PUBLIC ${RENDU_LIB_DEFINES})
@@ -230,7 +225,7 @@ function(rendu_add_executable)
   cmake_parse_arguments(RENDU_EXEC
       ""
       "NAME"
-      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;DEPS"
+      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS; PUBLIC_DEPS,PRIVATE_DEPS"
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_EXEC_NAME}")
@@ -259,9 +254,9 @@ function(rendu_add_executable)
   add_executable(${_NAME} ${PRIVATE_SOURCES})
   target_link_libraries(${_NAME}
       PRIVATE
-      rendu-core-interface
+      ${RENDU_EXEC_PRIVATE_DEPS}
       PUBLIC
-      ${RENDU_EXEC_DEPS}
+      ${RENDU_EXEC_PUBLIC_DEPS}
       )
   CollectIncludeDirectories(
       ${RENDU_EXEC_CMAKE_CUR_SOURCE_DIR}

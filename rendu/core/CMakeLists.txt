@@ -11,7 +11,9 @@ rendu_add_library(
     ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
-    DEPS
+    PRIVATE_DEPS
+    rendu-core-interface
+    PUBLIC_DEPS
     rendu::common
     DEFINES
     LINKOPTS

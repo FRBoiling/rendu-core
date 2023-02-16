@@ -10,7 +10,9 @@ rendu_add_executable(
     ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
-    DEPS
+    PRIVATE_DEPS
+    rendu-core-interface
+    PUBLIC_DEPS
     protobuf::libprotoc
     DEFINES
     LINKOPTS
