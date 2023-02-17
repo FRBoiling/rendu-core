@@ -722,14 +722,14 @@ class dense_map {
    */
   [[nodiscard]] mapped_type &at(const key_type &key) {
     auto it = find(key);
-    ENTT_ASSERT(it != end(), "Invalid key");
+    RD_ASSERT(it != end(), "Invalid key");
     return it->second;
   }
 
   /*! @copydoc at */
   [[nodiscard]] const mapped_type &at(const key_type &key) const {
     auto it = find(key);
-    ENTT_ASSERT(it != cend(), "Invalid key");
+    RD_ASSERT(it != cend(), "Invalid key");
     return it->second;
   }
 

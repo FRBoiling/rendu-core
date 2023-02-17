@@ -893,5 +893,5 @@ class dense_set {
   float threshold;
 };
 
-} // namespace entt
+} // namespace rendu
 #endif //RENDU_CORE_CORE_CONTAINER_DENSE_SET_H_

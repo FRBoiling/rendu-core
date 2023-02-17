@@ -17,7 +17,7 @@ using id_type = RD_ID_TYPE;
 /*! @brief Alias declaration for the most common use case. */
 using any = basic_any<>;
 
-} // namespace entt
+} // namespace rendu
 
 
 #endif //RENDU_CORE_CORE_BASE_FWD_H_

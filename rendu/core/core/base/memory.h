@@ -104,7 +104,7 @@ constexpr void propagate_on_container_swap([[maybe_unused]] Allocator &lhs, [[ma
     using std::swap;
     swap(lhs, rhs);
   } else {
-    ENTT_ASSERT_CONSTEXPR(lhs == rhs, "Cannot swap the containers");
+    RD_ASSERT_CONSTEXPR(lhs == rhs, "Cannot swap the containers");
   }
 }
 

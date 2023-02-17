@@ -333,6 +333,6 @@ inline namespace literals {
 
 } // namespace literals
 
-} // namespace entt
+} // namespace rendu
 
 #endif //RENDU_CORE_CORE_BASE_HASHED_STRING_H_

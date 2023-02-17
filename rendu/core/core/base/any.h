@@ -437,7 +437,7 @@ class basic_any {
 template<typename Type, std::size_t Len, std::size_t Align>
 [[nodiscard]] Type any_cast(const basic_any<Len, Align> &data) noexcept {
   const auto *const instance = any_cast<std::remove_reference_t<Type>>(&data);
-  ENTT_ASSERT(instance, "Invalid instance");
+  RD_ASSERT(instance, "Invalid instance");
   return static_cast<Type>(*instance);
 }
 
@@ -446,7 +446,7 @@ template<typename Type, std::size_t Len, std::size_t Align>
 [[nodiscard]] Type any_cast(basic_any<Len, Align> &data) noexcept {
   // forces const on non-reference types to make them work also with wrappers for const references
   auto *const instance = any_cast<std::remove_reference_t<const Type>>(&data);
-  ENTT_ASSERT(instance, "Invalid instance");
+  RD_ASSERT(instance, "Invalid instance");
   return static_cast<Type>(*instance);
 }
 
@@ -461,7 +461,7 @@ template<typename Type, std::size_t Len, std::size_t Align>
     }
   } else {
     auto *const instance = any_cast<std::remove_reference_t<Type>>(&data);
-    ENTT_ASSERT(instance, "Invalid instance");
+    RD_ASSERT(instance, "Invalid instance");
     return static_cast<Type>(std::move(*instance));
   }
 }
