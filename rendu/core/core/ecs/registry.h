@@ -26,6 +26,7 @@
 #include "fwd.h"
 #include "sparse_set.h"
 #include "storage.h"
+#include "mixin.h"
 
 namespace rendu {
 namespace internal {
@@ -261,7 +262,7 @@ class basic_registry {
   struct group_handler;
 
   template<typename... Exclude, typename... Get, typename... Owned>
-  struct group_handler<exclude_t < Exclude...>, get_t<Get...>, Owned...> {
+  struct group_handler<exclude_t<Exclude...>, get_t<Get...>, Owned...> {
     // nasty workaround for an issue with the toolset v141 that doesn't accept a fold expression here
     static_assert(!std::disjunction_v<std::bool_constant<storage_for_type<Owned>::traits_type::in_place_delete
     > ...>, "Groups do not support in-place delete");
@@ -269,10 +270,9 @@ class basic_registry {
     value_type current{};
 
     template<typename... Args>
-    group_handler(Args && ...
+    group_handler(Args &&...
     args)
-    : current{std::forward<Args>(args)...}
-    {}
+        : current{std::forward<Args>(args)...} {}
 
     template<typename Type>
     void maybe_valid_if(basic_registry &owner, const Entity entt) {
@@ -339,7 +339,7 @@ class basic_registry {
       cpool->bind(forward_as_any(*this));
     }
 
-    ENTT_ASSERT(cpool->type() == type_id<Type>(), "Unexpected type");
+    RD_ASSERT(cpool->type() == type_id<Type>(), "Unexpected type");
     return static_cast<storage_for_type<Type> &>(*cpool);
   }
 
@@ -348,7 +348,7 @@ class basic_registry {
     static_assert(std::is_same_v<Type, std::decay_t<Type >>, "Non-decayed types not allowed");
 
     if (const auto it = pools.find(id); it != pools.cend()) {
-      ENTT_ASSERT(it->second->type() == type_id<Type>(), "Unexpected type");
+      RD_ASSERT(it->second->type() == type_id<Type>(), "Unexpected type");
       return static_cast<const storage_for_type<Type> &>(*it->second);
     }
 
@@ -663,7 +663,7 @@ class basic_registry {
    */
   template<typename It>
   void assign(It first, It last, const size_type destroyed) {
-    ENTT_ASSERT(!entities->in_use(), "Non-empty registry");
+    RD_ASSERT(!entities->in_use(), "Non-empty registry");
     entities->push(first, last);
     entities->in_use(entities->size() - destroyed);
   }
@@ -680,7 +680,7 @@ class basic_registry {
    * @return The version of the recycled entity.
    */
   version_type release(const entity_type entt) {
-    ENTT_ASSERT(orphan(entt), "Non-orphan entity");
+    RD_ASSERT(orphan(entt), "Non-orphan entity");
     entities->erase(entt);
     return entities->current(entt);
   }
@@ -1303,8 +1303,10 @@ class basic_registry {
     static_assert(sizeof...(Owned) + sizeof...(Get) + sizeof...(Exclude) > 1,
                   "Single component groups are not allowed");
 
-    using handler_type = group_handler<exclude_t < std::remove_const_t<Exclude>...>, get_t < std::remove_const_t
-        <Get>...>, std::remove_const_t<Owned>...>;
+    using handler_type = group_handler<exclude_t<std::remove_const_t<Exclude>...>,
+                                       get_t<std::remove_const_t
+                                                 <Get>...>,
+                                       std::remove_const_t<Owned>...>;
 
     const auto cpools = std::forward_as_tuple(assure<std::remove_const_t<Owned >>()...,
                                               assure<std::remove_const_t<Get >>()...);
@@ -1353,7 +1355,7 @@ class basic_registry {
           return !overlapping || ((sz == size) || (sz == gdata.size));
         };
 
-        ENTT_ASSERT(std::all_of(groups.cbegin(), groups.cend(), std::move(has_conflict)), "Conflicting groups");
+        RD_ASSERT(std::all_of(groups.cbegin(), groups.cend(), std::move(has_conflict)), "Conflicting groups");
 
         const auto next = std::find_if_not(groups.cbegin(), groups.cend(), [size](const auto &gdata) {
           return !(0u + ... + gdata.owned(type_hash<std::remove_const_t<Owned >>::value()))
@@ -1387,7 +1389,7 @@ class basic_registry {
                         <Exclude >>().before(discard_if).template connect<&handler_type::discard_if>(*handler), ...);
 
       if constexpr (sizeof...(Owned) == 0) {
-        for (const auto entity : view<Owned..., Get...>(exclude < Exclude... > )) {
+        for (const auto entity : view<Owned..., Get...>(exclude<Exclude...>)) {
           handler->current.push(entity);
         }
       } else {
@@ -1421,8 +1423,10 @@ class basic_registry {
     if (it == groups.cend()) {
       return {};
     } else {
-      using handler_type = group_handler<exclude_t < std::remove_const_t<Exclude>...>, get_t < std::remove_const_t
-          <Get>...>, std::remove_const_t<Owned>...>;
+      using handler_type = group_handler<exclude_t<std::remove_const_t<Exclude>...>,
+                                         get_t<std::remove_const_t
+                                                   <Get>...>,
+                                         std::remove_const_t<Owned>...>;
       return {static_cast<handler_type *>(it->group.get())->current, assure<std::remove_const_t<Owned >>()...,
               assure<std::remove_const_t<Get >>()..., assure<std::remove_const_t<Exclude >>()...};
     }
@@ -1496,7 +1500,7 @@ class basic_registry {
    */
   template<typename Type, typename Compare, typename Sort = std_sort, typename... Args>
   void sort(Compare compare, Sort algo = Sort{}, Args &&...args) {
-    ENTT_ASSERT(!owned<Type>(), "Cannot sort owned storage");
+    RD_ASSERT(!owned<Type>(), "Cannot sort owned storage");
     auto &cpool = assure<Type>();
 
     if constexpr (std::is_invocable_v<Compare, decltype(cpool.get({})), decltype(cpool.get({}))>) {
@@ -1532,7 +1536,7 @@ class basic_registry {
    */
   template<typename To, typename From>
   void sort() {
-    ENTT_ASSERT(!owned<To>(), "Cannot sort owned storage");
+    RD_ASSERT(!owned<To>(), "Cannot sort owned storage");
     assure<To>().respect(assure<From>());
   }
 

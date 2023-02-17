@@ -1,10 +1,9 @@
 #**********************************
 #  Created by boil on 2022/9/10.
 #**********************************
-set(target_name core)
 rendu_add_library(
     NAME
-    ${target_name}
+    core
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
