@@ -9,10 +9,8 @@
 #include <type_traits>
 #include <utility>
 #include "define/define.h"
-#include "common/define.h"
+#include "hashed_string.h"
 #include "fwd.h"
-#include "base/hashed_string.h"
-#include "base/fwd.h"
 
 namespace rendu {
 

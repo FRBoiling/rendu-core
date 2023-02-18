@@ -6,10 +6,127 @@
 #define RENDU_CORE_ECS_BASIC_SPARSE_SET_H_
 
 #include "base/iterator.h"
-#include "sparse_set_iterator.h"
+#include "entity.h"
 #include "fwd.h"
 
 namespace rendu {
+
+namespace internal {
+
+template<typename Container>
+struct sparse_set_iterator final {
+  using value_type = typename Container::value_type;
+  using pointer = typename Container::const_pointer;
+  using reference = typename Container::const_reference;
+  using difference_type = typename Container::difference_type;
+  using iterator_category = std::random_access_iterator_tag;
+
+  constexpr sparse_set_iterator() noexcept
+      : packed{},
+        offset{} {}
+
+  constexpr sparse_set_iterator(const Container &ref, const difference_type idx) noexcept
+      : packed{std::addressof(ref)},
+        offset{idx} {}
+
+  constexpr sparse_set_iterator &operator++() noexcept {
+    return --offset, *this;
+  }
+
+  constexpr sparse_set_iterator operator++(int) noexcept {
+    sparse_set_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  constexpr sparse_set_iterator &operator--() noexcept {
+    return ++offset, *this;
+  }
+
+  constexpr sparse_set_iterator operator--(int) noexcept {
+    sparse_set_iterator orig = *this;
+    return operator--(), orig;
+  }
+
+  constexpr sparse_set_iterator &operator+=(const difference_type value) noexcept {
+    offset -= value;
+    return *this;
+  }
+
+  constexpr sparse_set_iterator operator+(const difference_type value) const noexcept {
+    sparse_set_iterator copy = *this;
+    return (copy += value);
+  }
+
+  constexpr sparse_set_iterator &operator-=(const difference_type value) noexcept {
+    return (*this += -value);
+  }
+
+  constexpr sparse_set_iterator operator-(const difference_type value) const noexcept {
+    return (*this + -value);
+  }
+
+  [[nodiscard]] constexpr reference operator[](const difference_type value) const noexcept {
+    return packed->data()[index() - value];
+  }
+
+  [[nodiscard]] constexpr pointer operator->() const noexcept {
+    return packed->data() + index();
+  }
+
+  [[nodiscard]] constexpr reference operator*() const noexcept {
+    return *operator->();
+  }
+
+  [[nodiscard]] constexpr pointer data() const noexcept {
+    return packed ? packed->data() : nullptr;
+  }
+
+  [[nodiscard]] constexpr difference_type index() const noexcept {
+    return offset - 1;
+  }
+
+ private:
+  const Container *packed;
+  difference_type offset;
+};
+
+template<typename Container>
+[[nodiscard]] constexpr std::ptrdiff_t operator-(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return rhs.index() - lhs.index();
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator==(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return lhs.index() == rhs.index();
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator!=(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator<(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return lhs.index() > rhs.index();
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator>(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return lhs.index() < rhs.index();
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator<=(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return !(lhs > rhs);
+}
+
+template<typename Container>
+[[nodiscard]] constexpr bool operator>=(const sparse_set_iterator<Container> &lhs, const sparse_set_iterator<Container> &rhs) noexcept {
+  return !(lhs < rhs);
+}
+
+} // namespace internal
+
 /**
  * @brief Basic sparse set implementation.
  *
@@ -37,7 +154,8 @@ template<typename Entity, typename Allocator>
 class basic_sparse_set {
   using alloc_traits = std::allocator_traits<Allocator>;
   static_assert(std::is_same_v<typename alloc_traits::value_type, Entity>, "Invalid value type");
-  using sparse_container_type = std::vector<typename alloc_traits::pointer, typename alloc_traits::template rebind_alloc<typename alloc_traits::pointer>>;
+  using sparse_container_type = std::vector<typename alloc_traits::pointer,
+                                            typename alloc_traits::template rebind_alloc<typename alloc_traits::pointer>>;
   using packed_container_type = std::vector<Entity, Allocator>;
 
   [[nodiscard]] auto sparse_ptr(const Entity rendu) const {
@@ -60,11 +178,11 @@ class basic_sparse_set {
     const auto pos = static_cast<size_type>(traits_type::to_entity(rendu));
     const auto page = pos / traits_type::page_size;
 
-    if(!(page < sparse.size())) {
+    if (!(page < sparse.size())) {
       sparse.resize(page + 1u, nullptr);
     }
 
-    if(!sparse[page]) {
+    if (!sparse[page]) {
       auto page_allocator{packed.get_allocator()};
       sparse[page] = alloc_traits::allocate(page_allocator, traits_type::page_size);
       std::uninitialized_fill(sparse[page], sparse[page] + traits_type::page_size, null);
@@ -78,8 +196,8 @@ class basic_sparse_set {
   void release_sparse_pages() {
     auto page_allocator{packed.get_allocator()};
 
-    for(auto &&page: sparse) {
-      if(page != nullptr) {
+    for (auto &&page : sparse) {
+      if (page != nullptr) {
         std::destroy(page, page + traits_type::page_size);
         alloc_traits::deallocate(page_allocator, page, traits_type::page_size);
         page = nullptr;
@@ -148,12 +266,12 @@ class basic_sparse_set {
    * @param last An iterator past the last element of the range of entities.
    */
   virtual void pop(basic_iterator first, basic_iterator last) {
-    if(mode == deletion_policy::swap_and_pop) {
-      for(; first != last; ++first) {
+    if (mode == deletion_policy::swap_and_pop) {
+      for (; first != last; ++first) {
         swap_and_pop(first);
       }
     } else {
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         in_place_pop(first);
       }
     }
@@ -161,13 +279,13 @@ class basic_sparse_set {
 
   /*! @brief Erases all entities of a sparse set. */
   virtual void pop_all() {
-    if(const auto prev = std::exchange(free_list, tombstone); prev == null) {
-      for(auto first = begin(); !(first.index() < 0); ++first) {
+    if (const auto prev = std::exchange(free_list, tombstone); prev == null) {
+      for (auto first = begin(); !(first.index() < 0); ++first) {
         sparse_ref(*first) = null;
       }
     } else {
-      for(auto first = begin(); !(first.index() < 0); ++first) {
-        if(*first != tombstone) {
+      for (auto first = begin(); !(first.index() < 0); ++first) {
+        if (*first != tombstone) {
           sparse_ref(*first) = null;
         }
       }
@@ -185,9 +303,10 @@ class basic_sparse_set {
   virtual basic_iterator try_emplace(const Entity rendu, const bool force_back, const void * = nullptr) {
     RD_ASSERT(!contains(rendu), "Set already contains entity");
 
-    if(auto &elem = assure_at_least(rendu); free_list == null || force_back) {
+    if (auto &elem = assure_at_least(rendu); free_list == null || force_back) {
       packed.push_back(rendu);
-      elem = traits_type::combine(static_cast<typename traits_type::entity_type>(packed.size() - 1u), traits_type::to_integral(rendu));
+      elem = traits_type::combine(static_cast<typename traits_type::entity_type>(packed.size() - 1u),
+                                  traits_type::to_integral(rendu));
       return begin();
     } else {
       const auto pos = static_cast<size_type>(traits_type::to_entity(free_list));
@@ -245,7 +364,9 @@ class basic_sparse_set {
    * @param pol Type of deletion policy.
    * @param allocator The allocator to use (possibly default-constructed).
    */
-  explicit basic_sparse_set(const type_info &elem, deletion_policy pol = deletion_policy::swap_and_pop, const allocator_type &allocator = {})
+  explicit basic_sparse_set(const type_info &elem,
+                            deletion_policy pol = deletion_policy::swap_and_pop,
+                            const allocator_type &allocator = {})
       : sparse{allocator},
         packed{allocator},
         info{&elem},
@@ -274,7 +395,8 @@ class basic_sparse_set {
         info{other.info},
         free_list{std::exchange(other.free_list, tombstone)},
         mode{other.mode} {
-    RD_ASSERT(alloc_traits::is_always_equal::value || packed.get_allocator() == other.packed.get_allocator(), "Copying a sparse set is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || packed.get_allocator() == other.packed.get_allocator(),
+              "Copying a sparse set is not allowed");
   }
 
   /*! @brief Default destructor. */
@@ -288,7 +410,8 @@ class basic_sparse_set {
    * @return This sparse set.
    */
   basic_sparse_set &operator=(basic_sparse_set &&other) noexcept {
-    RD_ASSERT(alloc_traits::is_always_equal::value || packed.get_allocator() == other.packed.get_allocator(), "Copying a sparse set is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || packed.get_allocator() == other.packed.get_allocator(),
+              "Copying a sparse set is not allowed");
 
     release_sparse_pages();
     sparse = std::move(other.sparse);
@@ -600,7 +723,7 @@ class basic_sparse_set {
    */
   template<typename It>
   iterator push(It first, It last) {
-    for(auto it = first; it != last; ++it) {
+    for (auto it = first; it != last; ++it) {
       try_emplace(*it, true);
     }
 
@@ -648,10 +771,10 @@ class basic_sparse_set {
    */
   template<typename It>
   void erase(It first, It last) {
-    if constexpr(std::is_same_v<It, basic_iterator>) {
+    if constexpr (std::is_same_v<It, basic_iterator>) {
       pop(first, last);
     } else {
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         erase(*first);
       }
     }
@@ -677,15 +800,15 @@ class basic_sparse_set {
   size_type remove(It first, It last) {
     size_type count{};
 
-    if constexpr(std::is_same_v<It, basic_iterator>) {
-      while(first != last) {
-        while(first != last && !contains(*first)) {
+    if constexpr (std::is_same_v<It, basic_iterator>) {
+      while (first != last) {
+        while (first != last && !contains(*first)) {
           ++first;
         }
 
         const auto it = first;
 
-        while(first != last && contains(*first)) {
+        while (first != last && contains(*first)) {
           ++first;
         }
 
@@ -693,7 +816,7 @@ class basic_sparse_set {
         erase(it, first);
       }
     } else {
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         count += remove(*first);
       }
     }
@@ -704,10 +827,10 @@ class basic_sparse_set {
   /*! @brief Removes all tombstones from a sparse set. */
   void compact() {
     size_type from = packed.size();
-    for(; from && packed[from - 1u] == tombstone; --from) {}
+    for (; from && packed[from - 1u] == tombstone; --from) {}
 
-    for(auto *it = &free_list; *it != null && from; it = std::addressof(packed[traits_type::to_entity(*it)])) {
-      if(const size_type to = traits_type::to_entity(*it); to < from) {
+    for (auto *it = &free_list; *it != null && from; it = std::addressof(packed[traits_type::to_entity(*it)])) {
+      if (const size_type to = traits_type::to_entity(*it); to < from) {
         --from;
         swap_or_move(from, to);
 
@@ -716,7 +839,7 @@ class basic_sparse_set {
         sparse_ref(packed[to]) = traits_type::combine(entity, traits_type::to_integral(packed[to]));
 
         *it = traits_type::combine(static_cast<typename traits_type::entity_type>(from), tombstone);
-        for(; from && packed[from - 1u] == tombstone; --from) {}
+        for (; from && packed[from - 1u] == tombstone; --from) {}
       }
     }
 
@@ -783,11 +906,11 @@ class basic_sparse_set {
 
     algo(packed.rend() - length, packed.rend(), std::move(compare), std::forward<Args>(args)...);
 
-    for(size_type pos{}; pos < length; ++pos) {
+    for (size_type pos{}; pos < length; ++pos) {
       auto curr = pos;
       auto next = index(packed[curr]);
 
-      while(curr != next) {
+      while (curr != next) {
         const auto idx = index(packed[next]);
         const auto rendu = packed[curr];
 
@@ -838,9 +961,9 @@ class basic_sparse_set {
     const auto to = other.end();
     auto from = other.begin();
 
-    for(auto it = begin(); it.index() && from != to; ++from) {
-      if(const auto curr = *from; contains(curr)) {
-        if(const auto rendu = *it; rendu != curr) {
+    for (auto it = begin(); it.index() && from != to; ++from) {
+      if (const auto curr = *from; contains(curr)) {
+        if (const auto rendu = *it; rendu != curr) {
           // basic no-leak guarantee (with invalid state) if swapping throws
           swap_elements(rendu, curr);
         }

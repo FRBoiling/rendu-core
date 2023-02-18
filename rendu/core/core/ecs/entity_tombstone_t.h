@@ -9,7 +9,7 @@
 
 namespace rendu {
 /*! @brief 所有标识符的逻辑删除对象.  */
-struct tombstone_t {
+struct entity_tombstone_t {
   /**
    * @brief Converts the tombstone object to identifiers of any type.
    * @tparam Entity Type of identifier.
@@ -27,7 +27,7 @@ struct tombstone_t {
    * @param other A tombstone object.
    * @return True in all cases.
    */
-  [[nodiscard]] constexpr bool operator==([[maybe_unused]] const tombstone_t other) const noexcept {
+  [[nodiscard]] constexpr bool operator==([[maybe_unused]] const entity_tombstone_t other) const noexcept {
     return true;
   }
 
@@ -36,7 +36,7 @@ struct tombstone_t {
    * @param other A tombstone object.
    * @return False in all cases.
    */
-  [[nodiscard]] constexpr bool operator!=([[maybe_unused]] const tombstone_t other) const noexcept {
+  [[nodiscard]] constexpr bool operator!=([[maybe_unused]] const entity_tombstone_t other) const noexcept {
     return false;
   }
 
@@ -72,7 +72,7 @@ struct tombstone_t {
  * @return False if the two elements differ, true otherwise.
  */
 template<typename Entity>
-[[nodiscard]] constexpr bool operator==(const Entity entity, const tombstone_t other) noexcept {
+[[nodiscard]] constexpr bool operator==(const Entity entity, const entity_tombstone_t other) noexcept {
   return other.operator==(entity);
 }
 
@@ -84,9 +84,19 @@ template<typename Entity>
  * @return True if the two elements differ, false otherwise.
  */
 template<typename Entity>
-[[nodiscard]] constexpr bool operator!=(const Entity entity, const tombstone_t other) noexcept {
+[[nodiscard]] constexpr bool operator!=(const Entity entity, const entity_tombstone_t other) noexcept {
   return !(other == entity);
 }
+
+/**
+ * @brief Compile-time constant for tombstone entities.
+ *
+ * There exist implicit conversions from this variable to identifiers of any
+ * allowed type. Similarly, there exist comparison operators between the
+ * tombstone entity and any other identifier.
+ */
+inline constexpr entity_tombstone_t tombstone{};
+
 }//namespace rendu
 
 #endif //RENDU_CORE_ECS_TOMBSTONE_T_H_

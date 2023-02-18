@@ -5,6 +5,8 @@
 #ifndef RENDU_CORE_DEFINE_DEFINE_H_
 #define RENDU_CORE_DEFINE_DEFINE_H_
 
+#include "common/define.h"
+
 #if defined(__cpp_exceptions) && !defined(ENTT_NOEXCEPTION)
 #    define RD_CONSTEXPR
 #    define RD_THROW throw

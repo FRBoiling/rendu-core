@@ -30,8 +30,6 @@ class basic_storage;
 template<typename Type>
 class sigh_mixin;
 
-
-
 /**
  * @brief Provides a common way to define storage types.
  * @tparam Type Storage value type.

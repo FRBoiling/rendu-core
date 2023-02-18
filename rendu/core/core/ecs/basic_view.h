@@ -5,9 +5,168 @@
 #ifndef RENDU_CORE_ECS_BASIC_VIEW_H_
 #define RENDU_CORE_ECS_BASIC_VIEW_H_
 
-#include "extended_view_iterator.h"
+#include <array>
+#include "base/iterator.h"
 
 namespace rendu {
+
+namespace internal {
+template<typename... Args, typename Type, std::size_t N>
+auto filter_as_tuple(const std::array<const Type *, N> &filter) noexcept {
+  return std::apply([](const auto *...curr) {
+    return std::make_tuple(static_cast<Args *>(const_cast<constness_as_t<Type, Args> *>(curr))...);
+  }, filter);
+}
+
+template<typename Type, std::size_t N>
+[[nodiscard]] auto none_of(const std::array<const Type *, N> &filter,
+                           const typename Type::entity_type entity) noexcept {
+  return std::apply([entity](const auto *...curr) {
+    return (!curr->contains(entity) && ...);
+  }, filter);
+}
+
+template<typename Type, std::size_t Get, std::size_t Exclude>
+class view_iterator final {
+  using iterator_type = typename Type::const_iterator;
+
+  [[nodiscard]] bool valid() const noexcept {
+    return ((Get != 0u) || (*it != tombstone))
+        && std::apply([entity = *it](const auto *...curr) { return (curr->contains(entity) && ...); }, pools)
+        && none_of(filter, *it);
+  }
+
+ public:
+  using value_type = typename iterator_type::value_type;
+  using pointer = typename iterator_type::pointer;
+  using reference = typename iterator_type::reference;
+  using difference_type = typename iterator_type::difference_type;
+  using iterator_category = std::forward_iterator_tag;
+
+  constexpr view_iterator() noexcept
+      : it{},
+        last{},
+        pools{},
+        filter{} {}
+
+  view_iterator(iterator_type curr,
+                iterator_type to,
+                std::array<const Type *, Get> value,
+                std::array<const Type *, Exclude> excl) noexcept
+      : it{curr},
+        last{to},
+        pools{value},
+        filter{excl} {
+    while (it != last && !valid()) {
+      ++it;
+    }
+  }
+
+  view_iterator &operator++() noexcept {
+    while (++it != last && !valid()) {}
+    return *this;
+  }
+
+  view_iterator operator++(int) noexcept {
+    view_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  [[nodiscard]] pointer operator->() const noexcept {
+    return &*it;
+  }
+
+  [[nodiscard]] reference operator*() const noexcept {
+    return *operator->();
+  }
+
+  template<typename LhsType, auto... LhsArgs, typename RhsType, auto... RhsArgs>
+  friend constexpr bool operator==(const view_iterator<LhsType, LhsArgs...> &,
+                                   const view_iterator<RhsType, RhsArgs...> &) noexcept;
+
+ private:
+  iterator_type it;
+  iterator_type last;
+  std::array<const Type *, Get> pools;
+  std::array<const Type *, Exclude> filter;
+};
+
+template<typename LhsType, auto... LhsArgs, typename RhsType, auto... RhsArgs>
+[[nodiscard]] constexpr bool operator==(const view_iterator<LhsType, LhsArgs...> &lhs,
+                                        const view_iterator<RhsType, RhsArgs...> &rhs) noexcept {
+  return lhs.it == rhs.it;
+}
+
+template<typename LhsType, auto... LhsArgs, typename RhsType, auto... RhsArgs>
+[[nodiscard]] constexpr bool operator!=(const view_iterator<LhsType, LhsArgs...> &lhs,
+                                        const view_iterator<RhsType, RhsArgs...> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+template<typename It, typename... Type>
+struct extended_view_iterator final {
+  using iterator_type = It;
+  using difference_type = std::ptrdiff_t;
+  using value_type = decltype(std::tuple_cat(std::make_tuple(*std::declval<It>()),
+                                             std::declval<Type>().get_as_tuple({})...));
+  using pointer = input_iterator_pointer<value_type>;
+  using reference = value_type;
+  using iterator_category = std::input_iterator_tag;
+
+  constexpr extended_view_iterator()
+      : it{},
+        pools{} {}
+
+  extended_view_iterator(It from, std::tuple<Type *...> value)
+      : it{from},
+        pools{value} {}
+
+  extended_view_iterator &operator++() noexcept {
+    return ++it, *this;
+  }
+
+  extended_view_iterator operator++(int) noexcept {
+    extended_view_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  [[nodiscard]] reference operator*() const noexcept {
+    return std::apply([entity = *it](auto *...curr) {
+      return std::tuple_cat(std::make_tuple(entity), curr->get_as_tuple(entity)...);
+    }, pools);
+  }
+
+  [[nodiscard]] pointer operator->() const noexcept {
+    return operator*();
+  }
+
+  [[nodiscard]] constexpr iterator_type base() const noexcept {
+    return it;
+  }
+
+  template<typename... Lhs, typename... Rhs>
+  friend bool constexpr operator==(const extended_view_iterator<Lhs...> &,
+                                   const extended_view_iterator<Rhs...> &) noexcept;
+
+ private:
+  It it;
+  std::tuple<Type *...> pools;
+};
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator==(const extended_view_iterator<Lhs...> &lhs,
+                                        const extended_view_iterator<Rhs...> &rhs) noexcept {
+  return lhs.it == rhs.it;
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator!=(const extended_view_iterator<Lhs...> &lhs,
+                                        const extended_view_iterator<Rhs...> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+} // namespace internal
+
 /**
  * @brief View implementation.
  *
@@ -118,9 +277,7 @@ class basic_view<get_t<Get...>, exclude_t<Exclude...>> {
   basic_view(Get &...value, Exclude &...excl) noexcept
       : pools{&value...},
         filter{&excl...},
-        view{std::get<0>(pools)} {
-    ((view = value.size() < view->size() ? &value : view), ...);
-  }
+        view{std::get<0>(pools)} { ((view = value.size() < view->size() ? &value : view), ...); }
 
 /**
  * @brief Constructs a multi-type view from a set of storage classes.
@@ -137,7 +294,8 @@ class basic_view<get_t<Get...>, exclude_t<Exclude...>> {
  */
   template<typename Type>
   [[nodiscard]] basic_view use() const noexcept {
-    return use<index_of<Type>>();
+    return use<index_of<Type>>
+        ();
   }
 
 /**
@@ -176,7 +334,8 @@ class basic_view<get_t<Get...>, exclude_t<Exclude...>> {
  */
   template<typename Type>
   [[nodiscard]] decltype(auto) storage() const noexcept {
-    return storage<index_of<Type>>();
+    return storage<index_of<Type>>
+        ();
   }
 
 /**
@@ -302,9 +461,11 @@ class basic_view<get_t<Get...>, exclude_t<Exclude...>> {
     if constexpr (sizeof...(Type) == 0) {
       return std::apply([entity](auto *...curr) { return std::tuple_cat(curr->get_as_tuple(entity)...); }, pools);
     } else if constexpr (sizeof...(Type) == 1) {
-      return (storage<index_of<Type>>().get(entity), ...);
+      return (storage<index_of<Type>>
+          ().get(entity), ...);
     } else {
-      return std::tuple_cat(storage<index_of<Type>>().get_as_tuple(entity)...);
+      return std::tuple_cat(storage<index_of<Type>>
+                                ().get_as_tuple(entity)...);
     }
   }
 
@@ -375,7 +536,9 @@ class basic_view<get_t<Get...>, exclude_t<Exclude...>> {
   template<typename... OGet, typename... OExclude>
   [[nodiscard]] auto operator|(const basic_view<get_t<OGet...>, exclude_t<OExclude...>> &other) const noexcept {
     return std::apply(
-        [](auto *...curr) { return basic_view<get_t<Get..., OGet...>, exclude_t<Exclude..., OExclude...>>{*curr...}; },
+        [](auto *...curr) {
+          return basic_view<get_t<Get..., OGet...>, exclude_t<Exclude..., OExclude...>>{*curr...};
+        },
         std::tuple_cat(pools,
                        other.pools,
                        internal::filter_as_tuple<Exclude...>(filter),
@@ -439,17 +602,28 @@ class basic_view<get_t<Get>, exclude_t<>, std::void_t<std::enable_if_t<!Get::tra
  * @brief Constructs a single-type view from a storage class.
  * @param value The storage for the type to iterate.
  */
-  basic_view(Get &value) noexcept
-      : pools{&value},
-        filter{},
-        view{&value} {}
+  basic_view(Get
+             &value) noexcept
+      : pools{
+      &value},
+        filter{
+        },
+        view{
+            &value} {
+  }
 
 /**
  * @brief Constructs a single-type view from a storage class.
  * @param value The storage for the type to iterate.
  */
-  basic_view(std::tuple<Get &> value, std::tuple<> = {}) noexcept
-      : basic_view{std::get<0>(value)} {}
+  basic_view(std::tuple<Get &>
+             value,
+             std::tuple<> = {}
+  ) noexcept
+      : basic_view{
+      std::get<0>(value)
+  } {
+  }
 
 /**
  * @brief Returns the leading storage of a view.
@@ -699,10 +873,19 @@ class basic_view<get_t<Get>, exclude_t<>, std::void_t<std::enable_if_t<!Get::tra
  * @return A more specific view.
  */
   template<typename... OGet, typename... OExclude>
-  [[nodiscard]] auto operator|(const basic_view<get_t<OGet...>, exclude_t<OExclude...>> &other) const noexcept {
+  [[nodiscard]] auto operator|(const basic_view<get_t<OGet...>, exclude_t<OExclude...>>
+                               &other) const noexcept {
     return std::apply(
-        [](auto *...curr) { return basic_view<get_t<Get, OGet...>, exclude_t<OExclude...>>{*curr...}; },
-        std::tuple_cat(pools, other.pools, internal::filter_as_tuple<OExclude...>(other.filter)));
+        [](
+            auto *...curr
+        ) {
+          return basic_view<get_t<Get, OGet...>, exclude_t<OExclude...>>{
+              *curr...};
+        },
+        std::tuple_cat(pools, other
+                           .pools,
+                       internal::filter_as_tuple<OExclude...>(other
+                                                                  .filter)));
   }
 
  private:

@@ -5,16 +5,223 @@
 #ifndef RENDU_CORE_ECS_BASIC_REGISTER_H_
 #define RENDU_CORE_ECS_BASIC_REGISTER_H_
 
+#include "define/define.h"
 #include "base/any.h"
 #include "base/algorithm.h"
-#include "define/define.h"
-#include "registry_storage_iterator.h"
-#include "registry_context.h"
+#include "container/dense_map.h"
 #include "basic_storage.h"
 #include "basic_group.h"
 #include "basic_view.h"
 
 namespace rendu {
+
+namespace internal {
+
+template<typename It>
+class registry_storage_iterator final {
+  template<typename Other>
+  friend
+  class registry_storage_iterator;
+  using mapped_type = std::remove_reference_t<decltype(std::declval<It>()->second)>;
+
+ public:
+  using value_type = std::pair<id_type, constness_as_t<typename mapped_type::element_type, mapped_type> &>;
+  using pointer = input_iterator_pointer<value_type>;
+  using reference = value_type;
+  using difference_type = std::ptrdiff_t;
+  using iterator_category = std::input_iterator_tag;
+
+  constexpr registry_storage_iterator() noexcept
+      : it{} {}
+
+  constexpr registry_storage_iterator(It iter) noexcept
+      : it{iter} {}
+
+  template<typename Other, typename =
+  std::enable_if_t<!std::is_same_v<It, Other> && std::is_constructible_v<It, Other>>
+  >
+  constexpr registry_storage_iterator(const registry_storage_iterator<Other> &other) noexcept
+      : registry_storage_iterator{other.it} {}
+
+  constexpr registry_storage_iterator &operator++() noexcept {
+    return ++it, *this;
+  }
+
+  constexpr registry_storage_iterator operator++(int) noexcept {
+    registry_storage_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  constexpr registry_storage_iterator &operator--() noexcept {
+    return --it, *this;
+  }
+
+  constexpr registry_storage_iterator operator--(int) noexcept {
+    registry_storage_iterator orig = *this;
+    return operator--(), orig;
+  }
+
+  constexpr registry_storage_iterator &operator+=(const difference_type value) noexcept {
+    it += value;
+    return *this;
+  }
+
+  constexpr registry_storage_iterator operator+(const difference_type value) const noexcept {
+    registry_storage_iterator copy = *this;
+    return (copy += value);
+  }
+
+  constexpr registry_storage_iterator &operator-=(const difference_type value) noexcept {
+    return (*this += -value);
+  }
+
+  constexpr registry_storage_iterator operator-(const difference_type value) const noexcept {
+    return (*this + -value);
+  }
+
+  [[nodiscard]] constexpr reference operator[](const difference_type value) const noexcept {
+    return {it[value].first, *it[value].second};
+  }
+
+  [[nodiscard]] constexpr reference operator*() const noexcept {
+    return {it->first, *it->second};
+  }
+
+  [[nodiscard]] constexpr pointer operator->() const noexcept {
+    return operator*();
+  }
+
+  template<typename Lhs, typename Rhs>
+  friend constexpr std::ptrdiff_t operator-(const registry_storage_iterator<Lhs> &,
+                                            const registry_storage_iterator<Rhs> &) noexcept;
+
+  template<typename Lhs, typename Rhs>
+  friend constexpr bool operator==(const registry_storage_iterator<Lhs> &,
+                                   const registry_storage_iterator<Rhs> &) noexcept;
+
+  template<typename Lhs, typename Rhs>
+  friend constexpr bool operator<(const registry_storage_iterator<Lhs> &,
+                                  const registry_storage_iterator<Rhs> &) noexcept;
+
+ private:
+  It it;
+};
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr std::ptrdiff_t operator-(const registry_storage_iterator<Lhs> &lhs,
+                                                 const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return lhs.it - rhs.it;
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator==(const registry_storage_iterator<Lhs> &lhs,
+                                        const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return lhs.it == rhs.it;
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator!=(const registry_storage_iterator<Lhs> &lhs,
+                                        const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator<(const registry_storage_iterator<Lhs> &lhs,
+                                       const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return lhs.it < rhs.it;
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator>(const registry_storage_iterator<Lhs> &lhs,
+                                       const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return rhs < lhs;
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator<=(const registry_storage_iterator<Lhs> &lhs,
+                                        const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return !(lhs > rhs);
+}
+
+template<typename Lhs, typename Rhs>
+[[nodiscard]] constexpr bool operator>=(const registry_storage_iterator<Lhs> &lhs,
+                                        const registry_storage_iterator<Rhs> &rhs) noexcept {
+  return !(lhs < rhs);
+}
+
+
+template<typename Allocator>
+class registry_context {
+  using alloc_traits = std::allocator_traits<Allocator>;
+  using allocator_type = typename alloc_traits::template rebind_alloc<std::pair<const id_type, basic_any<0u>>>;
+
+ public:
+  explicit registry_context(const allocator_type &allocator)
+      : ctx{allocator} {}
+
+  template<typename Type, typename... Args>
+  Type &emplace_as(const id_type id, Args &&...args) {
+    return any_cast<Type &>(ctx.try_emplace(id,
+                                            std::in_place_type<Type>,
+                                            std::forward<Args>(args)...).first->second);
+  }
+
+  template<typename Type, typename... Args>
+  Type &emplace(Args &&...args) {
+    return emplace_as<Type>(type_id<Type>().hash(), std::forward<Args>(args)...);
+  }
+
+  template<typename Type>
+  Type &insert_or_assign(const id_type id, Type &&value) {
+    return any_cast<std::remove_cv_t<std::remove_reference_t<Type >> &
+    >(ctx.insert_or_assign(id, std::forward<Type>(value)).first->second);
+  }
+
+  template<typename Type>
+  Type &insert_or_assign(Type &&value) {
+    return insert_or_assign(type_id<Type>().hash(), std::forward<Type>(value));
+  }
+
+  template<typename Type>
+  bool erase(const id_type id = type_id<Type>().hash()) {
+    const auto it = ctx.find(id);
+    return it != ctx.end() && it->second.type() == type_id<Type>() ? (ctx.erase(it), true) : false;
+  }
+
+  template<typename Type>
+  [[nodiscard]] const Type &get(const id_type id = type_id<Type>().hash()) const {
+    return any_cast<const Type &>(ctx.at(id));
+  }
+
+  template<typename Type>
+  [[nodiscard]] Type &get(const id_type id = type_id<Type>().hash()) {
+    return any_cast<Type &>(ctx.at(id));
+  }
+
+  template<typename Type>
+  [[nodiscard]] const Type *find(const id_type id = type_id<Type>().hash()) const {
+    const auto it = ctx.find(id);
+    return it != ctx.cend() ? any_cast<const Type>(&it->second) : nullptr;
+  }
+
+  template<typename Type>
+  [[nodiscard]] Type *find(const id_type id = type_id<Type>().hash()) {
+    const auto it = ctx.find(id);
+    return it != ctx.end() ? any_cast<Type>(&it->second) : nullptr;
+  }
+
+  template<typename Type>
+  [[nodiscard]] bool contains(const id_type id = type_id<Type>().hash()) const {
+    const auto it = ctx.find(id);
+    return it != ctx.cend() && it->second.type() == type_id<Type>();
+  }
+
+ private:
+  dense_map<id_type, basic_any<0u>, std::identity, std::equal_to<id_type>, allocator_type> ctx;
+};
+
+} //namespace internal
+
+
 /**
  * @brief Fast and reliable entity-component system.
  * @tparam Entity A valid entity type.
@@ -28,12 +235,12 @@ class basic_registry {
   static_assert(std::is_same_v<typename alloc_traits::value_type, Entity>, "Invalid value type");
   // std::shared_ptr because of its type erased allocator which is useful here
   using container_type = dense_map<id_type,
-      std::shared_ptr<basic_common_type>,
-      std::identity,
-      std::equal_to<id_type>,
-      typename alloc_traits::template rebind_alloc<std::pair<const id_type,
-                                                             std::shared_ptr<
-                                                                 basic_common_type>>>>;
+                                   std::shared_ptr<basic_common_type>,
+                                   std::identity,
+                                   std::equal_to<id_type>,
+                                   typename alloc_traits::template rebind_alloc<std::pair<const id_type,
+                                                                                          std::shared_ptr<
+                                                                                              basic_common_type>>>>;
 
   template<typename Type>
   using storage_for_type = typename storage_for<Type, Entity, typename alloc_traits::
@@ -46,14 +253,14 @@ class basic_registry {
   struct group_handler<exclude_t<Exclude...>, get_t<Get...>, Owned...> {
     // nasty workaround for an issue with the toolset v141 that doesn't accept a fold expression here
     static_assert(!std::disjunction_v<std::bool_constant<storage_for_type<Owned>::traits_type::in_place_delete
-                      > ...>, "Groups do not support in-place delete");
+    > ...>, "Groups do not support in-place delete");
     using value_type = std::conditional_t<sizeof...(Owned) == 0, basic_common_type, std::size_t>;
     value_type current{};
 
     template<typename... Args>
     group_handler(Args &&...
     args)
-    : current{std::forward<Args>(args)...} {}
+        : current{std::forward<Args>(args)...} {}
 
     template<typename Type>
     void maybe_valid_if(basic_registry &owner, const Entity entity) {
@@ -1038,18 +1245,22 @@ class basic_registry {
   template<typename Type, typename... Other, typename... Exclude>
   [[nodiscard]] basic_view<get_t<storage_for_type<const Type>, storage_for_type<const Other>...>, exclude_t<
       storage_for_type<const Exclude>...>>
-  view(exclude_t<Exclude...> = {}) const {
+  view(
+      exclude_t<Exclude...> = {}
+  ) const {
     return {assure<std::remove_const_t<Type >>(), assure<std::remove_const_t<Other >>()...,
-    assure<std::remove_const_t<Exclude >>()...};
+            assure<std::remove_const_t<Exclude >>()...};
   }
 
   /*! @copydoc view */
   template<typename Type, typename... Other, typename... Exclude>
   [[nodiscard]] basic_view<get_t<storage_for_type<Type>,
                                  storage_for_type<Other>...>, exclude_t<storage_for_type<Exclude>...>>
-  view(exclude_t<Exclude...> = {}) {
+  view(
+      exclude_t<Exclude...> = {}
+  ) {
     return {assure<std::remove_const_t<Type >>(), assure<std::remove_const_t<Other >>()...,
-    assure<std::remove_const_t<Exclude >>()...};
+            assure<std::remove_const_t<Exclude >>()...};
   }
 
   /**
@@ -1079,18 +1290,20 @@ class basic_registry {
   template<typename... Owned, typename... Get, typename... Exclude>
   [[nodiscard]] basic_group<owned_t<storage_for_type<Owned>...>, get_t<storage_for_type<Get>...>, exclude_t<
       storage_for_type<Exclude>...>>
-  group(get_t<Get...> = {}, exclude_t<Exclude...> = {}) {
+  group(
+      get_t<Get...> = {}, exclude_t<Exclude...> = {}
+  ) {
     static_assert(sizeof...(Owned) + sizeof...(Get) > 0, "Exclusion-only groups are not supported");
     static_assert(sizeof...(Owned) + sizeof...(Get) + sizeof...(Exclude) > 1,
                   "Single component groups are not allowed");
 
     using handler_type = group_handler<exclude_t<std::remove_const_t<Exclude>...>,
-    get_t<std::remove_const_t
-        <Get>...>,
-    std::remove_const_t<Owned>...>;
+                                       get_t<std::remove_const_t
+                                                 <Get>...>,
+                                       std::remove_const_t<Owned>...>;
 
     const auto cpools = std::forward_as_tuple(assure<std::remove_const_t<Owned >>()...,
-    assure<std::remove_const_t<Get >>()...);
+                                              assure<std::remove_const_t<Get >>()...);
     constexpr auto size = sizeof...(Owned) + sizeof...(Get) + sizeof...(Exclude);
     handler_type *handler = nullptr;
 
@@ -1178,22 +1391,25 @@ class basic_registry {
         for (auto *first = std::get<0>(cpools).data(), *last = first + std::get<0>(cpools).size(); first != last;
              ++first) {
           handler->template maybe_valid_if<type_list_element_t<0,
-                                           type_list<std::remove_const_t<Owned>...>>>(*this,
-              *first);
+                                                               type_list<std::remove_const_t<Owned>...>>>(*this,
+                                                                                                          *first);
         }
       }
     }
 
     return {handler->current, std::get<storage_for_type<std::remove_const_t<Owned >> &>(cpools)...,
-    std::get<storage_for_type<std::remove_const_t<Get >> &>(cpools)...,
-    assure<std::remove_const_t<Exclude >>()...};
+            std::get<storage_for_type<std::remove_const_t<Get >> &>(cpools)...,
+            assure<std::remove_const_t<Exclude >>()...};
   }
 
   /*! @copydoc group */
   template<typename... Owned, typename... Get, typename... Exclude>
-  [[nodiscard]] basic_group<owned_t<storage_for_type<const Owned>...>, get_t<storage_for_type<const Get>...>, exclude_t<
-      storage_for_type<const Exclude>...>>
-  group_if_exists(get_t<Get...> = {}, exclude_t<Exclude...> = {}) const {
+  [[nodiscard]] basic_group<
+      owned_t<storage_for_type<const Owned>...>, get_t<storage_for_type<const Get>...>, exclude_t<
+          storage_for_type<const Exclude>...>>
+  group_if_exists(
+      get_t<Get...> = {}, exclude_t<Exclude...> = {}
+  ) const {
     auto it = std::find_if(groups.cbegin(), groups.cend(), [](const auto &gdata) {
       return gdata.size == (sizeof...(Owned) + sizeof...(Get) + sizeof...(Exclude))
           && (gdata.owned(type_hash<std::remove_const_t<Owned >>::value()) && ...)
@@ -1205,11 +1421,11 @@ class basic_registry {
       return {};
     } else {
       using handler_type = group_handler<exclude_t<std::remove_const_t<Exclude>...>,
-      get_t<std::remove_const_t
-          <Get>...>,
-      std::remove_const_t<Owned>...>;
+                                         get_t<std::remove_const_t
+                                                   <Get>...>,
+                                         std::remove_const_t<Owned>...>;
       return {static_cast<handler_type *>(it->group.get())->current, assure<std::remove_const_t<Owned >>()...,
-      assure<std::remove_const_t<Get >>()..., assure<std::remove_const_t<Exclude >>()...};
+              assure<std::remove_const_t<Get >>()..., assure<std::remove_const_t<Exclude >>()...};
     }
   }
 
@@ -1236,7 +1452,8 @@ class basic_registry {
    * @return True if the group can be sorted, false otherwise.
    */
   template<typename... Owned, typename... Get, typename... Exclude>
-  [[nodiscard]] bool sortable(const basic_group<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> &) noexcept {
+  [[nodiscard]] bool sortable(const basic_group<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>>
+                              &) noexcept {
     constexpr auto size = sizeof...(Owned) + sizeof...(Get) + sizeof...(Exclude);
     auto pred = [size](const auto &gdata) {
       return (0u + ... + gdata.owned(type_hash<typename Owned::value_type>::value())) && (size < gdata.size);

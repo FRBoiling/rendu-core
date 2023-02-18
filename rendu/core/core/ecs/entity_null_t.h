@@ -10,7 +10,7 @@
 namespace rendu {
 
 /*! @brief Null object for all identifiers.  */
-struct null_t {
+struct entity_null_t {
   /**
    * @brief Converts the null object to identifiers of any type.
    * @tparam Entity Type of identifier.
@@ -28,7 +28,7 @@ struct null_t {
    * @param other A null object.
    * @return True in all cases.
    */
-  [[nodiscard]] constexpr bool operator==([[maybe_unused]] const null_t other) const noexcept {
+  [[nodiscard]] constexpr bool operator==([[maybe_unused]] const entity_null_t other) const noexcept {
     return true;
   }
 
@@ -37,7 +37,7 @@ struct null_t {
    * @param other A null object.
    * @return False in all cases.
    */
-  [[nodiscard]] constexpr bool operator!=([[maybe_unused]] const null_t other) const noexcept {
+  [[nodiscard]] constexpr bool operator!=([[maybe_unused]] const entity_null_t other) const noexcept {
     return false;
   }
 
@@ -74,7 +74,7 @@ struct null_t {
 * @return False if the two elements differ, true otherwise.
 */
 template<typename Entity>
-[[nodiscard]] constexpr bool operator==(const Entity entity, const null_t other) noexcept {
+[[nodiscard]] constexpr bool operator==(const Entity entity, const entity_null_t other) noexcept {
   return other.operator==(entity);
 }
 
@@ -86,9 +86,18 @@ template<typename Entity>
  * @return True if the two elements differ, false otherwise.
  */
 template<typename Entity>
-[[nodiscard]] constexpr bool operator!=(const Entity entity, const null_t other) noexcept {
+[[nodiscard]] constexpr bool operator!=(const Entity entity, const entity_null_t other) noexcept {
   return !(other == entity);
 }
+
+/**
+ * @brief Compile-time constant for null entities.
+ *
+ * There exist implicit conversions from this variable to identifiers of any
+ * allowed type. Similarly, there exist comparison operators between the null
+ * entity and any other identifier.
+ */
+inline constexpr entity_null_t null{};
 
 }//namespace rendu
 

@@ -5,10 +5,214 @@
 #ifndef RENDU_CORE_ECS_BASE_STORAGE_H_
 #define RENDU_CORE_ECS_BASE_STORAGE_H_
 
-#include "extended_storage_iterator.h"
-#include "component_traits.h"
+#include "base/iterator.h"
+#include "base/memory.h"
+#include "basic_sparse_set.h"
+#include "component.h"
 
 namespace rendu {
+
+namespace internal {
+
+template<typename Container, typename Size>
+class storage_iterator final {
+  friend storage_iterator<const Container, Size>;
+
+  using container_type = std::remove_const_t<Container>;
+  using alloc_traits = std::allocator_traits<typename container_type::allocator_type>;
+
+  using iterator_traits = std::iterator_traits<std::conditional_t<
+      std::is_const_v<Container>,
+      typename alloc_traits::template rebind_traits<typename std::pointer_traits<typename container_type::value_type>::element_type>::const_pointer,
+      typename alloc_traits::template rebind_traits<typename std::pointer_traits<typename container_type::value_type>::element_type>::pointer>>;
+
+ public:
+  using value_type = typename iterator_traits::value_type;
+  using pointer = typename iterator_traits::pointer;
+  using reference = typename iterator_traits::reference;
+  using difference_type = typename iterator_traits::difference_type;
+  using iterator_category = std::random_access_iterator_tag;
+
+  constexpr storage_iterator() noexcept = default;
+
+  constexpr storage_iterator(Container *ref, const difference_type idx) noexcept
+      : payload{ref},
+        offset{idx} {}
+
+  template<bool Const = std::is_const_v<Container>, typename = std::enable_if_t<Const>>
+  constexpr
+  storage_iterator(const storage_iterator<std::remove_const_t<Container>, Size> &other) noexcept
+      : storage_iterator{other.payload, other.offset} {}
+
+  constexpr storage_iterator &operator++() noexcept {
+    return --offset, *this;
+  }
+
+  constexpr storage_iterator operator++(int) noexcept {
+    storage_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  constexpr storage_iterator &operator--() noexcept {
+    return ++offset, *this;
+  }
+
+  constexpr storage_iterator operator--(int) noexcept {
+    storage_iterator orig = *this;
+    return operator--(), orig;
+  }
+
+  constexpr storage_iterator &operator+=(const difference_type value) noexcept {
+    offset -= value;
+    return *this;
+  }
+
+  constexpr storage_iterator operator+(const difference_type value) const noexcept {
+    storage_iterator copy = *this;
+    return (copy += value);
+  }
+
+  constexpr storage_iterator &operator-=(const difference_type value) noexcept {
+    return (*this += -value);
+  }
+
+  constexpr storage_iterator operator-(const difference_type value) const noexcept {
+    return (*this + -value);
+  }
+
+  [[nodiscard]] constexpr reference operator[](const difference_type value) const noexcept {
+    const auto pos = index() - value;
+    return (*payload)[pos / Size::value][fast_mod(pos, Size::value)];
+  }
+
+  [[nodiscard]] constexpr pointer operator->() const noexcept {
+    const auto pos = index();
+    return (*payload)[pos / Size::value] + fast_mod(pos, Size::value);
+  }
+
+  [[nodiscard]] constexpr reference operator*() const noexcept {
+    return *operator->();
+  }
+
+  [[nodiscard]] constexpr difference_type index() const noexcept {
+    return offset - 1;
+  }
+
+ private:
+  Container *payload;
+  difference_type offset;
+};
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr std::ptrdiff_t operator-(const storage_iterator<Lhs...> &lhs,
+                                                 const storage_iterator<Rhs...> &rhs) noexcept {
+  return rhs.index() - lhs.index();
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator==(const storage_iterator<Lhs...> &lhs,
+                                        const storage_iterator<Rhs...> &rhs) noexcept {
+  return lhs.index() == rhs.index();
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator!=(const storage_iterator<Lhs...> &lhs,
+                                        const storage_iterator<Rhs...> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator<(const storage_iterator<Lhs...> &lhs,
+                                       const storage_iterator<Rhs...> &rhs) noexcept {
+  return lhs.index() > rhs.index();
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator>(const storage_iterator<Lhs...> &lhs,
+                                       const storage_iterator<Rhs...> &rhs) noexcept {
+  return lhs.index() < rhs.index();
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator<=(const storage_iterator<Lhs...> &lhs,
+                                        const storage_iterator<Rhs...> &rhs) noexcept {
+  return !(lhs > rhs);
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator>=(const storage_iterator<Lhs...> &lhs,
+                                        const storage_iterator<Rhs...> &rhs) noexcept {
+  return !(lhs < rhs);
+}
+
+template<typename It, typename... Other>
+class extended_storage_iterator final {
+  template<typename Iter, typename... Args>
+  friend
+  class extended_storage_iterator;
+
+ public:
+  using iterator_type = It;
+  using difference_type = std::ptrdiff_t;
+  using value_type = decltype(std::tuple_cat(std::make_tuple(*std::declval<It>()),
+                                             std::forward_as_tuple(*std::declval<Other>()...)));
+  using pointer = input_iterator_pointer<value_type>;
+  using reference = value_type;
+  using iterator_category = std::input_iterator_tag;
+
+  constexpr extended_storage_iterator()
+      : it{} {}
+
+  constexpr extended_storage_iterator(It base, Other... other)
+      : it{base, other...} {}
+
+  template<typename... Args, typename = std::enable_if_t<
+      (!std::is_same_v<Other, Args> && ...) && (std::is_constructible_v<Other, Args> && ...)>>
+  constexpr extended_storage_iterator(const extended_storage_iterator<It, Args...> &other)
+      : it{other.it} {}
+
+  constexpr extended_storage_iterator &operator++() noexcept {
+    return ++std::get<It>(it), (++std::get<Other>(it), ...), *this;
+  }
+
+  constexpr extended_storage_iterator operator++(int) noexcept {
+    extended_storage_iterator orig = *this;
+    return ++(*this), orig;
+  }
+
+  [[nodiscard]] constexpr pointer operator->() const noexcept {
+    return operator*();
+  }
+
+  [[nodiscard]] constexpr reference operator*() const noexcept {
+    return {*std::get<It>(it), *std::get<Other>(it)...};
+  }
+
+  [[nodiscard]] constexpr iterator_type base() const noexcept {
+    return std::get<It>(it);
+  }
+
+  template<typename... Lhs, typename... Rhs>
+  friend constexpr bool operator==(const extended_storage_iterator<Lhs...> &,
+                                   const extended_storage_iterator<Rhs...> &) noexcept;
+
+ private:
+  std::tuple<It, Other...> it;
+};
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator==(const extended_storage_iterator<Lhs...> &lhs,
+                                        const extended_storage_iterator<Rhs...> &rhs) noexcept {
+  return std::get<0>(lhs.it) == std::get<0>(rhs.it);
+}
+
+template<typename... Lhs, typename... Rhs>
+[[nodiscard]] constexpr bool operator!=(const extended_storage_iterator<Lhs...> &lhs,
+                                        const extended_storage_iterator<Rhs...> &rhs) noexcept {
+  return !(lhs == rhs);
+}
+
+} // namespace internal
 
 /**
  * @brief Basic storage implementation.
@@ -29,14 +233,14 @@ template<typename Type, typename Entity, typename Allocator, typename>
 class basic_storage : public basic_sparse_set<Entity,
                                               typename std::allocator_traits<Allocator>::template rebind_alloc<Entity>> {
   using alloc_traits = std::allocator_traits<Allocator>;
-  static_assert(std::is_same_v < typename alloc_traits::value_type, Type > , "Invalid value type");
+  static_assert(std::is_same_v<typename alloc_traits::value_type, Type>, "Invalid value type");
   using container_type = std::vector<typename alloc_traits::pointer,
                                      typename alloc_traits::template rebind_alloc<typename alloc_traits::pointer>>;
   using underlying_type = basic_sparse_set<Entity, typename alloc_traits::template rebind_alloc<Entity>>;
   using underlying_iterator = typename underlying_type::basic_iterator;
 
   static constexpr bool
-      is_pinned_type_v = !(std::is_move_constructible_v < Type > && std::is_move_assignable_v < Type > );
+      is_pinned_type_v = !(std::is_move_constructible_v<Type> && std::is_move_assignable_v<Type>);
 
   [[nodiscard]] auto &element_at(const std::size_t pos) const {
     return payload[pos / traits_type::page_size][fast_mod(pos, traits_type::page_size)];
@@ -50,14 +254,14 @@ class basic_storage : public basic_sparse_set<Entity,
       allocator_type page_allocator{get_allocator()};
       payload.resize(idx + 1u, nullptr);
 
-      RD_TRY{
-          for (const auto last = payload.size(); curr < last; ++curr) {
-            payload[curr] = alloc_traits::allocate(page_allocator, traits_type::page_size);
-          }
+      RD_TRY {
+        for (const auto last = payload.size(); curr < last; ++curr) {
+          payload[curr] = alloc_traits::allocate(page_allocator, traits_type::page_size);
+        }
       }
-      RD_CATCH{
-          payload.resize(curr);
-          RD_THROW;
+      RD_CATCH {
+        payload.resize(curr);
+        RD_THROW;
       }
     }
 
@@ -68,13 +272,13 @@ class basic_storage : public basic_sparse_set<Entity,
   auto emplace_element(const Entity rendu, const bool force_back, Args &&...args) {
     const auto it = base_type::try_emplace(rendu, force_back);
 
-    RD_TRY{
-        auto elem = assure_at_least(static_cast<size_type>(it.index()));
-        rendu::uninitialized_construct_using_allocator(to_address(elem), get_allocator(), std::forward<Args>(args)...);
+    RD_TRY {
+      auto elem = assure_at_least(static_cast<size_type>(it.index()));
+      rendu::uninitialized_construct_using_allocator(to_address(elem), get_allocator(), std::forward<Args>(args)...);
     }
-    RD_CATCH{
-        base_type::pop(it, it + 1u);
-        RD_THROW;
+    RD_CATCH {
+      base_type::pop(it, it + 1u);
+      RD_THROW;
     }
 
     return it;
@@ -178,13 +382,13 @@ class basic_storage : public basic_sparse_set<Entity,
                                   [[maybe_unused]] const bool force_back,
                                   const void *value) override {
     if (value) {
-      if constexpr (std::is_copy_constructible_v < value_type >) {
+      if constexpr (std::is_copy_constructible_v<value_type>) {
         return emplace_element(rendu, force_back, *static_cast<const value_type *>(value));
       } else {
         return base_type::end();
       }
     } else {
-      if constexpr (std::is_default_constructible_v < value_type >) {
+      if constexpr (std::is_default_constructible_v<value_type>) {
         return emplace_element(rendu, force_back);
       } else {
         return base_type::end();
@@ -214,8 +418,8 @@ class basic_storage : public basic_sparse_set<Entity,
                                                                                      traits_type::page_size>>;
   /*! @brief Constant random access iterator type. */
   using const_iterator = internal::storage_iterator<const container_type,
-                                                    std::integral_constant < size_type,
-                                                    traits_type::page_size>>;
+                                                    std::integral_constant<size_type,
+                                                                           traits_type::page_size>>;
   /*! @brief Reverse iterator type. */
   using reverse_iterator = std::reverse_iterator<iterator>;
   /*! @brief Constant reverse iterator type. */
@@ -481,8 +685,8 @@ class basic_storage : public basic_sparse_set<Entity,
    */
   template<typename... Args>
   value_type &emplace(const entity_type rendu, Args &&...args) {
-    if constexpr (std::is_aggregate_v < value_type >
-        && (sizeof...(Args) != 0u || !std::is_default_constructible_v < value_type > )) {
+    if constexpr (std::is_aggregate_v<value_type>
+        && (sizeof...(Args) != 0u || !std::is_default_constructible_v<value_type>)) {
       const auto it = emplace_element(rendu, false, Type{std::forward<Args>(args)...});
       return element_at(static_cast<size_type>(it.index()));
     } else {
@@ -571,76 +775,75 @@ class basic_storage : public basic_sparse_set<Entity,
 
 /*! @copydoc basic_storage */
 template<typename Type, typename Entity, typename Allocator>
-class basic_storage<Type, Entity, Allocator, std::enable_if_t < component_traits<Type>::page_size == 0u>>
-: public basic_sparse_set<Entity, typename std::allocator_traits<Allocator>::template rebind_alloc<Entity>> {
-using alloc_traits = std::allocator_traits<Allocator>;
-static_assert(std::is_same_v < typename alloc_traits::value_type, Type > , "Invalid value type");
+class basic_storage<Type, Entity, Allocator, std::enable_if_t<component_traits<Type>::page_size == 0u>>
+    : public basic_sparse_set<Entity, typename std::allocator_traits<Allocator>::template rebind_alloc<Entity>> {
+  using alloc_traits = std::allocator_traits<Allocator>;
+  static_assert(std::is_same_v<typename alloc_traits::value_type, Type>, "Invalid value type");
 
-public:
+ public:
 /*! @brief Base type. */
-using base_type = basic_sparse_set<Entity, typename alloc_traits::template rebind_alloc<Entity>>;
+  using base_type = basic_sparse_set<Entity, typename alloc_traits::template rebind_alloc<Entity>>;
 /*! @brief Type of the objects assigned to entities. */
-using value_type = Type;
+  using value_type = Type;
 /*! @brief Component traits. */
-using traits_type = component_traits<value_type>;
+  using traits_type = component_traits<value_type>;
 /*! @brief Underlying entity identifier. */
-using entity_type = Entity;
+  using entity_type = Entity;
 /*! @brief Unsigned integer type. */
-using size_type = std::size_t;
+  using size_type = std::size_t;
 /*! @brief Allocator type. */
-using allocator_type = Allocator;
+  using allocator_type = Allocator;
 /*! @brief Extended iterable storage proxy. */
-using iterable = iterable_adaptor<internal::extended_storage_iterator<typename base_type::iterator>>;
+  using iterable = iterable_adaptor<internal::extended_storage_iterator<typename base_type::iterator>>;
 /*! @brief Constant extended iterable storage proxy. */
-using const_iterable = iterable_adaptor<internal::extended_storage_iterator<typename base_type::const_iterator>>;
+  using const_iterable = iterable_adaptor<internal::extended_storage_iterator<typename base_type::const_iterator>>;
 
 /*! @brief Default constructor. */
-basic_storage()
-    : basic_storage{allocator_type{}} {}
+  basic_storage()
+      : basic_storage{allocator_type{}} {}
 
 /**
  * @brief Constructs an empty container with a given allocator.
  * @param allocator The allocator to use.
  */
-explicit basic_storage(const allocator_type &allocator)
-    : base_type{type_id<value_type>(), deletion_policy{traits_type::in_place_delete}, allocator} {}
+  explicit basic_storage(const allocator_type &allocator)
+      : base_type{type_id<value_type>(), deletion_policy{traits_type::in_place_delete}, allocator} {}
 
 /**
  * @brief Move constructor.
  * @param other The instance to move from.
  */
-basic_storage(basic_storage
-&&other) noexcept = default;
+  basic_storage(basic_storage
+                &&other) noexcept = default;
 
 /**
  * @brief Allocator-extended move constructor.
  * @param other The instance to move from.
  * @param allocator The allocator to use.
  */
-basic_storage(basic_storage
-&&other,
-const allocator_type &allocator
-) noexcept
-: base_type {
-std::move(other), allocator
-}
-{
-}
+  basic_storage(basic_storage
+                &&other,
+                const allocator_type &allocator
+  ) noexcept
+      : base_type{
+      std::move(other), allocator
+  } {
+  }
 
 /**
  * @brief Move assignment operator.
  * @param other The instance to move from.
  * @return This storage.
  */
-basic_storage &operator=(basic_storage &&other) noexcept = default;
+  basic_storage &operator=(basic_storage &&other) noexcept = default;
 
 /**
  * @brief Returns the associated allocator.
  * @return The associated allocator.
  */
-[[nodiscard]] constexpr allocator_type get_allocator() const noexcept {
-  return allocator_type{base_type::get_allocator()};
-}
+  [[nodiscard]] constexpr allocator_type get_allocator() const noexcept {
+    return allocator_type{base_type::get_allocator()};
+  }
 
 /**
  * @brief Returns the object assigned to an entity, that is `void`.
@@ -651,9 +854,9 @@ basic_storage &operator=(basic_storage &&other) noexcept = default;
  *
  * @param rendu A valid identifier.
  */
-void get([[maybe_unused]] const entity_type rendu) const noexcept {
-  RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
-}
+  void get([[maybe_unused]] const entity_type rendu) const noexcept {
+    RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
+  }
 
 /**
  * @brief Returns an empty tuple.
@@ -665,10 +868,10 @@ void get([[maybe_unused]] const entity_type rendu) const noexcept {
  * @param rendu A valid identifier.
  * @return Returns an empty tuple.
  */
-[[nodiscard]] std::tuple<> get_as_tuple([[maybe_unused]] const entity_type rendu) const noexcept {
-  RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
-  return std::tuple{};
-}
+  [[nodiscard]] std::tuple<> get_as_tuple([[maybe_unused]] const entity_type rendu) const noexcept {
+    RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
+    return std::tuple{};
+  }
 
 /**
  * @brief Assigns an entity to a storage and constructs its object.
@@ -680,10 +883,10 @@ void get([[maybe_unused]] const entity_type rendu) const noexcept {
  * @tparam Args Types of arguments to use to construct the object.
  * @param rendu A valid identifier.
  */
-template<typename... Args>
-void emplace(const entity_type rendu, Args &&...) {
-  base_type::try_emplace(rendu, false);
-}
+  template<typename... Args>
+  void emplace(const entity_type rendu, Args &&...) {
+    base_type::try_emplace(rendu, false);
+  }
 
 /**
  * @brief Updates the instance assigned to a given entity in-place.
@@ -691,11 +894,11 @@ void emplace(const entity_type rendu, Args &&...) {
  * @param rendu A valid identifier.
  * @param func Valid function objects.
  */
-template<typename... Func>
-void patch([[maybe_unused]] const entity_type rendu, Func &&...func) {
-  RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
-  (std::forward<Func>(func)(), ...);
-}
+  template<typename... Func>
+  void patch([[maybe_unused]] const entity_type rendu, Func &&...func) {
+    RD_ASSERT(base_type::contains(rendu), "Storage does not contain entity");
+    (std::forward<Func>(func)(), ...);
+  }
 
 /**
  * @brief Assigns entities to a storage.
@@ -704,12 +907,12 @@ void patch([[maybe_unused]] const entity_type rendu, Func &&...func) {
  * @param first An iterator to the first element of the range of entities.
  * @param last An iterator past the last element of the range of entities.
  */
-template<typename It, typename... Args>
-void insert(It first, It last, Args &&...) {
-  for (; first != last; ++first) {
-    base_type::try_emplace(*first, true);
+  template<typename It, typename... Args>
+  void insert(It first, It last, Args &&...) {
+    for (; first != last; ++first) {
+      base_type::try_emplace(*first, true);
+    }
   }
-}
 
 /**
  * @brief Returns an iterable object to use to _visit_ a storage.
@@ -718,16 +921,16 @@ void insert(It first, It last, Args &&...) {
  *
  * @return An iterable object to use to _visit_ the storage.
  */
-[[nodiscard]] iterable each() noexcept {
-  return {internal::extended_storage_iterator{base_type::begin()},
-          internal::extended_storage_iterator{base_type::end()}};
-}
+  [[nodiscard]] iterable each() noexcept {
+    return {internal::extended_storage_iterator{base_type::begin()},
+            internal::extended_storage_iterator{base_type::end()}};
+  }
 
 /*! @copydoc each */
-[[nodiscard]] const_iterable each() const noexcept {
-  return {internal::extended_storage_iterator{base_type::cbegin()},
-          internal::extended_storage_iterator{base_type::cend()}};
-}
+  [[nodiscard]] const_iterable each() const noexcept {
+    return {internal::extended_storage_iterator{base_type::cbegin()},
+            internal::extended_storage_iterator{base_type::cend()}};
+  }
 };
 
 /**
@@ -739,7 +942,7 @@ template<typename Entity, typename Allocator>
 class basic_storage<Entity, Entity, Allocator>
     : public basic_sparse_set<Entity, Allocator> {
   using alloc_traits = std::allocator_traits<Allocator>;
-  static_assert(std::is_same_v < typename alloc_traits::value_type, Entity > , "Invalid value type");
+  static_assert(std::is_same_v<typename alloc_traits::value_type, Entity>, "Invalid value type");
   using underlying_type = basic_sparse_set<Entity, typename alloc_traits::template rebind_alloc<Entity>>;
   using underlying_iterator = typename underlying_type::basic_iterator;
   using local_traits_type = entity_traits<Entity>;
