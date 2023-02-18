@@ -2,119 +2,12 @@
 * Created by boil on 2023/2/18.
 */
 
-#ifndef RENDU_CORE_CORE_ECS_GROUP_H_
-#define RENDU_CORE_CORE_ECS_GROUP_H_
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include "define/define.h"
-#include "base/iterator.h"
-#include "base/type_traits.h"
-#include "entity.h"
-#include "fwd.h"
-#include "sparse_set.h"
-#include "storage.h"
+#ifndef RENDU_CORE_ECS_BASIC_GROUP_H_
+#define RENDU_CORE_ECS_BASIC_GROUP_H_
+
+#include "extended_group_iterator.h"
 
 namespace rendu {
-
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
-namespace internal {
-
-template<typename, typename, typename>
-class extended_group_iterator;
-
-template<typename It, typename... Owned, typename... Get>
-class extended_group_iterator<It, owned_t<Owned...>, get_t<Get...>> {
-  template<typename Type>
-  auto index_to_element([[maybe_unused]] Type &cpool) const {
-    if constexpr (Type::traits_type::page_size == 0u) {
-      return std::make_tuple();
-    } else {
-      return std::forward_as_tuple(cpool.rbegin()[it.index()]);
-    }
-  }
-
- public:
-  using iterator_type = It;
-  using difference_type = std::ptrdiff_t;
-  using value_type = decltype(std::tuple_cat(std::make_tuple(*std::declval<It>()),
-                                             std::declval<Owned>().get_as_tuple({})...,
-                                             std::declval<Get>().get_as_tuple({})...));
-  using pointer = input_iterator_pointer<value_type>;
-  using reference = value_type;
-  using iterator_category = std::input_iterator_tag;
-
-  constexpr extended_group_iterator()
-      : it{},
-        pools{} {}
-
-  extended_group_iterator(It from, const std::tuple<Owned *..., Get *...> &cpools)
-      : it{from},
-        pools{cpools} {}
-
-  extended_group_iterator &operator++() noexcept {
-    return ++it, *this;
-  }
-
-  extended_group_iterator operator++(int) noexcept {
-    extended_group_iterator orig = *this;
-    return ++(*this), orig;
-  }
-
-  [[nodiscard]] reference operator*() const noexcept {
-    return std::tuple_cat(std::make_tuple(*it),
-                          index_to_element(*std::get<Owned *>(pools))...,
-                          std::get<Get *>(pools)->get_as_tuple(*it)...);
-  }
-
-  [[nodiscard]] pointer operator->() const noexcept {
-    return operator*();
-  }
-
-  [[nodiscard]] constexpr iterator_type base() const noexcept {
-    return it;
-  }
-
-  template<typename... Lhs, typename... Rhs>
-  friend constexpr bool operator==(const extended_group_iterator<Lhs...> &,
-                                   const extended_group_iterator<Rhs...> &) noexcept;
-
- private:
-  It it;
-  std::tuple<Owned *..., Get *...> pools;
-};
-
-template<typename... Lhs, typename... Rhs>
-[[nodiscard]] constexpr bool operator==(const extended_group_iterator<Lhs...> &lhs,
-                                        const extended_group_iterator<Rhs...> &rhs) noexcept {
-  return lhs.it == rhs.it;
-}
-
-template<typename... Lhs, typename... Rhs>
-[[nodiscard]] constexpr bool operator!=(const extended_group_iterator<Lhs...> &lhs,
-                                        const extended_group_iterator<Rhs...> &rhs) noexcept {
-  return !(lhs == rhs);
-}
-
-} // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
-
-/**
- * @brief Group.
- *
- * Primary template isn't defined on purpose. All the specializations give a
- * compile-time error, but for a few reasonable cases.
- */
-template<typename, typename, typename>
-class basic_group;
 
 /**
  * @brief Non-owning group.
@@ -172,10 +65,18 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
  * @param gpool The storage for the _observed_ types to iterate.
  * @param epool The storage for the types used to filter the group.
  */
-  basic_group(basic_common_type &ref, Get &...gpool, Exclude &...epool) noexcept
-      : handler{&ref},
-        pools{&gpool...},
-        filter{&epool...} {}
+  basic_group(basic_common_type
+              &ref,
+              Get &...gpool, Exclude
+              &...epool) noexcept
+      : handler{
+      &ref
+  },
+        pools{
+            &gpool...},
+        filter{
+            &epool...} {
+  }
 
 /**
  * @brief Returns a const reference to the underlying handler.
@@ -192,7 +93,8 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
  */
   template<typename Type>
   [[nodiscard]] decltype(auto) storage() const noexcept {
-    return storage<index_of<Type>>();
+    return storage<index_of<Type>>
+        ();
   }
 
 /**
@@ -373,9 +275,9 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
     if constexpr (sizeof...(Type) == 0) {
       return std::apply([entity](auto *...curr) { return std::tuple_cat(curr->get_as_tuple(entity)...); }, pools);
     } else if constexpr (sizeof...(Type) == 1) {
-      return (std::get<index_of<Type>>(pools)->get(entity), ...);
+      return (std::get<index_of<Type >>(pools)->get(entity), ...);
     } else {
-      return std::tuple_cat(std::get<index_of<Type>>(pools)->get_as_tuple(entity)...);
+      return std::tuple_cat(std::get<index_of<Type >>(pools)->get_as_tuple(entity)...);
     }
   }
 
@@ -477,11 +379,11 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
       } else {
         auto comp = [this, &compare](const entity_type lhs, const entity_type rhs) {
           if constexpr (sizeof...(Type) == 1) {
-            return compare((std::get<index_of<Type>>(pools)->get(lhs), ...),
-                           (std::get<index_of<Type>>(pools)->get(rhs), ...));
+            return compare((std::get<index_of<Type >>(pools)->get(lhs), ...),
+                           (std::get<index_of<Type >>(pools)->get(rhs), ...));
           } else {
-            return compare(std::forward_as_tuple(std::get<index_of<Type>>(pools)->get(lhs)...),
-                           std::forward_as_tuple(std::get<index_of<Type>>(pools)->get(rhs)...));
+            return compare(std::forward_as_tuple(std::get<index_of<Type >>(pools)->get(lhs)...),
+                           std::forward_as_tuple(std::get<index_of<Type >>(pools)->get(rhs)...));
           }
         };
 
@@ -509,7 +411,7 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
   template<typename Type>
   void sort() const {
     if (*this) {
-      handler->respect(*std::get<index_of<Type>>(pools));
+      handler->respect(*std::get<index_of<Type >>(pools));
     }
   }
 
@@ -898,4 +800,4 @@ class basic_group<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> {
 };
 
 } // namespace rendu
-#endif //RENDU_CORE_CORE_ECS_GROUP_H_
+#endif //RENDU_CORE_ECS_BASIC_GROUP_H_

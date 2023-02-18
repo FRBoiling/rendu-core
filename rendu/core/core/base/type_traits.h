@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_
-#define RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_
+#ifndef RENDU_CORE_BASE_TYPE_TRAITS_H_
+#define RENDU_CORE_BASE_TYPE_TRAITS_H_
 
 #include <cstddef>
 #include <iterator>
@@ -22,7 +22,8 @@ template<std::size_t N>
 struct choice_t
   // Unfortunately, doxygen cannot parse such a construct.
     : /*! @cond TURN_OFF_DOXYGEN */ choice_t<N - 1> /*! @endcond */
-{};
+{
+};
 
 /*! @copybrief choice_t */
 template<>
@@ -61,12 +62,13 @@ using type_identity_t = typename type_identity<Type>::type;
  * @tparam Type The type of which to return the size.
  */
 template<typename Type, typename = void>
-struct size_of: std::integral_constant<std::size_t, 0u> {};
+struct size_of : std::integral_constant<std::size_t, 0u> {};
 
 /*! @copydoc size_of */
 template<typename Type>
 struct size_of<Type, std::void_t<decltype(sizeof(Type))>>
-    : std::integral_constant<std::size_t, sizeof(Type)> {};
+    : std::integral_constant<std::size_t, sizeof(Type)> {
+};
 
 /**
  * @brief Helper variable template.
@@ -129,7 +131,8 @@ struct type_list_element;
  */
 template<std::size_t Index, typename First, typename... Other>
 struct type_list_element<Index, type_list<First, Other...>>
-    : type_list_element<Index - 1u, type_list<Other...>> {};
+    : type_list_element<Index - 1u, type_list<Other...>> {
+};
 
 /**
  * @brief Provides compile-time indexed access to the types of a type list.
@@ -300,7 +303,7 @@ struct type_list_contains;
  * @tparam Other Type to look for.
  */
 template<typename... Type, typename Other>
-struct type_list_contains<type_list<Type...>, Other>: std::disjunction<std::is_same<Type, Other>...> {};
+struct type_list_contains<type_list<Type...>, Other> : std::disjunction<std::is_same<Type, Other>...> {};
 
 /**
  * @brief Helper variable template.
@@ -322,7 +325,9 @@ struct type_list_diff;
 template<typename... Type, typename... Other>
 struct type_list_diff<type_list<Type...>, type_list<Other...>> {
   /*! @brief A type list that is the difference between the two type lists. */
-  using type = type_list_cat_t<std::conditional_t<type_list_contains_v<type_list<Other...>, Type>, type_list<>, type_list<Type>>...>;
+  using type = type_list_cat_t<std::conditional_t<type_list_contains_v<type_list<Other...>, Type>,
+                                                  type_list<>,
+                                                  type_list<Type>>...>;
 };
 
 /**
@@ -379,7 +384,8 @@ struct value_list_element;
  */
 template<std::size_t Index, auto Value, auto... Other>
 struct value_list_element<Index, value_list<Value, Other...>>
-    : value_list_element<Index - 1u, value_list<Other...>> {};
+    : value_list_element<Index - 1u, value_list<Other...>> {
+};
 
 /**
  * @brief Provides compile-time indexed access to the types of a type list.
@@ -453,7 +459,7 @@ using value_list_cat_t = typename value_list_cat<List...>::type;
 
 /*! @brief Same as std::is_invocable, but with tuples. */
 template<typename, typename>
-struct is_applicable: std::false_type {};
+struct is_applicable : std::false_type {};
 
 /**
  * @copybrief is_applicable
@@ -462,7 +468,7 @@ struct is_applicable: std::false_type {};
  * @tparam Args The list of arguments to use to probe the function type.
  */
 template<typename Func, template<typename...> class Tuple, typename... Args>
-struct is_applicable<Func, Tuple<Args...>>: std::is_invocable<Func, Args...> {};
+struct is_applicable<Func, Tuple<Args...>> : std::is_invocable<Func, Args...> {};
 
 /**
  * @copybrief is_applicable
@@ -471,7 +477,7 @@ struct is_applicable<Func, Tuple<Args...>>: std::is_invocable<Func, Args...> {};
  * @tparam Args The list of arguments to use to probe the function type.
  */
 template<typename Func, template<typename...> class Tuple, typename... Args>
-struct is_applicable<Func, const Tuple<Args...>>: std::is_invocable<Func, Args...> {};
+struct is_applicable<Func, const Tuple<Args...>> : std::is_invocable<Func, Args...> {};
 
 /**
  * @brief Helper variable template.
@@ -483,7 +489,7 @@ inline constexpr bool is_applicable_v = is_applicable<Func, Args>::value;
 
 /*! @brief Same as std::is_invocable_r, but with tuples for arguments. */
 template<typename, typename, typename>
-struct is_applicable_r: std::false_type {};
+struct is_applicable_r : std::false_type {};
 
 /**
  * @copybrief is_applicable_r
@@ -493,7 +499,7 @@ struct is_applicable_r: std::false_type {};
  * @tparam Args The list of arguments to use to probe the function type.
  */
 template<typename Ret, typename Func, typename... Args>
-struct is_applicable_r<Ret, Func, std::tuple<Args...>>: std::is_invocable_r<Ret, Func, Args...> {};
+struct is_applicable_r<Ret, Func, std::tuple<Args...>> : std::is_invocable_r<Ret, Func, Args...> {};
 
 /**
  * @brief Helper variable template.
@@ -511,11 +517,11 @@ inline constexpr bool is_applicable_r_v = is_applicable_r<Ret, Func, Args>::valu
  * @tparam Type The type to test.
  */
 template<typename Type, typename = void>
-struct is_complete: std::false_type {};
+struct is_complete : std::false_type {};
 
 /*! @copydoc is_complete */
 template<typename Type>
-struct is_complete<Type, std::void_t<decltype(sizeof(Type))>>: std::true_type {};
+struct is_complete<Type, std::void_t<decltype(sizeof(Type))>> : std::true_type {};
 
 /**
  * @brief Helper variable template.
@@ -530,7 +536,7 @@ inline constexpr bool is_complete_v = is_complete<Type>::value;
  * @tparam Type The type to test.
  */
 template<typename Type, typename = void>
-struct is_iterator: std::false_type {};
+struct is_iterator : std::false_type {};
 
 /**
  * @cond TURN_OFF_DOXYGEN
@@ -540,10 +546,12 @@ struct is_iterator: std::false_type {};
 namespace internal {
 
 template<typename, typename = void>
-struct has_iterator_category: std::false_type {};
+struct has_iterator_category : std::false_type {};
 
 template<typename Type>
-struct has_iterator_category<Type, std::void_t<typename std::iterator_traits<Type>::iterator_category>>: std::true_type {};
+struct has_iterator_category<Type, std::void_t<typename std::iterator_traits<Type>::iterator_category>>
+    : std::true_type {
+};
 
 } // namespace internal
 
@@ -555,7 +563,8 @@ struct has_iterator_category<Type, std::void_t<typename std::iterator_traits<Typ
 /*! @copydoc is_iterator */
 template<typename Type>
 struct is_iterator<Type, std::enable_if_t<!std::is_same_v<std::remove_cv_t<std::remove_pointer_t<Type>>, void>>>
-    : internal::has_iterator_category<Type> {};
+    : internal::has_iterator_category<Type> {
+};
 
 /**
  * @brief Helper variable template.
@@ -571,7 +580,8 @@ inline constexpr bool is_iterator_v = is_iterator<Type>::value;
  */
 template<typename Type>
 struct is_ebco_eligible
-    : std::conjunction<std::is_empty<Type>, std::negation<std::is_final<Type>>> {};
+    : std::conjunction<std::is_empty<Type>, std::negation<std::is_final<Type>>> {
+};
 
 /**
  * @brief Helper variable template.
@@ -586,11 +596,11 @@ inline constexpr bool is_ebco_eligible_v = is_ebco_eligible<Type>::value;
  * @tparam Type The type to test.
  */
 template<typename Type, typename = void>
-struct is_transparent: std::false_type {};
+struct is_transparent : std::false_type {};
 
 /*! @copydoc is_transparent */
 template<typename Type>
-struct is_transparent<Type, std::void_t<typename Type::is_transparent>>: std::true_type {};
+struct is_transparent<Type, std::void_t<typename Type::is_transparent>> : std::true_type {};
 
 /**
  * @brief Helper variable template.
@@ -605,7 +615,7 @@ inline constexpr bool is_transparent_v = is_transparent<Type>::value;
  * @tparam Type The type to test.
  */
 template<typename Type, typename = void>
-struct is_equality_comparable: std::false_type {};
+struct is_equality_comparable : std::false_type {};
 
 /**
  * @cond TURN_OFF_DOXYGEN
@@ -615,10 +625,10 @@ struct is_equality_comparable: std::false_type {};
 namespace internal {
 
 template<typename, typename = void>
-struct has_tuple_size_value: std::false_type {};
+struct has_tuple_size_value : std::false_type {};
 
 template<typename Type>
-struct has_tuple_size_value<Type, std::void_t<decltype(std::tuple_size<const Type>::value)>>: std::true_type {};
+struct has_tuple_size_value<Type, std::void_t<decltype(std::tuple_size<const Type>::value)>> : std::true_type {};
 
 template<typename Type, std::size_t... Index>
 [[nodiscard]] constexpr bool unpack_maybe_equality_comparable(std::index_sequence<Index...>) {
@@ -632,9 +642,9 @@ template<typename>
 
 template<typename Type>
 [[nodiscard]] constexpr auto maybe_equality_comparable(choice_t<1>) -> decltype(std::declval<typename Type::value_type>(), bool{}) {
-  if constexpr(is_iterator_v<Type>) {
+  if constexpr (is_iterator_v<Type>) {
     return true;
-  } else if constexpr(std::is_same_v<typename Type::value_type, Type>) {
+  } else if constexpr (std::is_same_v<typename Type::value_type, Type>) {
     return maybe_equality_comparable<Type>(choice<0>);
   } else {
     return is_equality_comparable<typename Type::value_type>::value;
@@ -642,8 +652,9 @@ template<typename Type>
 }
 
 template<typename Type>
-[[nodiscard]] constexpr std::enable_if_t<is_complete_v<std::tuple_size<std::remove_cv_t<Type>>>, bool> maybe_equality_comparable(choice_t<2>) {
-  if constexpr(has_tuple_size_value<Type>::value) {
+[[nodiscard]] constexpr std::enable_if_t<is_complete_v<std::tuple_size<std::remove_cv_t<Type>>>,
+                                         bool> maybe_equality_comparable(choice_t<2>) {
+  if constexpr (has_tuple_size_value<Type>::value) {
     return unpack_maybe_equality_comparable<Type>(std::make_index_sequence<std::tuple_size<Type>::value>{});
   } else {
     return maybe_equality_comparable<Type>(choice<1>);
@@ -660,7 +671,8 @@ template<typename Type>
 /*! @copydoc is_equality_comparable */
 template<typename Type>
 struct is_equality_comparable<Type, std::void_t<decltype(std::declval<Type>() == std::declval<Type>())>>
-    : std::bool_constant<internal::maybe_equality_comparable<Type>(choice<2>)> {};
+    : std::bool_constant<internal::maybe_equality_comparable<Type>(choice<2>)> {
+};
 
 /**
  * @brief Helper variable template.
@@ -735,13 +747,13 @@ class nth_argument {
   static constexpr type_list<Args...> pick_up(Ret (*)(Args...));
 
   template<typename Ret, typename Class, typename... Args>
-  static constexpr type_list<Args...> pick_up(Ret (Class ::*)(Args...));
+  static constexpr type_list<Args...> pick_up(Ret (Class::*)(Args...));
 
   template<typename Ret, typename Class, typename... Args>
-  static constexpr type_list<Args...> pick_up(Ret (Class ::*)(Args...) const);
+  static constexpr type_list<Args...> pick_up(Ret (Class::*)(Args...) const);
 
   template<typename Type, typename Class>
-  static constexpr type_list<Type> pick_up(Type Class ::*);
+  static constexpr type_list<Type> pick_up(Type Class::*);
 
  public:
   /*! @brief N-th argument of the given function or member function. */
@@ -758,4 +770,4 @@ using nth_argument_t = typename nth_argument<Index, Candidate>::type;
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_BASE_TYPE_TRAITS_H_
+#endif //RENDU_CORE_BASE_TYPE_TRAITS_H_

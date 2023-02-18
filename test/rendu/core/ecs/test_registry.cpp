@@ -1,7 +1,6 @@
 /*
 * Created by boil on 2023/2/18.
 */
-#include <cstddef>
 #include <functional>
 #include <iterator>
 #include <memory>
@@ -663,14 +662,14 @@ TEST(Registry, DestroyVersion) {
 
 RD_DEBUG_TEST(RegistryDeathTest, DestroyVersion
 ) {
-rendu::registry registry;
-const auto entity = registry.create();
+  rendu::registry registry;
+  const auto entity = registry.create();
 
-registry.
-destroy(entity);
+  registry.
+      destroy(entity);
 
-ASSERT_DEATH(registry.destroy(entity), "");
-ASSERT_DEATH(registry.destroy(entity, 3), "");
+  ASSERT_DEATH(registry.destroy(entity), "");
+  ASSERT_DEATH(registry.destroy(entity, 3), "");
 }
 
 TEST(Registry, DestroyRange) {
@@ -809,14 +808,14 @@ TEST(Registry, ReleaseVersion) {
 
 RD_DEBUG_TEST(RegistryDeathTest, ReleaseVersion
 ) {
-rendu::registry registry;
-rendu::entity entity = registry.create();
+  rendu::registry registry;
+  rendu::entity entity = registry.create();
 
-registry.
-release(entity);
+  registry.
+      release(entity);
 
-ASSERT_DEATH(registry.release(entity), "");
-ASSERT_DEATH(registry.release(entity, 3), "");
+  ASSERT_DEATH(registry.release(entity), "");
+  ASSERT_DEATH(registry.release(entity, 3), "");
 }
 
 TEST(Registry, ReleaseRange) {
@@ -1632,12 +1631,12 @@ TEST(Registry, Erase) {
 
 RD_DEBUG_TEST(RegistryDeathTest, Erase
 ) {
-rendu::registry registry;
-const rendu::entity entities[1u]{registry.create()};
+  rendu::registry registry;
+  const rendu::entity entities[1u]{registry.create()};
 
-ASSERT_FALSE((registry.any_of<int>(entities[0u])));
-ASSERT_DEATH((registry.erase<int>(std::begin(entities), std::end(entities))), "");
-ASSERT_DEATH(registry.erase<int>(entities[0u]), "");
+  ASSERT_FALSE((registry.any_of<int>(entities[0u])));
+  ASSERT_DEATH((registry.erase<int>(std::begin(entities), std::end(entities))), "");
+  ASSERT_DEATH(registry.erase<int>(entities[0u]), "");
 }
 
 TEST(Registry, StableErase) {

@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/17.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_ITERATOR_H_
-#define RENDU_CORE_CORE_BASE_ITERATOR_H_
+#ifndef RENDU_CORE_BASE_ITERATOR_H_
+#define RENDU_CORE_BASE_ITERATOR_H_
 
 #include <iterator>
 #include <memory>
@@ -151,7 +151,8 @@ struct iterable_adaptor final {
   using sentinel = Sentinel;
 
   /*! @brief Default constructor. */
-  constexpr iterable_adaptor() noexcept(std::is_nothrow_default_constructible_v<iterator> &&std::is_nothrow_default_constructible_v<sentinel>)
+  constexpr iterable_adaptor() noexcept(std::is_nothrow_default_constructible_v<iterator>
+      && std::is_nothrow_default_constructible_v<sentinel>)
       : first{},
         last{} {}
 
@@ -160,7 +161,8 @@ struct iterable_adaptor final {
    * @param from Begin iterator.
    * @param to End iterator.
    */
-  constexpr iterable_adaptor(iterator from, sentinel to) noexcept(std::is_nothrow_move_constructible_v<iterator> &&std::is_nothrow_move_constructible_v<sentinel>)
+  constexpr iterable_adaptor(iterator from, sentinel to) noexcept(std::is_nothrow_move_constructible_v<iterator>
+      && std::is_nothrow_move_constructible_v<sentinel>)
       : first{std::move(from)},
         last{std::move(to)} {}
 
@@ -198,4 +200,4 @@ struct iterable_adaptor final {
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_BASE_ITERATOR_H_
+#endif //RENDU_CORE_BASE_ITERATOR_H_

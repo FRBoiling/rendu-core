@@ -2,14 +2,11 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_CORE_ECS_FWD_H_
-#define RENDU_CORE_CORE_ECS_FWD_H_
+#ifndef RENDU_CORE_ECS_FWD_H_
+#define RENDU_CORE_ECS_FWD_H_
 
-#include <cstdint>
-#include <memory>
-#include <type_traits>
-#include "base/type_traits.h"
 #include "base/fwd.h"
+#include "base/type_traits.h"
 
 namespace rendu {
 
@@ -32,6 +29,8 @@ class basic_storage;
 
 template<typename Type>
 class sigh_mixin;
+
+
 
 /**
  * @brief Provides a common way to define storage types.
@@ -212,9 +211,10 @@ using const_runtime_view = basic_runtime_view<const sparse_set>;
  * @tparam Exclude Types of storage used to filter the group.
  */
 template<typename Owned, typename Get, typename Exclude>
-using group = basic_group<type_list_transform_t<Owned, storage_for>, type_list_transform_t<Get, storage_for>, type_list_transform_t<Exclude, storage_for>>;
-
+using group = basic_group<type_list_transform_t<Owned, storage_for>,
+                          type_list_transform_t<Get, storage_for>,
+                          type_list_transform_t<Exclude, storage_for>>;
 
 } //namespace rendu
 
-#endif //RENDU_CORE_CORE_ECS_FWD_H_
+#endif //RENDU_CORE_ECS_FWD_H_

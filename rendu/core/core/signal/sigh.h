@@ -2,8 +2,9 @@
 // Created by boil on 2023/2/17.
 //
 
-#ifndef RENDU_CORE_CORE_SIGNAL_SIGH_H_
-#define RENDU_CORE_CORE_SIGNAL_SIGH_H_
+#ifndef RENDU_CORE_SIGNAL_SIGH_H_
+#define RENDU_CORE_SIGNAL_SIGH_H_
+
 #include <algorithm>
 #include <functional>
 #include <type_traits>
@@ -563,4 +564,4 @@ template<typename Ret, typename... Args, typename Allocator>
 sink(sigh<Ret(Args...), Allocator> &) -> sink<sigh<Ret(Args...), Allocator>>;
 
 } // namespace rendu
-#endif //RENDU_CORE_CORE_SIGNAL_SIGH_H_
+#endif //RENDU_CORE_SIGNAL_SIGH_H_

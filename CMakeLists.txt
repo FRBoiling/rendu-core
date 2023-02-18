@@ -8,7 +8,7 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 # Set projectname (must be done AFTER setting configurationtypes)
-set(RENDU_PROJECT_NAME rendu-core)
+set(RENDU_PROJECT_NAME rendu)
 set(RENDU_PROJECT_DIR ${CMAKE_SOURCE_DIR})
 set(RENDU_PROJECT_VERSION 2.0.0)
 project(${RENDU_PROJECT_NAME} LANGUAGES C CXX)

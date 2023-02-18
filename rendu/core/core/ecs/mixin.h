@@ -2,14 +2,9 @@
 // Created by boil on 2023/2/17.
 //
 
-#ifndef RENDU_CORE_CORE_ECS_MIXIN_H_
-#include <utility>
-#include "define/define.h"
-#include "base/any.h"
-#include "base/fwd.h"
+#ifndef RENDU_CORE_ECS_MIXIN_H_
+
 #include "signal/sigh.h"
-#include "entity.h"
-#include "fwd.h"
 
 namespace rendu {
 
@@ -27,18 +22,18 @@ namespace rendu {
  * @tparam Type The type of the underlying storage.
  */
 template<typename Type>
-class sigh_mixin final: public Type {
+class sigh_mixin final : public Type {
   using basic_registry_type = basic_registry<typename Type::entity_type, typename Type::base_type::allocator_type>;
   using sigh_type = sigh<void(basic_registry_type &, const typename Type::entity_type), typename Type::allocator_type>;
   using underlying_iterator = typename Type::base_type::basic_iterator;
 
   void pop(underlying_iterator first, underlying_iterator last) final {
-    if(destruction.empty()) {
+    if (destruction.empty()) {
       Type::pop(first, last);
     } else {
       RD_ASSERT(owner != nullptr, "Invalid pointer to registry");
 
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         const auto rendu = *first;
         destruction.publish(*owner, rendu);
         const auto it = Type::find(rendu);
@@ -48,12 +43,12 @@ class sigh_mixin final: public Type {
   }
 
   void pop_all() final {
-    if(!destruction.empty()) {
+    if (!destruction.empty()) {
       RD_ASSERT(owner != nullptr, "Invalid pointer to registry");
 
-      for(auto pos = Type::each().begin().base().index(); !(pos < 0); --pos) {
-        if constexpr(Type::traits_type::in_place_delete) {
-          if(const auto rendu = Type::operator[](static_cast<typename Type::size_type>(pos)); rendu != tombstone) {
+      for (auto pos = Type::each().begin().base().index(); !(pos < 0); --pos) {
+        if constexpr (Type::traits_type::in_place_delete) {
+          if (const auto rendu = Type::operator[](static_cast<typename Type::size_type>(pos)); rendu != tombstone) {
             destruction.publish(*owner, rendu);
           }
         } else {
@@ -65,10 +60,12 @@ class sigh_mixin final: public Type {
     Type::pop_all();
   }
 
-  underlying_iterator try_emplace(const typename Type::entity_type rendu, const bool force_back, const void *value) final {
+  underlying_iterator try_emplace(const typename Type::entity_type rendu,
+                                  const bool force_back,
+                                  const void *value) final {
     const auto it = Type::try_emplace(rendu, force_back, value);
 
-    if(it != Type::base_type::end()) {
+    if (it != Type::base_type::end()) {
       RD_ASSERT(owner != nullptr, "Invalid pointer to registry");
       construction.publish(*owner, *it);
     }
@@ -238,10 +235,10 @@ class sigh_mixin final: public Type {
   void insert(It first, It last, Args &&...args) {
     Type::insert(first, last, std::forward<Args>(args)...);
 
-    if(!construction.empty()) {
+    if (!construction.empty()) {
       RD_ASSERT(owner != nullptr, "Invalid pointer to registry");
 
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         construction.publish(*owner, *first);
       }
     }
@@ -284,10 +281,10 @@ class sigh_mixin final: public Type {
   void spawn(It first, It last) {
     Type::spawn(first, last);
 
-    if(!construction.empty()) {
+    if (!construction.empty()) {
       RD_ASSERT(owner != nullptr, "Invalid pointer to registry");
 
-      for(; first != last; ++first) {
+      for (; first != last; ++first) {
         construction.publish(*owner, *first);
       }
     }
@@ -313,6 +310,6 @@ class sigh_mixin final: public Type {
 } // namespace rendu 
 
 
-#define RENDU_CORE_CORE_ECS_MIXIN_H_
+#define RENDU_CORE_ECS_MIXIN_H_
 
-#endif //RENDU_CORE_CORE_ECS_MIXIN_H_
+#endif //RENDU_CORE_ECS_MIXIN_H_

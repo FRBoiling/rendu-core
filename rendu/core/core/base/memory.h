@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/17.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_MEMORY_H_
-#define RENDU_CORE_CORE_BASE_MEMORY_H_
+#ifndef RENDU_CORE_BASE_MEMORY_H_
+#define RENDU_CORE_BASE_MEMORY_H_
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -30,10 +30,10 @@ namespace rendu {
  */
 [[nodiscard]] inline constexpr std::size_t next_power_of_two(const std::size_t value) noexcept {
   RD_ASSERT_CONSTEXPR(value < (std::size_t{1u} << (std::numeric_limits<std::size_t>::digits - 1)), "Numeric limits "
-                                                                                                  "exceeded");
+                                                                                                   "exceeded");
   std::size_t curr = value - (value != 0u);
 
-  for(int next = 1; next < std::numeric_limits<std::size_t>::digits; next = next * 2) {
+  for (int next = 1; next < std::numeric_limits<std::size_t>::digits; next = next * 2) {
     curr |= curr >> next;
   }
 
@@ -59,7 +59,7 @@ namespace rendu {
  */
 template<typename Type>
 [[nodiscard]] constexpr auto to_address(Type &&ptr) noexcept {
-  if constexpr(std::is_pointer_v<std::decay_t<Type>>) {
+  if constexpr (std::is_pointer_v<std::decay_t<Type>>) {
     return ptr;
   } else {
     return to_address(std::forward<Type>(ptr).operator->());
@@ -73,8 +73,9 @@ template<typename Type>
  * @param rhs Another valid allocator.
  */
 template<typename Allocator>
-constexpr void propagate_on_container_copy_assignment([[maybe_unused]] Allocator &lhs, [[maybe_unused]] Allocator &rhs) noexcept {
-  if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value) {
+constexpr void propagate_on_container_copy_assignment([[maybe_unused]] Allocator &lhs,
+                                                      [[maybe_unused]] Allocator &rhs) noexcept {
+  if constexpr (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value) {
     lhs = rhs;
   }
 }
@@ -86,8 +87,9 @@ constexpr void propagate_on_container_copy_assignment([[maybe_unused]] Allocator
  * @param rhs Another valid allocator.
  */
 template<typename Allocator>
-constexpr void propagate_on_container_move_assignment([[maybe_unused]] Allocator &lhs, [[maybe_unused]] Allocator &rhs) noexcept {
-  if constexpr(std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value) {
+constexpr void propagate_on_container_move_assignment([[maybe_unused]] Allocator &lhs,
+                                                      [[maybe_unused]] Allocator &rhs) noexcept {
+  if constexpr (std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value) {
     lhs = std::move(rhs);
   }
 }
@@ -100,7 +102,7 @@ constexpr void propagate_on_container_move_assignment([[maybe_unused]] Allocator
  */
 template<typename Allocator>
 constexpr void propagate_on_container_swap([[maybe_unused]] Allocator &lhs, [[maybe_unused]] Allocator &rhs) noexcept {
-  if constexpr(std::allocator_traits<Allocator>::propagate_on_container_swap::value) {
+  if constexpr (std::allocator_traits<Allocator>::propagate_on_container_swap::value) {
     using std::swap;
     swap(lhs, rhs);
   } else {
@@ -113,7 +115,7 @@ constexpr void propagate_on_container_swap([[maybe_unused]] Allocator &lhs, [[ma
  * @tparam Allocator Type of allocator used to manage memory and elements.
  */
 template<typename Allocator>
-struct allocation_deleter: private Allocator {
+struct allocation_deleter : private Allocator {
   /*! @brief Allocator type. */
   using allocator_type = Allocator;
   /*! @brief Pointer type. */
@@ -157,11 +159,11 @@ RD_CONSTEXPR auto allocate_unique(Allocator &allocator, Args &&...args) {
   auto ptr = alloc_traits::allocate(alloc, 1u);
 
   RD_TRY {
-      alloc_traits::construct(alloc, to_address(ptr), std::forward<Args>(args)...);
+    alloc_traits::construct(alloc, to_address(ptr), std::forward<Args>(args)...);
   }
   RD_CATCH {
-      alloc_traits::deallocate(alloc, ptr, 1u);
-      RD_THROW;
+    alloc_traits::deallocate(alloc, ptr, 1u);
+    RD_THROW;
   }
 
   return std::unique_ptr<Type, allocation_deleter<allocator_type>>{ptr, alloc};
@@ -178,13 +180,14 @@ template<typename Type>
 struct uses_allocator_construction {
   template<typename Allocator, typename... Params>
   static constexpr auto args([[maybe_unused]] const Allocator &allocator, Params &&...params) noexcept {
-    if constexpr(!std::uses_allocator_v<Type, Allocator> && std::is_constructible_v<Type, Params...>) {
+    if constexpr (!std::uses_allocator_v<Type, Allocator> && std::is_constructible_v<Type, Params...>) {
       return std::forward_as_tuple(std::forward<Params>(params)...);
     } else {
       static_assert(std::uses_allocator_v<Type, Allocator>, "Ill-formed request");
 
-      if constexpr(std::is_constructible_v<Type, std::allocator_arg_t, const Allocator &, Params...>) {
-        return std::tuple<std::allocator_arg_t, const Allocator &, Params &&...>{std::allocator_arg, allocator, std::forward<Params>(params)...};
+      if constexpr (std::is_constructible_v<Type, std::allocator_arg_t, const Allocator &, Params...>) {
+        return std::tuple<std::allocator_arg_t, const Allocator &, Params &&...>{std::allocator_arg, allocator,
+                                                                                 std::forward<Params>(params)...};
       } else {
         static_assert(std::is_constructible_v<Type, Params..., const Allocator &>, "Ill-formed request");
         return std::forward_as_tuple(std::forward<Params>(params)..., allocator);
@@ -198,11 +201,20 @@ struct uses_allocator_construction<std::pair<Type, Other>> {
   using type = std::pair<Type, Other>;
 
   template<typename Allocator, typename First, typename Second>
-  static constexpr auto args(const Allocator &allocator, std::piecewise_construct_t, First &&first, Second &&second) noexcept {
+  static constexpr auto args(const Allocator &allocator,
+                             std::piecewise_construct_t,
+                             First &&first,
+                             Second &&second) noexcept {
     return std::make_tuple(
         std::piecewise_construct,
-        std::apply([&allocator](auto &&...curr) { return uses_allocator_construction<Type>::args(allocator, std::forward<decltype(curr)>(curr)...); }, std::forward<First>(first)),
-        std::apply([&allocator](auto &&...curr) { return uses_allocator_construction<Other>::args(allocator, std::forward<decltype(curr)>(curr)...); }, std::forward<Second>(second)));
+        std::apply([&allocator](auto &&...curr) { return uses_allocator_construction<Type>::args(allocator,
+                                                                                                 std::forward<decltype(curr)>(
+                                                                                                     curr)...);
+        }, std::forward<First>(first)),
+        std::apply([&allocator](auto &&...curr) { return uses_allocator_construction<Other>::args(allocator,
+                                                                                                  std::forward<decltype(curr)>(
+                                                                                                      curr)...);
+        }, std::forward<Second>(second)));
   }
 
   template<typename Allocator>
@@ -212,17 +224,26 @@ struct uses_allocator_construction<std::pair<Type, Other>> {
 
   template<typename Allocator, typename First, typename Second>
   static constexpr auto args(const Allocator &allocator, First &&first, Second &&second) noexcept {
-    return uses_allocator_construction<type>::args(allocator, std::piecewise_construct, std::forward_as_tuple(std::forward<First>(first)), std::forward_as_tuple(std::forward<Second>(second)));
+    return uses_allocator_construction<type>::args(allocator,
+                                                   std::piecewise_construct,
+                                                   std::forward_as_tuple(std::forward<First>(first)),
+                                                   std::forward_as_tuple(std::forward<Second>(second)));
   }
 
   template<typename Allocator, typename First, typename Second>
   static constexpr auto args(const Allocator &allocator, const std::pair<First, Second> &value) noexcept {
-    return uses_allocator_construction<type>::args(allocator, std::piecewise_construct, std::forward_as_tuple(value.first), std::forward_as_tuple(value.second));
+    return uses_allocator_construction<type>::args(allocator,
+                                                   std::piecewise_construct,
+                                                   std::forward_as_tuple(value.first),
+                                                   std::forward_as_tuple(value.second));
   }
 
   template<typename Allocator, typename First, typename Second>
   static constexpr auto args(const Allocator &allocator, std::pair<First, Second> &&value) noexcept {
-    return uses_allocator_construction<type>::args(allocator, std::piecewise_construct, std::forward_as_tuple(std::move(value.first)), std::forward_as_tuple(std::move(value.second)));
+    return uses_allocator_construction<type>::args(allocator,
+                                                   std::piecewise_construct,
+                                                   std::forward_as_tuple(std::move(value.first)),
+                                                   std::forward_as_tuple(std::move(value.second)));
   }
 };
 
@@ -266,7 +287,8 @@ constexpr auto uses_allocator_construction_args(const Allocator &allocator, Args
  */
 template<typename Type, typename Allocator, typename... Args>
 constexpr Type make_obj_using_allocator(const Allocator &allocator, Args &&...args) {
-  return std::make_from_tuple<Type>(internal::uses_allocator_construction<Type>::args(allocator, std::forward<Args>(args)...));
+  return std::make_from_tuple<Type>(internal::uses_allocator_construction<Type>::args(allocator,
+                                                                                      std::forward<Args>(args)...));
 }
 
 /**
@@ -285,9 +307,10 @@ constexpr Type make_obj_using_allocator(const Allocator &allocator, Args &&...ar
  */
 template<typename Type, typename Allocator, typename... Args>
 constexpr Type *uninitialized_construct_using_allocator(Type *value, const Allocator &allocator, Args &&...args) {
-  return std::apply([value](auto &&...curr) { return new(value) Type(std::forward<decltype(curr)>(curr)...); }, internal::uses_allocator_construction<Type>::args(allocator, std::forward<Args>(args)...));
+  return std::apply([value](auto &&...curr) { return new(value) Type(std::forward<decltype(curr)>(curr)...); },
+                    internal::uses_allocator_construction<Type>::args(allocator, std::forward<Args>(args)...));
 }
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_BASE_MEMORY_H_
+#endif //RENDU_CORE_BASE_MEMORY_H_

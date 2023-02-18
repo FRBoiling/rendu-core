@@ -2,9 +2,8 @@
 * Created by boil on 2023/2/17.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_ALGORITHM_H_
-#define RENDU_CORE_CORE_BASE_ALGORITHM_H_
-
+#ifndef RENDU_CORE_BASE_ALGORITHM_H_
+#define RENDU_CORE_BASE_ALGORITHM_H_
 
 #include <algorithm>
 #include <functional>
@@ -138,7 +137,4 @@ struct radix_sort {
 
 } // namespace rendu
 
-
-
-
-#endif //RENDU_CORE_CORE_BASE_ALGORITHM_H_
+#endif //RENDU_CORE_BASE_ALGORITHM_H_

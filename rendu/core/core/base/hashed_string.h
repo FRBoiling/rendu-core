@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_HASHED_STRING_H_
-#define RENDU_CORE_CORE_BASE_HASHED_STRING_H_
+#ifndef RENDU_CORE_BASE_HASHED_STRING_H_
+#define RENDU_CORE_BASE_HASHED_STRING_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -69,7 +69,7 @@ struct basic_hashed_string {
  * @tparam Char Character type.
  */
 template<typename Char>
-class basic_hashed_string: internal::basic_hashed_string<Char> {
+class basic_hashed_string : internal::basic_hashed_string<Char> {
   using base_type = internal::basic_hashed_string<Char>;
   using traits_type = internal::fnv1a_traits<id_type>;
 
@@ -85,7 +85,7 @@ class basic_hashed_string: internal::basic_hashed_string<Char> {
   [[nodiscard]] static constexpr auto helper(const Char *str) noexcept {
     base_type base{str, 0u, traits_type::offset};
 
-    for(; str[base.length]; ++base.length) {
+    for (; str[base.length]; ++base.length) {
       base.hash = (base.hash ^ static_cast<traits_type::type>(str[base.length])) * traits_type::prime;
     }
 
@@ -96,7 +96,7 @@ class basic_hashed_string: internal::basic_hashed_string<Char> {
   [[nodiscard]] static constexpr auto helper(const Char *str, const std::size_t len) noexcept {
     base_type base{str, len, traits_type::offset};
 
-    for(size_type pos{}; pos < len; ++pos) {
+    for (size_type pos{}; pos < len; ++pos) {
       base.hash = (base.hash ^ static_cast<traits_type::type>(str[pos])) * traits_type::prime;
     }
 
@@ -238,7 +238,8 @@ basic_hashed_string(const Char (&str)[N]) -> basic_hashed_string<Char>;
  * @return True if the two hashed strings are identical, false otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator==(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator==(const basic_hashed_string<Char> &lhs,
+                                        const basic_hashed_string<Char> &rhs) noexcept {
   return lhs.value() == rhs.value();
 }
 
@@ -250,7 +251,8 @@ template<typename Char>
  * @return True if the two hashed strings differ, false otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator!=(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator!=(const basic_hashed_string<Char> &lhs,
+                                        const basic_hashed_string<Char> &rhs) noexcept {
   return !(lhs == rhs);
 }
 
@@ -262,7 +264,8 @@ template<typename Char>
  * @return True if the first element is less than the second, false otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator<(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator<(const basic_hashed_string<Char> &lhs,
+                                       const basic_hashed_string<Char> &rhs) noexcept {
   return lhs.value() < rhs.value();
 }
 
@@ -275,7 +278,8 @@ template<typename Char>
  * otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator<=(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator<=(const basic_hashed_string<Char> &lhs,
+                                        const basic_hashed_string<Char> &rhs) noexcept {
   return !(rhs < lhs);
 }
 
@@ -288,7 +292,8 @@ template<typename Char>
  * otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator>(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator>(const basic_hashed_string<Char> &lhs,
+                                       const basic_hashed_string<Char> &rhs) noexcept {
   return rhs < lhs;
 }
 
@@ -301,7 +306,8 @@ template<typename Char>
  * false otherwise.
  */
 template<typename Char>
-[[nodiscard]] constexpr bool operator>=(const basic_hashed_string<Char> &lhs, const basic_hashed_string<Char> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator>=(const basic_hashed_string<Char> &lhs,
+                                        const basic_hashed_string<Char> &rhs) noexcept {
   return !(lhs < rhs);
 }
 
@@ -318,7 +324,7 @@ inline namespace literals {
  * @param str The literal without its suffix.
  * @return A properly initialized hashed string.
  */
-[[nodiscard]] constexpr hashed_string operator"" _hs(const char *str, std::size_t) noexcept {
+[[nodiscard]] constexpr hashed_string operator "" _hs(const char *str, std::size_t) noexcept {
   return hashed_string{str};
 }
 
@@ -327,7 +333,7 @@ inline namespace literals {
  * @param str The literal without its suffix.
  * @return A properly initialized hashed wstring.
  */
-[[nodiscard]] constexpr hashed_wstring operator"" _hws(const wchar_t *str, std::size_t) noexcept {
+[[nodiscard]] constexpr hashed_wstring operator "" _hws(const wchar_t *str, std::size_t) noexcept {
   return hashed_wstring{str};
 }
 
@@ -335,4 +341,4 @@ inline namespace literals {
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_BASE_HASHED_STRING_H_
+#endif //RENDU_CORE_BASE_HASHED_STRING_H_

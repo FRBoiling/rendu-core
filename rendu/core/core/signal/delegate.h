@@ -2,8 +2,8 @@
 // Created by boil on 2023/2/17.
 //
 
-#ifndef RENDU_CORE_CORE_SIGNAL_DELEGATE_H_
-#define RENDU_CORE_CORE_SIGNAL_DELEGATE_H_
+#ifndef RENDU_CORE_SIGNAL_DELEGATE_H_
+#define RENDU_CORE_SIGNAL_DELEGATE_H_
 
 #include <cstddef>
 #include <functional>
@@ -343,4 +343,4 @@ template<typename Ret, typename... Args>
 delegate(Ret (*)(const void *, Args...), const void * = nullptr) -> delegate<Ret(Args...)>;
 
 } // namespace rendu
-#endif //RENDU_CORE_CORE_SIGNAL_DELEGATE_H_
+#endif //RENDU_CORE_SIGNAL_DELEGATE_H_

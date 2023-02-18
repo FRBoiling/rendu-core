@@ -2,14 +2,13 @@
 * Created by boil on 2023/2/17.
 */
 
-#ifndef RENDU_CORE_CORE_CONTAINER_FWD_H_
-#define RENDU_CORE_CORE_CONTAINER_FWD_H_
+#ifndef RENDU_CORE_CONTAINER_FWD_H_
+#define RENDU_CORE_CONTAINER_FWD_H_
 
 #include <functional>
 #include <memory>
 
 namespace rendu {
-
 
 template<
     typename Key,
@@ -28,4 +27,4 @@ class dense_set;
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_CONTAINER_FWD_H_
+#endif //RENDU_CORE_CONTAINER_FWD_H_

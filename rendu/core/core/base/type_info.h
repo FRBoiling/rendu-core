@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_CORE_CORE_BASE_TYPE_INFO_H_
-#define RENDU_CORE_CORE_BASE_TYPE_INFO_H_
+#ifndef RENDU_CORE_BASE_TYPE_INFO_H_
+#define RENDU_CORE_BASE_TYPE_INFO_H_
 
 #include <string_view>
 #include <type_traits>
@@ -24,10 +24,10 @@ namespace rendu {
 namespace internal {
 
 struct RD_API type_index final {
-[[nodiscard]] static id_type next() noexcept {
-  static RD_MAYBE_ATOMIC(id_type) value{};
-  return value++;
-}
+  [[nodiscard]] static id_type next() noexcept {
+    static RD_MAYBE_ATOMIC(id_type) value{};
+    return value++;
+  }
 };
 
 template<typename Type>
@@ -79,15 +79,15 @@ struct RD_API type_index final {
  * @brief Returns the sequential identifier of a given type.
  * @return The sequential identifier of a given type.
  */
-[[nodiscard]] static id_type value() noexcept {
-  static const id_type value = internal::type_index::next();
-  return value;
-}
+  [[nodiscard]] static id_type value() noexcept {
+    static const id_type value = internal::type_index::next();
+    return value;
+  }
 
 /*! @copydoc value */
-[[nodiscard]] constexpr operator id_type() const noexcept {
-  return value();
-}
+  [[nodiscard]] constexpr operator id_type() const noexcept {
+    return value();
+  }
 };
 
 /**
@@ -253,7 +253,7 @@ struct type_info final {
  */
 template<typename Type>
 [[nodiscard]] const type_info &type_id() noexcept {
-  if constexpr(std::is_same_v<Type, std::remove_cv_t<std::remove_reference_t<Type>>>) {
+  if constexpr (std::is_same_v<Type, std::remove_cv_t<std::remove_reference_t<Type>>>) {
     static type_info instance{std::in_place_type<Type>};
     return instance;
   } else {
@@ -269,4 +269,4 @@ template<typename Type>
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_BASE_TYPE_INFO_H_
+#endif //RENDU_CORE_BASE_TYPE_INFO_H_

@@ -2,8 +2,8 @@
 // Created by boil on 2023/2/17.
 //
 
-#ifndef RENDU_CORE_CORE_SIGNAL_FWD_H_
-#define RENDU_CORE_CORE_SIGNAL_FWD_H_
+#ifndef RENDU_CORE_SIGNAL_FWD_H_
+#define RENDU_CORE_SIGNAL_FWD_H_
 #include <memory>
 
 namespace rendu {
@@ -45,4 +45,4 @@ template<auto Candidate>
 inline constexpr connect_arg_t<Candidate> connect_arg{};
 
 } // namespace rendu
-#endif //RENDU_CORE_CORE_SIGNAL_FWD_H_
+#endif //RENDU_CORE_SIGNAL_FWD_H_

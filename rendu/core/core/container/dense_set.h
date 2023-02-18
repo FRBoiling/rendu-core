@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/17.
 */
 
-#ifndef RENDU_CORE_CORE_CONTAINER_DENSE_SET_H_
-#define RENDU_CORE_CORE_CONTAINER_DENSE_SET_H_
+#ifndef RENDU_CORE_CONTAINER_DENSE_SET_H_
+#define RENDU_CORE_CONTAINER_DENSE_SET_H_
 #include <cmath>
 #include <cstddef>
 #include <functional>
@@ -32,7 +32,8 @@ namespace internal {
 template<typename It>
 class dense_set_iterator final {
   template<typename>
-  friend class dense_set_iterator;
+  friend
+  class dense_set_iterator;
 
  public:
   using value_type = typename It::value_type::second_type;
@@ -47,7 +48,8 @@ class dense_set_iterator final {
   constexpr dense_set_iterator(const It iter) noexcept
       : it{iter} {}
 
-  template<typename Other, typename = std::enable_if_t<!std::is_same_v<It, Other> && std::is_constructible_v<It, Other>>>
+  template<typename Other, typename = std::enable_if_t<
+      !std::is_same_v<It, Other> && std::is_constructible_v<It, Other>>>
   constexpr dense_set_iterator(const dense_set_iterator<Other> &other) noexcept
       : it{other.it} {}
 
@@ -113,44 +115,52 @@ class dense_set_iterator final {
 };
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr std::ptrdiff_t operator-(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr std::ptrdiff_t operator-(const dense_set_iterator<Lhs> &lhs,
+                                                 const dense_set_iterator<Rhs> &rhs) noexcept {
   return lhs.it - rhs.it;
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator==(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator==(const dense_set_iterator<Lhs> &lhs,
+                                        const dense_set_iterator<Rhs> &rhs) noexcept {
   return lhs.it == rhs.it;
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator!=(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator!=(const dense_set_iterator<Lhs> &lhs,
+                                        const dense_set_iterator<Rhs> &rhs) noexcept {
   return !(lhs == rhs);
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator<(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator<(const dense_set_iterator<Lhs> &lhs,
+                                       const dense_set_iterator<Rhs> &rhs) noexcept {
   return lhs.it < rhs.it;
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator>(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator>(const dense_set_iterator<Lhs> &lhs,
+                                       const dense_set_iterator<Rhs> &rhs) noexcept {
   return rhs < lhs;
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator<=(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator<=(const dense_set_iterator<Lhs> &lhs,
+                                        const dense_set_iterator<Rhs> &rhs) noexcept {
   return !(lhs > rhs);
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator>=(const dense_set_iterator<Lhs> &lhs, const dense_set_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator>=(const dense_set_iterator<Lhs> &lhs,
+                                        const dense_set_iterator<Rhs> &rhs) noexcept {
   return !(lhs < rhs);
 }
 
 template<typename It>
 class dense_set_local_iterator final {
   template<typename>
-  friend class dense_set_local_iterator;
+  friend
+  class dense_set_local_iterator;
 
  public:
   using value_type = typename It::value_type::second_type;
@@ -167,7 +177,8 @@ class dense_set_local_iterator final {
       : it{iter},
         offset{pos} {}
 
-  template<typename Other, typename = std::enable_if_t<!std::is_same_v<It, Other> && std::is_constructible_v<It, Other>>>
+  template<typename Other, typename = std::enable_if_t<
+      !std::is_same_v<It, Other> && std::is_constructible_v<It, Other>>>
   constexpr dense_set_local_iterator(const dense_set_local_iterator<Other> &other) noexcept
       : it{other.it},
         offset{other.offset} {}
@@ -199,12 +210,14 @@ class dense_set_local_iterator final {
 };
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator==(const dense_set_local_iterator<Lhs> &lhs, const dense_set_local_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator==(const dense_set_local_iterator<Lhs> &lhs,
+                                        const dense_set_local_iterator<Rhs> &rhs) noexcept {
   return lhs.index() == rhs.index();
 }
 
 template<typename Lhs, typename Rhs>
-[[nodiscard]] constexpr bool operator!=(const dense_set_local_iterator<Lhs> &lhs, const dense_set_local_iterator<Rhs> &rhs) noexcept {
+[[nodiscard]] constexpr bool operator!=(const dense_set_local_iterator<Lhs> &lhs,
+                                        const dense_set_local_iterator<Rhs> &rhs) noexcept {
   return !(lhs == rhs);
 }
 
@@ -245,8 +258,8 @@ class dense_set {
 
   template<typename Other>
   [[nodiscard]] auto constrained_find(const Other &value, std::size_t bucket) {
-    for(auto it = begin(bucket), last = end(bucket); it != last; ++it) {
-      if(packed.second()(*it, value)) {
+    for (auto it = begin(bucket), last = end(bucket); it != last; ++it) {
+      if (packed.second()(*it, value)) {
         return begin() + static_cast<typename iterator::difference_type>(it.index());
       }
     }
@@ -256,8 +269,8 @@ class dense_set {
 
   template<typename Other>
   [[nodiscard]] auto constrained_find(const Other &value, std::size_t bucket) const {
-    for(auto it = cbegin(bucket), last = cend(bucket); it != last; ++it) {
-      if(packed.second()(*it, value)) {
+    for (auto it = cbegin(bucket), last = cend(bucket); it != last; ++it) {
+      if (packed.second()(*it, value)) {
         return cbegin() + static_cast<typename iterator::difference_type>(it.index());
       }
     }
@@ -269,7 +282,7 @@ class dense_set {
   [[nodiscard]] auto insert_or_do_nothing(Other &&value) {
     const auto index = value_to_bucket(value);
 
-    if(auto it = constrained_find(value, index); it != end()) {
+    if (auto it = constrained_find(value, index); it != end()) {
       return std::make_pair(it, false);
     }
 
@@ -281,10 +294,10 @@ class dense_set {
   }
 
   void move_and_pop(const std::size_t pos) {
-    if(const auto last = size() - 1u; pos != last) {
+    if (const auto last = size() - 1u; pos != last) {
       size_type *curr = sparse.first().data() + value_to_bucket(packed.first().back().second);
       packed.first()[pos] = std::move(packed.first().back());
-      for(; *curr != last; curr = &packed.first()[*curr].first) {}
+      for (; *curr != last; curr = &packed.first()[*curr].first) {}
       *curr = pos;
     }
 
@@ -292,7 +305,7 @@ class dense_set {
   }
 
   void rehash_if_required() {
-    if(size() > (bucket_count() * max_load_factor())) {
+    if (size() > (bucket_count() * max_load_factor())) {
       rehash(bucket_count() * 2u);
     }
   }
@@ -357,7 +370,10 @@ class dense_set {
    * @param equal Compare function to use.
    * @param allocator The allocator to use.
    */
-  explicit dense_set(const size_type cnt, const hasher &hash = hasher{}, const key_equal &equal = key_equal{}, const allocator_type &allocator = allocator_type{})
+  explicit dense_set(const size_type cnt,
+                     const hasher &hash = hasher{},
+                     const key_equal &equal = key_equal{},
+                     const allocator_type &allocator = allocator_type{})
       : sparse{allocator, hash},
         packed{allocator, equal},
         threshold{default_threshold} {
@@ -373,12 +389,15 @@ class dense_set {
    * @param allocator The allocator to use.
    */
   dense_set(const dense_set &other, const allocator_type &allocator)
-      : sparse{std::piecewise_construct, std::forward_as_tuple(other.sparse.first(), allocator), std::forward_as_tuple(other.sparse.second())},
-        packed{std::piecewise_construct, std::forward_as_tuple(other.packed.first(), allocator), std::forward_as_tuple(other.packed.second())},
+      : sparse{std::piecewise_construct, std::forward_as_tuple(other.sparse.first(), allocator),
+               std::forward_as_tuple(other.sparse.second())},
+        packed{std::piecewise_construct, std::forward_as_tuple(other.packed.first(), allocator),
+               std::forward_as_tuple(other.packed.second())},
         threshold{other.threshold} {}
 
   /*! @brief Default move constructor. */
-  dense_set(dense_set &&) noexcept(std::is_nothrow_move_constructible_v<compressed_pair<sparse_container_type, hasher>> &&std::is_nothrow_move_constructible_v<compressed_pair<packed_container_type, key_equal>>) = default;
+  dense_set(dense_set &&) noexcept(std::is_nothrow_move_constructible_v<compressed_pair<sparse_container_type, hasher>>
+      && std::is_nothrow_move_constructible_v<compressed_pair<packed_container_type, key_equal>>) = default;
 
   /**
    * @brief Allocator-extended move constructor.
@@ -386,8 +405,10 @@ class dense_set {
    * @param allocator The allocator to use.
    */
   dense_set(dense_set &&other, const allocator_type &allocator)
-      : sparse{std::piecewise_construct, std::forward_as_tuple(std::move(other.sparse.first()), allocator), std::forward_as_tuple(std::move(other.sparse.second()))},
-        packed{std::piecewise_construct, std::forward_as_tuple(std::move(other.packed.first()), allocator), std::forward_as_tuple(std::move(other.packed.second()))},
+      : sparse{std::piecewise_construct, std::forward_as_tuple(std::move(other.sparse.first()), allocator),
+               std::forward_as_tuple(std::move(other.sparse.second()))},
+        packed{std::piecewise_construct, std::forward_as_tuple(std::move(other.packed.first()), allocator),
+               std::forward_as_tuple(std::move(other.packed.second()))},
         threshold{other.threshold} {}
 
   /**
@@ -400,7 +421,9 @@ class dense_set {
    * @brief Default move assignment operator.
    * @return This container.
    */
-  dense_set &operator=(dense_set &&) noexcept(std::is_nothrow_move_assignable_v<compressed_pair<sparse_container_type, hasher>> &&std::is_nothrow_move_assignable_v<compressed_pair<packed_container_type, key_equal>>) = default;
+  dense_set &operator=(dense_set &&) noexcept(
+  std::is_nothrow_move_assignable_v<compressed_pair<sparse_container_type, hasher>>
+      && std::is_nothrow_move_assignable_v<compressed_pair<packed_container_type, key_equal>>) = default;
 
   /**
    * @brief Returns the associated allocator.
@@ -511,7 +534,7 @@ class dense_set {
    */
   template<typename It>
   void insert(It first, It last) {
-    for(; first != last; ++first) {
+    for (; first != last; ++first) {
       insert(*first);
     }
   }
@@ -531,13 +554,15 @@ class dense_set {
    */
   template<typename... Args>
   std::pair<iterator, bool> emplace(Args &&...args) {
-    if constexpr(((sizeof...(Args) == 1u) && ... && std::is_same_v<std::decay_t<Args>, value_type>)) {
+    if constexpr (((sizeof...(Args) == 1u) && ... && std::is_same_v<std::decay_t<Args>, value_type>)) {
       return insert_or_do_nothing(std::forward<Args>(args)...);
     } else {
-      auto &node = packed.first().emplace_back(std::piecewise_construct, std::make_tuple(packed.first().size()), std::forward_as_tuple(std::forward<Args>(args)...));
+      auto &node = packed.first().emplace_back(std::piecewise_construct,
+                                               std::make_tuple(packed.first().size()),
+                                               std::forward_as_tuple(std::forward<Args>(args)...));
       const auto index = value_to_bucket(node.second);
 
-      if(auto it = constrained_find(node.second, index); it != end()) {
+      if (auto it = constrained_find(node.second, index); it != end()) {
         packed.first().pop_back();
         return std::make_pair(it, false);
       }
@@ -569,7 +594,7 @@ class dense_set {
   iterator erase(const_iterator first, const_iterator last) {
     const auto dist = first - cbegin();
 
-    for(auto from = last - cbegin(); from != dist; --from) {
+    for (auto from = last - cbegin(); from != dist; --from) {
       erase(packed.first()[from - 1u].second);
     }
 
@@ -582,8 +607,9 @@ class dense_set {
    * @return Number of elements removed (either 0 or 1).
    */
   size_type erase(const value_type &value) {
-    for(size_type *curr = sparse.first().data() + value_to_bucket(value); *curr != (std::numeric_limits<size_type>::max)(); curr = &packed.first()[*curr].first) {
-      if(packed.second()(packed.first()[*curr].second, value)) {
+    for (size_type *curr = sparse.first().data() + value_to_bucket(value);
+         *curr != (std::numeric_limits<size_type>::max)(); curr = &packed.first()[*curr].first) {
+      if (packed.second()(packed.first()[*curr].second, value)) {
         const auto index = *curr;
         *curr = packed.first()[*curr].first;
         move_and_pop(index);
@@ -621,7 +647,8 @@ class dense_set {
    * @return Number of elements matching the key (either 1 or 0).
    */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, size_type>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, size_type>>
   count(const Other &key) const {
     return find(key) != end();
   }
@@ -649,14 +676,16 @@ class dense_set {
    * element is found, a past-the-end iterator is returned.
    */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, iterator>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, iterator>>
   find(const Other &value) {
     return constrained_find(value, value_to_bucket(value));
   }
 
   /*! @copydoc find */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, const_iterator>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, const_iterator>>
   find(const Other &value) const {
     return constrained_find(value, value_to_bucket(value));
   }
@@ -687,7 +716,8 @@ class dense_set {
    * last element of the range.
    */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, std::pair<iterator, iterator>>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, std::pair<iterator, iterator>>>
   equal_range(const Other &value) {
     const auto it = find(value);
     return {it, it + !(it == end())};
@@ -695,7 +725,8 @@ class dense_set {
 
   /*! @copydoc equal_range */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, std::pair<const_iterator, const_iterator>>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, std::pair<const_iterator, const_iterator>>>
   equal_range(const Other &value) const {
     const auto it = find(value);
     return {it, it + !(it == cend())};
@@ -718,7 +749,8 @@ class dense_set {
    * @return True if there is such an element, false otherwise.
    */
   template<typename Other>
-  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>, std::conditional_t<false, Other, bool>>
+  [[nodiscard]] std::enable_if_t<is_transparent_v<hasher> && is_transparent_v<key_equal>,
+                                 std::conditional_t<false, Other, bool>>
   contains(const Other &value) const {
     return (find(value) != cend());
   }
@@ -847,14 +879,14 @@ class dense_set {
     const auto cap = static_cast<size_type>(size() / max_load_factor());
     value = value > cap ? value : cap;
 
-    if(const auto sz = next_power_of_two(value); sz != bucket_count()) {
+    if (const auto sz = next_power_of_two(value); sz != bucket_count()) {
       sparse.first().resize(sz);
 
-      for(auto &&elem: sparse.first()) {
+      for (auto &&elem : sparse.first()) {
         elem = std::numeric_limits<size_type>::max();
       }
 
-      for(size_type pos{}, last = size(); pos < last; ++pos) {
+      for (size_type pos{}, last = size(); pos < last; ++pos) {
         const auto index = value_to_bucket(packed.first()[pos].second);
         packed.first()[pos].first = std::exchange(sparse.first()[index], pos);
       }
@@ -894,4 +926,4 @@ class dense_set {
 };
 
 } // namespace rendu
-#endif //RENDU_CORE_CORE_CONTAINER_DENSE_SET_H_
+#endif //RENDU_CORE_CONTAINER_DENSE_SET_H_
