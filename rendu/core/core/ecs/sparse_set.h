@@ -2,11 +2,10 @@
 * Created by boil on 2023/2/18.
 */
 
-#ifndef RENDU_CORE_ECS_BASIC_SPARSE_SET_H_
-#define RENDU_CORE_ECS_BASIC_SPARSE_SET_H_
+#ifndef RENDU_CORE_ECS_SPARSE_SET_H_
+#define RENDU_CORE_ECS_SPARSE_SET_H_
 
 #include "base/iterator.h"
-#include "entity.h"
 #include "fwd.h"
 
 namespace rendu {
@@ -1003,4 +1002,4 @@ class basic_sparse_set {
 
 } // namespace rendu
 
-#endif //RENDU_CORE_ECS_BASIC_SPARSE_SET_H_
+#endif //RENDU_CORE_ECS_SPARSE_SET_H_

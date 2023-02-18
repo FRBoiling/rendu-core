@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/18.
 */
 
-#ifndef RENDU_CORE_ECS_BASIC_GROUP_H_
-#define RENDU_CORE_ECS_BASIC_GROUP_H_
+#ifndef RENDU_CORE_ECS_GROUP_H_
+#define RENDU_CORE_ECS_GROUP_H_
 
 #include "base/iterator.h"
 
@@ -889,4 +889,4 @@ class basic_group<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> {
 };
 
 } // namespace rendu
-#endif //RENDU_CORE_ECS_BASIC_GROUP_H_
+#endif //RENDU_CORE_ECS_GROUP_H_

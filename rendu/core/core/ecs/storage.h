@@ -2,13 +2,14 @@
 * Created by boil on 2023/2/18.
 */
 
-#ifndef RENDU_CORE_ECS_BASE_STORAGE_H_
-#define RENDU_CORE_ECS_BASE_STORAGE_H_
+#ifndef RENDU_CORE_ECS_STORAGE_H_
+#define RENDU_CORE_ECS_STORAGE_H_
 
 #include "base/iterator.h"
 #include "base/memory.h"
-#include "basic_sparse_set.h"
+#include "sparse_set.h"
 #include "component.h"
+#include "entity.h"
 
 namespace rendu {
 
@@ -1210,4 +1211,4 @@ class basic_storage<Entity, Entity, Allocator>
 
 }// namespace rendu
 
-#endif //RENDU_CORE_ECS_BASE_STORAGE_H_
+#endif //RENDU_CORE_ECS_STORAGE_H_

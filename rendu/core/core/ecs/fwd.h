@@ -6,7 +6,6 @@
 #define RENDU_CORE_ECS_FWD_H_
 
 #include "base/fwd.h"
-#include "base/type_traits.h"
 
 namespace rendu {
 
