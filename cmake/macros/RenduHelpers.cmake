@@ -184,7 +184,7 @@ function(rendu_add_library)
 
   target_link_libraries(${_NAME}
       PRIVATE
-#
+      #
       ${RENDU_LIB_PRIVATE_DEPS}
       PUBLIC
       ${RENDU_LIB_PUBLIC_DEPS}
@@ -225,7 +225,7 @@ function(rendu_add_executable)
   cmake_parse_arguments(RENDU_EXEC
       ""
       "NAME"
-      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS; PUBLIC_DEPS,PRIVATE_DEPS"
+      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC_DEPS;PRIVATE_DEPS"
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RENDU_EXEC_NAME}")
