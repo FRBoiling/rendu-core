@@ -2,10 +2,14 @@
 * Created by boil on 2023/2/19.
 */
 
-#ifndef RD_TEST_RD_TEST_H_
-#define RD_TEST_RD_TEST_H_
+#ifndef RENDU_TEST_RD_TEST_H_
+#define RENDU_TEST_RD_TEST_H_
 
 #include <gtest/gtest.h>
+
+
+#define RD_TEST(test_suite_name, test_name) TEST(test_suite_name, test_name)
+#define RD_TEST_F(test_fixture, test_name) TEST_F(test_fixture, test_name)
 
 #ifdef NDEBUG
 #    define RD_DEBUG_TEST(Case, Test) RD_TEST(Case, DISABLED_##Test)
@@ -16,9 +20,6 @@
 #    define RD_DEBUG_TEST_F(Case, Test) RD_TEST_F(Case, Test)
 #    define RD_DEBUG_TYPED_TEST(Case, Test) TYPED_TEST(Case, Test)
 #endif
-
-#define RD_TEST(test_suite_name, test_name) TEST(test_suite_name, test_name)
-#define RD_TEST_F(test_fixture, test_name) TEST_F(test_fixture, test_name)
 
 #define RD_EXPECT_NE(val1, val2)  EXPECT_NE(val1, val2)
 #define RD_EXPECT_EQ(val1, val2)  EXPECT_EQ(val1, val2)
@@ -53,4 +54,14 @@
 #define RD_ASSERT_NO_THROW(statement) ASSERT_NO_THROW(statement)
 #define RD_ASSERT_ANY_THROW(statement) ASSERT_ANY_THROW(statement)
 
-#endif //RD_TEST_RD_TEST_H_
+#define RD_EXPECT_STREQ(s1, s2) EXPECT_STREQ(s1, s2)
+#define RD_EXPECT_STRNE(s1, s2) EXPECT_STRNE(s1, s2)
+#define RD_EXPECT_STRCASEEQ(s1, s2) EXPECT_STRCASEEQ(s1, s2)
+#define RD_EXPECT_STRCASENE(s1, s2) EXPECT_STRCASENE(s1, s2)
+
+#define RD_ASSERT_STREQ(s1, s2) ASSERT_STREQ(s1, s2)
+#define RD_ASSERT_STRNE(s1, s2) ASSERT_STRNE(s1, s2)
+#define RD_ASSERT_STRCASEEQ(s1, s2) ASSERT_STRCASEEQ(s1, s2)
+#define RD_ASSERT_STRCASENE(s1, s2) ASSERT_STRCASENE(s1, s2)
+
+#endif //RENDU_TEST_RD_TEST_H_

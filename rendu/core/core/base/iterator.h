@@ -6,9 +6,6 @@
 #define RENDU_CORE_BASE_ITERATOR_H_
 
 #include <iterator>
-#include <memory>
-#include <type_traits>
-#include <utility>
 
 namespace rendu {
 

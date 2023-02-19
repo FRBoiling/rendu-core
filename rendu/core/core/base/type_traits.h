@@ -5,11 +5,7 @@
 #ifndef RENDU_CORE_BASE_TYPE_TRAITS_H_
 #define RENDU_CORE_BASE_TYPE_TRAITS_H_
 
-#include <cstddef>
-#include <iterator>
 #include <type_traits>
-#include <utility>
-#include "define.h"
 #include "fwd.h"
 
 namespace rendu {

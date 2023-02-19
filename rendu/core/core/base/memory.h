@@ -4,12 +4,7 @@
 
 #ifndef RENDU_CORE_BASE_MEMORY_H_
 #define RENDU_CORE_BASE_MEMORY_H_
-#include <cstddef>
-#include <limits>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
+
 #include "define/define.h"
 
 namespace rendu {

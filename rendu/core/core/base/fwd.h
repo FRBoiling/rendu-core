@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include "define/define.h"
+
 namespace rendu {
 
 template<std::size_t Len = sizeof(double[2]), std::size_t = alignof(double[2])>

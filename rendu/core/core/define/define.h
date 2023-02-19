@@ -49,4 +49,19 @@
 #    define RD_ASSERT_CONSTEXPR(condition, msg) RD_ASSERT(condition, msg)
 #endif
 
+#ifdef RD_STANDARD_CPP
+#    define RD_NONSTD false
+#else
+#    define RD_NONSTD true
+#    if defined __clang__ || defined __GNUC__
+#        define RD_PRETTY_FUNCTION __PRETTY_FUNCTION__
+#        define RD_PRETTY_FUNCTION_PREFIX '='
+#        define RD_PRETTY_FUNCTION_SUFFIX ']'
+#    elif defined _MSC_VER
+#        define RD_PRETTY_FUNCTION __FUNCSIG__
+#        define RD_PRETTY_FUNCTION_PREFIX '<'
+#        define RD_PRETTY_FUNCTION_SUFFIX '>'
+#    endif
+#endif
+
 #endif //RENDU_CORE_DEFINE_DEFINE_H_

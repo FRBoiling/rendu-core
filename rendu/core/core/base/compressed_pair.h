@@ -5,10 +5,7 @@
 #ifndef RENDU_CORE_BASE_COMPRESSED_PAIR_H_
 #define RENDU_CORE_BASE_COMPRESSED_PAIR_H_
 
-#include <cstddef>
 #include <tuple>
-#include <type_traits>
-#include <utility>
 #include "type_traits.h"
 
 namespace rendu {

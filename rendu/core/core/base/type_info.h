@@ -6,18 +6,9 @@
 #define RENDU_CORE_BASE_TYPE_INFO_H_
 
 #include <string_view>
-#include <type_traits>
-#include <utility>
-#include "define/define.h"
 #include "hashed_string.h"
-#include "fwd.h"
 
 namespace rendu {
-
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
 
 namespace internal {
 
@@ -30,7 +21,14 @@ struct RD_API type_index final {
 
 template<typename Type>
 [[nodiscard]] constexpr auto stripped_type_name() noexcept {
+#if defined RD_PRETTY_FUNCTION
+  std::string_view pretty_function{RD_PRETTY_FUNCTION};
+    auto first = pretty_function.find_first_not_of(' ', pretty_function.find_first_of(RD_PRETTY_FUNCTION_PREFIX) + 1);
+    auto value = pretty_function.substr(first, pretty_function.find_last_of(RD_PRETTY_FUNCTION_SUFFIX) - first);
+    return value;
+#else
   return std::string_view{""};
+#endif
 }
 
 template<typename Type, auto = stripped_type_name<Type>().find_first_of('.')>
