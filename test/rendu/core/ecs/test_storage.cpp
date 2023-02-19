@@ -8,7 +8,7 @@
 #include <core/ecs/component.h>
 #include <core/ecs/storage.h>
 #include <test/rdtest.h>
-#include <test/define.h>
+
 #include <test/throwing_allocator.h>
 #include <test/throwing_type.h>
 

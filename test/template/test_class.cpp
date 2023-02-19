@@ -2,15 +2,16 @@
 // Created by boil on 2023/2/14.
 //
 #include <test/rdtest.h>
+namespace {
 
 template<typename T>
 class A {
-public:
+ public:
   A(T y) : x(y) {}
 
-private:
+ private:
   T x;
-public:
+ public:
   T get_value() {
     return x;
   }
@@ -34,8 +35,8 @@ using Container = std::vector<T>;
 
 RD_TEST(TemplateTest, Alias) {
   auto i = zero<int> = 11; // 相当于int i = 11;
-  Container<int> v{ 1,2,3 }; // 相当于std::vector<int> v{1, 2, 3};
+  Container<int> v{1, 2, 3}; // 相当于std::vector<int> v{1, 2, 3};
   RD_EXPECT_EQ(11, i);
   RD_EXPECT_EQ(2, v[1]);
 }
-
+}

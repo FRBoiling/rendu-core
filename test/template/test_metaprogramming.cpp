@@ -3,9 +3,11 @@
 //
 #include <test/rdtest.h>
 
+namespace {
+
 template<int N>
 class Fac {
-public:
+ public:
   enum {
     value = N * Fac<N - 1>::value
   };
@@ -13,7 +15,7 @@ public:
 
 template<>
 class Fac<0> {
-public:
+ public:
   enum {
     value = 1
   };
@@ -21,45 +23,43 @@ public:
 
 template<int N>
 class Fac1 {
-public:
+ public:
   static const int value = N * Fac1<N - 1>::value;
 };
 
 template<>
 class Fac1<0> {
-public:
+ public:
   static const int value = 1;
 };
 
 template<int N>
 class Fac2 {
-public:
+ public:
   static constexpr auto value = N * Fac2<N - 1>::value;
 };
 
 template<>
 class Fac2<0> {
-public:
+ public:
   static constexpr auto value = 1;
 };
 
-
 template<int N>
 class Fac3 {
-public:
+ public:
   static inline constexpr auto value = N * Fac3<N - 1>::value;
 };
 
 template<>
 class Fac3<0> {
-public:
+ public:
   static inline constexpr auto value = 1;
 };
 
 int f(const int &a) {
   return a;
 }  //函数参数是引用
-
 
 //一个模板元编程一般包括：递归构造的手段、表示状态的模板参数、一个表示终点的特化以及具体实现的算法。
 RD_TEST(TemplateTest, Metaprogramming) {
@@ -69,4 +69,4 @@ RD_TEST(TemplateTest, Metaprogramming) {
   RD_EXPECT_EQ(120, f(Fac2<5>::value));
   RD_EXPECT_EQ(120, f(Fac3<5>::value));
 }
-
+}

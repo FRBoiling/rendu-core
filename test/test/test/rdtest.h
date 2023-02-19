@@ -7,6 +7,16 @@
 
 #include <gtest/gtest.h>
 
+#ifdef NDEBUG
+#    define RD_DEBUG_TEST(Case, Test) RD_TEST(Case, DISABLED_##Test)
+#    define RD_DEBUG_TEST_F(Case, Test) RD_TEST_F(Case, DISABLED_##Test)
+#    define RD_DEBUG_TYPED_TEST(Case, Test) TYPED_TEST(Case, DISABLED_##Test)
+#else
+#    define RD_DEBUG_TEST(Case, Test) RD_TEST(Case, Test)
+#    define RD_DEBUG_TEST_F(Case, Test) RD_TEST_F(Case, Test)
+#    define RD_DEBUG_TYPED_TEST(Case, Test) TYPED_TEST(Case, Test)
+#endif
+
 #define RD_TEST(test_suite_name, test_name) TEST(test_suite_name, test_name)
 #define RD_TEST_F(test_fixture, test_name) TEST_F(test_fixture, test_name)
 

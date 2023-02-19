@@ -5,7 +5,7 @@
 #include <core/ecs/entity.h>
 #include <core/ecs/sparse_set.h>
 #include <test/throwing_allocator.h>
-#include <test/define.h>
+
 
 struct empty_type {};
 

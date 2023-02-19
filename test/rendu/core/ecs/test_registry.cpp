@@ -14,7 +14,7 @@
 #include <base/type_info.h>
 #include <ecs/entity.h>
 #include <ecs/registry.h>
-#include <test/define.h>
+
 
 struct empty_type {};
 
