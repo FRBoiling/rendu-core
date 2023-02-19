@@ -1,6 +1,8 @@
 /*
 * Created by boil on 2023/2/4.
 */
+
+#include <iostream>
 #include <base/hashed_string.h>
 #include <base/type_info.h>
 #include <ecs/entity.h>

@@ -7,7 +7,7 @@
 
 #include "common/define.h"
 
-#if defined(__cpp_exceptions) && !defined(ENTT_NOEXCEPTION)
+#if defined(__cpp_exceptions) && !defined(rendu_NOEXCEPTION)
 #    define RD_CONSTEXPR
 #    define RD_THROW throw
 #    define RD_TRY try

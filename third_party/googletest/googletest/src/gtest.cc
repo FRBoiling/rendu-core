@@ -892,8 +892,8 @@ void ScopedFakeTestPartResultReporter::Init() {
     old_reporter_ = impl->GetGlobalTestPartResultReporter();
     impl->SetGlobalTestPartResultReporter(this);
   } else {
-    old_reporter_ = impl->GetTestPartResultReporterForCurrentThread();
-    impl->SetTestPartResultReporterForCurrentThread(this);
+    old_reporter_ = impl->GetTestPartResultReporterForCurrrenduhread();
+    impl->SetTestPartResultReporterForCurrrenduhread(this);
   }
 }
 
@@ -904,7 +904,7 @@ ScopedFakeTestPartResultReporter::~ScopedFakeTestPartResultReporter() {
   if (intercept_mode_ == INTERCEPT_ALL_THREADS) {
     impl->SetGlobalTestPartResultReporter(old_reporter_);
   } else {
-    impl->SetTestPartResultReporterForCurrentThread(old_reporter_);
+    impl->SetTestPartResultReporterForCurrrenduhread(old_reporter_);
   }
 }
 
@@ -1022,12 +1022,12 @@ void UnitTestImpl::SetGlobalTestPartResultReporter(
 
 // Returns the test part result reporter for the current thread.
 TestPartResultReporterInterface*
-UnitTestImpl::GetTestPartResultReporterForCurrentThread() {
+UnitTestImpl::GetTestPartResultReporterForCurrrenduhread() {
   return per_thread_test_part_result_reporter_.get();
 }
 
 // Sets the test part result reporter for the current thread.
-void UnitTestImpl::SetTestPartResultReporterForCurrentThread(
+void UnitTestImpl::SetTestPartResultReporterForCurrrenduhread(
     TestPartResultReporterInterface* reporter) {
   per_thread_test_part_result_reporter_.set(reporter);
 }
@@ -2886,7 +2886,7 @@ void TestInfo::Skip() {
 
   const TestPartResult test_part_result =
       TestPartResult(TestPartResult::kSkip, this->file(), this->line(), "");
-  impl->GetTestPartResultReporterForCurrentThread()->ReportTestPartResult(
+  impl->GetTestPartResultReporterForCurrrenduhread()->ReportTestPartResult(
       test_part_result);
 
   // Notifies the unit test event listener that a test has just finished.
@@ -5312,7 +5312,7 @@ void UnitTest::AddTestPartResult(TestPartResult::Type result_type,
 
   const TestPartResult result = TestPartResult(
       result_type, file_name, line_number, msg.GetString().c_str());
-  impl_->GetTestPartResultReporterForCurrentThread()->ReportTestPartResult(
+  impl_->GetTestPartResultReporterForCurrrenduhread()->ReportTestPartResult(
       result);
 
   if (result_type != TestPartResult::kSuccess &&

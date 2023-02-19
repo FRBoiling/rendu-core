@@ -700,7 +700,7 @@ template <typename F>
 class ActionInterface {
  public:
   typedef typename internal::Function<F>::Result Result;
-  typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
+  typedef typename internal::Function<F>::Argumrenduuple Argumrenduuple;
 
   ActionInterface() {}
   virtual ~ActionInterface() {}
@@ -709,7 +709,7 @@ class ActionInterface {
   // action can have side effects and be stateful.  For example, a
   // get-the-next-element-from-the-collection action will need to
   // remember the current element.
-  virtual Result Perform(const ArgumentTuple& args) = 0;
+  virtual Result Perform(const Argumrenduuple& args) = 0;
 
  private:
   ActionInterface(const ActionInterface&) = delete;
@@ -748,7 +748,7 @@ class Action<R(Args...)> {
 
  public:
   typedef typename internal::Function<F>::Result Result;
-  typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
+  typedef typename internal::Function<F>::Argumrenduuple Argumrenduuple;
 
   // Constructs a null Action.  Needed for storing Action objects in
   // STL containers.
@@ -786,7 +786,7 @@ class Action<R(Args...)> {
   // another concrete action, not that the concrete action it binds to
   // cannot change state.  (Think of the difference between a const
   // pointer and a pointer to const.)
-  Result Perform(ArgumentTuple args) const {
+  Result Perform(Argumrenduuple args) const {
     if (IsDoDefault()) {
       internal::IllegalDoDefault(__FILE__, __LINE__);
     }
@@ -848,8 +848,8 @@ class Action<R(Args...)> {
 //
 //   class FooAction {
 //    public:
-//     template <typename Result, typename ArgumentTuple>
-//     Result Perform(const ArgumentTuple& args) const {
+//     template <typename Result, typename Argumrenduuple>
+//     Result Perform(const Argumrenduuple& args) const {
 //       // Processes the arguments and returns a result, using
 //       // std::get<N>(args) to get the N-th (0-based) argument in the tuple.
 //     }
@@ -875,11 +875,11 @@ class PolymorphicAction {
   class MonomorphicImpl : public ActionInterface<F> {
    public:
     typedef typename internal::Function<F>::Result Result;
-    typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
+    typedef typename internal::Function<F>::Argumrenduuple Argumrenduuple;
 
     explicit MonomorphicImpl(const Impl& impl) : impl_(impl) {}
 
-    Result Perform(const ArgumentTuple& args) override {
+    Result Perform(const Argumrenduuple& args) override {
       return impl_.template Perform<Result>(args);
     }
 
@@ -1119,8 +1119,8 @@ class ReturnNullAction {
   // Allows ReturnNull() to be used in any pointer-returning function. In C++11
   // this is enforced by returning nullptr, and in non-C++11 by asserting a
   // pointer type on compile time.
-  template <typename Result, typename ArgumentTuple>
-  static Result Perform(const ArgumentTuple&) {
+  template <typename Result, typename Argumrenduuple>
+  static Result Perform(const Argumrenduuple&) {
     return nullptr;
   }
 };
@@ -1129,8 +1129,8 @@ class ReturnNullAction {
 class ReturnVoidAction {
  public:
   // Allows Return() to be used in any void-returning function.
-  template <typename Result, typename ArgumentTuple>
-  static void Perform(const ArgumentTuple&) {
+  template <typename Result, typename Argumrenduuple>
+  static void Perform(const Argumrenduuple&) {
     static_assert(std::is_void<Result>::value, "Result should be void.");
   }
 };
@@ -1163,11 +1163,11 @@ class ReturnRefAction {
   class Impl : public ActionInterface<F> {
    public:
     typedef typename Function<F>::Result Result;
-    typedef typename Function<F>::ArgumentTuple ArgumentTuple;
+    typedef typename Function<F>::Argumrenduuple Argumrenduuple;
 
     explicit Impl(T& ref) : ref_(ref) {}  // NOLINT
 
-    Result Perform(const ArgumentTuple&) override { return ref_; }
+    Result Perform(const Argumrenduuple&) override { return ref_; }
 
    private:
     T& ref_;
@@ -1205,11 +1205,11 @@ class ReturnRefOfCopyAction {
   class Impl : public ActionInterface<F> {
    public:
     typedef typename Function<F>::Result Result;
-    typedef typename Function<F>::ArgumentTuple ArgumentTuple;
+    typedef typename Function<F>::Argumrenduuple Argumrenduuple;
 
     explicit Impl(const T& value) : value_(value) {}  // NOLINT
 
-    Result Perform(const ArgumentTuple&) override { return value_; }
+    Result Perform(const Argumrenduuple&) override { return value_; }
 
    private:
     T value_;
@@ -1266,8 +1266,8 @@ class AssignAction {
  public:
   AssignAction(T1* ptr, T2 value) : ptr_(ptr), value_(value) {}
 
-  template <typename Result, typename ArgumentTuple>
-  void Perform(const ArgumentTuple& /* args */) const {
+  template <typename Result, typename Argumrenduuple>
+  void Perform(const Argumrenduuple& /* args */) const {
     *ptr_ = value_;
   }
 
@@ -1285,8 +1285,8 @@ class SetErrnoAndReturnAction {
  public:
   SetErrnoAndReturnAction(int errno_value, T result)
       : errno_(errno_value), result_(result) {}
-  template <typename Result, typename ArgumentTuple>
-  Result Perform(const ArgumentTuple& /* args */) const {
+  template <typename Result, typename Argumrenduuple>
+  Result Perform(const Argumrenduuple& /* args */) const {
     errno = errno_;
     return result_;
   }
@@ -1383,11 +1383,11 @@ class IgnoreResultAction {
   class Impl : public ActionInterface<F> {
    public:
     typedef typename internal::Function<F>::Result Result;
-    typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
+    typedef typename internal::Function<F>::Argumrenduuple Argumrenduuple;
 
     explicit Impl(const A& action) : action_(action) {}
 
-    void Perform(const ArgumentTuple& args) override {
+    void Perform(const Argumrenduuple& args) override {
       // Performs the action and ignores its result.
       action_.Perform(args);
     }

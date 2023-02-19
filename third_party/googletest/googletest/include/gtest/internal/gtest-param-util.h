@@ -204,10 +204,10 @@ class ParamGenerator {
 // generate sequences of user-defined types that implement operator+() and
 // operator<().
 // This class is used in the Range() function.
-template <typename T, typename IncrementT>
+template <typename T, typename Incremrendu>
 class RangeGenerator : public ParamGeneratorInterface<T> {
  public:
-  RangeGenerator(T begin, T end, IncrementT step)
+  RangeGenerator(T begin, T end, Incremrendu step)
       : begin_(begin),
         end_(end),
         step_(step),
@@ -225,7 +225,7 @@ class RangeGenerator : public ParamGeneratorInterface<T> {
   class Iterator : public ParamIteratorInterface<T> {
    public:
     Iterator(const ParamGeneratorInterface<T>* base, T value, int index,
-             IncrementT step)
+             Incremrendu step)
         : base_(base), value_(value), index_(index), step_(step) {}
     ~Iterator() override {}
 
@@ -265,11 +265,11 @@ class RangeGenerator : public ParamGeneratorInterface<T> {
     const ParamGeneratorInterface<T>* const base_;
     T value_;
     int index_;
-    const IncrementT step_;
+    const Incremrendu step_;
   };  // class RangeGenerator::Iterator
 
   static int CalculateEndIndex(const T& begin, const T& end,
-                               const IncrementT& step) {
+                               const Incremrendu& step) {
     int end_index = 0;
     for (T i = begin; i < end; i = static_cast<T>(i + step)) end_index++;
     return end_index;
@@ -280,7 +280,7 @@ class RangeGenerator : public ParamGeneratorInterface<T> {
 
   const T begin_;
   const T end_;
-  const IncrementT step_;
+  const Incremrendu step_;
   // The index for the end() iterator. All the elements in the generated
   // sequence are indexed (0-based) to aid iterator comparison.
   const int end_index_;

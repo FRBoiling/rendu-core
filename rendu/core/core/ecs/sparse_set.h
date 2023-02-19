@@ -6,6 +6,10 @@
 #define RENDU_CORE_ECS_SPARSE_SET_H_
 
 #include "base/iterator.h"
+#include "base/type_info.h"
+#include "base/algorithm.h"
+#include "base/memory.h"
+#include "base/any.h"
 #include "fwd.h"
 
 namespace rendu {

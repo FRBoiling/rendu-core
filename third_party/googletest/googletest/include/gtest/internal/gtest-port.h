@@ -1427,7 +1427,7 @@ class ThreadLocalBase {
   // this ThreadLocal<T>'s constructor and returns it.  It is the caller's
   // responsibility not to call this when the ThreadLocal<T> instance already
   // has a value on the current thread.
-  virtual ThreadLocalValueHolderBase* NewValueForCurrentThread() const = 0;
+  virtual ThreadLocalValueHolderBase* NewValueForCurrrenduhread() const = 0;
 
  protected:
   ThreadLocalBase() {}
@@ -1445,7 +1445,7 @@ class GTEST_API_ ThreadLocalRegistry {
  public:
   // Registers thread_local_instance as having value on the current thread.
   // Returns a value that can be used to identify the thread from other threads.
-  static ThreadLocalValueHolderBase* GetValueOnCurrentThread(
+  static ThreadLocalValueHolderBase* GetValueOnCurrrenduhread(
       const ThreadLocalBase* thread_local_instance);
 
   // Invoked when a ThreadLocal instance is destroyed.
@@ -1559,11 +1559,11 @@ class ThreadLocal : public ThreadLocalBase {
 
   T* GetOrCreateValue() const {
     return static_cast<ValueHolder*>(
-               ThreadLocalRegistry::GetValueOnCurrentThread(this))
+               ThreadLocalRegistry::GetValueOnCurrrenduhread(this))
         ->pointer();
   }
 
-  ThreadLocalValueHolderBase* NewValueForCurrentThread() const override {
+  ThreadLocalValueHolderBase* NewValueForCurrrenduhread() const override {
     return default_factory_->MakeNewHolder();
   }
 

@@ -163,7 +163,7 @@ using internal::FunctionMocker;
       "unprotected comma.");                                           \
   static_assert(                                                       \
       ::testing::tuple_size<typename ::testing::internal::Function<    \
-              __VA_ARGS__>::ArgumentTuple>::value == _N,               \
+              __VA_ARGS__>::Argumrenduuple>::value == _N,               \
       "This method does not take " GMOCK_PP_STRINGIZE(                 \
           _N) " arguments. Parenthesize all types with unprotected commas.")
 

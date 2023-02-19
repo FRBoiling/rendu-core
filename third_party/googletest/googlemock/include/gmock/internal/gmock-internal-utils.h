@@ -438,7 +438,7 @@ auto Apply(F&& f, Tuple&& args) -> decltype(ApplyImpl(
 //
 //   Result:               the function's return type.
 //   Arg<N>:               the type of the N-th argument, where N starts with 0.
-//   ArgumentTuple:        the tuple type consisting of all parameters of F.
+//   Argumrenduuple:        the tuple type consisting of all parameters of F.
 //   ArgumentMatcherTuple: the tuple type consisting of Matchers for all
 //                         parameters of F.
 //   MakeResultVoid:       the function type obtained by substituting void
@@ -455,7 +455,7 @@ struct Function<R(Args...)> {
   static constexpr size_t ArgumentCount = sizeof...(Args);
   template <size_t I>
   using Arg = ElemFromList<I, Args...>;
-  using ArgumentTuple = std::tuple<Args...>;
+  using Argumrenduuple = std::tuple<Args...>;
   using ArgumentMatcherTuple = std::tuple<Matcher<Args>...>;
   using MakeResultVoid = void(Args...);
   using MakeResultIgnoredValue = IgnoredValue(Args...);

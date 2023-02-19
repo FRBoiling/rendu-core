@@ -5,8 +5,9 @@
 #ifndef RENDU_CORE_ECS_ENTITY_H_
 #define RENDU_CORE_ECS_ENTITY_H_
 
-#include "base/type_traits.h"
 #include <bit>
+#include "base/type_traits.h"
+#include "fwd.h"
 
 namespace rendu {
 

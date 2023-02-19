@@ -85,12 +85,12 @@ namespace internal {
 HasNewFatalFailureHelper::HasNewFatalFailureHelper()
     : has_new_fatal_failure_(false),
       original_reporter_(
-          GetUnitTestImpl()->GetTestPartResultReporterForCurrentThread()) {
-  GetUnitTestImpl()->SetTestPartResultReporterForCurrentThread(this);
+          GetUnitTestImpl()->GetTestPartResultReporterForCurrrenduhread()) {
+  GetUnitTestImpl()->SetTestPartResultReporterForCurrrenduhread(this);
 }
 
 HasNewFatalFailureHelper::~HasNewFatalFailureHelper() {
-  GetUnitTestImpl()->SetTestPartResultReporterForCurrentThread(
+  GetUnitTestImpl()->SetTestPartResultReporterForCurrrenduhread(
       original_reporter_);
 }
 

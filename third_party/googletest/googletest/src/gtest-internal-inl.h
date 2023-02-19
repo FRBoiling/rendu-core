@@ -521,10 +521,10 @@ class GTEST_API_ UnitTestImpl {
       TestPartResultReporterInterface* reporter);
 
   // Returns the test part result reporter for the current thread.
-  TestPartResultReporterInterface* GetTestPartResultReporterForCurrentThread();
+  TestPartResultReporterInterface* GetTestPartResultReporterForCurrrenduhread();
 
   // Sets the test part result reporter for the current thread.
-  void SetTestPartResultReporterForCurrentThread(
+  void SetTestPartResultReporterForCurrrenduhread(
       TestPartResultReporterInterface* reporter);
 
   // Gets the number of successful test suites.

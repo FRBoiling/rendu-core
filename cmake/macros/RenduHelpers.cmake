@@ -150,48 +150,56 @@ function(rendu_add_library)
   GroupSources(${RENDU_LIB_CMAKE_CUR_SOURCE_DIR})
   #  add_definitions(-DTRINITY_API_EXPORT_COMMON)
 
-  add_library(${_NAME})
-  #  if (LIB_IS_INTERFACE) #TODO:BOIL head only
-  #    target_sources(${_NAME} INTERFACE ${PRIVATE_SOURCES})
-  #    target_include_directories(${_NAME}
-  #        INTERFACE
-  #        # Provide the binary dir for all child targets
-  #        ${RENDU_LIB_CMAKE_BINARY_DIR}
-  #        ${PUBLIC_INCLUDES}
-  #        ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
-  #
-  #    target_link_libraries(${_NAME}
-  #        INTERFACE
-  #        rendu-core-interface
-  #        )
-  #
-  #    target_compile_definitions(${_NAME} INTERFACE ${RENDU_LIB_DEFINES})
-  #  else()
-  target_sources(${_NAME} PRIVATE ${PRIVATE_SOURCES})
-  CollectIncludeDirectories(
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
-      PUBLIC_INCLUDES
-      # Exclude
-      ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
+  if (LIB_IS_INTERFACE) #TODO:BOIL head only
+    add_library(${_NAME} INTERFACE)
+    target_sources(${_NAME} INTERFACE ${PRIVATE_SOURCES})
+    target_compile_features(${_NAME}
+        INTERFACE
+        cxx_std_11
+        )
 
-  target_include_directories(${_NAME}
-      PUBLIC
-      # Provide the binary dir for all child targets
-      ${RENDU_LIB_CMAKE_BINARY_DIR}
-      ${PUBLIC_INCLUDES}
-      PRIVATE
-      ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
+    target_include_directories(${_NAME}
+        INTERFACE
+        $<BUILD_INTERFACE:${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}>
+        # Provide the binary dir for all child targets
+        ${RENDU_LIB_CMAKE_BINARY_DIR}
+        ${PUBLIC_INCLUDES}
+        ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
 
-  target_link_libraries(${_NAME}
-      PRIVATE
-      #
-      ${RENDU_LIB_PRIVATE_DEPS}
-      PUBLIC
-      ${RENDU_LIB_PUBLIC_DEPS}
-      )
+    target_link_libraries(${_NAME}
+        INTERFACE
+        #
+        ${RENDU_LIB_PRIVATE_DEPS}
+        ${RENDU_LIB_PUBLIC_DEPS}
+        )
 
+  else ()
+    add_library(${_NAME})
+    target_sources(${_NAME} PRIVATE ${PRIVATE_SOURCES})
+    CollectIncludeDirectories(
+        ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}
+        PUBLIC_INCLUDES
+        # Exclude
+        ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
+
+    target_include_directories(${_NAME}
+        PUBLIC
+        # Provide the binary dir for all child targets
+        ${RENDU_LIB_CMAKE_BINARY_DIR}
+        ${PUBLIC_INCLUDES}
+        PRIVATE
+        ${RENDU_LIB_CMAKE_CUR_BINARY_DIR})
+
+    target_link_libraries(${_NAME}
+        PRIVATE
+        #
+        ${RENDU_LIB_PRIVATE_DEPS}
+        PUBLIC
+        ${RENDU_LIB_PUBLIC_DEPS}
+        )
+
+  endif ()
   target_compile_definitions(${_NAME} PUBLIC ${RENDU_LIB_DEFINES})
-  #  endif ()
   #  add_dependencies(${_NAME} ${RENDU_LIB_CMAKE_BINARY_DIR}/revision_data.h)
   set_target_properties(${_NAME}
       PROPERTIES
@@ -199,6 +207,7 @@ function(rendu_add_library)
       ${RENDU_LIB_NAME})
 
   if (BUILD_SHARED_LIBS)
+    message(STATUS "build shared libs")
     if (UNIX)
       install(TARGETS ${_NAME}
           LIBRARY
@@ -212,6 +221,7 @@ function(rendu_add_library)
 
   # Generate precompiled header
   if (USE_COREPCH)
+    message(STATUS "use core pch ")
     set(_header "${PRIVATE_PCH_HEADER}")
     if (_header STREQUAL "")
     else ()

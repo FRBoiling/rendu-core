@@ -1,9 +1,10 @@
 /*
 * Created by boil on 2023/2/17.
 */
+
 #include "gtest/gtest.h"
-#include "ecs/entity.h"
-#include "ecs/registry.h"
+#include <ecs/entity.h>
+#include <ecs/registry.h>
 
 TEST(Entity, Traits) {
   using traits_type = rendu::entity_traits<rendu::entity>;

@@ -276,7 +276,7 @@ class UntypedOnCallSpecBase {
 template <typename F>
 class OnCallSpec : public UntypedOnCallSpecBase {
  public:
-  typedef typename Function<F>::ArgumentTuple ArgumentTuple;
+  typedef typename Function<F>::Argumrenduuple Argumrenduuple;
   typedef typename Function<F>::ArgumentMatcherTuple ArgumentMatcherTuple;
 
   // Constructs an OnCallSpec object from the information inside
@@ -288,10 +288,10 @@ class OnCallSpec : public UntypedOnCallSpecBase {
         // By default, extra_matcher_ should match anything.  However,
         // we cannot initialize it with _ as that causes ambiguity between
         // Matcher's copy and move constructor for some argument types.
-        extra_matcher_(A<const ArgumentTuple&>()) {}
+        extra_matcher_(A<const Argumrenduuple&>()) {}
 
   // Implements the .With() clause.
-  OnCallSpec& With(const Matcher<const ArgumentTuple&>& m) {
+  OnCallSpec& With(const Matcher<const Argumrenduuple&>& m) {
     // Makes sure this is called at most once.
     ExpectSpecProperty(last_clause_ < kWith,
                        ".With() cannot appear "
@@ -316,7 +316,7 @@ class OnCallSpec : public UntypedOnCallSpecBase {
   }
 
   // Returns true if and only if the given arguments match the matchers.
-  bool Matches(const ArgumentTuple& args) const {
+  bool Matches(const Argumrenduuple& args) const {
     return TupleMatches(matchers_, args) && extra_matcher_.Matches(args);
   }
 
@@ -343,7 +343,7 @@ class OnCallSpec : public UntypedOnCallSpecBase {
   //   multi-argument-matcher                  => extra_matcher_
   //   action                                  => action_
   ArgumentMatcherTuple matchers_;
-  Matcher<const ArgumentTuple&> extra_matcher_;
+  Matcher<const Argumrenduuple&> extra_matcher_;
   Action<F> action_;
 };  // class OnCallSpec
 
@@ -865,7 +865,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   using F = R(Args...);
 
  public:
-  typedef typename Function<F>::ArgumentTuple ArgumentTuple;
+  typedef typename Function<F>::Argumrenduuple Argumrenduuple;
   typedef typename Function<F>::ArgumentMatcherTuple ArgumentMatcherTuple;
   typedef typename Function<F>::Result Result;
 
@@ -878,7 +878,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
         // By default, extra_matcher_ should match anything.  However,
         // we cannot initialize it with _ as that causes ambiguity between
         // Matcher's copy and move constructor for some argument types.
-        extra_matcher_(A<const ArgumentTuple&>()),
+        extra_matcher_(A<const Argumrenduuple&>()),
         repeated_action_(DoDefault()) {}
 
   ~TypedExpectation() override {
@@ -892,7 +892,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   }
 
   // Implements the .With() clause.
-  TypedExpectation& With(const Matcher<const ArgumentTuple&>& m) {
+  TypedExpectation& With(const Matcher<const Argumrenduuple&>& m) {
     if (last_clause_ == kWith) {
       ExpectSpecProperty(false,
                          ".With() cannot appear "
@@ -1051,7 +1051,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   const ArgumentMatcherTuple& matchers() const { return matchers_; }
 
   // Returns the matcher specified by the .With() clause.
-  const Matcher<const ArgumentTuple&>& extra_matcher() const {
+  const Matcher<const Argumrenduuple&>& extra_matcher() const {
     return extra_matcher_;
   }
 
@@ -1091,7 +1091,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   // g_gmock_mutex.
 
   // Returns true if and only if this expectation matches the given arguments.
-  bool Matches(const ArgumentTuple& args) const
+  bool Matches(const Argumrenduuple& args) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
     return TupleMatches(matchers_, args) && extra_matcher_.Matches(args);
@@ -1099,7 +1099,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
 
   // Returns true if and only if this expectation should handle the given
   // arguments.
-  bool ShouldHandleArguments(const ArgumentTuple& args) const
+  bool ShouldHandleArguments(const Argumrenduuple& args) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
 
@@ -1113,7 +1113,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
 
   // Describes the result of matching the arguments against this
   // expectation to the given ostream.
-  void ExplainMatchResultTo(const ArgumentTuple& args, ::std::ostream* os) const
+  void ExplainMatchResultTo(const Argumrenduuple& args, ::std::ostream* os) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
 
@@ -1157,7 +1157,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
 
   // Returns the action that should be taken for the current invocation.
   const Action<F>& GetCurrentAction(const FunctionMocker<F>* mocker,
-                                    const ArgumentTuple& args) const
+                                    const Argumrenduuple& args) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
     const int count = call_count();
@@ -1194,7 +1194,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   // IncrementCallCount().  A return value of NULL means the default
   // action.
   const Action<F>* GetActionForArguments(const FunctionMocker<F>* mocker,
-                                         const ArgumentTuple& args,
+                                         const Argumrenduuple& args,
                                          ::std::ostream* what,
                                          ::std::ostream* why)
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
@@ -1225,7 +1225,7 @@ class TypedExpectation<R(Args...)> : public ExpectationBase {
   // statement finishes.
   FunctionMocker<F>* const owner_;
   ArgumentMatcherTuple matchers_;
-  Matcher<const ArgumentTuple&> extra_matcher_;
+  Matcher<const Argumrenduuple&> extra_matcher_;
   Action<F> repeated_action_;
 
   TypedExpectation(const TypedExpectation&) = delete;
@@ -1250,7 +1250,7 @@ GTEST_API_ void LogWithLocation(testing::internal::LogSeverity severity,
 template <typename F>
 class MockSpec {
  public:
-  typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
+  typedef typename internal::Function<F>::Argumrenduuple Argumrenduuple;
   typedef
       typename internal::Function<F>::ArgumentMatcherTuple ArgumentMatcherTuple;
 
@@ -1377,7 +1377,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
 
  public:
   using Result = R;
-  using ArgumentTuple = std::tuple<Args...>;
+  using Argumrenduuple = std::tuple<Args...>;
   using ArgumentMatcherTuple = std::tuple<Matcher<Args>...>;
 
   FunctionMocker() {}
@@ -1410,7 +1410,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // Returns the ON_CALL spec that matches this mock function with the
   // given arguments; returns NULL if no matching ON_CALL is found.
   // L = *
-  const OnCallSpec<F>* FindOnCallSpec(const ArgumentTuple& args) const {
+  const OnCallSpec<F>* FindOnCallSpec(const Argumrenduuple& args) const {
     for (UntypedOnCallSpecs::const_reverse_iterator it =
              untyped_on_call_specs_.rbegin();
          it != untyped_on_call_specs_.rend(); ++it) {
@@ -1428,7 +1428,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // mutable state of this object, and thus can be called concurrently
   // without locking.
   // L = *
-  Result PerformDefaultAction(ArgumentTuple&& args,
+  Result PerformDefaultAction(Argumrenduuple&& args,
                               const std::string& call_description) const {
     const OnCallSpec<F>* const spec = this->FindOnCallSpec(args);
     if (spec != nullptr) {
@@ -1479,7 +1479,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // arguments.  This function can be safely called from multiple
   // threads concurrently.
   Result Invoke(Args... args) GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
-    return InvokeWith(ArgumentTuple(std::forward<Args>(args)...));
+    return InvokeWith(Argumrenduuple(std::forward<Args>(args)...));
   }
 
   MockSpec<F> With(Matcher<Args>... m) {
@@ -1531,7 +1531,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // Describes what default action will be performed for the given
   // arguments.
   // L = *
-  void DescribeDefaultActionTo(const ArgumentTuple& args,
+  void DescribeDefaultActionTo(const Argumrenduuple& args,
                                ::std::ostream* os) const {
     const OnCallSpec<F>* const spec = FindOnCallSpec(args);
 
@@ -1550,8 +1550,8 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   void UntypedDescribeUninterestingCall(const void* untyped_args,
                                         ::std::ostream* os) const override
       GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
-    const ArgumentTuple& args =
-        *static_cast<const ArgumentTuple*>(untyped_args);
+    const Argumrenduuple& args =
+        *static_cast<const Argumrenduuple*>(untyped_args);
     *os << "Uninteresting mock function call - ";
     DescribeDefaultActionTo(args, os);
     *os << "    Function call: " << Name();
@@ -1578,8 +1578,8 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
       const void* untyped_args, const void** untyped_action, bool* is_excessive,
       ::std::ostream* what, ::std::ostream* why) override
       GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
-    const ArgumentTuple& args =
-        *static_cast<const ArgumentTuple*>(untyped_args);
+    const Argumrenduuple& args =
+        *static_cast<const Argumrenduuple*>(untyped_args);
     MutexLock l(&g_gmock_mutex);
     TypedExpectation<F>* exp = this->FindMatchingExpectationLocked(args);
     if (exp == nullptr) {  // A match wasn't found.
@@ -1601,14 +1601,14 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // Prints the given function arguments to the ostream.
   void UntypedPrintArgs(const void* untyped_args,
                         ::std::ostream* os) const override {
-    const ArgumentTuple& args =
-        *static_cast<const ArgumentTuple*>(untyped_args);
+    const Argumrenduuple& args =
+        *static_cast<const Argumrenduuple*>(untyped_args);
     UniversalPrint(args, os);
   }
 
   // Returns the expectation that matches the arguments, or NULL if no
   // expectation matches them.
-  TypedExpectation<F>* FindMatchingExpectationLocked(const ArgumentTuple& args)
+  TypedExpectation<F>* FindMatchingExpectationLocked(const Argumrenduuple& args)
       const GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
     // See the definition of untyped_expectations_ for why access to
@@ -1626,7 +1626,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   }
 
   // Returns a message that the arguments don't match any expectation.
-  void FormatUnexpectedCallMessageLocked(const ArgumentTuple& args,
+  void FormatUnexpectedCallMessageLocked(const Argumrenduuple& args,
                                          ::std::ostream* os,
                                          ::std::ostream* why) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
@@ -1638,7 +1638,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
 
   // Prints a list of expectations that have been tried against the
   // current mock function call.
-  void PrintTriedExpectationsLocked(const ArgumentTuple& args,
+  void PrintTriedExpectationsLocked(const Argumrenduuple& args,
                                     ::std::ostream* why) const
       GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
@@ -1664,7 +1664,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // Performs the given action (or the default if it's null) with the given
   // arguments and returns the action's result.
   // L = *
-  R PerformAction(const void* untyped_action, ArgumentTuple&& args,
+  R PerformAction(const void* untyped_action, Argumrenduuple&& args,
                   const std::string& call_description) const {
     if (untyped_action == nullptr) {
       return PerformDefaultAction(std::move(args), call_description);
@@ -1690,7 +1690,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   template <typename T = R,
             typename std::enable_if<can_print_result<T>::value, int>::type = 0>
   R PerformActionAndPrintResult(const void* const untyped_action,
-                                ArgumentTuple&& args,
+                                Argumrenduuple&& args,
                                 const std::string& call_description,
                                 std::ostream& os) {
     R result = PerformAction(untyped_action, std::move(args), call_description);
@@ -1705,7 +1705,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
             typename std::enable_if<
                 internal::negation<can_print_result<T>>::value, int>::type = 0>
   R PerformActionAndPrintResult(const void* const untyped_action,
-                                ArgumentTuple&& args,
+                                Argumrenduuple&& args,
                                 const std::string& call_description,
                                 std::ostream&) {
     return PerformAction(untyped_action, std::move(args), call_description);
@@ -1714,13 +1714,13 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
   // Returns the result of invoking this mock function with the given
   // arguments. This function can be safely called from multiple
   // threads concurrently.
-  R InvokeWith(ArgumentTuple&& args) GTEST_LOCK_EXCLUDED_(g_gmock_mutex);
+  R InvokeWith(Argumrenduuple&& args) GTEST_LOCK_EXCLUDED_(g_gmock_mutex);
 };  // class FunctionMocker
 
 // Calculates the result of invoking this mock function with the given
 // arguments, prints it, and returns it.
 template <typename R, typename... Args>
-R FunctionMocker<R(Args...)>::InvokeWith(ArgumentTuple&& args)
+R FunctionMocker<R(Args...)>::InvokeWith(Argumrenduuple&& args)
     GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
   // See the definition of untyped_expectations_ for why access to it
   // is unprotected here.

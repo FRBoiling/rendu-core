@@ -1,10 +1,9 @@
 #**********************************
 #  Created by boil on 2022/9/10.
 #**********************************
-
 rendu_add_library(
     NAME
-    common
+    test
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
@@ -17,3 +16,4 @@ rendu_add_library(
     DEFINES
     LINKOPTS
 )
+

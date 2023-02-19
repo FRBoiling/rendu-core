@@ -317,7 +317,7 @@ Mutex::~Mutex() {
 void Mutex::Lock() {
   ThreadSafeLazyInit();
   ::EnterCriticalSection(critical_section_);
-  owner_thread_id_ = ::GetCurrentThreadId();
+  owner_thread_id_ = ::GetCurrrenduhreadId();
 }
 
 void Mutex::Unlock() {
@@ -333,7 +333,7 @@ void Mutex::Unlock() {
 // with high probability.
 void Mutex::AssertHeld() {
   ThreadSafeLazyInit();
-  GTEST_CHECK_(owner_thread_id_ == ::GetCurrentThreadId())
+  GTEST_CHECK_(owner_thread_id_ == ::GetCurrrenduhreadId())
       << "The current thread is not holding the mutex @" << this;
 }
 
@@ -487,12 +487,12 @@ class ThreadLocalRegistryImpl {
  public:
   // Registers thread_local_instance as having value on the current thread.
   // Returns a value that can be used to identify the thread from other threads.
-  static ThreadLocalValueHolderBase* GetValueOnCurrentThread(
+  static ThreadLocalValueHolderBase* GetValueOnCurrrenduhread(
       const ThreadLocalBase* thread_local_instance) {
 #ifdef _MSC_VER
     MemoryIsNotDeallocated memory_is_not_deallocated;
 #endif  // _MSC_VER
-    DWORD current_thread = ::GetCurrentThreadId();
+    DWORD current_thread = ::GetCurrrenduhreadId();
     MutexLock lock(&mutex_);
     ThreadIdToThreadLocals* const thread_to_thread_locals =
         GetThreadLocalsMapLocked();
@@ -514,7 +514,7 @@ class ThreadLocalRegistryImpl {
               .insert(std::make_pair(
                   thread_local_instance,
                   std::shared_ptr<ThreadLocalValueHolderBase>(
-                      thread_local_instance->NewValueForCurrentThread())))
+                      thread_local_instance->NewValueForCurrrenduhread())))
               .first;
     }
     return value_pos->second.get();
@@ -605,7 +605,7 @@ class ThreadLocalRegistryImpl {
     // Give the watcher thread the same priority as ours to avoid being
     // blocked by it.
     ::SetThreadPriority(watcher_thread,
-                        ::GetThreadPriority(::GetCurrentThread()));
+                        ::GetThreadPriority(::GetCurrrenduhread()));
     ::ResumeThread(watcher_thread);
     ::CloseHandle(watcher_thread);
   }
@@ -642,9 +642,9 @@ Mutex ThreadLocalRegistryImpl::mutex_(Mutex::kStaticMutex);  // NOLINT
 Mutex ThreadLocalRegistryImpl::thread_map_mutex_(
     Mutex::kStaticMutex);  // NOLINT
 
-ThreadLocalValueHolderBase* ThreadLocalRegistry::GetValueOnCurrentThread(
+ThreadLocalValueHolderBase* ThreadLocalRegistry::GetValueOnCurrrenduhread(
     const ThreadLocalBase* thread_local_instance) {
-  return ThreadLocalRegistryImpl::GetValueOnCurrentThread(
+  return ThreadLocalRegistryImpl::GetValueOnCurrrenduhread(
       thread_local_instance);
 }
 

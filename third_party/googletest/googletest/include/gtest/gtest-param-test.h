@@ -225,10 +225,10 @@ namespace testing {
 //   * Condition start < end must be satisfied in order for resulting sequences
 //     to contain any elements.
 //
-template <typename T, typename IncrementT>
-internal::ParamGenerator<T> Range(T start, T end, IncrementT step) {
+template <typename T, typename Incremrendu>
+internal::ParamGenerator<T> Range(T start, T end, Incremrendu step) {
   return internal::ParamGenerator<T>(
-      new internal::RangeGenerator<T, IncrementT>(start, end, step));
+      new internal::RangeGenerator<T, Incremrendu>(start, end, step));
 }
 
 template <typename T>
@@ -346,15 +346,15 @@ internal::ValueArray<T...> Values(T... v) {
 // of multiple flags can be tested when several Bool()'s are combined using
 // Combine() function.
 //
-// In the following example all tests in the test suite FlagDependentTest
+// In the following example all tests in the test suite FlagDependrenduest
 // will be instantiated twice with parameters false and true.
 //
-// class FlagDependentTest : public testing::TestWithParam<bool> {
+// class FlagDependrenduest : public testing::TestWithParam<bool> {
 //   virtual void SetUp() {
 //     external_flag = GetParam();
 //   }
 // }
-// INSTANTIATE_TEST_SUITE_P(BoolSequence, FlagDependentTest, Bool());
+// INSTANTIATE_TEST_SUITE_P(BoolSequence, FlagDependrenduest, Bool());
 //
 inline internal::ParamGenerator<bool> Bool() { return Values(false, true); }
 
@@ -385,10 +385,10 @@ inline internal::ParamGenerator<bool> Bool() { return Values(false, true); }
 //                          Combine(Values("cat", "dog"),
 //                                  Values(BLACK, WHITE)));
 //
-// This will instantiate tests in FlagDependentTest with all variations of two
+// This will instantiate tests in FlagDependrenduest with all variations of two
 // Boolean flags:
 //
-// class FlagDependentTest
+// class FlagDependrenduest
 //     : public testing::TestWithParam<std::tuple<bool, bool> > {
 //   virtual void SetUp() {
 //     // Assigns external_flag_1 and external_flag_2 values from the tuple.
@@ -396,10 +396,10 @@ inline internal::ParamGenerator<bool> Bool() { return Values(false, true); }
 //   }
 // };
 //
-// TEST_P(FlagDependentTest, TestFeature1) {
+// TEST_P(FlagDependrenduest, TestFeature1) {
 //   // Test your code using external_flag_1 and external_flag_2 here.
 // }
-// INSTANTIATE_TEST_SUITE_P(TwoBoolSequence, FlagDependentTest,
+// INSTANTIATE_TEST_SUITE_P(TwoBoolSequence, FlagDependrenduest,
 //                          Combine(Bool(), Bool()));
 //
 template <typename... Generator>
