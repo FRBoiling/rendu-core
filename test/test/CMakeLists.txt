@@ -1,6 +1,7 @@
 #**********************************
 #  Created by boil on 2022/9/10.
 #**********************************
+set(PROJECT_NAME rendu)
 rendu_add_library(
     NAME
     test

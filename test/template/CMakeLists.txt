@@ -2,6 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
+set(PROJECT_NAME test)
 rendu_add_test(
     NAME
     template
