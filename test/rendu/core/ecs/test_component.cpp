@@ -2,8 +2,7 @@
 * Created by boil on 2023/2/15.
 */
 #include <test/rdtest.h>
-#include "ecs/component.h"
-#include "define/define.h"
+#include <core/ecs/component.h>
 
 struct empty {};
 

@@ -2,10 +2,9 @@
 * Created by boil on 2023/2/19.
 */
 #include <test/rdtest.h>
+#include <test/throwing_allocator.h>
 #include <core/ecs/entity.h>
 #include <core/ecs/sparse_set.h>
-#include <test/throwing_allocator.h>
-
 
 struct empty_type {};
 

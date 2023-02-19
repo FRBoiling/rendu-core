@@ -1,20 +1,13 @@
 /*
 * Created by boil on 2023/2/18.
 */
-#include <test/rdtest.h>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <unordered_set>
-#include <utility>
-#include <test/rdtest.h>
-#include <base/hashed_string.h>
-#include <base/type_info.h>
-#include <ecs/entity.h>
-#include <ecs/registry.h>
 
+#include <unordered_set>
+#include <test/rdtest.h>
+#include <core/base/hashed_string.h>
+#include <core/base/type_info.h>
+#include <core/ecs/entity.h>
+#include <core/ecs/registry.h>
 
 struct empty_type {};
 

@@ -2,15 +2,14 @@
 * Created by boil on 2023/2/19.
 */
 
+#include <test/rdtest.h>
+#include <test/throwing_allocator.h>
+#include <test/throwing_type.h>
 #include <unordered_set>
 #include <core/ecs/entity.h>
 #include <core/ecs/sparse_set.h>
 #include <core/ecs/component.h>
 #include <core/ecs/storage.h>
-#include <test/rdtest.h>
-
-#include <test/throwing_allocator.h>
-#include <test/throwing_type.h>
 
 struct pinned_type {
   const int value{42};

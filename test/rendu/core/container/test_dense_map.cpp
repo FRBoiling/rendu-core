@@ -1,8 +1,8 @@
 #include <test/rdtest.h>
-#include <container/dense_map.h>
-#include <ecs/entity.h>
-#include <base/memory.h>
-#include "test/throwing_allocator.h"
+#include <test/throwing_allocator.h>
+#include <core/container/dense_map.h>
+#include <core/ecs/entity.h>
+#include <core/base/memory.h>
 
 struct transparent_equal_to {
   using is_transparent = void;

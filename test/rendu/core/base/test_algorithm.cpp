@@ -3,8 +3,8 @@
 */
 #include <array>
 #include <vector>
-#include <core/base/algorithm.h>
 #include <test/rdtest.h>
+#include <core/base/algorithm.h>
 
 struct boxed_int {
   int value;

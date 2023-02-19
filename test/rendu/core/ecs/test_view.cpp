@@ -3,9 +3,9 @@
 */
 
 #include <test/rdtest.h>
-#include <ecs/entity.h>
-#include <ecs/registry.h>
-#include <ecs/view.h>
+#include <core/ecs/entity.h>
+#include <core/ecs/registry.h>
+#include <core/ecs/view.h>
 
 struct empty_type {};
 

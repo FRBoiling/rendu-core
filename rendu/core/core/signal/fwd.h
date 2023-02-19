@@ -4,7 +4,6 @@
 
 #ifndef RENDU_CORE_SIGNAL_FWD_H_
 #define RENDU_CORE_SIGNAL_FWD_H_
-#include <memory>
 
 namespace rendu {
 

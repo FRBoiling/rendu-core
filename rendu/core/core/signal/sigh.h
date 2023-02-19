@@ -5,13 +5,7 @@
 #ifndef RENDU_CORE_SIGNAL_SIGH_H_
 #define RENDU_CORE_SIGNAL_SIGH_H_
 
-#include <algorithm>
-#include <functional>
-#include <type_traits>
-#include <utility>
-#include <vector>
 #include "delegate.h"
-#include "fwd.h"
 
 namespace rendu {
 

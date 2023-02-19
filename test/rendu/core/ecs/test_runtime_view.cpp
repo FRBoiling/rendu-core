@@ -2,9 +2,9 @@
 * Created by boil on 2023/2/19.
 */
 #include <test/rdtest.h>
-#include <ecs/entity.h>
-#include <ecs/registry.h>
-#include <ecs/runtime_view.h>
+#include <core/ecs/entity.h>
+#include <core/ecs/registry.h>
+#include <core/ecs/runtime_view.h>
 
 struct stable_type {
   static constexpr auto in_place_delete = true;

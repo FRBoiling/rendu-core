@@ -2,10 +2,10 @@
 * Created by boil on 2023/2/19.
 */
 #include <test/rdtest.h>
-#include <container/dense_set.h>
-#include <ecs/entity.h>
-#include <base/memory.h>
-#include "test/throwing_allocator.h"
+#include <test/throwing_allocator.h>
+#include <core/container/dense_set.h>
+#include <core/ecs/entity.h>
+#include <core/base/memory.h>
 
 namespace {
 

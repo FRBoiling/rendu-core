@@ -3,8 +3,8 @@
 */
 
 #include <test/rdtest.h>
-#include <ecs/entity.h>
-#include <ecs/registry.h>
+#include <core/ecs/entity.h>
+#include <core/ecs/registry.h>
 
 RD_TEST(Entity, Traits) {
   using traits_type = rendu::entity_traits<rendu::entity>;

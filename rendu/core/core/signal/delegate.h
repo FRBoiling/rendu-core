@@ -5,12 +5,6 @@
 #ifndef RENDU_CORE_SIGNAL_DELEGATE_H_
 #define RENDU_CORE_SIGNAL_DELEGATE_H_
 
-#include <cstddef>
-#include <functional>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include "define/define.h"
 #include "base/type_traits.h"
 #include "fwd.h"
 
