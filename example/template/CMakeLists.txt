@@ -1,19 +1,20 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-set(target_name template)
+
 rendu_add_executable(
     NAME
-    ${target_name}
+    template
     CMAKE_CUR_SOURCE_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CMAKE_CUR_BINARY_DIR
     ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
-    DEPS
-    rendu::core
+    PRIVATE_DEPS
+    PUBLIC_DEPS
     rendu::common
+    rendu::core
     DEFINES
     LINKOPTS
 )

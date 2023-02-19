@@ -12,7 +12,6 @@ rendu_add_executable(
     CMAKE_BINARY_DIR
     ${CMAKE_BINARY_DIR}
     PRIVATE_DEPS
-    rendu-core-interface
     PUBLIC_DEPS
     rendu::common
     rendu::core
