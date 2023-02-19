@@ -1,7 +1,7 @@
 /*
 * Created by boil on 2023/2/15.
 */
-#include "gtest/gtest.h"
+#include <test/rdtest.h>
 #include "ecs/component.h"
 #include "define/define.h"
 
@@ -32,42 +32,42 @@ struct rendu::component_traits<traits_based> {
   static constexpr auto page_size = 8u;
 };
 
-TEST(Component, VoidType) {
+RD_TEST(Component, VoidType) {
   using traits_type = rendu::component_traits<void>;
 
   static_assert(!traits_type::in_place_delete);
   static_assert(traits_type::page_size == 0u);
 }
 
-TEST(Component, Empty) {
+RD_TEST(Component, Empty) {
   using traits_type = rendu::component_traits<empty>;
 
   static_assert(!traits_type::in_place_delete);
   static_assert(traits_type::page_size == 0u);
 }
 
-TEST(Component, NonEmpty) {
+RD_TEST(Component, NonEmpty) {
   using traits_type = rendu::component_traits<non_empty>;
 
   static_assert(!traits_type::in_place_delete);
   static_assert(traits_type::page_size == RD_PACKED_PAGE);
 }
 
-TEST(Component, NonMovable) {
+RD_TEST(Component, NonMovable) {
   using traits_type = rendu::component_traits<non_movable>;
 
   static_assert(traits_type::in_place_delete);
   static_assert(traits_type::page_size == RD_PACKED_PAGE);
 }
 
-TEST(Component, SelfContained) {
+RD_TEST(Component, SelfContained) {
   using traits_type = rendu::component_traits<self_contained>;
 
   static_assert(traits_type::in_place_delete);
   static_assert(traits_type::page_size == 4u);
 }
 
-TEST(Component, TraitsBased) {
+RD_TEST(Component, TraitsBased) {
   using traits_type = rendu::component_traits<traits_based>;
 
   static_assert(!traits_type::in_place_delete);

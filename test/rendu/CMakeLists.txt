@@ -16,8 +16,6 @@ rendu_add_test(
     rendu::test
     rendu::core
     rendu::common
-    gtest::gmock
-    gtest::gtest
     DEFINES
     LINKOPTS
 )

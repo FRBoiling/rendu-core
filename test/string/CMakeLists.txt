@@ -14,8 +14,7 @@ rendu_add_test(
     ${CMAKE_BINARY_DIR}
     DEPS
     rendu::common
-    gtest::gmock
-    gtest::gtest
+    rendu::test
     DEFINES
     LINKOPTS
 )

@@ -14,6 +14,8 @@ rendu_add_library(
     PRIVATE_DEPS
     rendu-core-interface
     PUBLIC_DEPS
+    gtest::gtest
+    gtest::gmock
     DEFINES
     LINKOPTS
 )
