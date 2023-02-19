@@ -7,7 +7,6 @@
 #include "base/any.h"
 #include "signal/sigh.h"
 #include "registry.h"
-#include "fwd.h"
 
 namespace rendu {
 

@@ -9,6 +9,7 @@
 #include "base/any.h"
 #include "base/algorithm.h"
 #include "container/dense_map.h"
+#include "entity.h"
 #include "storage.h"
 #include "group.h"
 #include "mixin.h"

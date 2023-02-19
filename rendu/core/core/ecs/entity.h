@@ -7,7 +7,6 @@
 
 #include <bit>
 #include "base/type_traits.h"
-#include "fwd.h"
 
 namespace rendu {
 
