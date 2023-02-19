@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/19.
 */
 
-#ifndef RENDU_COMMON_THROWING_ALLOCATOR_H_
-#define RENDU_COMMON_THROWING_ALLOCATOR_H_
+#ifndef RENDU_TEST_THROWING_ALLOCATOR_H_
+#define RENDU_TEST_THROWING_ALLOCATOR_H_
 #include <cstddef>
 #include <memory>
 #include <type_traits>
@@ -69,4 +69,4 @@ class throwing_allocator: std::allocator<Type> {
 
 } // namespace test
 
-#endif //RENDU_COMMON_THROWING_ALLOCATOR_H_
+#endif //RENDU_TEST_THROWING_ALLOCATOR_H_

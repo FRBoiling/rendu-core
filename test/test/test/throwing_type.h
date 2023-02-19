@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/19.
 */
 
-#ifndef RENDU_TEST_TEST_THROWING_TYPE_H_
-#define RENDU_TEST_TEST_THROWING_TYPE_H_
+#ifndef RENDU_TEST_THROWING_TYPE_H_
+#define RENDU_TEST_THROWING_TYPE_H_
 namespace test {
 
 class throwing_type {
@@ -45,4 +45,4 @@ class throwing_type {
 };
 
 } // namespace test
-#endif //RENDU_TEST_TEST_THROWING_TYPE_H_
+#endif //RENDU_TEST_THROWING_TYPE_H_
