@@ -317,7 +317,7 @@ Mutex::~Mutex() {
 void Mutex::Lock() {
   ThreadSafeLazyInit();
   ::EnterCriticalSection(critical_section_);
-  owner_thread_id_ = ::GetCurrrenduhreadId();
+  owner_thread_id_ = ::GetCurrentThreadId();
 }
 
 void Mutex::Unlock() {
@@ -333,7 +333,7 @@ void Mutex::Unlock() {
 // with high probability.
 void Mutex::AssertHeld() {
   ThreadSafeLazyInit();
-  GTEST_CHECK_(owner_thread_id_ == ::GetCurrrenduhreadId())
+  GTEST_CHECK_(owner_thread_id_ == ::GetCurrentThreadId())
       << "The current thread is not holding the mutex @" << this;
 }
 
@@ -492,7 +492,7 @@ class ThreadLocalRegistryImpl {
 #ifdef _MSC_VER
     MemoryIsNotDeallocated memory_is_not_deallocated;
 #endif  // _MSC_VER
-    DWORD current_thread = ::GetCurrrenduhreadId();
+    DWORD current_thread = ::GetCurrentThreadId();
     MutexLock lock(&mutex_);
     ThreadIdToThreadLocals* const thread_to_thread_locals =
         GetThreadLocalsMapLocked();
