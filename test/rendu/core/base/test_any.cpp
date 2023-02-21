@@ -1438,11 +1438,11 @@ RD_TEST_F(Any, DeducedArrayType) {
 
   RD_ASSERT_TRUE(any);
   RD_ASSERT_EQ(any.type(), rendu::type_id<const char *>());
-  RD_ASSERT_EQ((std::strcmp("array of char", rendu::any_cast<const char *>(any))), 0);
+  RD_ASSERT_EQ((strcmp("array of char", rendu::any_cast<const char *>(any))), 0);
 
   any = "another array of char";
 
   RD_ASSERT_TRUE(any);
   RD_ASSERT_EQ(any.type(), rendu::type_id<const char *>());
-  RD_ASSERT_EQ((std::strcmp("another array of char", rendu::any_cast<const char *>(any))), 0);
+  RD_ASSERT_EQ((strcmp("another array of char", rendu::any_cast<const char *>(any))), 0);
 }

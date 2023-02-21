@@ -605,7 +605,7 @@ class ThreadLocalRegistryImpl {
     // Give the watcher thread the same priority as ours to avoid being
     // blocked by it.
     ::SetThreadPriority(watcher_thread,
-                        ::GetThreadPriority(::GetCurrrenduhread()));
+                        ::GetThreadPriority(::GetCurrentThread()));
     ::ResumeThread(watcher_thread);
     ::CloseHandle(watcher_thread);
   }
