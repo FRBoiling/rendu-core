@@ -3,6 +3,7 @@
 */
 #include <test/rdtest.h>
 #include <core/signal/sigh.h>
+namespace {
 
 struct sigh_listener {
   static void f(int &v) {
@@ -46,7 +47,7 @@ struct before_after {
   static inline int value{};
 };
 
-struct SigH: ::testing::Test {
+struct SigH : ::testing::Test {
   void SetUp() override {
     before_after::value = 0;
   }
@@ -574,4 +575,5 @@ RD_TEST_F(SigH, CustomAllocator) {
 
   RD_ASSERT_TRUE(copy.empty());
   RD_ASSERT_TRUE(move.empty());
+}
 }

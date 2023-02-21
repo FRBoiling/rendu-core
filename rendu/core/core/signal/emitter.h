@@ -6,10 +6,10 @@
 #define RENDU_CORE_CORE_SIGNAL_EMITTER_H_
 
 #include "container/dense_map.h"
-#include "define/define.h"
 #include "base/compressed_pair.h"
-#include "fwd.h"
 #include "base/type_info.h"
+#include "base/identity.h"
+#include "fwd.h"
 
 namespace rendu {
 
@@ -77,7 +77,7 @@ class emitter {
    */
   emitter(emitter &&other, const allocator_type &allocator) noexcept
       : handlers{container_type{std::move(other.handlers.first()), allocator}, allocator} {
-    ENTT_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
   }
 
   /**
@@ -86,7 +86,7 @@ class emitter {
    * @return This dispatcher.
    */
   emitter &operator=(emitter &&other) noexcept {
-    ENTT_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
 
     handlers = std::move(other.handlers);
     return *this;
