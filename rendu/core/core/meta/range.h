@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/22.
 */
 
-#ifndef RENDU_CORE_CORE_META_RANGE_H_
-#define RENDU_CORE_CORE_META_RANGE_H_
+#ifndef RENDU_CORE_META_RANGE_H_
+#define RENDU_CORE_META_RANGE_H_
 
 #include "base/iterator.h"
 #include "context.h"
@@ -147,4 +147,4 @@ using meta_range = iterable_adaptor<internal::meta_range_iterator<Type, It>>;
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_META_RANGE_H_
+#endif //RENDU_CORE_META_RANGE_H_
