@@ -8,7 +8,7 @@
 
 namespace {
 
-struct test_emitter: rendu::emitter<test_emitter> {
+struct test_emitter : rendu::emitter<test_emitter> {
   using rendu::emitter<test_emitter>::emitter;
 };
 

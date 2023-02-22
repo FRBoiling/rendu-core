@@ -54,7 +54,8 @@ class sigh<Ret(Args...), Allocator> {
   friend class sink<sigh<Ret(Args...), Allocator>>;
 
   using alloc_traits = std::allocator_traits<Allocator>;
-  using container_type = std::vector<delegate<Ret(Args...)>, typename alloc_traits::template rebind_alloc<delegate<Ret(Args...)>>>;
+  using container_type = std::vector<delegate<Ret(Args...)>,
+                                     typename alloc_traits::template rebind_alloc<delegate<Ret(Args...)>>>;
 
  public:
   /*! @brief Allocator type. */
@@ -65,14 +66,16 @@ class sigh<Ret(Args...), Allocator> {
   using sink_type = sink<sigh<Ret(Args...), Allocator>>;
 
   /*! @brief Default constructor. */
-  sigh() noexcept(std::is_nothrow_default_constructible_v<allocator_type> &&std::is_nothrow_constructible_v<container_type, const allocator_type &>)
+  sigh() noexcept(std::is_nothrow_default_constructible_v<allocator_type>
+      && std::is_nothrow_constructible_v<container_type, const allocator_type &>)
       : sigh{allocator_type{}} {}
 
   /**
    * @brief Constructs a signal handler with a given allocator.
    * @param allocator The allocator to use.
    */
-  explicit sigh(const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type, const allocator_type &>)
+  explicit sigh(const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type,
+                                                                                          const allocator_type &>)
       : calls{allocator} {}
 
   /**
@@ -87,7 +90,9 @@ class sigh<Ret(Args...), Allocator> {
    * @param other The instance to copy from.
    * @param allocator The allocator to use.
    */
-  sigh(const sigh &other, const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type, const container_type &, const allocator_type &>)
+  sigh(const sigh &other, const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type,
+                                                                                                    const container_type &,
+                                                                                                    const allocator_type &>)
       : calls{other.calls, allocator} {}
 
   /**
@@ -102,7 +107,9 @@ class sigh<Ret(Args...), Allocator> {
    * @param other The instance to move from.
    * @param allocator The allocator to use.
    */
-  sigh(sigh &&other, const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type, container_type &&, const allocator_type &>)
+  sigh(sigh &&other, const allocator_type &allocator) noexcept(std::is_nothrow_constructible_v<container_type,
+                                                                                               container_type &&,
+                                                                                               const allocator_type &>)
       : calls{std::move(other.calls), allocator} {}
 
   /**
@@ -166,7 +173,7 @@ class sigh<Ret(Args...), Allocator> {
    * @param args Arguments to use to invoke listeners.
    */
   void publish(Args... args) const {
-    for(auto &&call: std::as_const(calls)) {
+    for (auto &&call : std::as_const(calls)) {
       call(args...);
     }
   }
@@ -187,20 +194,20 @@ class sigh<Ret(Args...), Allocator> {
    */
   template<typename Func>
   void collect(Func func, Args... args) const {
-    for(auto &&call: calls) {
-      if constexpr(std::is_void_v<Ret> || !std::is_invocable_v<Func, Ret>) {
+    for (auto &&call : calls) {
+      if constexpr (std::is_void_v<Ret> || !std::is_invocable_v<Func, Ret>) {
         call(args...);
 
-        if constexpr(std::is_invocable_r_v<bool, Func>) {
-          if(func()) {
+        if constexpr (std::is_invocable_r_v<bool, Func>) {
+          if (func()) {
             break;
           }
         } else {
           func();
         }
       } else {
-        if constexpr(std::is_invocable_r_v<bool, Func, Ret>) {
-          if(func(call(args...))) {
+        if constexpr (std::is_invocable_r_v<bool, Func, Ret>) {
+          if (func(call(args...))) {
             break;
           }
         } else {
@@ -224,7 +231,8 @@ class sigh<Ret(Args...), Allocator> {
 class connection {
   /*! @brief A sink is allowed to create connection objects. */
   template<typename>
-  friend class sink;
+  friend
+  class sink;
 
   connection(delegate<void(void *)> fn, void *ref)
       : disconnect{fn}, signal{ref} {}
@@ -245,7 +253,7 @@ class connection {
 
   /*! @brief Breaks the connection. */
   void release() {
-    if(disconnect) {
+    if (disconnect) {
       disconnect(signal);
       disconnect.reset();
     }
@@ -429,7 +437,8 @@ class sink<sigh<Ret(Args...), Allocator>> {
    * @param value_or_instance A valid object that fits the purpose.
    * @return A properly initialized sink object.
    */
-  template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<std::remove_pointer_t<Type>>, void>, sink>>
+  template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<std::remove_pointer_t<Type>>, void>,
+                                                      sink>>
   [[nodiscard]] sink before(Type &value_or_instance) {
     return before(&value_or_instance);
   }
@@ -443,7 +452,7 @@ class sink<sigh<Ret(Args...), Allocator>> {
   [[nodiscard]] sink before(const void *value_or_instance) {
     sink other{*this};
 
-    if(value_or_instance) {
+    if (value_or_instance) {
       const auto &calls = signal->calls;
       const auto it = std::find_if(calls.cbegin(), calls.cend(), [value_or_instance](const auto &delegate) {
         return delegate.data() == value_or_instance;
@@ -527,7 +536,7 @@ class sink<sigh<Ret(Args...), Allocator>> {
    * @param value_or_instance A valid object that fits the purpose.
    */
   void disconnect(const void *value_or_instance) {
-    if(value_or_instance) {
+    if (value_or_instance) {
       auto &calls = signal->calls;
       auto predicate = [value_or_instance](const auto &delegate) { return delegate.data() == value_or_instance; };
       calls.erase(std::remove_if(calls.begin(), calls.end(), std::move(predicate)), calls.end());
@@ -558,4 +567,5 @@ template<typename Ret, typename... Args, typename Allocator>
 sink(sigh<Ret(Args...), Allocator> &) -> sink<sigh<Ret(Args...), Allocator>>;
 
 } // namespace rendu
+
 #endif //RENDU_CORE_SIGNAL_SIGH_H_

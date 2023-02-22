@@ -6,7 +6,7 @@
 #include <test/throwing_allocator.h>
 #include <core/signal/delegate.h>
 
-namespace{
+namespace {
 
 int delegate_function(const int &i) {
   return i * i;
@@ -75,7 +75,8 @@ RD_TEST(Delegate, Functionalities) {
 
   ff_del.connect<&delegate_function>();
   mf_del.connect<&delegate_functor::operator()>(functor);
-  lf_del.connect([](const void *ptr, int value) { return static_cast<const delegate_functor *>(ptr)->identity(value); }, &functor);
+  lf_del.connect([](const void *ptr, int value) { return static_cast<const delegate_functor *>(ptr)->identity(value); },
+                 &functor);
 
   RD_ASSERT_TRUE(ff_del);
   RD_ASSERT_TRUE(mf_del);
@@ -89,9 +90,9 @@ RD_TEST(Delegate, Functionalities) {
 
   RD_ASSERT_FALSE(ff_del);
 
-  RD_ASSERT_EQ(ff_del, rendu::delegate<int(int)>{});
-  RD_ASSERT_NE(mf_del, rendu::delegate<int(int)>{});
-  RD_ASSERT_NE(lf_del, rendu::delegate<int(int)>{});
+  RD_ASSERT_EQ(ff_del, rendu::delegate < int(int) > {});
+  RD_ASSERT_NE(mf_del, rendu::delegate < int(int) > {});
+  RD_ASSERT_NE(lf_del, rendu::delegate < int(int) > {});
 
   RD_ASSERT_NE(ff_del, mf_del);
   RD_ASSERT_NE(ff_del, lf_del);
@@ -103,9 +104,9 @@ RD_TEST(Delegate, Functionalities) {
   RD_ASSERT_FALSE(mf_del);
   RD_ASSERT_TRUE(lf_del);
 
-  RD_ASSERT_EQ(ff_del, rendu::delegate<int(int)>{});
-  RD_ASSERT_EQ(mf_del, rendu::delegate<int(int)>{});
-  RD_ASSERT_NE(lf_del, rendu::delegate<int(int)>{});
+  RD_ASSERT_EQ(ff_del, rendu::delegate < int(int) > {});
+  RD_ASSERT_EQ(mf_del, rendu::delegate < int(int) > {});
+  RD_ASSERT_NE(lf_del, rendu::delegate < int(int) > {});
 
   RD_ASSERT_EQ(ff_del, mf_del);
   RD_ASSERT_NE(ff_del, lf_del);
@@ -113,11 +114,11 @@ RD_TEST(Delegate, Functionalities) {
 }
 
 RD_DEBUG_TEST(DelegateDeathTest, InvokeEmpty) {
-rendu::delegate<int(int)> del;
+  rendu::delegate<int(int)> del;
 
-RD_ASSERT_FALSE(del);
-RD_ASSERT_DEATH(del(42), "");
-RD_ASSERT_DEATH(std::as_const(del)(42), "");
+  RD_ASSERT_FALSE(del);
+  RD_ASSERT_DEATH(del(42), "");
+  RD_ASSERT_DEATH(std::as_const(del)(42), "");
 }
 
 RD_TEST(Delegate, DataMembers) {
@@ -136,63 +137,63 @@ RD_TEST(Delegate, Comparison) {
   delegate_functor other;
   const int value = 0;
 
-  RD_ASSERT_EQ(lhs, rendu::delegate<int(int)>{});
+  RD_ASSERT_EQ(lhs, rendu::delegate < int(int) > {});
   RD_ASSERT_FALSE(lhs != rhs);
   RD_ASSERT_TRUE(lhs == rhs);
   RD_ASSERT_EQ(lhs, rhs);
 
   lhs.connect<&delegate_function>();
 
-  RD_ASSERT_EQ(lhs, rendu::delegate<int(int)>{rendu::connect_arg<&delegate_function>});
+  RD_ASSERT_EQ(lhs, rendu::delegate < int(int) > {rendu::connect_arg < &delegate_function > });
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   rhs.connect<&delegate_function>();
 
-  RD_ASSERT_EQ(rhs, rendu::delegate<int(int)>{rendu::connect_arg<&delegate_function>});
+  RD_ASSERT_EQ(rhs, rendu::delegate < int(int) > {rendu::connect_arg < &delegate_function > });
   RD_ASSERT_FALSE(lhs != rhs);
   RD_ASSERT_TRUE(lhs == rhs);
   RD_ASSERT_EQ(lhs, rhs);
 
   lhs.connect<&curried_by_ref>(value);
 
-  RD_ASSERT_EQ(lhs, (rendu::delegate<int(int)>{rendu::connect_arg<&curried_by_ref>, value}));
+  RD_ASSERT_EQ(lhs, (rendu::delegate < int(int) > {rendu::connect_arg < &curried_by_ref > , value}));
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   rhs.connect<&curried_by_ref>(value);
 
-  RD_ASSERT_EQ(rhs, (rendu::delegate<int(int)>{rendu::connect_arg<&curried_by_ref>, value}));
+  RD_ASSERT_EQ(rhs, (rendu::delegate < int(int) > {rendu::connect_arg < &curried_by_ref > , value}));
   RD_ASSERT_FALSE(lhs != rhs);
   RD_ASSERT_TRUE(lhs == rhs);
   RD_ASSERT_EQ(lhs, rhs);
 
   lhs.connect<&curried_by_ptr>(&value);
 
-  RD_ASSERT_EQ(lhs, (rendu::delegate<int(int)>{rendu::connect_arg<&curried_by_ptr>, &value}));
+  RD_ASSERT_EQ(lhs, (rendu::delegate < int(int) > {rendu::connect_arg < &curried_by_ptr > , &value}));
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   rhs.connect<&curried_by_ptr>(&value);
 
-  RD_ASSERT_EQ(rhs, (rendu::delegate<int(int)>{rendu::connect_arg<&curried_by_ptr>, &value}));
+  RD_ASSERT_EQ(rhs, (rendu::delegate < int(int) > {rendu::connect_arg < &curried_by_ptr > , &value}));
   RD_ASSERT_FALSE(lhs != rhs);
   RD_ASSERT_TRUE(lhs == rhs);
   RD_ASSERT_EQ(lhs, rhs);
 
   lhs.connect<&delegate_functor::operator()>(functor);
 
-  RD_ASSERT_EQ(lhs, (rendu::delegate<int(int)>{rendu::connect_arg<&delegate_functor::operator()>, functor}));
+  RD_ASSERT_EQ(lhs, (rendu::delegate < int(int) > {rendu::connect_arg < &delegate_functor::operator() > , functor}));
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   rhs.connect<&delegate_functor::operator()>(functor);
 
-  RD_ASSERT_EQ(rhs, (rendu::delegate<int(int)>{rendu::connect_arg<&delegate_functor::operator()>, functor}));
+  RD_ASSERT_EQ(rhs, (rendu::delegate < int(int) > {rendu::connect_arg < &delegate_functor::operator() > , functor}));
   RD_ASSERT_EQ(lhs.target(), rhs.target());
   RD_ASSERT_EQ(lhs.data(), rhs.data());
   RD_ASSERT_FALSE(lhs != rhs);
@@ -201,39 +202,41 @@ RD_TEST(Delegate, Comparison) {
 
   lhs.connect<&delegate_functor::operator()>(other);
 
-  RD_ASSERT_EQ(lhs, (rendu::delegate<int(int)>{rendu::connect_arg<&delegate_functor::operator()>, other}));
+  RD_ASSERT_EQ(lhs, (rendu::delegate < int(int) > {rendu::connect_arg < &delegate_functor::operator() > , other}));
   RD_ASSERT_EQ(lhs.target(), rhs.target());
   RD_ASSERT_NE(lhs.data(), rhs.data());
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
-  lhs.connect([](const void *ptr, int val) { return static_cast<const delegate_functor *>(ptr)->identity(val) * val; }, &functor);
+  lhs.connect([](const void *ptr, int val) { return static_cast<const delegate_functor *>(ptr)->identity(val) * val; },
+              &functor);
 
-  RD_ASSERT_NE(lhs, (rendu::delegate<int(int)>{[](const void *, int val) { return val + val; }, &functor}));
+  RD_ASSERT_NE(lhs, (rendu::delegate < int(int) > {[](const void *, int val) { return val + val; }, &functor}));
   RD_ASSERT_NE(lhs.target(), rhs.target());
   RD_ASSERT_EQ(lhs.data(), rhs.data());
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
-  rhs.connect([](const void *ptr, int val) { return static_cast<const delegate_functor *>(ptr)->identity(val) + val; }, &functor);
+  rhs.connect([](const void *ptr, int val) { return static_cast<const delegate_functor *>(ptr)->identity(val) + val; },
+              &functor);
 
-  RD_ASSERT_NE(rhs, (rendu::delegate<int(int)>{[](const void *, int val) { return val * val; }, &functor}));
+  RD_ASSERT_NE(rhs, (rendu::delegate < int(int) > {[](const void *, int val) { return val * val; }, &functor}));
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   lhs.reset();
 
-  RD_ASSERT_EQ(lhs, (rendu::delegate<int(int)>{}));
+  RD_ASSERT_EQ(lhs, (rendu::delegate < int(int) > {}));
   RD_ASSERT_TRUE(lhs != rhs);
   RD_ASSERT_FALSE(lhs == rhs);
   RD_ASSERT_NE(lhs, rhs);
 
   rhs.reset();
 
-  RD_ASSERT_EQ(rhs, (rendu::delegate<int(int)>{}));
+  RD_ASSERT_EQ(rhs, (rendu::delegate < int(int) > {}));
   RD_ASSERT_FALSE(lhs != rhs);
   RD_ASSERT_TRUE(lhs == rhs);
   RD_ASSERT_EQ(lhs, rhs);
@@ -262,20 +265,20 @@ RD_TEST(Delegate, DeductionGuide) {
   const_nonconst_noexcept functor;
   int value = 0;
 
-  rendu::delegate func{rendu::connect_arg<&delegate_function>};
-  rendu::delegate curried_func_with_ref{rendu::connect_arg<&curried_by_ref>, value};
-  rendu::delegate curried_func_with_const_ref{rendu::connect_arg<&curried_by_ref>, std::as_const(value)};
-  rendu::delegate curried_func_with_ptr{rendu::connect_arg<&curried_by_ptr>, &value};
-  rendu::delegate curried_func_with_const_ptr{rendu::connect_arg<&curried_by_ptr>, &std::as_const(value)};
-  rendu::delegate member_func_f{rendu::connect_arg<&const_nonconst_noexcept::f>, functor};
-  rendu::delegate member_func_g{rendu::connect_arg<&const_nonconst_noexcept::g>, functor};
-  rendu::delegate member_func_h{rendu::connect_arg<&const_nonconst_noexcept::h>, &functor};
-  rendu::delegate member_func_h_const{rendu::connect_arg<&const_nonconst_noexcept::h>, &std::as_const(functor)};
-  rendu::delegate member_func_i{rendu::connect_arg<&const_nonconst_noexcept::i>, functor};
-  rendu::delegate member_func_i_const{rendu::connect_arg<&const_nonconst_noexcept::i>, std::as_const(functor)};
-  rendu::delegate data_member_u{rendu::connect_arg<&const_nonconst_noexcept::u>, functor};
-  rendu::delegate data_member_v{rendu::connect_arg<&const_nonconst_noexcept::v>, &functor};
-  rendu::delegate data_member_v_const{rendu::connect_arg<&const_nonconst_noexcept::v>, &std::as_const(functor)};
+  rendu::delegate func{rendu::connect_arg < &delegate_function > };
+  rendu::delegate curried_func_with_ref{rendu::connect_arg < &curried_by_ref > , value};
+  rendu::delegate curried_func_with_const_ref{rendu::connect_arg < &curried_by_ref > , std::as_const(value)};
+  rendu::delegate curried_func_with_ptr{rendu::connect_arg < &curried_by_ptr > , &value};
+  rendu::delegate curried_func_with_const_ptr{rendu::connect_arg < &curried_by_ptr > , &std::as_const(value)};
+  rendu::delegate member_func_f{rendu::connect_arg < &const_nonconst_noexcept::f > , functor};
+  rendu::delegate member_func_g{rendu::connect_arg < &const_nonconst_noexcept::g > , functor};
+  rendu::delegate member_func_h{rendu::connect_arg < &const_nonconst_noexcept::h > , &functor};
+  rendu::delegate member_func_h_const{rendu::connect_arg < &const_nonconst_noexcept::h > , &std::as_const(functor)};
+  rendu::delegate member_func_i{rendu::connect_arg < &const_nonconst_noexcept::i > , functor};
+  rendu::delegate member_func_i_const{rendu::connect_arg < &const_nonconst_noexcept::i > , std::as_const(functor)};
+  rendu::delegate data_member_u{rendu::connect_arg < &const_nonconst_noexcept::u > , functor};
+  rendu::delegate data_member_v{rendu::connect_arg < &const_nonconst_noexcept::v > , &functor};
+  rendu::delegate data_member_v_const{rendu::connect_arg < &const_nonconst_noexcept::v > , &std::as_const(functor)};
   rendu::delegate lambda{+[](const void *, int) { return 0; }};
 
   static_assert(std::is_same_v<typename decltype(func)::type, int(const int &)>);
@@ -325,7 +328,7 @@ RD_TEST(Delegate, ConstInstance) {
   delegate.reset();
 
   RD_ASSERT_FALSE(delegate);
-  RD_ASSERT_EQ(delegate, rendu::delegate<int(int)>{});
+  RD_ASSERT_EQ(delegate, rendu::delegate < int(int) > {});
 }
 
 RD_TEST(Delegate, NonConstReference) {
@@ -366,10 +369,10 @@ RD_TEST(Delegate, Constructors) {
   const auto value = 2;
 
   rendu::delegate<int(int)> empty{};
-  rendu::delegate<int(int)> func{rendu::connect_arg<&delegate_function>};
-  rendu::delegate<int(int)> ref{rendu::connect_arg<&curried_by_ref>, value};
-  rendu::delegate<int(int)> ptr{rendu::connect_arg<&curried_by_ptr>, &value};
-  rendu::delegate<int(int)> member{rendu::connect_arg<&delegate_functor::operator()>, functor};
+  rendu::delegate<int(int)> func{rendu::connect_arg < &delegate_function > };
+  rendu::delegate<int(int)> ref{rendu::connect_arg < &curried_by_ref > , value};
+  rendu::delegate<int(int)> ptr{rendu::connect_arg < &curried_by_ptr > , &value};
+  rendu::delegate<int(int)> member{rendu::connect_arg < &delegate_functor::operator() > , functor};
 
   RD_ASSERT_FALSE(empty);
 
@@ -389,9 +392,9 @@ RD_TEST(Delegate, Constructors) {
 RD_TEST(Delegate, VoidVsNonVoidReturnType) {
   delegate_functor functor;
 
-  rendu::delegate<void(int)> func{rendu::connect_arg<&delegate_function>};
-  rendu::delegate<void(int)> member{rendu::connect_arg<&delegate_functor::operator()>, &functor};
-  rendu::delegate<void(int)> cmember{rendu::connect_arg<&delegate_functor::identity>, &std::as_const(functor)};
+  rendu::delegate<void(int)> func{rendu::connect_arg < &delegate_function > };
+  rendu::delegate<void(int)> member{rendu::connect_arg < &delegate_functor::operator() > , &functor};
+  rendu::delegate<void(int)> cmember{rendu::connect_arg < &delegate_functor::identity > , &std::as_const(functor)};
 
   RD_ASSERT_TRUE(func);
   RD_ASSERT_TRUE(member);

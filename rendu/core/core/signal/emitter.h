@@ -77,7 +77,8 @@ class emitter {
    */
   emitter(emitter &&other, const allocator_type &allocator) noexcept
       : handlers{container_type{std::move(other.handlers.first()), allocator}, allocator} {
-    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(),
+              "Copying an emitter is not allowed");
   }
 
   /**
@@ -86,7 +87,8 @@ class emitter {
    * @return This dispatcher.
    */
   emitter &operator=(emitter &&other) noexcept {
-    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(), "Copying an emitter is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || handlers.second() == other.handlers.second(),
+              "Copying an emitter is not allowed");
 
     handlers = std::move(other.handlers);
     return *this;
@@ -116,7 +118,7 @@ class emitter {
    */
   template<typename Type>
   void publish(Type &&value) {
-    if(const auto id = type_id<Type>().hash(); handlers.first().contains(id)) {
+    if (const auto id = type_id<Type>().hash(); handlers.first().contains(id)) {
       handlers.first()[id](&value);
     }
   }
@@ -170,4 +172,5 @@ class emitter {
 };
 
 } // namespace rendu
+
 #endif //RENDU_CORE_CORE_SIGNAL_EMITTER_H_

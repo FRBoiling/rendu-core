@@ -28,7 +28,7 @@ struct basic_dispatcher_handler {
 };
 
 template<typename Type, typename Allocator>
-class dispatcher_handler final: public basic_dispatcher_handler {
+class dispatcher_handler final : public basic_dispatcher_handler {
   static_assert(std::is_same_v<Type, std::decay_t<Type>>, "Invalid type");
 
   using alloc_traits = std::allocator_traits<Allocator>;
@@ -45,7 +45,7 @@ class dispatcher_handler final: public basic_dispatcher_handler {
   void publish() override {
     const auto length = events.size();
 
-    for(std::size_t pos{}; pos < length; ++pos) {
+    for (std::size_t pos{}; pos < length; ++pos) {
       signal.publish(events[pos]);
     }
 
@@ -70,7 +70,7 @@ class dispatcher_handler final: public basic_dispatcher_handler {
 
   template<typename... Args>
   void enqueue(Args &&...args) {
-    if constexpr(std::is_aggregate_v<Type> && (sizeof...(Args) != 0u || !std::is_default_constructible_v<Type>)) {
+    if constexpr (std::is_aggregate_v<Type> && (sizeof...(Args) != 0u || !std::is_default_constructible_v<Type>)) {
       events.push_back(Type{std::forward<Args>(args)...});
     } else {
       events.emplace_back(std::forward<Args>(args)...);
@@ -125,7 +125,7 @@ class basic_dispatcher {
     static_assert(std::is_same_v<Type, std::decay_t<Type>>, "Non-decayed types not allowed");
     auto &&ptr = pools.first()[id];
 
-    if(!ptr) {
+    if (!ptr) {
       const auto &allocator = get_allocator();
       ptr = std::allocate_shared<handler_type<Type>>(allocator, allocator);
     }
@@ -137,7 +137,7 @@ class basic_dispatcher {
   [[nodiscard]] const handler_type<Type> *assure(const id_type id) const {
     static_assert(std::is_same_v<Type, std::decay_t<Type>>, "Non-decayed types not allowed");
 
-    if(auto it = pools.first().find(id); it != pools.first().cend()) {
+    if (auto it = pools.first().find(id); it != pools.first().cend()) {
       return static_cast<const handler_type<Type> *>(it->second.get());
     }
 
@@ -175,7 +175,8 @@ class basic_dispatcher {
    */
   basic_dispatcher(basic_dispatcher &&other, const allocator_type &allocator) noexcept
       : pools{container_type{std::move(other.pools.first()), allocator}, allocator} {
-    RD_ASSERT(alloc_traits::is_always_equal::value || pools.second() == other.pools.second(), "Copying a dispatcher is not allowed");
+    RD_ASSERT(alloc_traits::is_always_equal::value || pools.second() == other.pools.second(),
+              "Copying a dispatcher is not allowed");
   }
 
   /**
@@ -185,7 +186,7 @@ class basic_dispatcher {
    */
   basic_dispatcher &operator=(basic_dispatcher &&other) noexcept {
     RD_ASSERT(alloc_traits::is_always_equal::value || pools.second() == other.pools.second(), "Copying a dispatcher is"
-                                                                                             " not allowed");
+                                                                                              " not allowed");
 
     pools = std::move(other.pools);
     return *this;
@@ -227,7 +228,7 @@ class basic_dispatcher {
   size_type size() const noexcept {
     size_type count{};
 
-    for(auto &&cpool: pools.first()) {
+    for (auto &&cpool : pools.first()) {
       count += cpool.second->size();
     }
 
@@ -342,7 +343,7 @@ class basic_dispatcher {
    */
   template<typename Type>
   void disconnect(Type *value_or_instance) {
-    for(auto &&cpool: pools.first()) {
+    for (auto &&cpool : pools.first()) {
       cpool.second->disconnect(value_or_instance);
     }
   }
@@ -359,7 +360,7 @@ class basic_dispatcher {
 
   /*! @brief Discards all the events queued so far. */
   void clear() noexcept {
-    for(auto &&cpool: pools.first()) {
+    for (auto &&cpool : pools.first()) {
       cpool.second->clear();
     }
   }
@@ -376,7 +377,7 @@ class basic_dispatcher {
 
   /*! @brief Delivers all the pending events. */
   void update() const {
-    for(auto &&cpool: pools.first()) {
+    for (auto &&cpool : pools.first()) {
       cpool.second->publish();
     }
   }

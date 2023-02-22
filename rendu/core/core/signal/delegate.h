@@ -337,4 +337,5 @@ template<typename Ret, typename... Args>
 delegate(Ret (*)(const void *, Args...), const void * = nullptr) -> delegate<Ret(Args...)>;
 
 } // namespace rendu
+
 #endif //RENDU_CORE_SIGNAL_DELEGATE_H_
