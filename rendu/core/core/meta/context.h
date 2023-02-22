@@ -17,7 +17,7 @@ namespace internal {
 struct meta_type_node;
 
 struct meta_context {
-  dense_map<id_type, meta_type_node, utility> value{};
+  dense_map<id_type, meta_type_node, identity> value{};
 
   [[nodiscard]] static inline meta_context &from(meta_ctx &ctx);
   [[nodiscard]] static inline const meta_context &from(const meta_ctx &ctx);
@@ -32,7 +32,7 @@ class meta_ctx_arg_t final {};
 inline constexpr meta_ctx_arg_t meta_ctx_arg{};
 
 /*! @brief Opaque meta context type. */
-class meta_ctx: private internal::meta_context {
+class meta_ctx : private internal::meta_context {
   /*! @brief Attorney idiom like model to access the base class. */
   friend struct internal::meta_context;
 };

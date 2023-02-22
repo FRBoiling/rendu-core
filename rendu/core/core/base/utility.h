@@ -2,15 +2,15 @@
 * Created by boil on 2023/2/20.
 */
 
-#ifndef RENDU_CORE_BASE_IDENTITY_H_
-#define RENDU_CORE_BASE_IDENTITY_H_
+#ifndef RENDU_CORE_BASE_UTILITY_H_
+#define RENDU_CORE_BASE_UTILITY_H_
 #include <cstddef>
 #include <utility>
 
 namespace rendu{
 
 /*! @brief Identity function object (waiting for C++20). */
-struct utility {
+struct identity {
   /*! @brief Indicates that this is a transparent function object. */
   using is_transparent = void;
 
@@ -101,4 +101,4 @@ struct y_combinator {
 
 }//namespace rendu
 
-#endif //RENDU_CORE_BASE_IDENTITY_H_
+#endif //RENDU_CORE_BASE_UTILITY_H_
