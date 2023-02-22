@@ -5,6 +5,8 @@
 #include <test/rdtest.h>
 #include <core/base/compressed_pair.h>
 
+namespace test {
+
 struct empty_type {};
 
 struct move_only_type {
@@ -91,7 +93,8 @@ TEST(CompressedPair, ConstructCopyMove) {
 TEST(CompressedPair, PiecewiseConstruct) {
   std::vector<int> vec{42};
   rendu::compressed_pair<empty_type, empty_type> empty{std::piecewise_construct, std::make_tuple(), std::make_tuple()};
-  rendu::compressed_pair<std::vector<int>, std::size_t> pair{std::piecewise_construct, std::forward_as_tuple(std::move(vec)), std::make_tuple(sizeof(empty))};
+  rendu::compressed_pair<std::vector<int>, std::size_t>
+      pair{std::piecewise_construct, std::forward_as_tuple(std::move(vec)), std::make_tuple(sizeof(empty))};
 
   ASSERT_EQ(pair.first().size(), 1u);
   ASSERT_EQ(pair.second(), sizeof(empty));
@@ -103,7 +106,8 @@ TEST(CompressedPair, DeductionGuide) {
   empty_type empty{};
   rendu::compressed_pair pair{value, 3};
 
-  static_assert(std::is_same_v<decltype(rendu::compressed_pair{empty_type{}, empty}), rendu::compressed_pair<empty_type, empty_type>>);
+  static_assert(std::is_same_v<decltype(rendu::compressed_pair{empty_type{}, empty}),
+                               rendu::compressed_pair<empty_type, empty_type>>);
 
   ASSERT_TRUE((std::is_same_v<decltype(pair), rendu::compressed_pair<int, int>>));
   ASSERT_EQ(pair.first(), 42);
@@ -179,3 +183,4 @@ TEST(CompressedPair, Get) {
   static_assert(std::is_same_v<decltype(cfirst), const int>);
   static_assert(std::is_same_v<decltype(csecond), const int>);
 }
+}//namespace test

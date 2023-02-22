@@ -4,6 +4,8 @@
 #include <test/rdtest.h>
 #include <core/base/iterator.h>
 
+namespace test {
+
 struct clazz {
   int value{0};
 };
@@ -48,7 +50,9 @@ RD_TEST(IterableAdaptor, Functionalities) {
   RD_ASSERT_EQ(*++iterable.cbegin(), 2);
   RD_ASSERT_EQ(++iterable.cbegin(), --iterable.end());
 
-  for(auto value: rendu::iterable_adaptor<const int *, const void *>{vec.data(), vec.data() + 1u}) {
+  for (auto value : rendu::iterable_adaptor<const int *, const void *>{vec.data(), vec.data() + 1u}) {
     RD_ASSERT_EQ(value, 1);
   }
 }
+
+}// namespace test

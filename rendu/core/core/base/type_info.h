@@ -61,11 +61,6 @@ template<typename Type>
 } // namespace internal
 
 /**
- * Internal details not to be documented.
- * @endcond
- */
-
-/**
  * @brief Type sequential identifier.
  * @tparam Type Type for which to generate a sequential identifier.
  */

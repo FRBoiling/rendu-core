@@ -7,7 +7,6 @@
 
 #include <gtest/gtest.h>
 
-
 #define RD_TEST(test_suite_name, test_name) TEST(test_suite_name, test_name)
 #define RD_TEST_F(test_fixture, test_name) TEST_F(test_fixture, test_name)
 
@@ -63,5 +62,8 @@
 #define RD_ASSERT_STRNE(s1, s2) ASSERT_STRNE(s1, s2)
 #define RD_ASSERT_STRCASEEQ(s1, s2) ASSERT_STRCASEEQ(s1, s2)
 #define RD_ASSERT_STRCASENE(s1, s2) ASSERT_STRCASENE(s1, s2)
+
+#define RD_TYPED_TEST(CaseName, TestName)  TYPED_TEST(CaseName, TestName)
+#define RD_TYPED_TEST_SUITE(CaseName, Types, ...) TYPED_TEST_SUITE(CaseName, Types, __VA_ARGS__)
 
 #endif //RENDU_TEST_RD_TEST_H_

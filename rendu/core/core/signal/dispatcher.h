@@ -6,7 +6,7 @@
 #define RENDU_CORE_SIGNAL_DISPATCHER_H_
 
 #include "container/dense_map.h"
-#include "base/identity.h"
+#include "base/utility.h"
 #include "base/type_info.h"
 #include "sigh.h"
 
@@ -118,7 +118,7 @@ class basic_dispatcher {
 
   using alloc_traits = std::allocator_traits<Allocator>;
   using container_allocator = typename alloc_traits::template rebind_alloc<std::pair<const key_type, mapped_type>>;
-  using container_type = dense_map<key_type, mapped_type, identity, std::equal_to<key_type>, container_allocator>;
+  using container_type = dense_map<key_type, mapped_type, utility, std::equal_to<key_type>, container_allocator>;
 
   template<typename Type>
   [[nodiscard]] handler_type<Type> &assure(const id_type id) {

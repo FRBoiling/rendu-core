@@ -217,7 +217,7 @@ class registry_context {
   }
 
  private:
-  dense_map<id_type, basic_any<0u>, identity, std::equal_to<id_type>, allocator_type> ctx;
+  dense_map<id_type, basic_any<0u>, utility, std::equal_to<id_type>, allocator_type> ctx;
 };
 
 } //namespace internal
@@ -236,7 +236,7 @@ class basic_registry {
   // std::shared_ptr because of its type erased allocator which is useful here
   using container_type = dense_map<id_type,
                                    std::shared_ptr<basic_common_type>,
-                                   identity,
+                                   utility,
                                    std::equal_to<id_type>,
                                    typename alloc_traits::template rebind_alloc<std::pair<const id_type,
                                                                                           std::shared_ptr<

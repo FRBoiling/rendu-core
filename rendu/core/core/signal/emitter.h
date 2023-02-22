@@ -2,13 +2,13 @@
 * Created by boil on 2023/2/20.
 */
 
-#ifndef RENDU_CORE_CORE_SIGNAL_EMITTER_H_
-#define RENDU_CORE_CORE_SIGNAL_EMITTER_H_
+#ifndef RENDU_CORE_SIGNAL_EMITTER_H_
+#define RENDU_CORE_SIGNAL_EMITTER_H_
 
 #include "container/dense_map.h"
 #include "base/compressed_pair.h"
 #include "base/type_info.h"
-#include "base/identity.h"
+#include "base/utility.h"
 #include "fwd.h"
 
 namespace rendu {
@@ -39,7 +39,7 @@ class emitter {
 
   using alloc_traits = std::allocator_traits<Allocator>;
   using container_allocator = typename alloc_traits::template rebind_alloc<std::pair<const key_type, mapped_type>>;
-  using container_type = dense_map<key_type, mapped_type, identity, std::equal_to<key_type>, container_allocator>;
+  using container_type = dense_map<key_type, mapped_type, utility, std::equal_to<key_type>, container_allocator>;
 
  public:
   /*! @brief Allocator type. */
@@ -173,4 +173,4 @@ class emitter {
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_SIGNAL_EMITTER_H_
+#endif //RENDU_CORE_SIGNAL_EMITTER_H_

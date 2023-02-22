@@ -6,6 +6,8 @@
 #include <core/base/hashed_string.h>
 #include <core/base/type_traits.h>
 
+namespace test {
+
 struct not_comparable {
   bool operator==(const not_comparable &) const = delete;
 };
@@ -84,10 +86,12 @@ RD_TEST(TypeList, Functionalities) {
   static_assert(other::size == 1u);
 
   static_assert(std::is_same_v<decltype(type{} + other{}), rendu::type_list<int, char, double>>);
-  static_assert(std::is_same_v<rendu::type_list_cat_t<type, other, type, other>, rendu::type_list<int, char, double, int, char, double>>);
+  static_assert(std::is_same_v<rendu::type_list_cat_t<type, other, type, other>,
+                               rendu::type_list<int, char, double, int, char, double>>);
   static_assert(std::is_same_v<rendu::type_list_cat_t<type, other>, rendu::type_list<int, char, double>>);
   static_assert(std::is_same_v<rendu::type_list_cat_t<type, type>, rendu::type_list<int, char, int, char>>);
-  static_assert(std::is_same_v<rendu::type_list_unique_t<rendu::type_list_cat_t<type, type>>, rendu::type_list<int, char>>);
+  static_assert(std::is_same_v<rendu::type_list_unique_t<rendu::type_list_cat_t<type, type>>,
+                               rendu::type_list<int, char>>);
 
   static_assert(rendu::type_list_contains_v<type, int>);
   static_assert(rendu::type_list_contains_v<type, char>);
@@ -101,15 +105,24 @@ RD_TEST(TypeList, Functionalities) {
   static_assert(rendu::type_list_index_v<char, type> == 1u);
   static_assert(rendu::type_list_index_v<double, other> == 0u);
 
-  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<float, bool>>, rendu::type_list<int, char, double>>);
-  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<int, char, double>>, rendu::type_list<>>);
-  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<int, char>>, rendu::type_list<double>>);
-  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<char, double>>, rendu::type_list<int>>);
-  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<char>>, rendu::type_list<int, double>>);
+  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>,
+                                                       rendu::type_list<float, bool>>,
+                               rendu::type_list<int, char, double>>);
+  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>,
+                                                       rendu::type_list<int, char, double>>, rendu::type_list<>>);
+  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>,
+                                                       rendu::type_list<int, char>>, rendu::type_list<double>>);
+  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>,
+                                                       rendu::type_list<char, double>>, rendu::type_list<int>>);
+  static_assert(std::is_same_v<rendu::type_list_diff_t<rendu::type_list<int, char, double>, rendu::type_list<char>>,
+                               rendu::type_list<int, double>>);
 
-  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, rendu::type_identity>, rendu::type_list<int, char>>);
-  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, std::add_const>, rendu::type_list<const int, const char>>);
-  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, multi_argument_operation>, rendu::type_list<void, void>>);
+  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, rendu::type_identity>,
+                               rendu::type_list<int, char>>);
+  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, std::add_const>,
+                               rendu::type_list<const int, const char>>);
+  static_assert(std::is_same_v<rendu::type_list_transform_t<rendu::type_list<int, char>, multi_argument_operation>,
+                               rendu::type_list<void, void>>);
 }
 
 RD_TEST(ValueList, Functionalities) {
@@ -120,7 +133,8 @@ RD_TEST(ValueList, Functionalities) {
   static_assert(other::size == 1u);
 
   static_assert(std::is_same_v<decltype(value{} + other{}), rendu::value_list<0, 2, 1>>);
-  static_assert(std::is_same_v<rendu::value_list_cat_t<value, other, value, other>, rendu::value_list<0, 2, 1, 0, 2, 1>>);
+  static_assert(std::is_same_v<rendu::value_list_cat_t<value, other, value, other>,
+                               rendu::value_list<0, 2, 1, 0, 2, 1>>);
   static_assert(std::is_same_v<rendu::value_list_cat_t<value, other>, rendu::value_list<0, 2, 1>>);
   static_assert(std::is_same_v<rendu::value_list_cat_t<value, value>, rendu::value_list<0, 2, 0, 2>>);
 
@@ -213,7 +227,8 @@ RD_TEST(NthArgument, Functionalities) {
   static_assert(std::is_same_v<rendu::nth_argument_t<1u, &clazz::bar>, float>);
   static_assert(std::is_same_v<rendu::nth_argument_t<0u, &clazz::quux>, bool>);
 
-  ASSERT_EQ(free_function(rendu::nth_argument_t<0u, &free_function>{}, rendu::nth_argument_t<1u, &free_function>{}), 42);
+  ASSERT_EQ(free_function(rendu::nth_argument_t<0u, &free_function>{}, rendu::nth_argument_t<1u, &free_function>{}),
+            42);
 }
 
 RD_TEST(Tag, Functionalities) {
@@ -221,3 +236,4 @@ RD_TEST(Tag, Functionalities) {
   static_assert(rendu::tag<"foobar"_hs>::value == rendu::hashed_string::value("foobar"));
   static_assert(std::is_same_v<typename rendu::tag<"foobar"_hs>::value_type, rendu::id_type>);
 }
+}// namespace test

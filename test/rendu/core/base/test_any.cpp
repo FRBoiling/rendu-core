@@ -7,6 +7,8 @@
 #include <test/rdtest.h>
 #include <core/base/any.h>
 
+namespace test {
+
 struct empty {
   ~empty() {
     ++counter;
@@ -49,7 +51,7 @@ struct not_movable {
 
 struct alignas(64u) over_aligned {};
 
-struct Any: ::testing::Test {
+struct Any : ::testing::Test {
   void SetUp() override {
     fat::counter = 0;
     empty::counter = 0;
@@ -1137,7 +1139,7 @@ RD_TEST_F(Any, NotComparable) {
   };
 
   test(not_comparable{});
-  test(std::unordered_map<int, not_comparable>{});
+  test(std::unordered_map < int, not_comparable > {});
   test(std::vector<not_comparable>{});
 }
 
@@ -1177,18 +1179,19 @@ RD_TEST_F(Any, AnyCast) {
 }
 
 RD_DEBUG_TEST_F(AnyDeathTest, AnyCast) {
-rendu::any any{42};
-const auto &cany = any;
+  rendu::any any{42};
+  const auto &cany = any;
 
-RD_ASSERT_DEATH([[maybe_unused]] auto &elem = rendu::any_cast<double &>(any), "");
-RD_ASSERT_DEATH([[maybe_unused]] const auto &elem = rendu::any_cast<const double &>(cany), "");
+  RD_ASSERT_DEATH([[maybe_unused]] auto &elem = rendu::any_cast<double &>(any), "");
+  RD_ASSERT_DEATH([[maybe_unused]] const auto &elem = rendu::any_cast<const double &>(cany), "");
 
-auto instance = std::make_unique<double>(42.);
-rendu::any ref{rendu::forward_as_any(instance)};
-rendu::any cref{rendu::forward_as_any(std::as_const(*instance))};
+  auto instance = std::make_unique<double>(42.);
+  rendu::any ref{rendu::forward_as_any(instance)};
+  rendu::any cref{rendu::forward_as_any(std::as_const(*instance))};
 
-RD_ASSERT_DEATH([[maybe_unused]] auto elem = rendu::any_cast<std::unique_ptr<double>>(std::as_const(ref).as_ref()), "");
-RD_ASSERT_DEATH([[maybe_unused]] auto elem = rendu::any_cast<double>(rendu::any{42}), "");
+  RD_ASSERT_DEATH([[maybe_unused]] auto elem = rendu::any_cast<std::unique_ptr<double>>(std::as_const(ref).as_ref()),
+                  "");
+  RD_ASSERT_DEATH([[maybe_unused]] auto elem = rendu::any_cast<double>(rendu::any{42}), "");
 }
 
 RD_TEST_F(Any, MakeAny) {
@@ -1336,9 +1339,9 @@ RD_TEST_F(Any, Array) {
   RD_ASSERT_EQ(rendu::any_cast<int[2]>(&any), nullptr);
   RD_ASSERT_EQ(rendu::any_cast<int *>(&any), nullptr);
 
-  rendu::any_cast<int(&)[1]>(any)[0] = 42;
+  rendu::any_cast<int (&)[1]>(any)[0] = 42;
 
-  RD_ASSERT_EQ(rendu::any_cast<const int(&)[1]>(std::as_const(any))[0], 42);
+  RD_ASSERT_EQ(rendu::any_cast<const int (&)[1]>(std::as_const(any))[0], 42);
 }
 
 RD_TEST_F(Any, CopyMoveReference) {
@@ -1446,3 +1449,5 @@ RD_TEST_F(Any, DeducedArrayType) {
   RD_ASSERT_EQ(any.type(), rendu::type_id<const char *>());
   RD_ASSERT_EQ((strcmp("another array of char", rendu::any_cast<const char *>(any))), 0);
 }
+
+} // namespace test
