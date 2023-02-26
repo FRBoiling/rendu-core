@@ -6,6 +6,7 @@
 #define RENDU_CORE_META_POINTER_H_
 
 #include <memory>
+#include <type_traits>
 #include "type_traits.h"
 
 namespace rendu {

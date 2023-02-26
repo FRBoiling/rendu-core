@@ -7,6 +7,7 @@
 
 #include "base/type_info.h"
 #include "base/enum.h"
+#include "base/fwd.h"
 #include "type_traits.h"
 #include "context.h"
 
