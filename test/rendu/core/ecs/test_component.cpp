@@ -1,9 +1,9 @@
 /*
 * Created by boil on 2023/2/15.
 */
+
 #include <test/rdtest.h>
 #include <core/ecs/component.h>
-
 
 struct empty {};
 

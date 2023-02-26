@@ -5,7 +5,8 @@
 #ifndef RENDU_CORE_META_TYPE_TRAITS_H_
 #define RENDU_CORE_META_TYPE_TRAITS_H_
 
-#include "base/type_traits.h"
+#include <type_traits>
+#include <utility>
 
 namespace rendu {
 

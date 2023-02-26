@@ -5,7 +5,6 @@
 #include <test/rdtest.h>
 #include <core/base/enum.h>
 
-
 enum class detected {
   foo = 0x01,
   bar = 0x02,

@@ -6,10 +6,6 @@
 #include <test/rdtest.h>
 #include <core/base/algorithm.h>
 
-
-namespace test{
-
-
 struct boxed_int {
   int value;
 };
@@ -103,5 +99,3 @@ TEST(Algorithm, RadixSortEmptyContainer) {
   // this should crash with asan enabled if we break the constraint
   sort(vec.begin(), vec.end());
 }
-
-} // namespace test

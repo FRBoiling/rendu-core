@@ -5,8 +5,8 @@
 #ifndef RENDU_CORE_META_POINTER_H_
 #define RENDU_CORE_META_POINTER_H_
 
-#include "type_traits.h"
 #include <memory>
+#include "type_traits.h"
 
 namespace rendu {
 
@@ -47,4 +47,5 @@ struct is_meta_pointer_like<std::unique_ptr<Type, Args...>>
     : std::true_type {};
 
 } // namespace rendu
+
 #endif //RENDU_CORE_META_POINTER_H_

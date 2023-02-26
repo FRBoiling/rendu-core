@@ -5,6 +5,9 @@
 #ifndef RENDU_CORE_BASE_ANY_H_
 #define RENDU_CORE_BASE_ANY_H_
 
+#include <memory>
+#include "define/define.h"
+#include "utility.h"
 #include "type_info.h"
 #include "type_traits.h"
 

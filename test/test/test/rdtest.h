@@ -9,6 +9,8 @@
 
 #define RD_TEST(test_suite_name, test_name) TEST(test_suite_name, test_name)
 #define RD_TEST_F(test_fixture, test_name) TEST_F(test_fixture, test_name)
+#define RD_TYPED_TEST(CaseName, TestName)  TYPED_TEST(CaseName, TestName)
+#define RD_TYPED_TEST_SUITE(CaseName, Types, ...) TYPED_TEST_SUITE(CaseName, Types, __VA_ARGS__)
 
 #ifdef NDEBUG
 #    define RD_DEBUG_TEST(Case, Test) RD_TEST(Case, DISABLED_##Test)
@@ -17,7 +19,7 @@
 #else
 #    define RD_DEBUG_TEST(Case, Test) RD_TEST(Case, Test)
 #    define RD_DEBUG_TEST_F(Case, Test) RD_TEST_F(Case, Test)
-#    define RD_DEBUG_TYPED_TEST(Case, Test) TYPED_TEST(Case, Test)
+#    define RD_DEBUG_TYPED_TEST(Case, Test) RD_TYPED_TEST(Case, Test)
 #endif
 
 #define RD_EXPECT_NE(val1, val2)  EXPECT_NE(val1, val2)
@@ -63,7 +65,6 @@
 #define RD_ASSERT_STRCASEEQ(s1, s2) ASSERT_STRCASEEQ(s1, s2)
 #define RD_ASSERT_STRCASENE(s1, s2) ASSERT_STRCASENE(s1, s2)
 
-#define RD_TYPED_TEST(CaseName, TestName)  TYPED_TEST(CaseName, TestName)
-#define RD_TYPED_TEST_SUITE(CaseName, Types, ...) TYPED_TEST_SUITE(CaseName, Types, __VA_ARGS__)
+
 
 #endif //RENDU_TEST_RD_TEST_H_

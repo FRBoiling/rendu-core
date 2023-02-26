@@ -6,7 +6,10 @@
 #define RENDU_CORE_BASE_TYPE_INFO_H_
 
 #include <string_view>
+#include <common/define.h>
 #include "hashed_string.h"
+#include "type_traits.h"
+#include "define/define.h"
 
 namespace rendu {
 

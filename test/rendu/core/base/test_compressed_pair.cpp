@@ -5,7 +5,6 @@
 #include <test/rdtest.h>
 #include <core/base/compressed_pair.h>
 
-
 struct empty_type {};
 
 struct move_only_type {

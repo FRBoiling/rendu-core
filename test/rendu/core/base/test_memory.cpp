@@ -1,13 +1,13 @@
 /*
 * Created by boil on 2023/2/19.
 */
+
 #include <cmath>
 #include <test/rdtest.h>
 #include <test/throwing_allocator.h>
 #include <test/basic_test_allocator.h>
 #include <test/throwing_type.h>
 #include <core/base/memory.h>
-
 
 RD_TEST(ToAddress, Functionalities) {
   std::shared_ptr<int> shared = std::make_shared<int>();

@@ -1,12 +1,12 @@
 /*
 * Created by boil on 2023/2/19.
 */
+
 #include <test/rdtest.h>
 #include <test/throwing_allocator.h>
 #include <core/container/dense_set.h>
 #include <core/ecs/entity.h>
 #include <core/base/memory.h>
-
 
 struct transparent_equal_to {
   using is_transparent = void;

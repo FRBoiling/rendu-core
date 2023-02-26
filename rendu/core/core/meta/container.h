@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/26.
 */
 
-#ifndef RENDU_CORE_CORE_META_CONTAINER_H_
-#define RENDU_CORE_CORE_META_CONTAINER_H_
+#ifndef RENDU_CORE_META_CONTAINER_H_
+#define RENDU_CORE_META_CONTAINER_H_
 
 #include <list>
 #include <queue>
@@ -244,4 +244,4 @@ struct meta_associative_container_traits<dense_set<Args...>>
 
 } // namespace rendu
 
-#endif //RENDU_CORE_CORE_META_CONTAINER_H_
+#endif //RENDU_CORE_META_CONTAINER_H_

@@ -9,10 +9,9 @@
 #include "meta.h"
 #include "node.h"
 #include "resolve.h"
-#include "utility.h"
-#include "meta.h"
-#include "policy.h"
 #include "range.h"
+#include "utility.h"
+#include "policy.h"
 
 namespace rendu {
 

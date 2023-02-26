@@ -53,25 +53,7 @@ struct SigH : ::testing::Test {
   }
 };
 
-struct const_nonconst_noexcept {
-  void f() {
-    ++cnt;
-  }
 
-  void g() noexcept {
-    ++cnt;
-  }
-
-  void h() const {
-    ++cnt;
-  }
-
-  void i() const noexcept {
-    ++cnt;
-  }
-
-  mutable int cnt{0};
-};
 
 RD_TEST_F(SigH, Lifetime) {
   using signal = rendu::sigh<void(void)>;
@@ -404,6 +386,27 @@ RD_TEST_F(SigH, ScopedConnectionConstructorsAndOperators) {
   RD_ASSERT_FALSE(listener.k);
 }
 
+namespace {
+struct const_nonconst_noexcept {
+  void f() {
+    ++cnt;
+  }
+
+  void g() noexcept {
+    ++cnt;
+  }
+
+  void h() const {
+    ++cnt;
+  }
+
+  void i() const noexcept {
+    ++cnt;
+  }
+
+  mutable int cnt{0};
+};
+
 RD_TEST_F(SigH, ConstNonConstNoExcept) {
   rendu::sigh<void()> sigh;
   rendu::sink sink{sigh};
@@ -427,6 +430,7 @@ RD_TEST_F(SigH, ConstNonConstNoExcept) {
   RD_ASSERT_EQ(functor.cnt, 2);
   RD_ASSERT_EQ(cfunctor.cnt, 2);
 }
+}
 
 RD_TEST_F(SigH, BeforeFunction) {
   rendu::sigh<void(int)> sigh;
@@ -440,6 +444,8 @@ RD_TEST_F(SigH, BeforeFunction) {
 
   RD_ASSERT_EQ(functor.value, 6);
 }
+
+
 
 RD_TEST_F(SigH, BeforeMemberFunction) {
   rendu::sigh<void(int)> sigh;

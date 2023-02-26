@@ -1,9 +1,9 @@
 /*
 * Created by boil on 2023/2/19.
 */
+
 #include <test/rdtest.h>
 #include <core/base/hashed_string.h>
-
 
 template<typename>
 struct foobar_t;

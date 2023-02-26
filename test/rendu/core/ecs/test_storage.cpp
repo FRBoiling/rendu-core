@@ -11,13 +11,11 @@
 #include <core/ecs/component.h>
 #include <core/ecs/storage.h>
 
-
 template<>
 struct rendu::component_traits<std::unordered_set<char>> {
   static constexpr auto in_place_delete = true;
   static constexpr auto page_size = 4u;
 };
-
 
 struct pinned_type {
   const int value{42};

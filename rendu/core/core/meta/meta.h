@@ -9,6 +9,7 @@
 #include "base/any.h"
 #include "locator/locator.h"
 #include "type_traits.h"
+#include "context.h"
 #include "adl_pointer.h"
 #include "node.h"
 #include "range.h"
