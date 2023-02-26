@@ -7,7 +7,6 @@
 #include <core/ecs/entity.h>
 #include <core/base/memory.h>
 
-namespace {
 
 struct transparent_equal_to {
   using is_transparent = void;
@@ -1032,4 +1031,3 @@ RD_TEST(DenseSet, UsesAllocatorConstruction) {
     RD_ASSERT_EQ(memory_resource.do_deallocate_counter(), 0u);
 }
 #endif
-}

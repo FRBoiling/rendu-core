@@ -4,7 +4,6 @@
 #include <test/rdtest.h>
 #include <core/base/hashed_string.h>
 
-namespace test{
 
 template<typename>
 struct foobar_t;
@@ -224,4 +223,3 @@ RD_TEST(HashedWString, Constexprness) {
   static_assert(rendu::hashed_wstring{L"foo"} >= L"foo"_hws);
 }
 
-}

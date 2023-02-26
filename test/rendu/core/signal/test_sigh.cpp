@@ -1,9 +1,9 @@
 /*
 * Created by boil on 2023/2/19.
 */
+
 #include <test/rdtest.h>
 #include <core/signal/sigh.h>
-namespace {
 
 struct sigh_listener {
   static void f(int &v) {
@@ -575,5 +575,4 @@ RD_TEST_F(SigH, CustomAllocator) {
 
   RD_ASSERT_TRUE(copy.empty());
   RD_ASSERT_TRUE(move.empty());
-}
 }

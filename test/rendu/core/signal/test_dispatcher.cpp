@@ -5,8 +5,6 @@
 #include <test/rdtest.h>
 #include <core/signal/dispatcher.h>
 
-namespace {
-
 struct an_event {};
 struct another_event {};
 
@@ -200,6 +198,4 @@ RD_TEST(Dispatcher, CustomAllocator) {
   decltype(dispatcher) other{std::move(dispatcher), allocator};
 
   RD_ASSERT_EQ(other.size<an_event>(), 1u);
-}
-
 }

@@ -4,6 +4,7 @@
 
 #ifndef RENDU_CORE_CONTAINER_DENSE_MAP_H_
 #define RENDU_CORE_CONTAINER_DENSE_MAP_H_
+
 #include <cmath>
 #include <cstddef>
 #include <functional>

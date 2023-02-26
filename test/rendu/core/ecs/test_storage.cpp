@@ -11,6 +11,14 @@
 #include <core/ecs/component.h>
 #include <core/ecs/storage.h>
 
+
+template<>
+struct rendu::component_traits<std::unordered_set<char>> {
+  static constexpr auto in_place_delete = true;
+  static constexpr auto page_size = 4u;
+};
+
+
 struct pinned_type {
   const int value{42};
 };
@@ -83,11 +91,6 @@ struct create_from_constructor {
   rendu::entity child;
 };
 
-template<>
-struct rendu::component_traits<std::unordered_set<char>> {
-  static constexpr auto in_place_delete = true;
-  static constexpr auto page_size = 4u;
-};
 
 inline bool operator==(const boxed_int &lhs, const boxed_int &rhs) {
   return lhs.value == rhs.value;

@@ -5,7 +5,6 @@
 #include <test/rdtest.h>
 #include <core/base/compressed_pair.h>
 
-namespace test {
 
 struct empty_type {};
 
@@ -183,4 +182,3 @@ TEST(CompressedPair, Get) {
   static_assert(std::is_same_v<decltype(cfirst), const int>);
   static_assert(std::is_same_v<decltype(csecond), const int>);
 }
-}//namespace test

@@ -1383,7 +1383,7 @@ RD_TEST(Registry, ComponentsWithTypesFromStandardTemplateLibrary) {
   // see #37 - the test shouldn't crash, that's all
   rendu::registry registry;
   const auto entity = registry.create();
-  registry.emplace < std::unordered_set < int >> (entity).insert(42);
+  registry.emplace<std::unordered_set<int >>(entity).insert(42);
   registry.destroy(entity);
 }
 
@@ -2254,7 +2254,7 @@ RD_TEST(Registry, NoEtoType) {
   auto cview = std::as_const(registry).view<const no_eto_type, const int>();
 
   RD_ASSERT_EQ((std::get<0>(view.get<no_eto_type, int>(entity))),
-            (std::get<0>(cview.get<const no_eto_type, const int>(entity))));
+               (std::get<0>(cview.get<const no_eto_type, const int>(entity))));
 }
 
 RD_TEST(Registry, CtxAndPoolMemberDestructionOrder) {

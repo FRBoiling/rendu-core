@@ -6,7 +6,6 @@
 #define RENDU_CORE_META_TYPE_TRAITS_H_
 
 #include "base/type_traits.h"
-#include <utility>
 
 namespace rendu {
 

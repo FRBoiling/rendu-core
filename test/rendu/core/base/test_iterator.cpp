@@ -4,7 +4,6 @@
 #include <test/rdtest.h>
 #include <core/base/iterator.h>
 
-namespace test {
 
 struct clazz {
   int value{0};
@@ -55,4 +54,3 @@ RD_TEST(IterableAdaptor, Functionalities) {
   }
 }
 
-}// namespace test

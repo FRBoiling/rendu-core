@@ -6,8 +6,6 @@
 #include <core/base/hashed_string.h>
 #include <core/base/type_traits.h>
 
-namespace test {
-
 struct not_comparable {
   bool operator==(const not_comparable &) const = delete;
 };
@@ -236,4 +234,3 @@ RD_TEST(Tag, Functionalities) {
   static_assert(rendu::tag<"foobar"_hs>::value == rendu::hashed_string::value("foobar"));
   static_assert(std::is_same_v<typename rendu::tag<"foobar"_hs>::value_type, rendu::id_type>);
 }
-}// namespace test

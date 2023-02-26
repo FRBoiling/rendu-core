@@ -6,8 +6,6 @@
 #include <gtest/gtest.h>
 #include <core/signal/emitter.h>
 
-namespace {
-
 struct test_emitter : rendu::emitter<test_emitter> {
   using rendu::emitter<test_emitter>::emitter;
 };
@@ -172,5 +170,4 @@ TEST(Emitter, CustomAllocator) {
 
   ASSERT_TRUE(emitter.empty());
   ASSERT_FALSE(other.empty());
-}
 }

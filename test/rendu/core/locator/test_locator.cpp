@@ -3,7 +3,6 @@
 */
 #include "test/rdtest.h"
 #include <core/locator/locator.h>
-#include <core/define/define.h>
 
 struct base_service {
   virtual ~base_service() = default;

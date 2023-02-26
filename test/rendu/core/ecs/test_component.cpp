@@ -4,6 +4,7 @@
 #include <test/rdtest.h>
 #include <core/ecs/component.h>
 
+
 struct empty {};
 
 struct non_empty {
@@ -22,14 +23,6 @@ struct self_contained {
   static constexpr auto page_size = 4u;
 };
 
-struct traits_based {};
-
-template<>
-struct rendu::component_traits<traits_based> {
-  using type = traits_based;
-  static constexpr auto in_place_delete = false;
-  static constexpr auto page_size = 8u;
-};
 
 RD_TEST(Component, VoidType) {
   using traits_type = rendu::component_traits<void>;
@@ -65,6 +58,15 @@ RD_TEST(Component, SelfContained) {
   static_assert(traits_type::in_place_delete);
   static_assert(traits_type::page_size == 4u);
 }
+
+
+struct traits_based {};
+template<>
+struct rendu::component_traits<traits_based> {
+  using type = traits_based;
+  static constexpr auto in_place_delete = false;
+  static constexpr auto page_size = 8u;
+};
 
 RD_TEST(Component, TraitsBased) {
   using traits_type = rendu::component_traits<traits_based>;

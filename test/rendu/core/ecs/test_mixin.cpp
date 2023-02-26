@@ -33,16 +33,6 @@ void listener(counter &counter, Registry &, typename Registry::entity_type) {
   ++counter.value;
 }
 
-struct empty_each_tag final {};
-
-template<>
-struct rendu::basic_storage<empty_each_tag, rendu::entity, std::allocator<empty_each_tag>>: rendu::basic_storage<void, rendu::entity, std::allocator<void>> {
-  basic_storage(const std::allocator<empty_each_tag> &) {}
-
-  [[nodiscard]] iterable each() noexcept {
-    return {internal::extended_storage_iterator{base_type::end()}, internal::extended_storage_iterator{base_type::end()}};
-  }
-};
 
 RD_TEST(SighMixin, GenericType) {
   rendu::entity entities[2u]{rendu::entity{3}, rendu::entity{42}};
@@ -436,34 +426,6 @@ RD_TEST(SighMixin, Swap) {
   RD_ASSERT_EQ(on_destroy.value, 3);
 }
 
-RD_TEST(SighMixin, EmptyEachStorage) {
-  rendu::sigh_mixin<rendu::storage<empty_each_tag>> pool;
-  rendu::registry registry;
-
-  counter on_destroy{};
-
-  pool.bind(rendu::forward_as_any(registry));
-  pool.on_destroy().connect<&listener<rendu::registry>>(on_destroy);
-
-  RD_ASSERT_TRUE(pool.empty());
-  RD_ASSERT_EQ(on_destroy.value, 0);
-
-  pool.push(rendu::entity{42});
-
-  RD_ASSERT_FALSE(pool.empty());
-  RD_ASSERT_EQ(on_destroy.value, 0);
-
-  RD_ASSERT_NE(pool.begin(), pool.end());
-  RD_ASSERT_EQ(pool.each().begin(), pool.each().end());
-  RD_ASSERT_EQ(on_destroy.value, 0);
-
-  pool.clear();
-
-  RD_ASSERT_EQ(pool.begin(), pool.end());
-  RD_ASSERT_EQ(pool.each().begin(), pool.each().end());
-  // no signal at all because of the (fake) empty iterable
-  RD_ASSERT_EQ(on_destroy.value, 0);
-}
 
 RD_TEST(SighMixin, StorageEntity) {
   using traits_type = rendu::entity_traits<rendu::entity>;
@@ -728,4 +690,44 @@ RD_TEST(SighMixin, ThrowingComponent) {
 
   RD_ASSERT_EQ(on_construct.value, 2);
   RD_ASSERT_EQ(on_destroy.value, 3);
+}
+
+struct empty_each_tag final {};
+
+template<>
+struct rendu::basic_storage<empty_each_tag, rendu::entity, std::allocator<empty_each_tag>>: rendu::basic_storage<void, rendu::entity, std::allocator<void>> {
+  basic_storage(const std::allocator<empty_each_tag> &) {}
+
+  [[nodiscard]] iterable each() noexcept {
+    return {internal::extended_storage_iterator{base_type::end()}, internal::extended_storage_iterator{base_type::end()}};
+  }
+};
+
+RD_TEST(SighMixin, EmptyEachStorage) {
+  rendu::sigh_mixin<rendu::storage<empty_each_tag>> pool;
+  rendu::registry registry;
+
+  counter on_destroy{};
+
+  pool.bind(rendu::forward_as_any(registry));
+  pool.on_destroy().connect<&listener<rendu::registry>>(on_destroy);
+
+  RD_ASSERT_TRUE(pool.empty());
+  RD_ASSERT_EQ(on_destroy.value, 0);
+
+  pool.push(rendu::entity{42});
+
+  RD_ASSERT_FALSE(pool.empty());
+  RD_ASSERT_EQ(on_destroy.value, 0);
+
+  RD_ASSERT_NE(pool.begin(), pool.end());
+  RD_ASSERT_EQ(pool.each().begin(), pool.each().end());
+  RD_ASSERT_EQ(on_destroy.value, 0);
+
+  pool.clear();
+
+  RD_ASSERT_EQ(pool.begin(), pool.end());
+  RD_ASSERT_EQ(pool.each().begin(), pool.each().end());
+  // no signal at all because of the (fake) empty iterable
+  RD_ASSERT_EQ(on_destroy.value, 0);
 }

@@ -8,7 +8,6 @@
 #include <test/throwing_type.h>
 #include <core/base/memory.h>
 
-namespace test {
 
 RD_TEST(ToAddress, Functionalities) {
   std::shared_ptr<int> shared = std::make_shared<int>();
@@ -276,4 +275,3 @@ RD_TEST(UninitializedConstructUsingAllocator, UsesAllocatorConstruction) {
 }
 
 #endif
-}// namespace test

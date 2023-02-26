@@ -5,6 +5,7 @@
 #ifndef RENDU_CORE_META_RESOLVE_H_
 #define RENDU_CORE_META_RESOLVE_H_
 
+#include <type_traits>
 #include "base/type_info.h"
 #include "locator/locator.h"
 #include "context.h"

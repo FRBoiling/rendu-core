@@ -11,11 +11,6 @@
 
 namespace rendu {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
 namespace internal {
 
 template<typename>
@@ -47,11 +42,6 @@ struct basic_hashed_string {
 };
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
 
 /**
  * @brief Zero overhead unique identifier.

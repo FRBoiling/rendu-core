@@ -7,8 +7,6 @@
 #include <test/rdtest.h>
 #include <core/base/any.h>
 
-namespace test {
-
 struct empty {
   ~empty() {
     ++counter;
@@ -1450,4 +1448,3 @@ RD_TEST_F(Any, DeducedArrayType) {
   RD_ASSERT_EQ((strcmp("another array of char", rendu::any_cast<const char *>(any))), 0);
 }
 
-} // namespace test
