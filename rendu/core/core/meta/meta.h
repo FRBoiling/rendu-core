@@ -5,7 +5,6 @@
 #ifndef RENDU_CORE_META_META_H_
 #define RENDU_CORE_META_META_H_
 
-#include "base/type_info.h"
 #include "base/any.h"
 #include "locator/locator.h"
 #include "type_traits.h"
