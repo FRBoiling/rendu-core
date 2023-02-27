@@ -4,8 +4,11 @@
 
 #include <unordered_map>
 #include <vector>
-#include "test/rdtest.h"
+#include <test/rdtest.h>
 #include <core/meta/context.h>
+#include <core/meta/pointer.h>
+#include <core/meta/template.h>
+#include <core/meta/container.h>
 #include <core/meta/factory.h>
 #include <core/base/hashed_string.h>
 

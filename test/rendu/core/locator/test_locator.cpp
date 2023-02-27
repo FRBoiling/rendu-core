@@ -2,7 +2,7 @@
 * Created by boil on 2023/2/25.
 */
 
-#include "test/rdtest.h"
+#include <test/rdtest.h>
 #include <core/locator/locator.h>
 
 struct base_service {
@@ -10,7 +10,7 @@ struct base_service {
   virtual void invoke() {}
 };
 
-struct null_service: base_service {
+struct null_service : base_service {
   void invoke() override {
     invoked = true;
   }
@@ -18,7 +18,7 @@ struct null_service: base_service {
   static inline bool invoked{};
 };
 
-struct derived_service: base_service {
+struct derived_service : base_service {
   void invoke() override {
     invoked = true;
   }
@@ -26,7 +26,7 @@ struct derived_service: base_service {
   static inline bool invoked{};
 };
 
-struct ServiceLocator: ::testing::Test {
+struct ServiceLocator : ::testing::Test {
   void SetUp() override {
     null_service::invoked = false;
     derived_service::invoked = false;
@@ -72,9 +72,9 @@ RD_TEST(ServiceLocator, Functionalities) {
 }
 
 RD_DEBUG_TEST(ServiceLocatorDeathTest, UninitializedValue) {
-RD_ASSERT_NO_FATAL_FAILURE(rendu::locator<base_service>::value_or().invoke());
+  RD_ASSERT_NO_FATAL_FAILURE(rendu::locator<base_service>::value_or().invoke());
 
-rendu::locator<base_service>::reset();
+  rendu::locator<base_service>::reset();
 
-RD_ASSERT_DEATH(rendu::locator<base_service>::value().invoke(), "");
+  RD_ASSERT_DEATH(rendu::locator<base_service>::value().invoke(), "");
 }

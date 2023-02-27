@@ -383,4 +383,27 @@ function(rendu_add_test)
   add_test(NAME ${_NAME} COMMAND ${_NAME})
 endfunction(rendu_add_test)
 
+function(rendu_cc_test)
+cmake_parse_arguments(RD_CC_TEST
+    ""
+    "NAME"
+    "SRCS;COPTS;DEFINES;LINKOPTS;DEPS"
+    ${ARGN}
+    )
 
+set(_NAME "${PROJECT_NAME}_${RD_CC_TEST_NAME}")
+
+add_executable(${_NAME} "")
+target_sources(${_NAME} PRIVATE ${RD_CC_TEST_SRCS})
+
+target_compile_options(${_NAME}
+    PRIVATE ${RD_CC_TEST_COPTS}
+    )
+
+target_link_libraries(${_NAME}
+    PUBLIC ${RD_CC_TEST_DEPS}
+    PRIVATE ${RD_CC_TEST_LINKOPTS}
+    )
+
+add_test(NAME ${_NAME} COMMAND ${_NAME})
+endfunction(rendu_cc_test)
