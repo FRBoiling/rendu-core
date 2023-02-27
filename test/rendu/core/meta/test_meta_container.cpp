@@ -10,6 +10,8 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
+namespace meta_container {
+
 struct invalid_type {};
 
 struct MetaContainer : ::testing::Test {
@@ -751,4 +753,5 @@ RD_TEST_F(MetaContainer, StdVectorBool) {
 
   RD_ASSERT_TRUE(view.clear());
   RD_ASSERT_EQ(cview.size(), 0u);
+}
 }

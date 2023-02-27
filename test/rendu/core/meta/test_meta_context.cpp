@@ -12,6 +12,8 @@
 #include <core/meta/factory.h>
 #include <core/base/hashed_string.h>
 
+namespace meta_context {
+
 struct base {
   base() = default;
 
@@ -506,4 +508,5 @@ RD_TEST_F(MetaContext, ForwardAsMeta) {
 
   RD_ASSERT_EQ(global.type().data("marker"_hs).get({}).cast<int>(), global_marker);
   RD_ASSERT_EQ(local.type().data("marker"_hs).get({}).cast<int>(), local_marker);
+}
 }

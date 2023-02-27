@@ -18,3 +18,15 @@ rendu_add_test(
     DEFINES
     LINKOPTS
 )
+
+#rendu_cc_test(
+#    NAME
+#    meta_type
+#    SRCS
+#    ${CMAKE_CURRENT_SOURCE_DIR}/core/test_meta_type.cpp
+#    COPTS
+#    DEPS
+#    rendu::test
+#    rendu::core
+#    rendu::common
+#)

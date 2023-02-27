@@ -16,9 +16,11 @@ struct function_type<Ret(Args...)> {};
 
 template<typename Ret, typename... Args>
 struct rendu::meta_template_traits<function_type<Ret(Args...)>> {
-  using class_type = meta_class_template_tag<function_type>;
-  using args_type = type_list<Ret, Args...>;
+using class_type = meta_class_template_tag<function_type>;
+using args_type = type_list<Ret, Args...>;
 };
+
+namespace meta_template {
 
 RD_TEST(MetaTemplate, Invalid) {
   const auto type = rendu::resolve<int>();
@@ -52,3 +54,4 @@ RD_TEST(MetaTemplate, CustomTraits) {
   RD_ASSERT_EQ(type.template_arg(3u), rendu::meta_type{});
 }
 
+}

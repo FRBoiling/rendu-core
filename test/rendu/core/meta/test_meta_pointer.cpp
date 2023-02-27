@@ -78,6 +78,7 @@ Type &dereference_meta_pointer_like(const adl_wrapped_shared_ptr<Type> &ptr) {
 int test_function() {
   return 42;
 }
+namespace meta_pointer {
 
 RD_TEST(MetaPointerLike, DereferenceOperatorInvalidType) {
   int value = 0;
@@ -402,4 +403,5 @@ RD_DEBUG_TEST(MetaPointerLikeDeathTest, DereferencePointerToConstOverload) {
 
   test(adl_wrapped_shared_ptr<const int>{42});
   test(spec_wrapped_shared_ptr<const int>{42});
+}
 }
