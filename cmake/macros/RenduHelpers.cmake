@@ -407,3 +407,34 @@ target_link_libraries(${_NAME}
 
 add_test(NAME ${_NAME} COMMAND ${_NAME})
 endfunction(rendu_cc_test)
+
+function(rendu_batch_test)
+  cmake_parse_arguments(RD_BATCH_TEST
+      ""
+      "NAME"
+      "CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;DEPS"
+      ${ARGN}
+      )
+
+  CollectSourceFiles(
+      ${RD_BATCH_TEST_CMAKE_CUR_SOURCE_DIR}
+      PRIVATE_SOURCES
+  )
+
+  foreach (file_path ${PRIVATE_SOURCES})
+    string(REGEX MATCHALL "[0-9A-Za-z_]*.cpp" tmp ${file_path})
+    string(REGEX REPLACE ".cpp" "" filename ${tmp})
+    message(STATUS "[test] " ${filename})
+    set(_NAME "${filename}")
+    add_executable(${_NAME} "")
+    target_sources(${_NAME} PRIVATE ${file_path})
+    target_compile_options(${_NAME}
+        PRIVATE ${RD_BATCH_TEST_COPTS}
+        )
+    target_link_libraries(${_NAME}
+        PUBLIC ${RD_BATCH_TEST_DEPS}
+        PRIVATE ${RD_BATCH_TEST_LINKOPTS}
+        )
+    add_test(NAME ${_NAME} COMMAND ${_NAME})
+  endforeach ()
+endfunction(rendu_batch_test)
