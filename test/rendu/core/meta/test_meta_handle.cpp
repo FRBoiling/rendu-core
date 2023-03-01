@@ -38,34 +38,34 @@ struct MetaHandle: ::testing::Test {
   }
 };
 
-RD_TEST_F(MetaHandle, Functionalities) {
+TEST_F(MetaHandle, Functionalities) {
   using namespace rendu::literals;
 
   clazz_t instance{};
   rendu::meta_handle handle{};
   rendu::meta_handle chandle{};
 
-  RD_ASSERT_FALSE(handle);
-  RD_ASSERT_FALSE(chandle);
+  ASSERT_FALSE(handle);
+  ASSERT_FALSE(chandle);
 
   handle = rendu::meta_handle{instance};
   chandle = rendu::meta_handle{std::as_const(instance)};
 
-  RD_ASSERT_TRUE(handle);
-  RD_ASSERT_TRUE(chandle);
+  ASSERT_TRUE(handle);
+  ASSERT_TRUE(chandle);
 
-  RD_ASSERT_TRUE(handle->invoke("incr"_hs));
-  RD_ASSERT_FALSE(chandle->invoke("incr"_hs));
-  RD_ASSERT_FALSE(std::as_const(handle)->invoke("incr"_hs));
-  RD_ASSERT_EQ(instance.value, 1);
+  ASSERT_TRUE(handle->invoke("incr"_hs));
+  ASSERT_FALSE(chandle->invoke("incr"_hs));
+  ASSERT_FALSE(std::as_const(handle)->invoke("incr"_hs));
+  ASSERT_EQ(instance.value, 1);
 
   auto any = rendu::forward_as_meta(instance);
   handle = rendu::meta_handle{any};
   chandle = rendu::meta_handle{std::as_const(any)};
 
-  RD_ASSERT_TRUE(handle->invoke("decr"_hs));
-  RD_ASSERT_FALSE(chandle->invoke("decr"_hs));
-  RD_ASSERT_FALSE(std::as_const(handle)->invoke("decr"_hs));
-  RD_ASSERT_EQ(instance.value, 0);
+  ASSERT_TRUE(handle->invoke("decr"_hs));
+  ASSERT_FALSE(chandle->invoke("decr"_hs));
+  ASSERT_FALSE(std::as_const(handle)->invoke("decr"_hs));
+  ASSERT_EQ(instance.value, 0);
 }
 }

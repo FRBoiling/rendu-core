@@ -55,42 +55,42 @@ struct SigH : ::testing::Test {
 
 
 
-RD_TEST_F(SigH, Lifetime) {
+TEST_F(SigH, Lifetime) {
   using signal = rendu::sigh<void(void)>;
 
-  RD_ASSERT_NO_FATAL_FAILURE(signal{});
+  ASSERT_NO_FATAL_FAILURE(signal{});
 
   signal src{}, other{};
 
-  RD_ASSERT_NO_FATAL_FAILURE(signal{src});
-  RD_ASSERT_NO_FATAL_FAILURE(signal{std::move(other)});
-  RD_ASSERT_NO_FATAL_FAILURE(src = other);
-  RD_ASSERT_NO_FATAL_FAILURE(src = std::move(other));
+  ASSERT_NO_FATAL_FAILURE(signal{src});
+  ASSERT_NO_FATAL_FAILURE(signal{std::move(other)});
+  ASSERT_NO_FATAL_FAILURE(src = other);
+  ASSERT_NO_FATAL_FAILURE(src = std::move(other));
 
-  RD_ASSERT_NO_FATAL_FAILURE(delete new signal{});
+  ASSERT_NO_FATAL_FAILURE(delete new signal{});
 }
 
-RD_TEST_F(SigH, Clear) {
+TEST_F(SigH, Clear) {
   rendu::sigh<void(int &)> sigh;
   rendu::sink sink{sigh};
 
   sink.connect<&sigh_listener::f>();
 
-  RD_ASSERT_FALSE(sink.empty());
-  RD_ASSERT_FALSE(sigh.empty());
+  ASSERT_FALSE(sink.empty());
+  ASSERT_FALSE(sigh.empty());
 
   sink.disconnect(static_cast<const void *>(nullptr));
 
-  RD_ASSERT_FALSE(sink.empty());
-  RD_ASSERT_FALSE(sigh.empty());
+  ASSERT_FALSE(sink.empty());
+  ASSERT_FALSE(sigh.empty());
 
   sink.disconnect();
 
-  RD_ASSERT_TRUE(sink.empty());
-  RD_ASSERT_TRUE(sigh.empty());
+  ASSERT_TRUE(sink.empty());
+  ASSERT_TRUE(sigh.empty());
 }
 
-RD_TEST_F(SigH, Swap) {
+TEST_F(SigH, Swap) {
   rendu::sigh<void(int &)> sigh1;
   rendu::sigh<void(int &)> sigh2;
   rendu::sink sink1{sigh1};
@@ -98,22 +98,22 @@ RD_TEST_F(SigH, Swap) {
 
   sink1.connect<&sigh_listener::f>();
 
-  RD_ASSERT_FALSE(sink1.empty());
-  RD_ASSERT_TRUE(sink2.empty());
+  ASSERT_FALSE(sink1.empty());
+  ASSERT_TRUE(sink2.empty());
 
-  RD_ASSERT_FALSE(sigh1.empty());
-  RD_ASSERT_TRUE(sigh2.empty());
+  ASSERT_FALSE(sigh1.empty());
+  ASSERT_TRUE(sigh2.empty());
 
   sigh1.swap(sigh2);
 
-  RD_ASSERT_TRUE(sink1.empty());
-  RD_ASSERT_FALSE(sink2.empty());
+  ASSERT_TRUE(sink1.empty());
+  ASSERT_FALSE(sink2.empty());
 
-  RD_ASSERT_TRUE(sigh1.empty());
-  RD_ASSERT_FALSE(sigh2.empty());
+  ASSERT_TRUE(sigh1.empty());
+  ASSERT_FALSE(sigh2.empty());
 }
 
-RD_TEST_F(SigH, Functions) {
+TEST_F(SigH, Functions) {
   rendu::sigh<void(int &)> sigh;
   rendu::sink sink{sigh};
   int v = 0;
@@ -121,20 +121,20 @@ RD_TEST_F(SigH, Functions) {
   sink.connect<&sigh_listener::f>();
   sigh.publish(v);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(1u, sigh.size());
-  RD_ASSERT_EQ(42, v);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(1u, sigh.size());
+  ASSERT_EQ(42, v);
 
   v = 0;
   sink.disconnect<&sigh_listener::f>();
   sigh.publish(v);
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_EQ(0u, sigh.size());
-  RD_ASSERT_EQ(v, 0);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_EQ(0u, sigh.size());
+  ASSERT_EQ(v, 0);
 }
 
-RD_TEST_F(SigH, FunctionsWithPayload) {
+TEST_F(SigH, FunctionsWithPayload) {
   rendu::sigh<void()> sigh;
   rendu::sink sink{sigh};
   int v = 0;
@@ -142,26 +142,26 @@ RD_TEST_F(SigH, FunctionsWithPayload) {
   sink.connect<&sigh_listener::f>(v);
   sigh.publish();
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(1u, sigh.size());
-  RD_ASSERT_EQ(42, v);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(1u, sigh.size());
+  ASSERT_EQ(42, v);
 
   v = 0;
   sink.disconnect<&sigh_listener::f>(v);
   sigh.publish();
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_EQ(0u, sigh.size());
-  RD_ASSERT_EQ(v, 0);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_EQ(0u, sigh.size());
+  ASSERT_EQ(v, 0);
 
   sink.connect<&sigh_listener::f>(v);
   sink.disconnect(v);
   sigh.publish();
 
-  RD_ASSERT_EQ(v, 0);
+  ASSERT_EQ(v, 0);
 }
 
-RD_TEST_F(SigH, Members) {
+TEST_F(SigH, Members) {
   sigh_listener l1, l2;
   rendu::sigh<bool(int)> sigh;
   rendu::sink sink{sigh};
@@ -169,35 +169,35 @@ RD_TEST_F(SigH, Members) {
   sink.connect<&sigh_listener::g>(l1);
   sigh.publish(42);
 
-  RD_ASSERT_TRUE(l1.k);
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(1u, sigh.size());
+  ASSERT_TRUE(l1.k);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(1u, sigh.size());
 
   sink.disconnect<&sigh_listener::g>(l1);
   sigh.publish(42);
 
-  RD_ASSERT_TRUE(l1.k);
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_EQ(0u, sigh.size());
+  ASSERT_TRUE(l1.k);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_EQ(0u, sigh.size());
 
   sink.connect<&sigh_listener::g>(&l1);
   sink.connect<&sigh_listener::h>(l2);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(2u, sigh.size());
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(2u, sigh.size());
 
   sink.disconnect(static_cast<const void *>(nullptr));
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(2u, sigh.size());
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(2u, sigh.size());
 
   sink.disconnect(&l1);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(1u, sigh.size());
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(1u, sigh.size());
 }
 
-RD_TEST_F(SigH, Collector) {
+TEST_F(SigH, Collector) {
   sigh_listener listener;
   rendu::sigh<bool(int)> sigh;
   rendu::sink sink{sigh};
@@ -207,7 +207,7 @@ RD_TEST_F(SigH, Collector) {
   sink.connect<&sigh_listener::h>(listener);
 
   auto no_return = [&listener, &cnt](bool value) {
-    RD_ASSERT_TRUE(value);
+    ASSERT_TRUE(value);
     listener.k = true;
     ++cnt;
   };
@@ -215,12 +215,12 @@ RD_TEST_F(SigH, Collector) {
   listener.k = true;
   sigh.collect(std::move(no_return), 42);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(cnt, 2);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(cnt, 2);
 
   auto bool_return = [&cnt](bool value) {
     // gtest and its macro hell are sometimes really annoying...
-    [](auto v) { RD_ASSERT_TRUE(v); }(value);
+    [](auto v) { ASSERT_TRUE(v); }(value);
     ++cnt;
     return true;
   };
@@ -228,10 +228,10 @@ RD_TEST_F(SigH, Collector) {
   cnt = 0;
   sigh.collect(std::move(bool_return), 42);
 
-  RD_ASSERT_EQ(cnt, 1);
+  ASSERT_EQ(cnt, 1);
 }
 
-RD_TEST_F(SigH, CollectorVoid) {
+TEST_F(SigH, CollectorVoid) {
   sigh_listener listener;
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
@@ -241,8 +241,8 @@ RD_TEST_F(SigH, CollectorVoid) {
   sink.connect<&sigh_listener::h>(listener);
   sigh.collect([&cnt]() { ++cnt; }, 42);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_EQ(cnt, 2);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_EQ(cnt, 2);
 
   auto test = [&cnt]() {
     ++cnt;
@@ -252,10 +252,10 @@ RD_TEST_F(SigH, CollectorVoid) {
   cnt = 0;
   sigh.collect(std::move(test), 42);
 
-  RD_ASSERT_EQ(cnt, 1);
+  ASSERT_EQ(cnt, 1);
 }
 
-RD_TEST_F(SigH, Connection) {
+TEST_F(SigH, Connection) {
   rendu::sigh<void(int &)> sigh;
   rendu::sink sink{sigh};
   int v = 0;
@@ -263,91 +263,91 @@ RD_TEST_F(SigH, Connection) {
   auto conn = sink.connect<&sigh_listener::f>();
   sigh.publish(v);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_TRUE(conn);
-  RD_ASSERT_EQ(42, v);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_TRUE(conn);
+  ASSERT_EQ(42, v);
 
   v = 0;
   conn.release();
   sigh.publish(v);
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_FALSE(conn);
-  RD_ASSERT_EQ(0, v);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_FALSE(conn);
+  ASSERT_EQ(0, v);
 }
 
-RD_TEST_F(SigH, ScopedConnection) {
+TEST_F(SigH, ScopedConnection) {
   sigh_listener listener;
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
 
   {
-    RD_ASSERT_FALSE(listener.k);
+    ASSERT_FALSE(listener.k);
 
     rendu::scoped_connection conn = sink.connect<&sigh_listener::g>(listener);
     sigh.publish(42);
 
-    RD_ASSERT_FALSE(sigh.empty());
-    RD_ASSERT_TRUE(listener.k);
-    RD_ASSERT_TRUE(conn);
+    ASSERT_FALSE(sigh.empty());
+    ASSERT_TRUE(listener.k);
+    ASSERT_TRUE(conn);
   }
 
   sigh.publish(42);
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_TRUE(listener.k);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_TRUE(listener.k);
 }
 
-RD_TEST_F(SigH, ScopedConnectionMove) {
+TEST_F(SigH, ScopedConnectionMove) {
   sigh_listener listener;
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
 
   rendu::scoped_connection outer{sink.connect<&sigh_listener::g>(listener)};
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_TRUE(outer);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_TRUE(outer);
 
   {
     rendu::scoped_connection inner{std::move(outer)};
 
-    RD_ASSERT_FALSE(listener.k);
-    RD_ASSERT_FALSE(outer);
-    RD_ASSERT_TRUE(inner);
+    ASSERT_FALSE(listener.k);
+    ASSERT_FALSE(outer);
+    ASSERT_TRUE(inner);
 
     sigh.publish(42);
 
-    RD_ASSERT_TRUE(listener.k);
+    ASSERT_TRUE(listener.k);
   }
 
-  RD_ASSERT_TRUE(sigh.empty());
+  ASSERT_TRUE(sigh.empty());
 
   outer = sink.connect<&sigh_listener::g>(listener);
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_TRUE(outer);
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_TRUE(outer);
 
   {
     rendu::scoped_connection inner{};
 
-    RD_ASSERT_TRUE(listener.k);
-    RD_ASSERT_TRUE(outer);
-    RD_ASSERT_FALSE(inner);
+    ASSERT_TRUE(listener.k);
+    ASSERT_TRUE(outer);
+    ASSERT_FALSE(inner);
 
     inner = std::move(outer);
 
-    RD_ASSERT_FALSE(outer);
-    RD_ASSERT_TRUE(inner);
+    ASSERT_FALSE(outer);
+    ASSERT_TRUE(inner);
 
     sigh.publish(42);
 
-    RD_ASSERT_FALSE(listener.k);
+    ASSERT_FALSE(listener.k);
   }
 
-  RD_ASSERT_TRUE(sigh.empty());
+  ASSERT_TRUE(sigh.empty());
 }
 
-RD_TEST_F(SigH, ScopedConnectionConstructorsAndOperators) {
+TEST_F(SigH, ScopedConnectionConstructorsAndOperators) {
   sigh_listener listener;
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
@@ -355,35 +355,35 @@ RD_TEST_F(SigH, ScopedConnectionConstructorsAndOperators) {
   {
     rendu::scoped_connection inner{};
 
-    RD_ASSERT_TRUE(sigh.empty());
-    RD_ASSERT_FALSE(listener.k);
-    RD_ASSERT_FALSE(inner);
+    ASSERT_TRUE(sigh.empty());
+    ASSERT_FALSE(listener.k);
+    ASSERT_FALSE(inner);
 
     inner = sink.connect<&sigh_listener::g>(listener);
     sigh.publish(42);
 
-    RD_ASSERT_FALSE(sigh.empty());
-    RD_ASSERT_TRUE(listener.k);
-    RD_ASSERT_TRUE(inner);
+    ASSERT_FALSE(sigh.empty());
+    ASSERT_TRUE(listener.k);
+    ASSERT_TRUE(inner);
 
     inner.release();
 
-    RD_ASSERT_TRUE(sigh.empty());
-    RD_ASSERT_FALSE(inner);
+    ASSERT_TRUE(sigh.empty());
+    ASSERT_FALSE(inner);
 
     auto basic = sink.connect<&sigh_listener::g>(listener);
     inner = std::as_const(basic);
     sigh.publish(42);
 
-    RD_ASSERT_FALSE(sigh.empty());
-    RD_ASSERT_FALSE(listener.k);
-    RD_ASSERT_TRUE(inner);
+    ASSERT_FALSE(sigh.empty());
+    ASSERT_FALSE(listener.k);
+    ASSERT_TRUE(inner);
   }
 
   sigh.publish(42);
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_FALSE(listener.k);
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_FALSE(listener.k);
 }
 
 namespace {
@@ -407,7 +407,7 @@ struct const_nonconst_noexcept {
   mutable int cnt{0};
 };
 
-RD_TEST_F(SigH, ConstNonConstNoExcept) {
+TEST_F(SigH, ConstNonConstNoExcept) {
   rendu::sigh<void()> sigh;
   rendu::sink sink{sigh};
   const_nonconst_noexcept functor;
@@ -418,8 +418,8 @@ RD_TEST_F(SigH, ConstNonConstNoExcept) {
   sink.connect<&const_nonconst_noexcept::i>(&cfunctor);
   sigh.publish();
 
-  RD_ASSERT_EQ(functor.cnt, 2);
-  RD_ASSERT_EQ(cfunctor.cnt, 2);
+  ASSERT_EQ(functor.cnt, 2);
+  ASSERT_EQ(cfunctor.cnt, 2);
 
   sink.disconnect<&const_nonconst_noexcept::f>(functor);
   sink.disconnect<&const_nonconst_noexcept::g>(&functor);
@@ -427,12 +427,12 @@ RD_TEST_F(SigH, ConstNonConstNoExcept) {
   sink.disconnect<&const_nonconst_noexcept::i>(&cfunctor);
   sigh.publish();
 
-  RD_ASSERT_EQ(functor.cnt, 2);
-  RD_ASSERT_EQ(cfunctor.cnt, 2);
+  ASSERT_EQ(functor.cnt, 2);
+  ASSERT_EQ(cfunctor.cnt, 2);
 }
 }
 
-RD_TEST_F(SigH, BeforeFunction) {
+TEST_F(SigH, BeforeFunction) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -442,12 +442,12 @@ RD_TEST_F(SigH, BeforeFunction) {
   sink.before<&before_after::static_add>().connect<&before_after::mul>(functor);
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 6);
+  ASSERT_EQ(functor.value, 6);
 }
 
 
 
-RD_TEST_F(SigH, BeforeMemberFunction) {
+TEST_F(SigH, BeforeMemberFunction) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -457,10 +457,10 @@ RD_TEST_F(SigH, BeforeMemberFunction) {
   sink.before<&before_after::add>(functor).connect<&before_after::mul>(functor);
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 6);
+  ASSERT_EQ(functor.value, 6);
 }
 
-RD_TEST_F(SigH, BeforeFunctionWithPayload) {
+TEST_F(SigH, BeforeFunctionWithPayload) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -470,10 +470,10 @@ RD_TEST_F(SigH, BeforeFunctionWithPayload) {
   sink.before<&before_after::static_mul>(functor).connect<&before_after::add>(functor);
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 8);
+  ASSERT_EQ(functor.value, 8);
 }
 
-RD_TEST_F(SigH, BeforeInstanceOrPayload) {
+TEST_F(SigH, BeforeInstanceOrPayload) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -483,10 +483,10 @@ RD_TEST_F(SigH, BeforeInstanceOrPayload) {
   sink.before(functor).connect<&before_after::static_add>();
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 6);
+  ASSERT_EQ(functor.value, 6);
 }
 
-RD_TEST_F(SigH, BeforeAnythingElse) {
+TEST_F(SigH, BeforeAnythingElse) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -495,10 +495,10 @@ RD_TEST_F(SigH, BeforeAnythingElse) {
   sink.before().connect<&before_after::mul>(functor);
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 2);
+  ASSERT_EQ(functor.value, 2);
 }
 
-RD_TEST_F(SigH, BeforeListenerNotPresent) {
+TEST_F(SigH, BeforeListenerNotPresent) {
   rendu::sigh<void(int)> sigh;
   rendu::sink sink{sigh};
   before_after functor;
@@ -507,42 +507,42 @@ RD_TEST_F(SigH, BeforeListenerNotPresent) {
   sink.before<&before_after::add>(&functor).connect<&before_after::add>(functor);
   sigh.publish(2);
 
-  RD_ASSERT_EQ(functor.value, 2);
+  ASSERT_EQ(functor.value, 2);
 }
 
-RD_TEST_F(SigH, UnboundDataMember) {
+TEST_F(SigH, UnboundDataMember) {
   sigh_listener listener;
   rendu::sigh<bool &(sigh_listener &)> sigh;
   rendu::sink sink{sigh};
 
-  RD_ASSERT_FALSE(listener.k);
+  ASSERT_FALSE(listener.k);
 
   sink.connect<&sigh_listener::k>();
   sigh.collect([](bool &value) { value = !value; }, listener);
 
-  RD_ASSERT_TRUE(listener.k);
+  ASSERT_TRUE(listener.k);
 }
 
-RD_TEST_F(SigH, UnboundMemberFunction) {
+TEST_F(SigH, UnboundMemberFunction) {
   sigh_listener listener;
   rendu::sigh<void(sigh_listener *, int)> sigh;
   rendu::sink sink{sigh};
 
-  RD_ASSERT_FALSE(listener.k);
+  ASSERT_FALSE(listener.k);
 
   sink.connect<&sigh_listener::g>();
   sigh.publish(&listener, 42);
 
-  RD_ASSERT_TRUE(listener.k);
+  ASSERT_TRUE(listener.k);
 }
 
-RD_TEST_F(SigH, CustomAllocator) {
+TEST_F(SigH, CustomAllocator) {
   std::allocator<void (*)(int)> allocator;
   rendu::sigh<void(int), decltype(allocator)> sigh{allocator};
 
-  RD_ASSERT_EQ(sigh.get_allocator(), allocator);
-  RD_ASSERT_FALSE(sigh.get_allocator() != allocator);
-  RD_ASSERT_TRUE(sigh.empty());
+  ASSERT_EQ(sigh.get_allocator(), allocator);
+  ASSERT_FALSE(sigh.get_allocator() != allocator);
+  ASSERT_TRUE(sigh.empty());
 
   rendu::sink sink{sigh};
   sigh_listener listener;
@@ -551,34 +551,34 @@ RD_TEST_F(SigH, CustomAllocator) {
   decltype(sigh) copy{sigh, allocator};
   sink.disconnect(listener);
 
-  RD_ASSERT_TRUE(sigh.empty());
-  RD_ASSERT_FALSE(copy.empty());
+  ASSERT_TRUE(sigh.empty());
+  ASSERT_FALSE(copy.empty());
 
   sigh = copy;
 
-  RD_ASSERT_FALSE(sigh.empty());
-  RD_ASSERT_FALSE(copy.empty());
+  ASSERT_FALSE(sigh.empty());
+  ASSERT_FALSE(copy.empty());
 
   decltype(sigh) move{std::move(copy), allocator};
 
-  RD_ASSERT_TRUE(copy.empty());
-  RD_ASSERT_FALSE(move.empty());
+  ASSERT_TRUE(copy.empty());
+  ASSERT_FALSE(move.empty());
 
   sink = rendu::sink{move};
   sink.disconnect(&listener);
 
-  RD_ASSERT_TRUE(copy.empty());
-  RD_ASSERT_TRUE(move.empty());
+  ASSERT_TRUE(copy.empty());
+  ASSERT_TRUE(move.empty());
 
   sink.template connect<&sigh_listener::g>(listener);
   copy.swap(move);
 
-  RD_ASSERT_FALSE(copy.empty());
-  RD_ASSERT_TRUE(move.empty());
+  ASSERT_FALSE(copy.empty());
+  ASSERT_TRUE(move.empty());
 
   sink = rendu::sink{copy};
   sink.disconnect();
 
-  RD_ASSERT_TRUE(copy.empty());
-  RD_ASSERT_TRUE(move.empty());
+  ASSERT_TRUE(copy.empty());
+  ASSERT_TRUE(move.empty());
 }

@@ -161,448 +161,448 @@ struct MetaData : ::testing::Test {
 
 using MetaDataDeathTest = MetaData;
 
-RD_TEST_F(MetaData, Functionalities) {
+TEST_F(MetaData, Functionalities) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<clazz_t>().data("i"_hs);
   clazz_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
 
   for (auto curr : data.prop()) {
-    RD_ASSERT_EQ(curr.first, 3u);
-    RD_ASSERT_EQ(curr.second.value(), 0);
+    ASSERT_EQ(curr.first, 3u);
+    ASSERT_EQ(curr.second.value(), 0);
   }
 
-  RD_ASSERT_FALSE(data.prop(2));
-  RD_ASSERT_FALSE(data.prop('c'));
+  ASSERT_FALSE(data.prop(2));
+  ASSERT_FALSE(data.prop('c'));
 
   auto prop = data.prop(3u);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_EQ(prop.value(), 0);
+  ASSERT_TRUE(prop);
+  ASSERT_EQ(prop.value(), 0);
 }
 
-RD_TEST_F(MetaData, Const) {
+TEST_F(MetaData, Const) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<clazz_t>().data("j"_hs);
   clazz_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_TRUE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 1);
-  RD_ASSERT_FALSE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 1);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_TRUE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 1);
+  ASSERT_FALSE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 1);
 
   for (auto curr : data.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_EQ(curr.second.value(), 1);
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_EQ(curr.second.value(), 1);
   }
 
-  RD_ASSERT_FALSE(data.prop(false));
-  RD_ASSERT_FALSE(data.prop('c'));
+  ASSERT_FALSE(data.prop(false));
+  ASSERT_FALSE(data.prop('c'));
 
   auto prop = data.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_EQ(prop.value(), 1);
+  ASSERT_TRUE(prop);
+  ASSERT_EQ(prop.value(), 1);
 }
 
-RD_TEST_F(MetaData, Static) {
+TEST_F(MetaData, Static) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<clazz_t>().data("h"_hs);
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_TRUE(data.is_static());
-  RD_ASSERT_EQ(data.get({}).cast<int>(), 2);
-  RD_ASSERT_TRUE(data.set({}, 42));
-  RD_ASSERT_EQ(data.get({}).cast<int>(), 42);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_TRUE(data.is_static());
+  ASSERT_EQ(data.get({}).cast<int>(), 2);
+  ASSERT_TRUE(data.set({}, 42));
+  ASSERT_EQ(data.get({}).cast<int>(), 42);
 
   for (auto curr : data.prop()) {
-    RD_ASSERT_EQ(curr.first, static_cast<rendu::id_type>(property_t::random));
-    RD_ASSERT_EQ(curr.second.value(), 2);
+    ASSERT_EQ(curr.first, static_cast<rendu::id_type>(property_t::random));
+    ASSERT_EQ(curr.second.value(), 2);
   }
 
-  RD_ASSERT_FALSE(data.prop(static_cast<rendu::id_type>(property_t::value)));
-  RD_ASSERT_FALSE(data.prop('c'));
+  ASSERT_FALSE(data.prop(static_cast<rendu::id_type>(property_t::value)));
+  ASSERT_FALSE(data.prop('c'));
 
   auto prop = data.prop(static_cast<rendu::id_type>(property_t::random));
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_EQ(prop.value(), 2);
+  ASSERT_TRUE(prop);
+  ASSERT_EQ(prop.value(), 2);
 }
 
-RD_TEST_F(MetaData, ConstStatic) {
+TEST_F(MetaData, ConstStatic) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<clazz_t>().data("k"_hs);
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_TRUE(data.is_const());
-  RD_ASSERT_TRUE(data.is_static());
-  RD_ASSERT_EQ(data.get({}).cast<int>(), 3);
-  RD_ASSERT_FALSE(data.set({}, 42));
-  RD_ASSERT_EQ(data.get({}).cast<int>(), 3);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_TRUE(data.is_const());
+  ASSERT_TRUE(data.is_static());
+  ASSERT_EQ(data.get({}).cast<int>(), 3);
+  ASSERT_FALSE(data.set({}, 42));
+  ASSERT_EQ(data.get({}).cast<int>(), 3);
 
   for (auto curr : data.prop()) {
-    RD_ASSERT_EQ(curr.first, static_cast<rendu::id_type>(property_t::value));
-    RD_ASSERT_EQ(curr.second.value(), 3);
+    ASSERT_EQ(curr.first, static_cast<rendu::id_type>(property_t::value));
+    ASSERT_EQ(curr.second.value(), 3);
   }
 
-  RD_ASSERT_FALSE(data.prop(static_cast<rendu::id_type>(property_t::random)));
-  RD_ASSERT_FALSE(data.prop('c'));
+  ASSERT_FALSE(data.prop(static_cast<rendu::id_type>(property_t::random)));
+  ASSERT_FALSE(data.prop('c'));
 
   auto prop = data.prop(static_cast<rendu::id_type>(property_t::value));
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_EQ(prop.value(), 3);
+  ASSERT_TRUE(prop);
+  ASSERT_EQ(prop.value(), 3);
 }
 
-RD_TEST_F(MetaData, GetMetaAnyArg) {
+TEST_F(MetaData, GetMetaAnyArg) {
   using namespace rendu::literals;
 
   rendu::meta_any any{clazz_t{}};
   any.cast<clazz_t &>().i = 99;
   const auto value = rendu::resolve<clazz_t>().data("i"_hs).get(any);
 
-  RD_ASSERT_TRUE(value);
-  RD_ASSERT_TRUE(static_cast<bool>(value.cast<int>()));
-  RD_ASSERT_EQ(value.cast<int>(), 99);
+  ASSERT_TRUE(value);
+  ASSERT_TRUE(static_cast<bool>(value.cast<int>()));
+  ASSERT_EQ(value.cast<int>(), 99);
 }
 
-RD_TEST_F(MetaData, GetInvalidArg) {
+TEST_F(MetaData, GetInvalidArg) {
   using namespace rendu::literals;
 
   auto instance = 0;
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).get(instance));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).get(instance));
 }
 
-RD_TEST_F(MetaData, SetMetaAnyArg) {
+TEST_F(MetaData, SetMetaAnyArg) {
   using namespace rendu::literals;
 
   rendu::meta_any any{clazz_t{}};
   rendu::meta_any value{42};
 
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 0);
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, value));
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().i, 0);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, value));
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
 }
 
-RD_TEST_F(MetaData, SetInvalidArg) {
+TEST_F(MetaData, SetInvalidArg) {
   using namespace rendu::literals;
 
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).set({}, 'c'));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).set({}, 'c'));
 }
 
-RD_TEST_F(MetaData, SetCast) {
+TEST_F(MetaData, SetCast) {
   using namespace rendu::literals;
 
   clazz_t instance{};
 
-  RD_ASSERT_EQ(base_t::counter, 0);
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("base"_hs).set(instance, derived_t{}));
-  RD_ASSERT_EQ(base_t::counter, 1);
+  ASSERT_EQ(base_t::counter, 0);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("base"_hs).set(instance, derived_t{}));
+  ASSERT_EQ(base_t::counter, 1);
 }
 
-RD_TEST_F(MetaData, SetConvert) {
+TEST_F(MetaData, SetConvert) {
   using namespace rendu::literals;
 
   clazz_t instance{};
   instance.h = 42;
 
-  RD_ASSERT_EQ(instance.i, 0);
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(instance, instance));
-  RD_ASSERT_EQ(instance.i, 42);
+  ASSERT_EQ(instance.i, 0);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(instance, instance));
+  ASSERT_EQ(instance.i, 42);
 }
 
-RD_TEST_F(MetaData, SetByRef) {
+TEST_F(MetaData, SetByRef) {
   using namespace rendu::literals;
 
   rendu::meta_any any{clazz_t{}};
   int value{42};
 
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 0);
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, rendu::forward_as_meta(value)));
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().i, 0);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, rendu::forward_as_meta(value)));
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
 
   value = 3;
   auto wrapper = rendu::forward_as_meta(value);
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, wrapper.as_ref()));
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 3);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, wrapper.as_ref()));
+  ASSERT_EQ(any.cast<clazz_t>().i, 3);
 }
 
-RD_TEST_F(MetaData, SetByConstRef) {
+TEST_F(MetaData, SetByConstRef) {
   using namespace rendu::literals;
 
   rendu::meta_any any{clazz_t{}};
   int value{42};
 
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 0);
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, rendu::forward_as_meta(std::as_const(value))));
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().i, 0);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, rendu::forward_as_meta(std::as_const(value))));
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
 
   value = 3;
   auto wrapper = rendu::forward_as_meta(std::as_const(value));
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, wrapper.as_ref()));
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 3);
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(any, wrapper.as_ref()));
+  ASSERT_EQ(any.cast<clazz_t>().i, 3);
 }
 
-RD_TEST_F(MetaData, SetterGetterAsFreeFunctions) {
+TEST_F(MetaData, SetterGetterAsFreeFunctions) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("x"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaData, SetterGetterAsMemberFunctions) {
+TEST_F(MetaData, SetterGetterAsMemberFunctions) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("y"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<double>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42.));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
-  RD_ASSERT_TRUE(data.set(instance, 3));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 3);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<double>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42.));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data.set(instance, 3));
+  ASSERT_EQ(data.get(instance).cast<int>(), 3);
 }
 
-RD_TEST_F(MetaData, SetterGetterWithRefAsMemberFunctions) {
+TEST_F(MetaData, SetterGetterWithRefAsMemberFunctions) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("w"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaData, SetterGetterMixed) {
+TEST_F(MetaData, SetterGetterMixed) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("z"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaData, SetterGetterReadOnly) {
+TEST_F(MetaData, SetterGetterReadOnly) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("z_ro"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 0u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::meta_type{});
-  RD_ASSERT_TRUE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_FALSE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 0u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::meta_type{});
+  ASSERT_TRUE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_FALSE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
 }
 
-RD_TEST_F(MetaData, SetterGetterReadOnlyDataMember) {
+TEST_F(MetaData, SetterGetterReadOnlyDataMember) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<setter_getter_t>().data("value"_hs);
   setter_getter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 0u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::meta_type{});
-  RD_ASSERT_TRUE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_FALSE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 0u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::meta_type{});
+  ASSERT_TRUE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_FALSE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
 }
 
-RD_TEST_F(MetaData, MultiSetter) {
+TEST_F(MetaData, MultiSetter) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<multi_setter_t>().data("value"_hs);
   multi_setter_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 2u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<double>());
-  RD_ASSERT_EQ(data.arg(1u), rendu::resolve<const char *>());
-  RD_ASSERT_EQ(data.arg(2u), rendu::meta_type{});
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 42);
-  RD_ASSERT_TRUE(data.set(instance, 3.));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 3);
-  RD_ASSERT_FALSE(data.set(instance, std::string{"99"}));
-  RD_ASSERT_TRUE(data.set(instance, std::string{"99"}.c_str()));
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 99);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 2u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<double>());
+  ASSERT_EQ(data.arg(1u), rendu::resolve<const char *>());
+  ASSERT_EQ(data.arg(2u), rendu::meta_type{});
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(data.get(instance).cast<int>(), 42);
+  ASSERT_TRUE(data.set(instance, 3.));
+  ASSERT_EQ(data.get(instance).cast<int>(), 3);
+  ASSERT_FALSE(data.set(instance, std::string{"99"}));
+  ASSERT_TRUE(data.set(instance, std::string{"99"}.c_str()));
+  ASSERT_EQ(data.get(instance).cast<int>(), 99);
 }
 
-RD_TEST_F(MetaData, ConstInstance) {
+TEST_F(MetaData, ConstInstance) {
   using namespace rendu::literals;
 
   clazz_t instance{};
 
-  RD_ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(instance).try_cast<int>(), nullptr);
-  RD_ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(instance).try_cast<const int>(), nullptr);
-  RD_ASSERT_EQ(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)).try_cast<int>(), nullptr);
+  ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(instance).try_cast<int>(), nullptr);
+  ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(instance).try_cast<const int>(), nullptr);
+  ASSERT_EQ(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)).try_cast<int>(), nullptr);
   // as_ref_t adapts to the constness of the passed object and returns const references in case
-  RD_ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)).try_cast<const int>(), nullptr);
+  ASSERT_NE(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)).try_cast<const int>(), nullptr);
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).get(instance));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(instance, 3));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).set(std::as_const(instance), 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).get(instance));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).set(instance, 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("i"_hs).get(std::as_const(instance)));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("i"_hs).set(std::as_const(instance), 3));
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).get(instance));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).set(instance, 3));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).get(std::as_const(instance)));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("ci"_hs).set(std::as_const(instance), 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).get(instance));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).set(instance, 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("ci"_hs).get(std::as_const(instance)));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("ci"_hs).set(std::as_const(instance), 3));
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).get(instance));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).set(instance, 3));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).get(std::as_const(instance)));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).set(std::as_const(instance), 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).get(instance));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).set(instance, 3));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).get(std::as_const(instance)));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).set(std::as_const(instance), 3));
 }
 
-RD_TEST_F(MetaData, ArrayStatic) {
+TEST_F(MetaData, ArrayStatic) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<array_t>().data("global"_hs);
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int[3]>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int[3]>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_TRUE(data.is_static());
-  RD_ASSERT_TRUE(data.type().is_array());
-  RD_ASSERT_FALSE(data.get({}));
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int[3]>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int[3]>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_TRUE(data.is_static());
+  ASSERT_TRUE(data.type().is_array());
+  ASSERT_FALSE(data.get({}));
 }
 
-RD_TEST_F(MetaData, Array) {
+TEST_F(MetaData, Array) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<array_t>().data("local"_hs);
   array_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int[5]>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int[5]>());
-  RD_ASSERT_FALSE(data.is_const());
-  RD_ASSERT_FALSE(data.is_static());
-  RD_ASSERT_TRUE(data.type().is_array());
-  RD_ASSERT_FALSE(data.get(instance));
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int[5]>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int[5]>());
+  ASSERT_FALSE(data.is_const());
+  ASSERT_FALSE(data.is_static());
+  ASSERT_TRUE(data.type().is_array());
+  ASSERT_FALSE(data.get(instance));
 }
 
-RD_TEST_F(MetaData, AsVoid) {
+TEST_F(MetaData, AsVoid) {
   using namespace rendu::literals;
 
   auto data = rendu::resolve<clazz_t>().data("void"_hs);
   clazz_t instance{};
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_TRUE(data.set(instance, 42));
-  RD_ASSERT_EQ(instance.i, 42);
-  RD_ASSERT_EQ(data.get(instance), rendu::meta_any{std::in_place_type<void>});
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_TRUE(data.set(instance, 42));
+  ASSERT_EQ(instance.i, 42);
+  ASSERT_EQ(data.get(instance), rendu::meta_any{std::in_place_type<void>});
 }
 
-RD_TEST_F(MetaData, AsRef) {
+TEST_F(MetaData, AsRef) {
   using namespace rendu::literals;
 
   clazz_t instance{};
   auto data = rendu::resolve<clazz_t>().data("i"_hs);
 
-  RD_ASSERT_TRUE(data);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_NE(data.prop().cbegin(), data.prop().cend());
-  RD_ASSERT_EQ(instance.i, 0);
+  ASSERT_TRUE(data);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_NE(data.prop().cbegin(), data.prop().cend());
+  ASSERT_EQ(instance.i, 0);
 
   data.get(instance).cast<int &>() = 3;
 
-  RD_ASSERT_EQ(instance.i, 3);
+  ASSERT_EQ(instance.i, 3);
 }
 
-RD_TEST_F(MetaData, AsConstRef) {
+TEST_F(MetaData, AsConstRef) {
   using namespace rendu::literals;
 
   clazz_t instance{};
   auto data = rendu::resolve<clazz_t>().data("ci"_hs);
 
-  RD_ASSERT_EQ(instance.i, 0);
-  RD_ASSERT_EQ(data.arity(), 1u);
-  RD_ASSERT_EQ(data.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_EQ(data.get(instance).cast<const int &>(), 0);
-  RD_ASSERT_EQ(data.get(instance).cast<int>(), 0);
-  RD_ASSERT_EQ(data.prop().cbegin(), data.prop().cend());
-  RD_ASSERT_EQ(instance.i, 0);
+  ASSERT_EQ(instance.i, 0);
+  ASSERT_EQ(data.arity(), 1u);
+  ASSERT_EQ(data.type(), rendu::resolve<int>());
+  ASSERT_EQ(data.arg(0u), rendu::resolve<int>());
+  ASSERT_EQ(data.get(instance).cast<const int &>(), 0);
+  ASSERT_EQ(data.get(instance).cast<int>(), 0);
+  ASSERT_EQ(data.prop().cbegin(), data.prop().cend());
+  ASSERT_EQ(instance.i, 0);
 }
 
 RD_DEBUG_TEST_F(MetaDataDeathTest, AsConstRef) {
@@ -611,38 +611,38 @@ RD_DEBUG_TEST_F(MetaDataDeathTest, AsConstRef) {
   clazz_t instance{};
   auto data = rendu::resolve<clazz_t>().data("ci"_hs);
 
-  RD_ASSERT_DEATH(data.get(instance).cast<int &>() = 3, "");
+  ASSERT_DEATH(data.get(instance).cast<int &>() = 3, "");
 }
 
-RD_TEST_F(MetaData, SetGetBaseData) {
+TEST_F(MetaData, SetGetBaseData) {
   using namespace rendu::literals;
 
   auto type = rendu::resolve<derived_t>();
   derived_t instance{};
 
-  RD_ASSERT_TRUE(type.data("value"_hs));
+  ASSERT_TRUE(type.data("value"_hs));
 
-  RD_ASSERT_EQ(instance.value, 3);
-  RD_ASSERT_TRUE(type.data("value"_hs).set(instance, 42));
-  RD_ASSERT_EQ(type.data("value"_hs).get(instance).cast<int>(), 42);
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(instance.value, 3);
+  ASSERT_TRUE(type.data("value"_hs).set(instance, 42));
+  ASSERT_EQ(type.data("value"_hs).get(instance).cast<int>(), 42);
+  ASSERT_EQ(instance.value, 42);
 }
 
-RD_TEST_F(MetaData, SetGetFromBase) {
+TEST_F(MetaData, SetGetFromBase) {
   using namespace rendu::literals;
 
   auto type = rendu::resolve<derived_t>();
   derived_t instance{};
 
-  RD_ASSERT_TRUE(type.data("value_from_base"_hs));
+  ASSERT_TRUE(type.data("value_from_base"_hs));
 
-  RD_ASSERT_EQ(instance.value, 3);
-  RD_ASSERT_TRUE(type.data("value_from_base"_hs).set(instance, 42));
-  RD_ASSERT_EQ(type.data("value_from_base"_hs).get(instance).cast<int>(), 42);
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(instance.value, 3);
+  ASSERT_TRUE(type.data("value_from_base"_hs).set(instance, 42));
+  ASSERT_EQ(type.data("value_from_base"_hs).get(instance).cast<int>(), 42);
+  ASSERT_EQ(instance.value, 42);
 }
 
-RD_TEST_F(MetaData, ReRegistration) {
+TEST_F(MetaData, ReRegistration) {
   using namespace rendu::literals;
 
   SetUp();
@@ -651,31 +651,31 @@ RD_TEST_F(MetaData, ReRegistration) {
       rendu::internal::resolve<base_t>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
   auto type = rendu::resolve<base_t>();
 
-  RD_ASSERT_TRUE(node.details);
-  RD_ASSERT_FALSE(node.details->data.empty());
-  RD_ASSERT_EQ(node.details->data.size(), 1u);
-  RD_ASSERT_TRUE(type.data("value"_hs));
+  ASSERT_TRUE(node.details);
+  ASSERT_FALSE(node.details->data.empty());
+  ASSERT_EQ(node.details->data.size(), 1u);
+  ASSERT_TRUE(type.data("value"_hs));
 
   rendu::meta<base_t>().data<&base_t::value>("field"_hs);
 
-  RD_ASSERT_TRUE(node.details);
-  RD_ASSERT_EQ(node.details->data.size(), 2u);
-  RD_ASSERT_TRUE(type.data("value"_hs));
-  RD_ASSERT_TRUE(type.data("field"_hs));
+  ASSERT_TRUE(node.details);
+  ASSERT_EQ(node.details->data.size(), 2u);
+  ASSERT_TRUE(type.data("value"_hs));
+  ASSERT_TRUE(type.data("field"_hs));
 }
 
-RD_TEST_F(MetaData, CollisionAndReuse) {
+TEST_F(MetaData, CollisionAndReuse) {
   using namespace rendu::literals;
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("cj"_hs));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).is_const());
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("cj"_hs));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs).is_const());
 
-  RD_ASSERT_NO_FATAL_FAILURE(rendu::meta<clazz_t>().data<&clazz_t::i>("j"_hs));
-  RD_ASSERT_NO_FATAL_FAILURE(rendu::meta<clazz_t>().data<&clazz_t::j>("cj"_hs));
+  ASSERT_NO_FATAL_FAILURE(rendu::meta<clazz_t>().data<&clazz_t::i>("j"_hs));
+  ASSERT_NO_FATAL_FAILURE(rendu::meta<clazz_t>().data<&clazz_t::j>("cj"_hs));
 
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs));
-  RD_ASSERT_TRUE(rendu::resolve<clazz_t>().data("cj"_hs));
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).is_const());
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("j"_hs));
+  ASSERT_TRUE(rendu::resolve<clazz_t>().data("cj"_hs));
+  ASSERT_FALSE(rendu::resolve<clazz_t>().data("j"_hs).is_const());
 }
 }

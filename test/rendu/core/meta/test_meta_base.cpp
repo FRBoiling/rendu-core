@@ -63,67 +63,67 @@ struct MetaBase : ::testing::Test {
   }
 };
 
-RD_TEST_F(MetaBase, Functionalities) {
+TEST_F(MetaBase, Functionalities) {
   auto any = rendu::resolve<derived_t>().construct();
   any.cast<derived_t &>().value_1 = 42;
   auto as_derived = any.as_ref();
 
-  RD_ASSERT_TRUE(any.allow_cast<base_1_t &>());
+  ASSERT_TRUE(any.allow_cast<base_1_t &>());
 
-  RD_ASSERT_FALSE(any.allow_cast<char>());
-  RD_ASSERT_FALSE(as_derived.allow_cast<char>());
+  ASSERT_FALSE(any.allow_cast<char>());
+  ASSERT_FALSE(as_derived.allow_cast<char>());
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<base_1_t &>().value_1, as_derived.cast<derived_t &>().value_1);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<base_1_t &>().value_1, as_derived.cast<derived_t &>().value_1);
 
   any.cast<base_1_t &>().value_1 = 3;
 
-  RD_ASSERT_EQ(any.cast<const base_1_t &>().value_1, as_derived.cast<const derived_t &>().value_1);
+  ASSERT_EQ(any.cast<const base_1_t &>().value_1, as_derived.cast<const derived_t &>().value_1);
 }
 
-RD_TEST_F(MetaBase, SetGetWithMutatingThis) {
+TEST_F(MetaBase, SetGetWithMutatingThis) {
   using namespace rendu::literals;
 
   derived_t instance;
   auto any = rendu::forward_as_meta(instance);
   auto as_cref = std::as_const(any).as_ref();
 
-  RD_ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
+  ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
                static_cast<const void *>(static_cast<const base_2_t *>(&instance)));
-  RD_ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
+  ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
                static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
-  RD_ASSERT_EQ(static_cast<const void *>(static_cast<const base_2_t *>(&instance)),
+  ASSERT_EQ(static_cast<const void *>(static_cast<const base_2_t *>(&instance)),
                static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
-  RD_ASSERT_EQ(static_cast<const void *>(&instance),
+  ASSERT_EQ(static_cast<const void *>(&instance),
                static_cast<const void *>(static_cast<const base_1_t *>(&instance)));
 
-  RD_ASSERT_TRUE(any.set("value"_hs, 42));
-  RD_ASSERT_TRUE(any.set("value_1"_hs, 1));
-  RD_ASSERT_TRUE(any.set("value_2"_hs, 2));
-  RD_ASSERT_TRUE(any.set("value_3"_hs, 3));
+  ASSERT_TRUE(any.set("value"_hs, 42));
+  ASSERT_TRUE(any.set("value_1"_hs, 1));
+  ASSERT_TRUE(any.set("value_2"_hs, 2));
+  ASSERT_TRUE(any.set("value_3"_hs, 3));
 
-  RD_ASSERT_FALSE(as_cref.set("value"_hs, 0));
-  RD_ASSERT_FALSE(as_cref.set("value_1"_hs, 0));
-  RD_ASSERT_FALSE(as_cref.set("value_2"_hs, 0));
-  RD_ASSERT_FALSE(as_cref.set("value_3"_hs, 0));
+  ASSERT_FALSE(as_cref.set("value"_hs, 0));
+  ASSERT_FALSE(as_cref.set("value_1"_hs, 0));
+  ASSERT_FALSE(as_cref.set("value_2"_hs, 0));
+  ASSERT_FALSE(as_cref.set("value_3"_hs, 0));
 
-  RD_ASSERT_EQ(any.get("value"_hs).cast<int>(), 42);
-  RD_ASSERT_EQ(any.get("value_1"_hs).cast<const int>(), 1);
-  RD_ASSERT_EQ(any.get("value_2"_hs).cast<int>(), 2);
-  RD_ASSERT_EQ(any.get("value_3"_hs).cast<const int>(), 3);
+  ASSERT_EQ(any.get("value"_hs).cast<int>(), 42);
+  ASSERT_EQ(any.get("value_1"_hs).cast<const int>(), 1);
+  ASSERT_EQ(any.get("value_2"_hs).cast<int>(), 2);
+  ASSERT_EQ(any.get("value_3"_hs).cast<const int>(), 3);
 
-  RD_ASSERT_EQ(as_cref.get("value"_hs).cast<const int>(), 42);
-  RD_ASSERT_EQ(as_cref.get("value_1"_hs).cast<int>(), 1);
-  RD_ASSERT_EQ(as_cref.get("value_2"_hs).cast<const int>(), 2);
-  RD_ASSERT_EQ(as_cref.get("value_3"_hs).cast<int>(), 3);
+  ASSERT_EQ(as_cref.get("value"_hs).cast<const int>(), 42);
+  ASSERT_EQ(as_cref.get("value_1"_hs).cast<int>(), 1);
+  ASSERT_EQ(as_cref.get("value_2"_hs).cast<const int>(), 2);
+  ASSERT_EQ(as_cref.get("value_3"_hs).cast<int>(), 3);
 
-  RD_ASSERT_EQ(instance.value, 42);
-  RD_ASSERT_EQ(instance.value_1, 1);
-  RD_ASSERT_EQ(instance.value_2, 2);
-  RD_ASSERT_EQ(instance.value_3, 3);
+  ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(instance.value_1, 1);
+  ASSERT_EQ(instance.value_2, 2);
+  ASSERT_EQ(instance.value_3, 3);
 }
 
-RD_TEST_F(MetaBase, ConvWithMutatingThis) {
+TEST_F(MetaBase, ConvWithMutatingThis) {
   rendu::meta_any any{derived_t{}};
   auto &&ref = any.cast<derived_t &>();
   auto as_cref = std::as_const(any).as_ref();
@@ -132,19 +132,19 @@ RD_TEST_F(MetaBase, ConvWithMutatingThis) {
   auto conv = std::as_const(any).allow_cast<int>();
   auto from_cref = std::as_const(as_cref).allow_cast<int>();
 
-  RD_ASSERT_TRUE(conv);
-  RD_ASSERT_TRUE(from_cref);
-  RD_ASSERT_EQ(conv.cast<int>(), 42);
-  RD_ASSERT_EQ(from_cref.cast<int>(), 42);
+  ASSERT_TRUE(conv);
+  ASSERT_TRUE(from_cref);
+  ASSERT_EQ(conv.cast<int>(), 42);
+  ASSERT_EQ(from_cref.cast<int>(), 42);
 
-  RD_ASSERT_TRUE(as_cref.allow_cast<int>());
-  RD_ASSERT_TRUE(any.allow_cast<int>());
+  ASSERT_TRUE(as_cref.allow_cast<int>());
+  ASSERT_TRUE(any.allow_cast<int>());
 
-  RD_ASSERT_EQ(as_cref.cast<int>(), 42);
-  RD_ASSERT_EQ(any.cast<int>(), 42);
+  ASSERT_EQ(as_cref.cast<int>(), 42);
+  ASSERT_EQ(any.cast<int>(), 42);
 }
 
-RD_TEST_F(MetaBase, OpaqueConvWithMutatingThis) {
+TEST_F(MetaBase, OpaqueConvWithMutatingThis) {
   rendu::meta_any any{derived_t{}};
   auto as_cref = std::as_const(any).as_ref();
   any.cast<derived_t &>().value_2 = 42;
@@ -152,19 +152,19 @@ RD_TEST_F(MetaBase, OpaqueConvWithMutatingThis) {
   auto conv = std::as_const(any).allow_cast(rendu::resolve<int>());
   auto from_cref = std::as_const(as_cref).allow_cast(rendu::resolve<int>());
 
-  RD_ASSERT_TRUE(conv);
-  RD_ASSERT_TRUE(from_cref);
-  RD_ASSERT_EQ(conv.cast<int>(), 42);
-  RD_ASSERT_EQ(from_cref.cast<int>(), 42);
+  ASSERT_TRUE(conv);
+  ASSERT_TRUE(from_cref);
+  ASSERT_EQ(conv.cast<int>(), 42);
+  ASSERT_EQ(from_cref.cast<int>(), 42);
 
-  RD_ASSERT_TRUE(as_cref.allow_cast(rendu::resolve<int>()));
-  RD_ASSERT_TRUE(any.allow_cast(rendu::resolve<int>()));
+  ASSERT_TRUE(as_cref.allow_cast(rendu::resolve<int>()));
+  ASSERT_TRUE(any.allow_cast(rendu::resolve<int>()));
 
-  RD_ASSERT_EQ(as_cref.cast<int>(), 42);
-  RD_ASSERT_EQ(any.cast<int>(), 42);
+  ASSERT_EQ(as_cref.cast<int>(), 42);
+  ASSERT_EQ(any.cast<int>(), 42);
 }
 
-RD_TEST_F(MetaBase, AssignWithMutatingThis) {
+TEST_F(MetaBase, AssignWithMutatingThis) {
   using namespace rendu::literals;
 
   rendu::meta_any dst{base_2_t{}};
@@ -173,11 +173,11 @@ RD_TEST_F(MetaBase, AssignWithMutatingThis) {
   dst.cast<base_2_t &>().value_2 = 0;
   src.cast<derived_t &>().value_2 = 42;
 
-  RD_ASSERT_TRUE(dst.assign(src));
-  RD_ASSERT_EQ(dst.get("value_2"_hs).cast<int>(), 42);
+  ASSERT_TRUE(dst.assign(src));
+  ASSERT_EQ(dst.get("value_2"_hs).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaBase, TransferWithMutatingThis) {
+TEST_F(MetaBase, TransferWithMutatingThis) {
   using namespace rendu::literals;
 
   rendu::meta_any dst{base_2_t{}};
@@ -186,18 +186,18 @@ RD_TEST_F(MetaBase, TransferWithMutatingThis) {
   dst.cast<base_2_t &>().value_2 = 0;
   src.cast<derived_t &>().value_2 = 42;
 
-  RD_ASSERT_TRUE(dst.assign(std::move(src)));
-  RD_ASSERT_EQ(dst.get("value_2"_hs).cast<int>(), 42);
+  ASSERT_TRUE(dst.assign(std::move(src)));
+  ASSERT_EQ(dst.get("value_2"_hs).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaBase, ReRegistration) {
+TEST_F(MetaBase, ReRegistration) {
   SetUp();
 
   auto &&node =
       rendu::internal::resolve<derived_t>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
 
-  RD_ASSERT_TRUE(node.details);
-  RD_ASSERT_FALSE(node.details->base.empty());
-  RD_ASSERT_EQ(node.details->base.size(), 2u);
+  ASSERT_TRUE(node.details);
+  ASSERT_FALSE(node.details->base.empty());
+  ASSERT_EQ(node.details->base.size(), 2u);
 }
 }

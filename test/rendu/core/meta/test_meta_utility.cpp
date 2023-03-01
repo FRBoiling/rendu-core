@@ -58,7 +58,7 @@ struct MetaUtility : ::testing::Test {
 
 using MetaUtilityDeathTest = MetaUtility;
 
-RD_TEST_F(MetaUtility, MetaDispatch) {
+TEST_F(MetaUtility, MetaDispatch) {
   int value = 42;
 
   auto as_void = rendu::meta_dispatch<rendu::as_void_t>(value);
@@ -66,210 +66,210 @@ RD_TEST_F(MetaUtility, MetaDispatch) {
   auto as_cref = rendu::meta_dispatch<rendu::as_cref_t>(value);
   auto as_is = rendu::meta_dispatch(value);
 
-  RD_ASSERT_EQ(as_void.type(), rendu::resolve<void>());
-  RD_ASSERT_EQ(as_ref.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(as_cref.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(as_is.type(), rendu::resolve<int>());
+  ASSERT_EQ(as_void.type(), rendu::resolve<void>());
+  ASSERT_EQ(as_ref.type(), rendu::resolve<int>());
+  ASSERT_EQ(as_cref.type(), rendu::resolve<int>());
+  ASSERT_EQ(as_is.type(), rendu::resolve<int>());
 
-  RD_ASSERT_NE(as_is.try_cast<int>(), nullptr);
-  RD_ASSERT_NE(as_ref.try_cast<int>(), nullptr);
-  RD_ASSERT_EQ(as_cref.try_cast<int>(), nullptr);
-  RD_ASSERT_NE(as_cref.try_cast<const int>(), nullptr);
+  ASSERT_NE(as_is.try_cast<int>(), nullptr);
+  ASSERT_NE(as_ref.try_cast<int>(), nullptr);
+  ASSERT_EQ(as_cref.try_cast<int>(), nullptr);
+  ASSERT_NE(as_cref.try_cast<const int>(), nullptr);
 
-  RD_ASSERT_EQ(as_is.cast<int>(), 42);
-  RD_ASSERT_EQ(as_ref.cast<int>(), 42);
-  RD_ASSERT_EQ(as_cref.cast<int>(), 42);
+  ASSERT_EQ(as_is.cast<int>(), 42);
+  ASSERT_EQ(as_ref.cast<int>(), 42);
+  ASSERT_EQ(as_cref.cast<int>(), 42);
 }
 
-RD_TEST_F(MetaUtility, MetaDispatchMetaAny) {
+TEST_F(MetaUtility, MetaDispatchMetaAny) {
   rendu::meta_any any{42};
 
   auto from_any = rendu::meta_dispatch(any);
   auto from_const_any = rendu::meta_dispatch(std::as_const(any));
 
-  RD_ASSERT_EQ(from_any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(from_const_any.type(), rendu::resolve<int>());
+  ASSERT_EQ(from_any.type(), rendu::resolve<int>());
+  ASSERT_EQ(from_const_any.type(), rendu::resolve<int>());
 
-  RD_ASSERT_NE(from_any.try_cast<int>(), nullptr);
-  RD_ASSERT_NE(from_const_any.try_cast<int>(), nullptr);
+  ASSERT_NE(from_any.try_cast<int>(), nullptr);
+  ASSERT_NE(from_const_any.try_cast<int>(), nullptr);
 
-  RD_ASSERT_EQ(from_any.cast<int>(), 42);
-  RD_ASSERT_EQ(from_const_any.cast<int>(), 42);
+  ASSERT_EQ(from_any.cast<int>(), 42);
+  ASSERT_EQ(from_const_any.cast<int>(), 42);
 }
 
-RD_TEST_F(MetaUtility, MetaDispatchMetaAnyAsRef) {
+TEST_F(MetaUtility, MetaDispatchMetaAnyAsRef) {
   rendu::meta_any any{42};
 
   auto from_any = rendu::meta_dispatch(any.as_ref());
   auto from_const_any = rendu::meta_dispatch(std::as_const(any).as_ref());
 
-  RD_ASSERT_EQ(from_any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(from_const_any.type(), rendu::resolve<int>());
+  ASSERT_EQ(from_any.type(), rendu::resolve<int>());
+  ASSERT_EQ(from_const_any.type(), rendu::resolve<int>());
 
-  RD_ASSERT_NE(from_any.try_cast<int>(), nullptr);
-  RD_ASSERT_EQ(from_const_any.try_cast<int>(), nullptr);
-  RD_ASSERT_NE(from_const_any.try_cast<const int>(), nullptr);
+  ASSERT_NE(from_any.try_cast<int>(), nullptr);
+  ASSERT_EQ(from_const_any.try_cast<int>(), nullptr);
+  ASSERT_NE(from_const_any.try_cast<const int>(), nullptr);
 
-  RD_ASSERT_EQ(from_any.cast<int>(), 42);
-  RD_ASSERT_EQ(from_const_any.cast<int>(), 42);
+  ASSERT_EQ(from_any.cast<int>(), 42);
+  ASSERT_EQ(from_const_any.cast<int>(), 42);
 }
 
-RD_TEST_F(MetaUtility, MetaArg) {
-  RD_ASSERT_EQ((rendu::meta_arg < rendu::type_list < int, char >> (0u)), rendu::resolve<int>());
-  RD_ASSERT_EQ((rendu::meta_arg < rendu::type_list < int, char >> (1u)), rendu::resolve<char>());
+TEST_F(MetaUtility, MetaArg) {
+  ASSERT_EQ((rendu::meta_arg < rendu::type_list < int, char >> (0u)), rendu::resolve<int>());
+  ASSERT_EQ((rendu::meta_arg < rendu::type_list < int, char >> (1u)), rendu::resolve<char>());
 }
 
 RD_DEBUG_TEST_F(MetaUtilityDeathTest, MetaArg
 ) {
-RD_ASSERT_DEATH([[maybe_unused]] auto type = rendu::meta_arg<rendu::type_list<>>(0u), "");
-RD_ASSERT_DEATH([[maybe_unused]] auto type = rendu::meta_arg < rendu::type_list < int >> (3u), "");
+ASSERT_DEATH([[maybe_unused]] auto type = rendu::meta_arg<rendu::type_list<>>(0u), "");
+ASSERT_DEATH([[maybe_unused]] auto type = rendu::meta_arg < rendu::type_list < int >> (3u), "");
 }
 
-RD_TEST_F(MetaUtility, MetaSetter) {
+TEST_F(MetaUtility, MetaSetter) {
   const int invalid{};
   clazz instance{};
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(instance, instance)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(std::as_const(instance), 42)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(invalid, 42)));
-  RD_ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::static_setter>(instance, 42)));
-  RD_ASSERT_EQ(instance.member, 42);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(instance, instance)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(std::as_const(instance), 42)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::static_setter>(invalid, 42)));
+  ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::static_setter>(instance, 42)));
+  ASSERT_EQ(instance.member, 42);
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(instance, instance)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(std::as_const(instance), 3)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(invalid, 3)));
-  RD_ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::setter>(instance, 3)));
-  RD_ASSERT_EQ(instance.member, 3);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(instance, instance)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(std::as_const(instance), 3)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::setter>(invalid, 3)));
+  ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::setter>(instance, 3)));
+  ASSERT_EQ(instance.member, 3);
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::member>(instance, instance)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::member>(invalid, 99)));
-  RD_ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::member>(instance, 99)));
-  RD_ASSERT_EQ(instance.member, 99);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::member>(instance, instance)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::member>(invalid, 99)));
+  ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::member>(instance, 99)));
+  ASSERT_EQ(instance.member, 99);
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cmember>(instance, 99)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cmember>(invalid, 99)));
-  RD_ASSERT_EQ(instance.cmember, 0);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cmember>(instance, 99)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cmember>(invalid, 99)));
+  ASSERT_EQ(instance.cmember, 0);
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::value>(instance, instance)));
-  RD_ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::value>(invalid, 1)));
-  RD_ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::value>(instance, 2)));
-  RD_ASSERT_EQ(clazz::value, 2);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::value>(instance, instance)));
+  ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::value>(invalid, 1)));
+  ASSERT_TRUE((rendu::meta_setter<clazz, &clazz::value>(instance, 2)));
+  ASSERT_EQ(clazz::value, 2);
 
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cvalue>(instance, 1)));
-  RD_ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cvalue>(invalid, 1)));
-  RD_ASSERT_EQ(clazz::cvalue, 0);
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cvalue>(instance, 1)));
+  ASSERT_FALSE((rendu::meta_setter<clazz, &clazz::cvalue>(invalid, 1)));
+  ASSERT_EQ(clazz::cvalue, 0);
 }
 
-RD_TEST_F(MetaUtility, MetaGetter) {
+TEST_F(MetaUtility, MetaGetter) {
   const int invalid{};
   clazz instance{};
 
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::static_getter>(invalid)));
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::static_getter>(instance)).cast<int>(), 0);
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::static_getter>(invalid)));
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::static_getter>(instance)).cast<int>(), 0);
 
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::getter>(invalid)));
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::getter>(instance)).cast<int>(), 0);
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::getter>(invalid)));
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::getter>(instance)).cast<int>(), 0);
 
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::member>(invalid)));
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::member>(instance)).cast<int>(), 0);
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::member>(std::as_const(instance))).cast<int>(), 0);
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::member>(invalid)));
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::member>(instance)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::member>(std::as_const(instance))).cast<int>(), 0);
 
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::cmember>(invalid)));
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cmember>(instance)).cast<int>(), 0);
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cmember>(std::as_const(instance))).cast<int>(), 0);
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::cmember>(invalid)));
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cmember>(instance)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cmember>(std::as_const(instance))).cast<int>(), 0);
 
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::arr>(invalid)));
-  RD_ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::arr>(instance)));
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::arr>(invalid)));
+  ASSERT_FALSE((rendu::meta_getter<clazz, &clazz::arr>(instance)));
 
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::value>(invalid)).cast<int>(), 0);
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::value>(instance)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::value>(invalid)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::value>(instance)).cast<int>(), 0);
 
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cvalue>(invalid)).cast<int>(), 0);
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cvalue>(instance)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cvalue>(invalid)).cast<int>(), 0);
+  ASSERT_EQ((rendu::meta_getter<clazz, &clazz::cvalue>(instance)).cast<int>(), 0);
 
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, 42>(invalid)).cast<int>(), 42);
-  RD_ASSERT_EQ((rendu::meta_getter<clazz, 42>(instance)).cast<int>(), 42);
+  ASSERT_EQ((rendu::meta_getter<clazz, 42>(invalid)).cast<int>(), 42);
+  ASSERT_EQ((rendu::meta_getter<clazz, 42>(instance)).cast<int>(), 42);
 }
 
-RD_TEST_F(MetaUtility, MetaInvokeWithCandidate) {
+TEST_F(MetaUtility, MetaInvokeWithCandidate) {
   rendu::meta_any args[2u]{clazz{}, 42};
   args[0u].cast<clazz &>().value = 99;
 
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz>({}, &clazz::setter, nullptr)));
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz>({}, &clazz::getter, nullptr)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz>({}, &clazz::setter, nullptr)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz>({}, &clazz::getter, nullptr)));
 
-  RD_ASSERT_TRUE((rendu::meta_invoke<clazz>(args[0u], &clazz::setter, args + 1u)));
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz>(args[0u], &clazz::setter, args)));
-  RD_ASSERT_EQ((rendu::meta_invoke<clazz>(args[0u], &clazz::getter, nullptr)).cast<int>(), 42);
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz>(args[1u], &clazz::getter, nullptr)));
+  ASSERT_TRUE((rendu::meta_invoke<clazz>(args[0u], &clazz::setter, args + 1u)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz>(args[0u], &clazz::setter, args)));
+  ASSERT_EQ((rendu::meta_invoke<clazz>(args[0u], &clazz::getter, nullptr)).cast<int>(), 42);
+  ASSERT_FALSE((rendu::meta_invoke<clazz>(args[1u], &clazz::getter, nullptr)));
 
-  RD_ASSERT_EQ((rendu::meta_invoke<clazz>({}, &clazz::get_value, nullptr)).cast<int>(), 99);
-  RD_ASSERT_TRUE((rendu::meta_invoke<clazz>({}, &clazz::reset_value, nullptr)));
-  RD_ASSERT_EQ(args[0u].cast<clazz &>().value, 0);
+  ASSERT_EQ((rendu::meta_invoke<clazz>({}, &clazz::get_value, nullptr)).cast<int>(), 99);
+  ASSERT_TRUE((rendu::meta_invoke<clazz>({}, &clazz::reset_value, nullptr)));
+  ASSERT_EQ(args[0u].cast<clazz &>().value, 0);
 
   const auto setter = [](int &value) { value = 3; };
   const auto getter = [](int value) { return value * 2; };
 
-  RD_ASSERT_TRUE(rendu::meta_invoke<dummy>({}, setter, args + 1u));
-  RD_ASSERT_EQ(rendu::meta_invoke<dummy>({}, getter, args + 1u).cast<int>(), 6);
+  ASSERT_TRUE(rendu::meta_invoke<dummy>({}, setter, args + 1u));
+  ASSERT_EQ(rendu::meta_invoke<dummy>({}, getter, args + 1u).cast<int>(), 6);
 }
 
-RD_TEST_F(MetaUtility, MetaInvoke) {
+TEST_F(MetaUtility, MetaInvoke) {
   rendu::meta_any args[2u]{clazz{}, 42};
   args[0u].cast<clazz &>().value = 99;
 
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::setter>({}, nullptr)));
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::getter>({}, nullptr)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::setter>({}, nullptr)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::getter>({}, nullptr)));
 
-  RD_ASSERT_TRUE((rendu::meta_invoke<clazz, &clazz::setter>(args[0u], args + 1u)));
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::setter>(args[0u], args)));
-  RD_ASSERT_EQ((rendu::meta_invoke<clazz, &clazz::getter>(args[0u], nullptr)).cast<int>(), 42);
-  RD_ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::getter>(args[1u], nullptr)));
+  ASSERT_TRUE((rendu::meta_invoke<clazz, &clazz::setter>(args[0u], args + 1u)));
+  ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::setter>(args[0u], args)));
+  ASSERT_EQ((rendu::meta_invoke<clazz, &clazz::getter>(args[0u], nullptr)).cast<int>(), 42);
+  ASSERT_FALSE((rendu::meta_invoke<clazz, &clazz::getter>(args[1u], nullptr)));
 
-  RD_ASSERT_EQ((rendu::meta_invoke<clazz, &clazz::get_value>({}, nullptr)).cast<int>(), 99);
-  RD_ASSERT_TRUE((rendu::meta_invoke<clazz, &clazz::reset_value>({}, nullptr)));
-  RD_ASSERT_EQ(args[0u].cast<clazz &>().value, 0);
+  ASSERT_EQ((rendu::meta_invoke<clazz, &clazz::get_value>({}, nullptr)).cast<int>(), 99);
+  ASSERT_TRUE((rendu::meta_invoke<clazz, &clazz::reset_value>({}, nullptr)));
+  ASSERT_EQ(args[0u].cast<clazz &>().value, 0);
 }
 
-RD_TEST_F(MetaUtility, MetaConstructArgsOnly) {
+TEST_F(MetaUtility, MetaConstructArgsOnly) {
   rendu::meta_any args[2u]{clazz{}, 42};
   const auto any = rendu::meta_construct<clazz, int>(args + 1u);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_FALSE((rendu::meta_construct<clazz, int>(args)));
-  RD_ASSERT_EQ(any.cast<const clazz &>().member, 42);
+  ASSERT_TRUE(any);
+  ASSERT_FALSE((rendu::meta_construct<clazz, int>(args)));
+  ASSERT_EQ(any.cast<const clazz &>().member, 42);
 }
 
-RD_TEST_F(MetaUtility, MetaConstructWithCandidate) {
+TEST_F(MetaUtility, MetaConstructWithCandidate) {
   rendu::meta_any args[2u]{clazz{}, 42};
   const auto any = rendu::meta_construct<clazz>(&clazz::factory, args + 1u);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_FALSE((rendu::meta_construct<clazz>(&clazz::factory, args)));
-  RD_ASSERT_EQ(any.cast<const clazz &>().member, 42);
+  ASSERT_TRUE(any);
+  ASSERT_FALSE((rendu::meta_construct<clazz>(&clazz::factory, args)));
+  ASSERT_EQ(any.cast<const clazz &>().member, 42);
 
-  RD_ASSERT_EQ(args[0u].cast<const clazz &>().member, 0);
-  RD_ASSERT_TRUE((rendu::meta_construct<clazz>(&clazz::static_setter, args)));
-  RD_ASSERT_EQ(args[0u].cast<const clazz &>().member, 42);
+  ASSERT_EQ(args[0u].cast<const clazz &>().member, 0);
+  ASSERT_TRUE((rendu::meta_construct<clazz>(&clazz::static_setter, args)));
+  ASSERT_EQ(args[0u].cast<const clazz &>().member, 42);
 
   const auto setter = [](int &value) { value = 3; };
   const auto builder = [](int value) { return value * 2; };
 
-  RD_ASSERT_TRUE(rendu::meta_construct<dummy>(setter, args + 1u));
-  RD_ASSERT_EQ(rendu::meta_construct<dummy>(builder, args + 1u).cast<int>(), 6);
+  ASSERT_TRUE(rendu::meta_construct<dummy>(setter, args + 1u));
+  ASSERT_EQ(rendu::meta_construct<dummy>(builder, args + 1u).cast<int>(), 6);
 }
 
-RD_TEST_F(MetaUtility, MetaConstruct) {
+TEST_F(MetaUtility, MetaConstruct) {
   rendu::meta_any args[2u]{clazz{}, 42};
   const auto any = rendu::meta_construct<clazz, &clazz::factory>(args + 1u);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_FALSE((rendu::meta_construct<clazz, &clazz::factory>(args)));
-  RD_ASSERT_EQ(any.cast<const clazz &>().member, 42);
+  ASSERT_TRUE(any);
+  ASSERT_FALSE((rendu::meta_construct<clazz, &clazz::factory>(args)));
+  ASSERT_EQ(any.cast<const clazz &>().member, 42);
 
-  RD_ASSERT_EQ(args[0u].cast<const clazz &>().member, 0);
-  RD_ASSERT_TRUE((rendu::meta_construct<clazz, &clazz::static_setter>(args)));
-  RD_ASSERT_EQ(args[0u].cast<const clazz &>().member, 42);
+  ASSERT_EQ(args[0u].cast<const clazz &>().member, 0);
+  ASSERT_TRUE((rendu::meta_construct<clazz, &clazz::static_setter>(args)));
+  ASSERT_EQ(args[0u].cast<const clazz &>().member, 42);
 }
 
 }

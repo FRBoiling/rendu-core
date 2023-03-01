@@ -160,276 +160,276 @@ struct MetaFunc : ::testing::Test {
 
 using MetaFuncDeathTest = MetaFunc;
 
-RD_TEST_F(MetaFunc, Functionalities) {
+TEST_F(MetaFunc, Functionalities) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("f2"_hs);
   func_t instance{};
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 2u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_FALSE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_EQ(func.arg(1u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(2u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 2u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_FALSE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_EQ(func.arg(1u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(2u));
 
   auto any = func.invoke(instance, 3, 2);
   auto empty = func.invoke(instance);
 
-  RD_ASSERT_FALSE(empty);
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 4);
-  RD_ASSERT_EQ(func_t::value, 3);
+  ASSERT_FALSE(empty);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 4);
+  ASSERT_EQ(func_t::value, 3);
 
   for (auto curr : func.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_FALSE(curr.second.value().template cast<bool>());
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_FALSE(curr.second.value().template cast<bool>());
   }
 
-  RD_ASSERT_FALSE(func.prop(false));
-  RD_ASSERT_FALSE(func.prop('c'));
+  ASSERT_FALSE(func.prop(false));
+  ASSERT_FALSE(func.prop('c'));
 
   auto prop = func.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_FALSE(prop.value().cast<bool>());
+  ASSERT_TRUE(prop);
+  ASSERT_FALSE(prop.value().cast<bool>());
 }
 
-RD_TEST_F(MetaFunc, Const) {
+TEST_F(MetaFunc, Const) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("f1"_hs);
   func_t instance{};
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 1u);
-  RD_ASSERT_TRUE(func.is_const());
-  RD_ASSERT_FALSE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(1u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 1u);
+  ASSERT_TRUE(func.is_const());
+  ASSERT_FALSE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(1u));
 
   auto any = func.invoke(instance, 4);
   auto empty = func.invoke(instance, derived_t{});
 
-  RD_ASSERT_FALSE(empty);
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 16);
+  ASSERT_FALSE(empty);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 16);
 
   for (auto curr : func.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_FALSE(curr.second.value().template cast<bool>());
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_FALSE(curr.second.value().template cast<bool>());
   }
 
-  RD_ASSERT_FALSE(func.prop(false));
-  RD_ASSERT_FALSE(func.prop('c'));
+  ASSERT_FALSE(func.prop(false));
+  ASSERT_FALSE(func.prop('c'));
 
   auto prop = func.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_FALSE(prop.value().cast<bool>());
+  ASSERT_TRUE(prop);
+  ASSERT_FALSE(prop.value().cast<bool>());
 }
 
-RD_TEST_F(MetaFunc, RetVoid) {
+TEST_F(MetaFunc, RetVoid) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("g"_hs);
   func_t instance{};
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 1u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_FALSE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(1u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 1u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_FALSE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<void>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(1u));
 
   auto any = func.invoke(instance, 5);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func_t::value, 25);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<void>());
+  ASSERT_EQ(func_t::value, 25);
 
   for (auto curr : func.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_FALSE(curr.second.value().template cast<bool>());
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_FALSE(curr.second.value().template cast<bool>());
   }
 
-  RD_ASSERT_FALSE(func.prop(false));
-  RD_ASSERT_FALSE(func.prop('c'));
+  ASSERT_FALSE(func.prop(false));
+  ASSERT_FALSE(func.prop('c'));
 
   auto prop = func.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_FALSE(prop.value().cast<bool>());
+  ASSERT_TRUE(prop);
+  ASSERT_FALSE(prop.value().cast<bool>());
 }
 
-RD_TEST_F(MetaFunc, Static) {
+TEST_F(MetaFunc, Static) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("h"_hs);
   func_t::value = 2;
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 1u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_TRUE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(1u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 1u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_TRUE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(1u));
 
   auto any = func.invoke({}, 3);
   auto empty = func.invoke({}, derived_t{});
 
-  RD_ASSERT_FALSE(empty);
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 6);
+  ASSERT_FALSE(empty);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 6);
 
   for (auto curr : func.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_FALSE(curr.second.value().template cast<bool>());
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_FALSE(curr.second.value().template cast<bool>());
   }
 
-  RD_ASSERT_FALSE(func.prop(false));
-  RD_ASSERT_FALSE(func.prop('c'));
+  ASSERT_FALSE(func.prop(false));
+  ASSERT_FALSE(func.prop('c'));
 
   auto prop = func.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_FALSE(prop.value().cast<bool>());
+  ASSERT_TRUE(prop);
+  ASSERT_FALSE(prop.value().cast<bool>());
 }
 
-RD_TEST_F(MetaFunc, StaticRetVoid) {
+TEST_F(MetaFunc, StaticRetVoid) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("k"_hs);
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 1u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_TRUE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(1u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 1u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_TRUE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<void>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(1u));
 
   auto any = func.invoke({}, 42);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func_t::value, 42);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<void>());
+  ASSERT_EQ(func_t::value, 42);
 
   for (auto curr : func.prop()) {
-    RD_ASSERT_EQ(curr.first, "true"_hs);
-    RD_ASSERT_FALSE(curr.second.value().template cast<bool>());
+    ASSERT_EQ(curr.first, "true"_hs);
+    ASSERT_FALSE(curr.second.value().template cast<bool>());
   }
 
-  RD_ASSERT_FALSE(func.prop(false));
-  RD_ASSERT_FALSE(func.prop('c'));
+  ASSERT_FALSE(func.prop(false));
+  ASSERT_FALSE(func.prop('c'));
 
   auto prop = func.prop("true"_hs);
 
-  RD_ASSERT_TRUE(prop);
-  RD_ASSERT_FALSE(prop.value().cast<bool>());
+  ASSERT_TRUE(prop);
+  ASSERT_FALSE(prop.value().cast<bool>());
 }
 
-RD_TEST_F(MetaFunc, StaticAsMember) {
+TEST_F(MetaFunc, StaticAsMember) {
   using namespace rendu::literals;
 
   base_t instance{};
   auto func = rendu::resolve<base_t>().func("fake_member"_hs);
   auto any = func.invoke(instance, 42);
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 1u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_FALSE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(1u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 1u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_FALSE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<void>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(1u));
 
-  RD_ASSERT_EQ(func.prop().cbegin(), func.prop().cend());
+  ASSERT_EQ(func.prop().cbegin(), func.prop().cend());
 
-  RD_ASSERT_FALSE(func.invoke({}, 42));
-  RD_ASSERT_FALSE(func.invoke(std::as_const(instance), 42));
+  ASSERT_FALSE(func.invoke({}, 42));
+  ASSERT_FALSE(func.invoke(std::as_const(instance), 42));
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<void>());
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<void>());
+  ASSERT_EQ(instance.value, 42);
 }
 
-RD_TEST_F(MetaFunc, StaticAsConstMember) {
+TEST_F(MetaFunc, StaticAsConstMember) {
   using namespace rendu::literals;
 
   base_t instance{};
   auto func = rendu::resolve<base_t>().func("fake_const_member"_hs);
   auto any = func.invoke(std::as_const(instance));
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 0u);
-  RD_ASSERT_TRUE(func.is_const());
-  RD_ASSERT_FALSE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_FALSE(func.arg(0u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 0u);
+  ASSERT_TRUE(func.is_const());
+  ASSERT_FALSE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_FALSE(func.arg(0u));
 
-  RD_ASSERT_EQ(func.prop().cbegin(), func.prop().cend());
+  ASSERT_EQ(func.prop().cbegin(), func.prop().cend());
 
-  RD_ASSERT_FALSE(func.invoke({}));
-  RD_ASSERT_TRUE(func.invoke(instance));
+  ASSERT_FALSE(func.invoke({}));
+  ASSERT_TRUE(func.invoke(instance));
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 3);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 3);
 }
 
-RD_TEST_F(MetaFunc, MetaAnyArgs) {
+TEST_F(MetaFunc, MetaAnyArgs) {
   using namespace rendu::literals;
 
   func_t instance;
   auto any = rendu::resolve<func_t>().func("f1"_hs).invoke(instance, 3);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 9);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 9);
 }
 
-RD_TEST_F(MetaFunc, InvalidArgs) {
+TEST_F(MetaFunc, InvalidArgs) {
   using namespace rendu::literals;
 
   int value = 3;
-  RD_ASSERT_FALSE(rendu::resolve<func_t>().func("f1"_hs).invoke(value, 'c'));
+  ASSERT_FALSE(rendu::resolve<func_t>().func("f1"_hs).invoke(value, 'c'));
 }
 
-RD_TEST_F(MetaFunc, CastAndConvert) {
+TEST_F(MetaFunc, CastAndConvert) {
   using namespace rendu::literals;
 
   func_t instance;
   instance.value = 3;
   auto any = rendu::resolve<func_t>().func("f3"_hs).invoke(instance, derived_t{}, 0, instance);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 9);
-  RD_ASSERT_EQ(instance.value, 0);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 9);
+  ASSERT_EQ(instance.value, 0);
 }
 
-RD_TEST_F(MetaFunc, ArithmeticConversion) {
+TEST_F(MetaFunc, ArithmeticConversion) {
   using namespace rendu::literals;
 
   func_t instance;
   auto any = rendu::resolve<func_t>().func("f2"_hs).invoke(instance, true, 4.2);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<int>());
-  RD_ASSERT_EQ(any.cast<int>(), 16);
-  RD_ASSERT_EQ(instance.value, 1);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<int>());
+  ASSERT_EQ(any.cast<int>(), 16);
+  ASSERT_EQ(instance.value, 1);
 }
 
-RD_TEST_F(MetaFunc, ArgsByRef) {
+TEST_F(MetaFunc, ArgsByRef) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("h"_hs);
@@ -437,13 +437,13 @@ RD_TEST_F(MetaFunc, ArgsByRef) {
   rendu::meta_any any{3};
   int value = 4;
 
-  RD_ASSERT_EQ(func.invoke({}, rendu::forward_as_meta(value)).cast<int>(), 8);
-  RD_ASSERT_EQ(func.invoke({}, any.as_ref()).cast<int>(), 6);
-  RD_ASSERT_EQ(any.cast<int>(), 6);
-  RD_ASSERT_EQ(value, 8);
+  ASSERT_EQ(func.invoke({}, rendu::forward_as_meta(value)).cast<int>(), 8);
+  ASSERT_EQ(func.invoke({}, any.as_ref()).cast<int>(), 6);
+  ASSERT_EQ(any.cast<int>(), 6);
+  ASSERT_EQ(value, 8);
 }
 
-RD_TEST_F(MetaFunc, ArgsByConstRef) {
+TEST_F(MetaFunc, ArgsByConstRef) {
   using namespace rendu::literals;
 
   func_t instance{};
@@ -451,55 +451,55 @@ RD_TEST_F(MetaFunc, ArgsByConstRef) {
   rendu::meta_any any{2};
   int value = 3;
 
-  RD_ASSERT_TRUE(func.invoke(instance, rendu::forward_as_meta(std::as_const(value))));
-  RD_ASSERT_EQ(func_t::value, 9);
+  ASSERT_TRUE(func.invoke(instance, rendu::forward_as_meta(std::as_const(value))));
+  ASSERT_EQ(func_t::value, 9);
 
-  RD_ASSERT_TRUE(func.invoke(instance, std::as_const(any).as_ref()));
-  RD_ASSERT_EQ(func_t::value, 4);
+  ASSERT_TRUE(func.invoke(instance, std::as_const(any).as_ref()));
+  ASSERT_EQ(func_t::value, 4);
 }
 
-RD_TEST_F(MetaFunc, ConstInstance) {
+TEST_F(MetaFunc, ConstInstance) {
   using namespace rendu::literals;
 
   func_t instance{};
   auto any = rendu::resolve<func_t>().func("f1"_hs).invoke(std::as_const(instance), 2);
 
-  RD_ASSERT_FALSE(rendu::resolve<func_t>().func("g"_hs).invoke(std::as_const(instance), 42));
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<int>(), 4);
+  ASSERT_FALSE(rendu::resolve<func_t>().func("g"_hs).invoke(std::as_const(instance), 42));
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<int>(), 4);
 }
 
-RD_TEST_F(MetaFunc, AsVoid) {
+TEST_F(MetaFunc, AsVoid) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("v"_hs);
   func_t instance{};
 
-  RD_ASSERT_EQ(func.invoke(instance, 42), rendu::meta_any{std::in_place_type<void>});
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<void>());
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(func.invoke(instance, 42), rendu::meta_any{std::in_place_type<void>});
+  ASSERT_EQ(func.ret(), rendu::resolve<void>());
+  ASSERT_EQ(instance.value, 42);
 }
 
-RD_TEST_F(MetaFunc, AsRef) {
+TEST_F(MetaFunc, AsRef) {
   using namespace rendu::literals;
 
   func_t instance{};
   auto func = rendu::resolve<func_t>().func("a"_hs);
   func.invoke(instance).cast<int &>() = 3;
 
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_EQ(instance.value, 3);
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_EQ(instance.value, 3);
 }
 
-RD_TEST_F(MetaFunc, AsConstRef) {
+TEST_F(MetaFunc, AsConstRef) {
   using namespace rendu::literals;
 
   func_t instance{};
   auto func = rendu::resolve<func_t>().func("ca"_hs);
 
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<int>());
-  RD_ASSERT_EQ(func.invoke(instance).cast<const int &>(), 3);
-  RD_ASSERT_EQ(func.invoke(instance).cast<int>(), 3);
+  ASSERT_EQ(func.ret(), rendu::resolve<int>());
+  ASSERT_EQ(func.invoke(instance).cast<const int &>(), 3);
+  ASSERT_EQ(func.invoke(instance).cast<int>(), 3);
 }
 
 RD_DEBUG_TEST_F(MetaFuncDeathTest, AsConstRef) {
@@ -508,24 +508,24 @@ RD_DEBUG_TEST_F(MetaFuncDeathTest, AsConstRef) {
   func_t instance{};
   auto func = rendu::resolve<func_t>().func("ca"_hs);
 
-  RD_ASSERT_DEATH((func.invoke(instance).cast<int &>() = 3), "");
+  ASSERT_DEATH((func.invoke(instance).cast<int &>() = 3), "");
 }
 
-RD_TEST_F(MetaFunc, InvokeBaseFunction) {
+TEST_F(MetaFunc, InvokeBaseFunction) {
   using namespace rendu::literals;
 
   auto type = rendu::resolve<derived_t>();
   derived_t instance{};
 
-  RD_ASSERT_TRUE(type.func("setter"_hs));
-  RD_ASSERT_EQ(instance.value, 3);
+  ASSERT_TRUE(type.func("setter"_hs));
+  ASSERT_EQ(instance.value, 3);
 
   type.func("setter"_hs).invoke(instance, 42);
 
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(instance.value, 42);
 }
 
-RD_TEST_F(MetaFunc, InvokeFromBase) {
+TEST_F(MetaFunc, InvokeFromBase) {
   using namespace rendu::literals;
 
   auto type = rendu::resolve<derived_t>();
@@ -533,79 +533,79 @@ RD_TEST_F(MetaFunc, InvokeFromBase) {
 
   auto setter_from_base = type.func("setter_from_base"_hs);
 
-  RD_ASSERT_TRUE(setter_from_base);
-  RD_ASSERT_EQ(instance.value, 3);
+  ASSERT_TRUE(setter_from_base);
+  ASSERT_EQ(instance.value, 3);
 
   setter_from_base.invoke(instance, 42);
 
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_EQ(instance.value, 42);
 
   auto getter_from_base = type.func("getter_from_base"_hs);
 
-  RD_ASSERT_TRUE(getter_from_base);
-  RD_ASSERT_EQ(getter_from_base.invoke(instance).cast<int>(), 42);
+  ASSERT_TRUE(getter_from_base);
+  ASSERT_EQ(getter_from_base.invoke(instance).cast<int>(), 42);
 
   auto static_setter_from_base = type.func("static_setter_from_base"_hs);
 
-  RD_ASSERT_TRUE(static_setter_from_base);
-  RD_ASSERT_EQ(instance.value, 42);
+  ASSERT_TRUE(static_setter_from_base);
+  ASSERT_EQ(instance.value, 42);
 
   static_setter_from_base.invoke(instance, 3);
 
-  RD_ASSERT_EQ(instance.value, 3);
+  ASSERT_EQ(instance.value, 3);
 }
 
-RD_TEST_F(MetaFunc, ExternalMemberFunction) {
+TEST_F(MetaFunc, ExternalMemberFunction) {
   using namespace rendu::literals;
 
   auto func = rendu::resolve<func_t>().func("emplace"_hs);
 
-  RD_ASSERT_TRUE(func);
-  RD_ASSERT_EQ(func.arity(), 2u);
-  RD_ASSERT_FALSE(func.is_const());
-  RD_ASSERT_TRUE(func.is_static());
-  RD_ASSERT_EQ(func.ret(), rendu::resolve<void>());
-  RD_ASSERT_EQ(func.arg(0u), rendu::resolve<rendu::registry>());
-  RD_ASSERT_EQ(func.arg(1u), rendu::resolve<rendu::entity>());
-  RD_ASSERT_FALSE(func.arg(2u));
+  ASSERT_TRUE(func);
+  ASSERT_EQ(func.arity(), 2u);
+  ASSERT_FALSE(func.is_const());
+  ASSERT_TRUE(func.is_static());
+  ASSERT_EQ(func.ret(), rendu::resolve<void>());
+  ASSERT_EQ(func.arg(0u), rendu::resolve<rendu::registry>());
+  ASSERT_EQ(func.arg(1u), rendu::resolve<rendu::entity>());
+  ASSERT_FALSE(func.arg(2u));
 
   rendu::registry registry;
   const auto entity = registry.create();
 
-  RD_ASSERT_FALSE(registry.all_of<func_t>(entity));
+  ASSERT_FALSE(registry.all_of<func_t>(entity));
 
   func.invoke({}, rendu::forward_as_meta(registry), entity);
 
-  RD_ASSERT_TRUE(registry.all_of<func_t>(entity));
+  ASSERT_TRUE(registry.all_of<func_t>(entity));
 }
 
-RD_TEST_F(MetaFunc, ReRegistration) {
+TEST_F(MetaFunc, ReRegistration) {
   using namespace rendu::literals;
 
-  RD_ASSERT_EQ(reset_and_check(), 0u);
+  ASSERT_EQ(reset_and_check(), 0u);
 
   func_t instance{};
   auto type = rendu::resolve<func_t>();
 
-  RD_ASSERT_TRUE(type.func("f2"_hs));
-  RD_ASSERT_FALSE(type.invoke("f2"_hs, instance, 0));
-  RD_ASSERT_TRUE(type.invoke("f2"_hs, instance, 0, 0));
+  ASSERT_TRUE(type.func("f2"_hs));
+  ASSERT_FALSE(type.invoke("f2"_hs, instance, 0));
+  ASSERT_TRUE(type.invoke("f2"_hs, instance, 0, 0));
 
-  RD_ASSERT_TRUE(type.func("f1"_hs));
-  RD_ASSERT_TRUE(type.invoke("f1"_hs, instance, 0));
-  RD_ASSERT_FALSE(type.invoke("f1"_hs, instance, 0, 0));
+  ASSERT_TRUE(type.func("f1"_hs));
+  ASSERT_TRUE(type.invoke("f1"_hs, instance, 0));
+  ASSERT_FALSE(type.invoke("f1"_hs, instance, 0, 0));
 
   rendu::meta<func_t>()
       .func<rendu::overload<int(int, int)>(&func_t::f)>("f"_hs)
       .func<rendu::overload<int(int) const>(&func_t::f)>("f"_hs);
 
-  RD_ASSERT_TRUE(type.func("f1"_hs));
-  RD_ASSERT_TRUE(type.func("f2"_hs));
-  RD_ASSERT_TRUE(type.func("f"_hs));
+  ASSERT_TRUE(type.func("f1"_hs));
+  ASSERT_TRUE(type.func("f2"_hs));
+  ASSERT_TRUE(type.func("f"_hs));
 
-  RD_ASSERT_TRUE(type.invoke("f"_hs, instance, 0));
-  RD_ASSERT_TRUE(type.invoke("f"_hs, instance, 0, 0));
+  ASSERT_TRUE(type.invoke("f"_hs, instance, 0));
+  ASSERT_TRUE(type.invoke("f"_hs, instance, 0, 0));
 
-  RD_ASSERT_EQ(reset_and_check(), 0u);
+  ASSERT_EQ(reset_and_check(), 0u);
 }
 }

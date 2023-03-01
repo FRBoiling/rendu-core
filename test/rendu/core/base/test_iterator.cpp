@@ -9,48 +9,48 @@ struct clazz {
   int value{0};
 };
 
-RD_TEST(InputIteratorPointer, Functionalities) {
+TEST(InputIteratorPointer, Functionalities) {
   clazz instance{};
   rendu::input_iterator_pointer ptr{std::move(instance)};
   ptr->value = 42;
 
-  RD_ASSERT_EQ(instance.value, 0);
-  RD_ASSERT_EQ(ptr->value, 42);
-  RD_ASSERT_EQ(ptr->value, (*ptr).value);
-  RD_ASSERT_EQ(ptr.operator->(), &ptr.operator*());
+  ASSERT_EQ(instance.value, 0);
+  ASSERT_EQ(ptr->value, 42);
+  ASSERT_EQ(ptr->value, (*ptr).value);
+  ASSERT_EQ(ptr.operator->(), &ptr.operator*());
 }
 
-RD_TEST(IotaIterator, Functionalities) {
+TEST(IotaIterator, Functionalities) {
   rendu::iota_iterator<std::size_t> first{};
   const rendu::iota_iterator<std::size_t> last{2u};
 
-  RD_ASSERT_NE(first, last);
-  RD_ASSERT_FALSE(first == last);
-  RD_ASSERT_TRUE(first != last);
+  ASSERT_NE(first, last);
+  ASSERT_FALSE(first == last);
+  ASSERT_TRUE(first != last);
 
-  RD_ASSERT_EQ(*first++, 0u);
-  RD_ASSERT_EQ(*first, 1u);
-  RD_ASSERT_EQ(*++first, *last);
-  RD_ASSERT_EQ(*first, 2u);
+  ASSERT_EQ(*first++, 0u);
+  ASSERT_EQ(*first, 1u);
+  ASSERT_EQ(*++first, *last);
+  ASSERT_EQ(*first, 2u);
 }
 
-RD_TEST(IterableAdaptor, Functionalities) {
+TEST(IterableAdaptor, Functionalities) {
   std::vector<int> vec{1, 2};
   rendu::iterable_adaptor iterable{vec.begin(), vec.end()};
   decltype(iterable) other{};
 
-  RD_ASSERT_NO_FATAL_FAILURE(other = iterable);
-  RD_ASSERT_NO_FATAL_FAILURE(std::swap(other, iterable));
+  ASSERT_NO_FATAL_FAILURE(other = iterable);
+  ASSERT_NO_FATAL_FAILURE(std::swap(other, iterable));
 
-  RD_ASSERT_EQ(iterable.begin(), vec.begin());
-  RD_ASSERT_EQ(iterable.end(), vec.end());
+  ASSERT_EQ(iterable.begin(), vec.begin());
+  ASSERT_EQ(iterable.end(), vec.end());
 
-  RD_ASSERT_EQ(*iterable.cbegin(), 1);
-  RD_ASSERT_EQ(*++iterable.cbegin(), 2);
-  RD_ASSERT_EQ(++iterable.cbegin(), --iterable.end());
+  ASSERT_EQ(*iterable.cbegin(), 1);
+  ASSERT_EQ(*++iterable.cbegin(), 2);
+  ASSERT_EQ(++iterable.cbegin(), --iterable.end());
 
   for (auto value : rendu::iterable_adaptor<const int *, const void *>{vec.data(), vec.data() + 1u}) {
-    RD_ASSERT_EQ(value, 1);
+    ASSERT_EQ(value, 1);
   }
 }
 

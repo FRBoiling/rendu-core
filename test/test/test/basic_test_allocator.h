@@ -4,8 +4,6 @@
 
 #ifndef RENDU_TEST_BASIC_TEST_ALLOCATOR_H_
 #define RENDU_TEST_BASIC_TEST_ALLOCATOR_H_
-#ifndef ENTT_COMMON_BASIC_TEST_ALLOCATOR_HPP
-#define ENTT_COMMON_BASIC_TEST_ALLOCATOR_HPP
 
 #include <memory>
 #include <type_traits>
@@ -34,7 +32,5 @@ struct basic_test_allocator: std::allocator<Type> {
 };
 
 } // namespace test
-
-#endif
 
 #endif //RENDU_TEST_BASIC_TEST_ALLOCATOR_H_

@@ -39,14 +39,14 @@ struct multi_argument_operation {
   using type = Type;
 };
 
-RD_TEST(SizeOf, Functionalities) {
+TEST(SizeOf, Functionalities) {
   static_assert(rendu::size_of_v<void> == 0u);
   static_assert(rendu::size_of_v<char> == sizeof(char));
   static_assert(rendu::size_of_v<int[]> == 0u);
   static_assert(rendu::size_of_v<int[3]> == sizeof(int[3]));
 }
 
-RD_TEST(UnpackAsType, Functionalities) {
+TEST(UnpackAsType, Functionalities) {
   auto test = [](auto &&...args) {
     return [](rendu::unpack_as_type<int, decltype(args)>... value) {
       return (value + ... + 0);
@@ -56,7 +56,7 @@ RD_TEST(UnpackAsType, Functionalities) {
   ASSERT_EQ(test('c', 42., true)(1, 2, 3), 6);
 }
 
-RD_TEST(UnpackAsValue, Functionalities) {
+TEST(UnpackAsValue, Functionalities) {
   auto test = [](auto &&...args) {
     return (rendu::unpack_as_value<2, decltype(args)> + ... + 0);
   };
@@ -64,19 +64,19 @@ RD_TEST(UnpackAsValue, Functionalities) {
   ASSERT_EQ(test('c', 42., true), 6);
 }
 
-RD_TEST(IntegralConstant, Functionalities) {
+TEST(IntegralConstant, Functionalities) {
   rendu::integral_constant<3> constant{};
 
   static_assert(std::is_same_v<typename rendu::integral_constant<3>::value_type, int>);
   static_assert(constant.value == 3);
 }
 
-RD_TEST(Choice, Functionalities) {
+TEST(Choice, Functionalities) {
   static_assert(std::is_base_of_v<rendu::choice_t<0>, rendu::choice_t<1>>);
   static_assert(!std::is_base_of_v<rendu::choice_t<1>, rendu::choice_t<0>>);
 }
 
-RD_TEST(TypeList, Functionalities) {
+TEST(TypeList, Functionalities) {
   using type = rendu::type_list<int, char>;
   using other = rendu::type_list<double>;
 
@@ -123,7 +123,7 @@ RD_TEST(TypeList, Functionalities) {
                                rendu::type_list<void, void>>);
 }
 
-RD_TEST(ValueList, Functionalities) {
+TEST(ValueList, Functionalities) {
   using value = rendu::value_list<0, 2>;
   using other = rendu::value_list<1>;
 
@@ -141,7 +141,7 @@ RD_TEST(ValueList, Functionalities) {
   static_assert(rendu::value_list_element_v<0u, other> == 1);
 }
 
-RD_TEST(IsApplicable, Functionalities) {
+TEST(IsApplicable, Functionalities) {
   static_assert(rendu::is_applicable_v<void(int, char), std::tuple<double, char>>);
   static_assert(!rendu::is_applicable_v<void(int, char), std::tuple<int>>);
 
@@ -150,12 +150,12 @@ RD_TEST(IsApplicable, Functionalities) {
   static_assert(!rendu::is_applicable_r_v<int, int(int, char), std::tuple<void>>);
 }
 
-RD_TEST(IsComplete, Functionalities) {
+TEST(IsComplete, Functionalities) {
   static_assert(!rendu::is_complete_v<void>);
   static_assert(rendu::is_complete_v<int>);
 }
 
-RD_TEST(IsIterator, Functionalities) {
+TEST(IsIterator, Functionalities) {
   static_assert(!rendu::is_iterator_v<void>);
   static_assert(!rendu::is_iterator_v<int>);
 
@@ -167,21 +167,21 @@ RD_TEST(IsIterator, Functionalities) {
   static_assert(rendu::is_iterator_v<std::vector<int>::reverse_iterator>);
 }
 
-RD_TEST(IsEBCOEligible, Functionalities) {
+TEST(IsEBCOEligible, Functionalities) {
   static_assert(rendu::is_ebco_eligible_v<not_comparable>);
   static_assert(!rendu::is_ebco_eligible_v<nlohmann_json_like>);
   static_assert(!rendu::is_ebco_eligible_v<double>);
   static_assert(!rendu::is_ebco_eligible_v<void>);
 }
 
-RD_TEST(IsTransparent, Functionalities) {
+TEST(IsTransparent, Functionalities) {
   static_assert(!rendu::is_transparent_v<std::less<int>>);
   static_assert(rendu::is_transparent_v<std::less<void>>);
   static_assert(!rendu::is_transparent_v<std::logical_not<double>>);
   static_assert(rendu::is_transparent_v<std::logical_not<void>>);
 }
 
-RD_TEST(IsEqualityComparable, Functionalities) {
+TEST(IsEqualityComparable, Functionalities) {
   static_assert(rendu::is_equality_comparable_v<int>);
   static_assert(rendu::is_equality_comparable_v<const int>);
   static_assert(rendu::is_equality_comparable_v<std::vector<int>>);
@@ -205,20 +205,20 @@ RD_TEST(IsEqualityComparable, Functionalities) {
   static_assert(!rendu::is_equality_comparable_v<void>);
 }
 
-RD_TEST(ConstnessAs, Functionalities) {
+TEST(ConstnessAs, Functionalities) {
   static_assert(std::is_same_v<rendu::constness_as_t<int, char>, int>);
   static_assert(std::is_same_v<rendu::constness_as_t<const int, char>, int>);
   static_assert(std::is_same_v<rendu::constness_as_t<int, const char>, const int>);
   static_assert(std::is_same_v<rendu::constness_as_t<const int, const char>, const int>);
 }
 
-RD_TEST(MemberClass, Functionalities) {
+TEST(MemberClass, Functionalities) {
   static_assert(std::is_same_v<clazz, rendu::member_class_t<decltype(&clazz::foo)>>);
   static_assert(std::is_same_v<clazz, rendu::member_class_t<decltype(&clazz::bar)>>);
   static_assert(std::is_same_v<clazz, rendu::member_class_t<decltype(&clazz::quux)>>);
 }
 
-RD_TEST(NthArgument, Functionalities) {
+TEST(NthArgument, Functionalities) {
   static_assert(std::is_same_v<rendu::nth_argument_t<0u, &free_function>, int>);
   static_assert(std::is_same_v<rendu::nth_argument_t<1u, &free_function>, const double &>);
   static_assert(std::is_same_v<rendu::nth_argument_t<0u, &clazz::bar>, double>);
@@ -229,7 +229,7 @@ RD_TEST(NthArgument, Functionalities) {
             42);
 }
 
-RD_TEST(Tag, Functionalities) {
+TEST(Tag, Functionalities) {
   using namespace rendu::literals;
   static_assert(rendu::tag<"foobar"_hs>::value == rendu::hashed_string::value("foobar"));
   static_assert(std::is_same_v<typename rendu::tag<"foobar"_hs>::value_type, rendu::id_type>);

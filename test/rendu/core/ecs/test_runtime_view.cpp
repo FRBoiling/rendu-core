@@ -30,10 +30,10 @@ TYPED_TEST(RuntimeView, Functionalities) {
   const auto e0 = registry.create();
   const auto e1 = registry.create();
 
-  RD_ASSERT_EQ(view.size_hint(), 0u);
-  RD_ASSERT_EQ(view.begin(), view.end());
-  RD_ASSERT_FALSE(view.contains(e0));
-  RD_ASSERT_FALSE(view.contains(e1));
+  ASSERT_EQ(view.size_hint(), 0u);
+  ASSERT_EQ(view.begin(), view.end());
+  ASSERT_FALSE(view.contains(e0));
+  ASSERT_FALSE(view.contains(e1));
 
   // forces the creation of the pools
   static_cast<void>(registry.storage<int>());
@@ -41,41 +41,41 @@ TYPED_TEST(RuntimeView, Functionalities) {
 
   view.iterate(registry.storage<int>()).iterate(registry.storage<char>());
 
-  RD_ASSERT_EQ(view.size_hint(), 0u);
+  ASSERT_EQ(view.size_hint(), 0u);
 
   registry.emplace<char>(e0);
   registry.emplace<int>(e1);
 
-  RD_ASSERT_NE(view.size_hint(), 0u);
+  ASSERT_NE(view.size_hint(), 0u);
 
   registry.emplace<char>(e1);
 
-  RD_ASSERT_EQ(view.size_hint(), 1u);
+  ASSERT_EQ(view.size_hint(), 1u);
 
   auto it = view.begin();
 
-  RD_ASSERT_EQ(*it, e1);
-  RD_ASSERT_EQ(++it, (view.end()));
+  ASSERT_EQ(*it, e1);
+  ASSERT_EQ(++it, (view.end()));
 
-  RD_ASSERT_NO_FATAL_FAILURE((view.begin()++));
-  RD_ASSERT_NO_FATAL_FAILURE((++view.begin()));
+  ASSERT_NO_FATAL_FAILURE((view.begin()++));
+  ASSERT_NO_FATAL_FAILURE((++view.begin()));
 
-  RD_ASSERT_NE(view.begin(), view.end());
-  RD_ASSERT_EQ(view.size_hint(), 1u);
+  ASSERT_NE(view.begin(), view.end());
+  ASSERT_EQ(view.size_hint(), 1u);
 
   registry.get<char>(e0) = '1';
   registry.get<char>(e1) = '2';
   registry.get<int>(e1) = 42;
 
   for(auto entity: view) {
-    RD_ASSERT_EQ(registry.get<int>(entity), 42);
-    RD_ASSERT_EQ(registry.get<char>(entity), '2');
+    ASSERT_EQ(registry.get<int>(entity), 42);
+    ASSERT_EQ(registry.get<char>(entity), '2');
   }
 
   view.clear();
 
-  RD_ASSERT_EQ(view.size_hint(), 0u);
-  RD_ASSERT_EQ(view.begin(), view.end());
+  ASSERT_EQ(view.size_hint(), 0u);
+  ASSERT_EQ(view.begin(), view.end());
 }
 
 TYPED_TEST(RuntimeView, Constructors) {
@@ -90,14 +90,14 @@ TYPED_TEST(RuntimeView, Constructors) {
   view = runtime_view_type{std::allocator<int>{}};
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_TRUE(view.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
 
   runtime_view_type temp{view, view.get_allocator()};
   runtime_view_type other{std::move(temp), view.get_allocator()};
 
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_FALSE(temp.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_FALSE(temp.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
 }
 
 TYPED_TEST(RuntimeView, Copy) {
@@ -112,22 +112,22 @@ TYPED_TEST(RuntimeView, Copy) {
 
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_TRUE(view.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
 
   runtime_view_type other{view};
 
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
 
   other.iterate(registry.storage<int>()).exclude(registry.storage<char>());
 
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_FALSE(other.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_FALSE(other.contains(entity));
 
   other = view;
 
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
 }
 
 TYPED_TEST(RuntimeView, Move) {
@@ -142,23 +142,23 @@ TYPED_TEST(RuntimeView, Move) {
 
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_TRUE(view.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
 
   runtime_view_type other{std::move(view)};
 
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
 
   view = other;
   other.iterate(registry.storage<int>()).exclude(registry.storage<char>());
 
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_FALSE(other.contains(entity));
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_FALSE(other.contains(entity));
 
   other = std::move(view);
 
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
 }
 
 TYPED_TEST(RuntimeView, Swap) {
@@ -173,21 +173,21 @@ TYPED_TEST(RuntimeView, Swap) {
   registry.emplace<int>(entity);
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_EQ(view.size_hint(), 1u);
-  RD_ASSERT_EQ(other.size_hint(), 0u);
-  RD_ASSERT_TRUE(view.contains(entity));
-  RD_ASSERT_FALSE(other.contains(entity));
-  RD_ASSERT_NE(view.begin(), view.end());
-  RD_ASSERT_EQ(other.begin(), other.end());
+  ASSERT_EQ(view.size_hint(), 1u);
+  ASSERT_EQ(other.size_hint(), 0u);
+  ASSERT_TRUE(view.contains(entity));
+  ASSERT_FALSE(other.contains(entity));
+  ASSERT_NE(view.begin(), view.end());
+  ASSERT_EQ(other.begin(), other.end());
 
   view.swap(other);
 
-  RD_ASSERT_EQ(view.size_hint(), 0u);
-  RD_ASSERT_EQ(other.size_hint(), 1u);
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(other.contains(entity));
-  RD_ASSERT_EQ(view.begin(), view.end());
-  RD_ASSERT_NE(other.begin(), other.end());
+  ASSERT_EQ(view.size_hint(), 0u);
+  ASSERT_EQ(other.size_hint(), 1u);
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(other.contains(entity));
+  ASSERT_EQ(view.begin(), view.end());
+  ASSERT_NE(other.begin(), other.end());
 }
 
 TYPED_TEST(RuntimeView, Iterator) {
@@ -207,18 +207,18 @@ TYPED_TEST(RuntimeView, Iterator) {
   begin = view.end();
   std::swap(begin, end);
 
-  RD_ASSERT_EQ(begin, view.begin());
-  RD_ASSERT_EQ(end, view.end());
-  RD_ASSERT_NE(begin, end);
+  ASSERT_EQ(begin, view.begin());
+  ASSERT_EQ(end, view.end());
+  ASSERT_NE(begin, end);
 
-  RD_ASSERT_EQ(begin++, view.begin());
-  RD_ASSERT_EQ(begin--, view.end());
+  ASSERT_EQ(begin++, view.begin());
+  ASSERT_EQ(begin--, view.end());
 
-  RD_ASSERT_EQ(++begin, view.end());
-  RD_ASSERT_EQ(--begin, view.begin());
+  ASSERT_EQ(++begin, view.end());
+  ASSERT_EQ(--begin, view.begin());
 
-  RD_ASSERT_EQ(*begin, entity);
-  RD_ASSERT_EQ(*begin.operator->(), entity);
+  ASSERT_EQ(*begin, entity);
+  ASSERT_EQ(*begin.operator->(), entity);
 }
 
 TYPED_TEST(RuntimeView, Contains) {
@@ -237,8 +237,8 @@ TYPED_TEST(RuntimeView, Contains) {
 
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(view.contains(other));
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(view.contains(other));
 }
 
 TYPED_TEST(RuntimeView, Empty) {
@@ -255,11 +255,11 @@ TYPED_TEST(RuntimeView, Empty) {
 
   view.iterate(registry.storage<int>());
 
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_FALSE(view.contains(other));
-  RD_ASSERT_EQ(view.begin(), view.end());
-  RD_ASSERT_EQ((std::find(view.begin(), view.end(), entity)), view.end());
-  RD_ASSERT_EQ((std::find(view.begin(), view.end(), other)), view.end());
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_FALSE(view.contains(other));
+  ASSERT_EQ(view.begin(), view.end());
+  ASSERT_EQ((std::find(view.begin(), view.end(), entity)), view.end());
+  ASSERT_EQ((std::find(view.begin(), view.end(), other)), view.end());
 }
 
 TYPED_TEST(RuntimeView, Each) {
@@ -278,7 +278,7 @@ TYPED_TEST(RuntimeView, Each) {
   view.iterate(registry.storage<int>()).iterate(registry.storage<char>());
 
   view.each([entity](const auto rendu) {
-    RD_ASSERT_EQ(rendu, entity);
+    ASSERT_EQ(rendu, entity);
   });
 }
 
@@ -301,7 +301,7 @@ TYPED_TEST(RuntimeView, EachWithHoles) {
   view.iterate(registry.storage<int>()).iterate(registry.storage<char>());
 
   view.each([e0](auto rendu) {
-    RD_ASSERT_EQ(e0, rendu);
+    ASSERT_EQ(e0, rendu);
   });
 }
 
@@ -321,11 +321,11 @@ TYPED_TEST(RuntimeView, ExcludedComponents) {
   view.iterate(registry.storage<int>())
       .exclude(registry.storage<char>());
 
-  RD_ASSERT_TRUE(view.contains(e0));
-  RD_ASSERT_FALSE(view.contains(e1));
+  ASSERT_TRUE(view.contains(e0));
+  ASSERT_FALSE(view.contains(e1));
 
   view.each([e0](auto rendu) {
-    RD_ASSERT_EQ(e0, rendu);
+    ASSERT_EQ(e0, rendu);
   });
 }
 
@@ -350,25 +350,25 @@ TYPED_TEST(RuntimeView, StableType) {
 
   view.iterate(registry.storage<int>()).iterate(registry.storage<stable_type>());
 
-  RD_ASSERT_EQ(view.size_hint(), 2u);
-  RD_ASSERT_TRUE(view.contains(e0));
-  RD_ASSERT_FALSE(view.contains(e1));
+  ASSERT_EQ(view.size_hint(), 2u);
+  ASSERT_TRUE(view.contains(e0));
+  ASSERT_FALSE(view.contains(e1));
 
-  RD_ASSERT_EQ(*view.begin(), e0);
-  RD_ASSERT_EQ(++view.begin(), view.end());
+  ASSERT_EQ(*view.begin(), e0);
+  ASSERT_EQ(++view.begin(), view.end());
 
   view.each([e0](const auto rendu) {
-    RD_ASSERT_EQ(e0, rendu);
+    ASSERT_EQ(e0, rendu);
   });
 
   for(auto rendu: view) {
     static_assert(std::is_same_v<decltype(rendu), rendu::entity>);
-    RD_ASSERT_EQ(e0, rendu);
+    ASSERT_EQ(e0, rendu);
   }
 
   registry.compact();
 
-  RD_ASSERT_EQ(view.size_hint(), 1u);
+  ASSERT_EQ(view.size_hint(), 1u);
 }
 
 TYPED_TEST(RuntimeView, StableTypeWithExcludedComponent) {
@@ -386,25 +386,25 @@ TYPED_TEST(RuntimeView, StableTypeWithExcludedComponent) {
 
   view.iterate(registry.storage<stable_type>()).exclude(registry.storage<int>());
 
-  RD_ASSERT_EQ(view.size_hint(), 2u);
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(view.contains(other));
+  ASSERT_EQ(view.size_hint(), 2u);
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(view.contains(other));
 
   registry.destroy(entity);
 
-  RD_ASSERT_EQ(view.size_hint(), 2u);
-  RD_ASSERT_FALSE(view.contains(entity));
-  RD_ASSERT_TRUE(view.contains(other));
+  ASSERT_EQ(view.size_hint(), 2u);
+  ASSERT_FALSE(view.contains(entity));
+  ASSERT_TRUE(view.contains(other));
 
   for(auto rendu: view) {
     constexpr rendu::entity tombstone = rendu::tombstone;
-    RD_ASSERT_NE(rendu, tombstone);
-    RD_ASSERT_EQ(rendu, other);
+    ASSERT_NE(rendu, tombstone);
+    ASSERT_EQ(rendu, other);
   }
 
   view.each([other](const auto rendu) {
     constexpr rendu::entity tombstone = rendu::tombstone;
-    RD_ASSERT_NE(rendu, tombstone);
-    RD_ASSERT_EQ(rendu, other);
+    ASSERT_NE(rendu, tombstone);
+    ASSERT_EQ(rendu, other);
   });
 }

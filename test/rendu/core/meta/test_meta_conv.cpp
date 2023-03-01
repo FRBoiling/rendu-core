@@ -44,7 +44,7 @@ struct MetaConv: ::testing::Test {
   }
 };
 
-RD_TEST_F(MetaConv, Functionalities) {
+TEST_F(MetaConv, Functionalities) {
   auto any = rendu::resolve<clazz_t>().construct();
   any.cast<clazz_t &>().value = 42;
 
@@ -52,24 +52,24 @@ RD_TEST_F(MetaConv, Functionalities) {
   const auto as_bool = std::as_const(any).allow_cast<bool>();
   const auto as_double = std::as_const(any).allow_cast<double>();
 
-  RD_ASSERT_FALSE(any.allow_cast<char>());
+  ASSERT_FALSE(any.allow_cast<char>());
 
-  RD_ASSERT_TRUE(as_int);
-  RD_ASSERT_TRUE(as_bool);
-  RD_ASSERT_TRUE(as_double);
+  ASSERT_TRUE(as_int);
+  ASSERT_TRUE(as_bool);
+  ASSERT_TRUE(as_double);
 
-  RD_ASSERT_EQ(as_int.cast<int>(), any.cast<clazz_t &>().operator int());
-  RD_ASSERT_EQ(as_bool.cast<bool>(), any.cast<clazz_t &>().to_bool());
-  RD_ASSERT_EQ(as_double.cast<double>(), conv_to_double(any.cast<clazz_t &>()));
+  ASSERT_EQ(as_int.cast<int>(), any.cast<clazz_t &>().operator int());
+  ASSERT_EQ(as_bool.cast<bool>(), any.cast<clazz_t &>().to_bool());
+  ASSERT_EQ(as_double.cast<double>(), conv_to_double(any.cast<clazz_t &>()));
 }
 
-RD_TEST_F(MetaConv, ReRegistration) {
+TEST_F(MetaConv, ReRegistration) {
   SetUp();
 
   auto &&node = rendu::internal::resolve<clazz_t>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
 
-  RD_ASSERT_TRUE(node.details);
-  RD_ASSERT_FALSE(node.details->conv.empty());
-  RD_ASSERT_EQ(node.details->conv.size(), 3u);
+  ASSERT_TRUE(node.details);
+  ASSERT_FALSE(node.details->conv.empty());
+  ASSERT_EQ(node.details->conv.size(), 3u);
 }
 }

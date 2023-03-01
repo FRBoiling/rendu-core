@@ -18,11 +18,11 @@ class A {
 
 };
 
-RD_TEST(TemplateTest, Class) {
+TEST(TemplateTest, Class) {
   A<int> a(10);
-  RD_EXPECT_EQ(10, a.get_value());
+  EXPECT_EQ(10, a.get_value());
   A<float> b(0.1f);
-  RD_EXPECT_EQ(0.1f, b.get_value());
+  EXPECT_EQ(0.1f, b.get_value());
 }
 
 // 变量模板
@@ -33,10 +33,10 @@ T zero = 0;
 template<typename T>
 using Container = std::vector<T>;
 
-RD_TEST(TemplateTest, Alias) {
+TEST(TemplateTest, Alias) {
   auto i = zero<int> = 11; // 相当于int i = 11;
   Container<int> v{1, 2, 3}; // 相当于std::vector<int> v{1, 2, 3};
-  RD_EXPECT_EQ(11, i);
-  RD_EXPECT_EQ(2, v[1]);
+  EXPECT_EQ(11, i);
+  EXPECT_EQ(2, v[1]);
 }
 }

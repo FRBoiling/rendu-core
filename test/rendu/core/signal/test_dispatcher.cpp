@@ -29,16 +29,16 @@ struct receiver {
   int cnt{0};
 };
 
-RD_TEST(Dispatcher, Functionalities) {
+TEST(Dispatcher, Functionalities) {
   rendu::dispatcher dispatcher;
   rendu::dispatcher other;
   receiver receiver;
 
-  RD_ASSERT_NO_FATAL_FAILURE(rendu::dispatcher{std::move(dispatcher)});
-  RD_ASSERT_NO_FATAL_FAILURE(dispatcher = std::move(other));
+  ASSERT_NO_FATAL_FAILURE(rendu::dispatcher{std::move(dispatcher)});
+  ASSERT_NO_FATAL_FAILURE(dispatcher = std::move(other));
 
-  RD_ASSERT_EQ(dispatcher.size<an_event>(), 0u);
-  RD_ASSERT_EQ(dispatcher.size(), 0u);
+  ASSERT_EQ(dispatcher.size<an_event>(), 0u);
+  ASSERT_EQ(dispatcher.size(), 0u);
 
   dispatcher.trigger(one_more_event{42});
   dispatcher.enqueue<one_more_event>(42);
@@ -48,25 +48,25 @@ RD_TEST(Dispatcher, Functionalities) {
   dispatcher.trigger<an_event>();
   dispatcher.enqueue<an_event>();
 
-  RD_ASSERT_EQ(dispatcher.size<one_more_event>(), 0u);
-  RD_ASSERT_EQ(dispatcher.size<an_event>(), 1u);
-  RD_ASSERT_EQ(dispatcher.size(), 1u);
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(dispatcher.size<one_more_event>(), 0u);
+  ASSERT_EQ(dispatcher.size<an_event>(), 1u);
+  ASSERT_EQ(dispatcher.size(), 1u);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.enqueue(another_event{});
   dispatcher.update<another_event>();
 
-  RD_ASSERT_EQ(dispatcher.size<another_event>(), 0u);
-  RD_ASSERT_EQ(dispatcher.size<an_event>(), 1u);
-  RD_ASSERT_EQ(dispatcher.size(), 1u);
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(dispatcher.size<another_event>(), 0u);
+  ASSERT_EQ(dispatcher.size<an_event>(), 1u);
+  ASSERT_EQ(dispatcher.size(), 1u);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.update<an_event>();
   dispatcher.trigger<an_event>();
 
-  RD_ASSERT_EQ(dispatcher.size<an_event>(), 0u);
-  RD_ASSERT_EQ(dispatcher.size(), 0u);
-  RD_ASSERT_EQ(receiver.cnt, 3);
+  ASSERT_EQ(dispatcher.size<an_event>(), 0u);
+  ASSERT_EQ(dispatcher.size(), 0u);
+  ASSERT_EQ(receiver.cnt, 3);
 
   dispatcher.enqueue<an_event>();
   dispatcher.clear<an_event>();
@@ -76,9 +76,9 @@ RD_TEST(Dispatcher, Functionalities) {
   dispatcher.clear();
   dispatcher.update();
 
-  RD_ASSERT_EQ(dispatcher.size<an_event>(), 0u);
-  RD_ASSERT_EQ(dispatcher.size(), 0u);
-  RD_ASSERT_EQ(receiver.cnt, 3);
+  ASSERT_EQ(dispatcher.size<an_event>(), 0u);
+  ASSERT_EQ(dispatcher.size(), 0u);
+  ASSERT_EQ(receiver.cnt, 3);
 
   receiver.reset();
 
@@ -90,10 +90,10 @@ RD_TEST(Dispatcher, Functionalities) {
   dispatcher.update();
   dispatcher.trigger(std::as_const(event));
 
-  RD_ASSERT_EQ(receiver.cnt, 0);
+  ASSERT_EQ(receiver.cnt, 0);
 }
 
-RD_TEST(Dispatcher, Swap) {
+TEST(Dispatcher, Swap) {
   rendu::dispatcher dispatcher;
   rendu::dispatcher other;
   receiver receiver;
@@ -101,25 +101,25 @@ RD_TEST(Dispatcher, Swap) {
   dispatcher.sink<an_event>().connect<&receiver::receive>(receiver);
   dispatcher.enqueue<an_event>();
 
-  RD_ASSERT_EQ(dispatcher.size(), 1u);
-  RD_ASSERT_EQ(other.size(), 0u);
-  RD_ASSERT_EQ(receiver.cnt, 0);
+  ASSERT_EQ(dispatcher.size(), 1u);
+  ASSERT_EQ(other.size(), 0u);
+  ASSERT_EQ(receiver.cnt, 0);
 
   dispatcher.swap(other);
   dispatcher.update();
 
-  RD_ASSERT_EQ(dispatcher.size(), 0u);
-  RD_ASSERT_EQ(other.size(), 1u);
-  RD_ASSERT_EQ(receiver.cnt, 0);
+  ASSERT_EQ(dispatcher.size(), 0u);
+  ASSERT_EQ(other.size(), 1u);
+  ASSERT_EQ(receiver.cnt, 0);
 
   other.update();
 
-  RD_ASSERT_EQ(dispatcher.size(), 0u);
-  RD_ASSERT_EQ(other.size(), 0u);
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(dispatcher.size(), 0u);
+  ASSERT_EQ(other.size(), 0u);
+  ASSERT_EQ(receiver.cnt, 1);
 }
 
-RD_TEST(Dispatcher, StopAndGo) {
+TEST(Dispatcher, StopAndGo) {
   rendu::dispatcher dispatcher;
   receiver receiver;
 
@@ -129,30 +129,30 @@ RD_TEST(Dispatcher, StopAndGo) {
   dispatcher.enqueue<an_event>();
   dispatcher.update();
 
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.sink<an_event>().disconnect<&receiver::forward>(dispatcher);
   dispatcher.update();
 
-  RD_ASSERT_EQ(receiver.cnt, 2);
+  ASSERT_EQ(receiver.cnt, 2);
 }
 
-RD_TEST(Dispatcher, OpaqueDisconnect) {
+TEST(Dispatcher, OpaqueDisconnect) {
   rendu::dispatcher dispatcher;
   receiver receiver;
 
   dispatcher.sink<an_event>().connect<&receiver::receive>(receiver);
   dispatcher.trigger<an_event>();
 
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.disconnect(receiver);
   dispatcher.trigger<an_event>();
 
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(receiver.cnt, 1);
 }
 
-RD_TEST(Dispatcher, NamedQueue) {
+TEST(Dispatcher, NamedQueue) {
   using namespace rendu::literals;
 
   rendu::dispatcher dispatcher;
@@ -161,11 +161,11 @@ RD_TEST(Dispatcher, NamedQueue) {
   dispatcher.sink<an_event>("named"_hs).connect<&receiver::receive>(receiver);
   dispatcher.trigger<an_event>();
 
-  RD_ASSERT_EQ(receiver.cnt, 0);
+  ASSERT_EQ(receiver.cnt, 0);
 
   dispatcher.trigger("named"_hs, an_event{});
 
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.enqueue<an_event>();
   dispatcher.enqueue(an_event{});
@@ -173,29 +173,29 @@ RD_TEST(Dispatcher, NamedQueue) {
   dispatcher.enqueue_hint("named"_hs, an_event{});
   dispatcher.update<an_event>();
 
-  RD_ASSERT_EQ(receiver.cnt, 1);
+  ASSERT_EQ(receiver.cnt, 1);
 
   dispatcher.clear<an_event>();
   dispatcher.update<an_event>("named"_hs);
 
-  RD_ASSERT_EQ(receiver.cnt, 3);
+  ASSERT_EQ(receiver.cnt, 3);
 
   dispatcher.enqueue_hint<an_event>("named"_hs);
   dispatcher.clear<an_event>("named"_hs);
   dispatcher.update<an_event>("named"_hs);
 
-  RD_ASSERT_EQ(receiver.cnt, 3);
+  ASSERT_EQ(receiver.cnt, 3);
 }
 
-RD_TEST(Dispatcher, CustomAllocator) {
+TEST(Dispatcher, CustomAllocator) {
   std::allocator<void> allocator;
   rendu::dispatcher dispatcher{allocator};
 
-  RD_ASSERT_EQ(dispatcher.get_allocator(), allocator);
-  RD_ASSERT_FALSE(dispatcher.get_allocator() != allocator);
+  ASSERT_EQ(dispatcher.get_allocator(), allocator);
+  ASSERT_FALSE(dispatcher.get_allocator() != allocator);
 
   dispatcher.enqueue<an_event>();
   decltype(dispatcher) other{std::move(dispatcher), allocator};
 
-  RD_ASSERT_EQ(other.size<an_event>(), 1u);
+  ASSERT_EQ(other.size<an_event>(), 1u);
 }

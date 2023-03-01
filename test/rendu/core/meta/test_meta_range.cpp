@@ -23,13 +23,13 @@ struct MetaRange : ::testing::Test {
   }
 };
 
-RD_TEST_F(MetaRange, EmptyRange) {
+TEST_F(MetaRange, EmptyRange) {
   rendu::meta_reset();
   auto range = rendu::resolve();
-  RD_ASSERT_EQ(range.begin(), range.end());
+  ASSERT_EQ(range.begin(), range.end());
 }
 
-RD_TEST_F(MetaRange, Iterator) {
+TEST_F(MetaRange, Iterator) {
   using namespace rendu::literals;
 
   using iterator = typename decltype(rendu::resolve())::iterator;
@@ -46,56 +46,56 @@ RD_TEST_F(MetaRange, Iterator) {
   begin = range.end();
   std::swap(begin, end);
 
-  RD_ASSERT_EQ(begin, range.begin());
-  RD_ASSERT_EQ(end, range.end());
-  RD_ASSERT_NE(begin, end);
+  ASSERT_EQ(begin, range.begin());
+  ASSERT_EQ(end, range.end());
+  ASSERT_NE(begin, end);
 
-  RD_ASSERT_EQ(begin++, range.begin());
-  RD_ASSERT_EQ(begin--, range.end());
+  ASSERT_EQ(begin++, range.begin());
+  ASSERT_EQ(begin--, range.end());
 
-  RD_ASSERT_EQ(begin + 1, range.end());
-  RD_ASSERT_EQ(end - 1, range.begin());
+  ASSERT_EQ(begin + 1, range.end());
+  ASSERT_EQ(end - 1, range.begin());
 
-  RD_ASSERT_EQ(++begin, range.end());
-  RD_ASSERT_EQ(--begin, range.begin());
+  ASSERT_EQ(++begin, range.end());
+  ASSERT_EQ(--begin, range.begin());
 
-  RD_ASSERT_EQ(begin += 1, range.end());
-  RD_ASSERT_EQ(begin -= 1, range.begin());
+  ASSERT_EQ(begin += 1, range.end());
+  ASSERT_EQ(begin -= 1, range.begin());
 
-  RD_ASSERT_EQ(begin + (end - begin), range.end());
-  RD_ASSERT_EQ(begin - (begin - end), range.end());
+  ASSERT_EQ(begin + (end - begin), range.end());
+  ASSERT_EQ(begin - (begin - end), range.end());
 
-  RD_ASSERT_EQ(end - (end - begin), range.begin());
-  RD_ASSERT_EQ(end + (begin - end), range.begin());
+  ASSERT_EQ(end - (end - begin), range.begin());
+  ASSERT_EQ(end + (begin - end), range.begin());
 
-  RD_ASSERT_EQ(begin[0u].first, range.begin()->first);
-  RD_ASSERT_EQ(begin[0u].second, (*range.begin()).second);
+  ASSERT_EQ(begin[0u].first, range.begin()->first);
+  ASSERT_EQ(begin[0u].second, (*range.begin()).second);
 
-  RD_ASSERT_LT(begin, end);
-  RD_ASSERT_LE(begin, range.begin());
+  ASSERT_LT(begin, end);
+  ASSERT_LE(begin, range.begin());
 
-  RD_ASSERT_GT(end, begin);
-  RD_ASSERT_GE(end, range.end());
+  ASSERT_GT(end, begin);
+  ASSERT_GE(end, range.end());
 
   rendu::meta<double>().type("double"_hs);
   range = rendu::resolve();
   begin = range.begin();
 
-  RD_ASSERT_EQ(begin[0u].first, rendu::resolve<int>().info().hash());
-  RD_ASSERT_EQ(begin[1u].second, rendu::resolve("double"_hs));
+  ASSERT_EQ(begin[0u].first, rendu::resolve<int>().info().hash());
+  ASSERT_EQ(begin[1u].second, rendu::resolve("double"_hs));
 }
 
-RD_TEST_F(MetaRange, DirectValue) {
+TEST_F(MetaRange, DirectValue) {
   using namespace rendu::literals;
 
   auto type = rendu::resolve<int>();
   auto range = type.data();
 
-  RD_ASSERT_NE(range.cbegin(), range.cend());
+  ASSERT_NE(range.cbegin(), range.cend());
 
   for (auto &&[id, data] : range) {
-    RD_ASSERT_EQ(id, "answer"_hs);
-    RD_ASSERT_EQ(data.get({}).cast<int>(), 42);
+    ASSERT_EQ(id, "answer"_hs);
+    ASSERT_EQ(data.get({}).cast<int>(), 42);
   }
 }
 }

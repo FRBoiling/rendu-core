@@ -14,32 +14,32 @@ struct functions {
   void bar() {}
 };
 
-RD_TEST(Identity, Functionalities) {
+TEST(Identity, Functionalities) {
   rendu::identity identity;
   int value = 42;
 
-  RD_ASSERT_TRUE(rendu::is_transparent_v<rendu::identity>);
-  RD_ASSERT_EQ(identity(value), value);
-  RD_ASSERT_EQ(&identity(value), &value);
+  ASSERT_TRUE(rendu::is_transparent_v<rendu::identity>);
+  ASSERT_EQ(identity(value), value);
+  ASSERT_EQ(&identity(value), &value);
 }
 
-RD_TEST(Overload, Functionalities) {
-  RD_ASSERT_EQ(rendu::overload<void(int)>(&functions::foo), static_cast<void (*)(int)>(&functions::foo));
-  RD_ASSERT_EQ(rendu::overload<void()>(&functions::foo), static_cast<void (*)()>(&functions::foo));
+TEST(Overload, Functionalities) {
+  ASSERT_EQ(rendu::overload<void(int)>(&functions::foo), static_cast<void (*)(int)>(&functions::foo));
+  ASSERT_EQ(rendu::overload<void()>(&functions::foo), static_cast<void (*)()>(&functions::foo));
 
-  RD_ASSERT_EQ(rendu::overload<void(int)>(&functions::bar), static_cast<void (functions::*)(int)>(&functions::bar));
-  RD_ASSERT_EQ(rendu::overload<void()>(&functions::bar), static_cast<void (functions::*)()>(&functions::bar));
+  ASSERT_EQ(rendu::overload<void(int)>(&functions::bar), static_cast<void (functions::*)(int)>(&functions::bar));
+  ASSERT_EQ(rendu::overload<void()>(&functions::bar), static_cast<void (functions::*)()>(&functions::bar));
 
   functions instance;
 
-  RD_ASSERT_NO_FATAL_FAILURE(rendu::overload<void(int)>(&functions::foo)(0));
-  RD_ASSERT_NO_FATAL_FAILURE(rendu::overload<void()>(&functions::foo)());
+  ASSERT_NO_FATAL_FAILURE(rendu::overload<void(int)>(&functions::foo)(0));
+  ASSERT_NO_FATAL_FAILURE(rendu::overload<void()>(&functions::foo)());
 
-  RD_ASSERT_NO_FATAL_FAILURE((instance.*rendu::overload<void(int)>(&functions::bar))(0));
-  RD_ASSERT_NO_FATAL_FAILURE((instance.*rendu::overload<void()>(&functions::bar))());
+  ASSERT_NO_FATAL_FAILURE((instance.*rendu::overload<void(int)>(&functions::bar))(0));
+  ASSERT_NO_FATAL_FAILURE((instance.*rendu::overload<void()>(&functions::bar))());
 }
 
-RD_TEST(Overloaded, Functionalities) {
+TEST(Overloaded, Functionalities) {
   int iv = 0;
   char cv = '\0';
 
@@ -50,15 +50,15 @@ RD_TEST(Overloaded, Functionalities) {
   func(42);
   func('c');
 
-  RD_ASSERT_EQ(iv, 42);
-  RD_ASSERT_EQ(cv, 'c');
+  ASSERT_EQ(iv, 42);
+  ASSERT_EQ(cv, 'c');
 }
 
-RD_TEST(YCombinator, Functionalities) {
+TEST(YCombinator, Functionalities) {
   rendu::y_combinator gauss([](const auto &self, auto value) -> unsigned int {
     return value ? (value + self(value - 1u)) : 0;
   });
 
-  RD_ASSERT_EQ(gauss(3u), 3u * 4u / 2u);
-  RD_ASSERT_EQ(std::as_const(gauss)(7u), 7u * 8u / 2u);
+  ASSERT_EQ(gauss(3u), 3u * 4u / 2u);
+  ASSERT_EQ(std::as_const(gauss)(7u), 7u * 8u / 2u);
 }

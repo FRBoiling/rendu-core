@@ -30,46 +30,46 @@ struct Enum: testing::Test {
 
 using EnumTypes = ::testing::Types<detected, registered>;
 
-RD_TYPED_TEST_SUITE(Enum, EnumTypes, );
+TYPED_TEST_SUITE(Enum, EnumTypes, );
 
-RD_TYPED_TEST(Enum, Functionalities) {
+TYPED_TEST(Enum, Functionalities) {
   using enum_type = typename TestFixture::type;
 
-  RD_ASSERT_TRUE(!!((enum_type::foo | enum_type::bar) & enum_type::foo));
-  RD_ASSERT_TRUE(!!((enum_type::foo | enum_type::bar) & enum_type::bar));
-  RD_ASSERT_TRUE(!((enum_type::foo | enum_type::bar) & enum_type::quux));
+  ASSERT_TRUE(!!((enum_type::foo | enum_type::bar) & enum_type::foo));
+  ASSERT_TRUE(!!((enum_type::foo | enum_type::bar) & enum_type::bar));
+  ASSERT_TRUE(!((enum_type::foo | enum_type::bar) & enum_type::quux));
 
-  RD_ASSERT_TRUE(!!((enum_type::foo ^ enum_type::bar) & enum_type::foo));
-  RD_ASSERT_TRUE(!((enum_type::foo ^ enum_type::foo) & enum_type::foo));
+  ASSERT_TRUE(!!((enum_type::foo ^ enum_type::bar) & enum_type::foo));
+  ASSERT_TRUE(!((enum_type::foo ^ enum_type::foo) & enum_type::foo));
 
-  RD_ASSERT_TRUE(!(~enum_type::foo & enum_type::foo));
-  RD_ASSERT_TRUE(!!(~enum_type::foo & enum_type::bar));
+  ASSERT_TRUE(!(~enum_type::foo & enum_type::foo));
+  ASSERT_TRUE(!!(~enum_type::foo & enum_type::bar));
 
-  RD_ASSERT_TRUE(enum_type::foo == enum_type::foo);
-  RD_ASSERT_TRUE(enum_type::foo != enum_type::bar);
+  ASSERT_TRUE(enum_type::foo == enum_type::foo);
+  ASSERT_TRUE(enum_type::foo != enum_type::bar);
 
   enum_type value = enum_type::foo;
 
-  RD_ASSERT_TRUE(!!(value & enum_type::foo));
-  RD_ASSERT_TRUE(!(value & enum_type::bar));
-  RD_ASSERT_TRUE(!(value & enum_type::quux));
+  ASSERT_TRUE(!!(value & enum_type::foo));
+  ASSERT_TRUE(!(value & enum_type::bar));
+  ASSERT_TRUE(!(value & enum_type::quux));
 
   value |= (enum_type::bar | enum_type::quux);
 
-  RD_ASSERT_TRUE(!!(value & enum_type::foo));
-  RD_ASSERT_TRUE(!!(value & enum_type::bar));
-  RD_ASSERT_TRUE(!!(value & enum_type::quux));
+  ASSERT_TRUE(!!(value & enum_type::foo));
+  ASSERT_TRUE(!!(value & enum_type::bar));
+  ASSERT_TRUE(!!(value & enum_type::quux));
 
   value &= (enum_type::bar | enum_type::quux);
 
-  RD_ASSERT_TRUE(!(value & enum_type::foo));
-  RD_ASSERT_TRUE(!!(value & enum_type::bar));
-  RD_ASSERT_TRUE(!!(value & enum_type::quux));
+  ASSERT_TRUE(!(value & enum_type::foo));
+  ASSERT_TRUE(!!(value & enum_type::bar));
+  ASSERT_TRUE(!!(value & enum_type::quux));
 
   value ^= enum_type::bar;
 
-  RD_ASSERT_TRUE(!(value & enum_type::foo));
-  RD_ASSERT_TRUE(!(value & enum_type::bar));
-  RD_ASSERT_TRUE(!!(value & enum_type::quux));
+  ASSERT_TRUE(!(value & enum_type::foo));
+  ASSERT_TRUE(!(value & enum_type::bar));
+  ASSERT_TRUE(!!(value & enum_type::quux));
 }
 

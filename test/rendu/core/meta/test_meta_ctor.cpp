@@ -79,143 +79,143 @@ struct MetaCtor: ::testing::Test {
   }
 };
 
-RD_TEST_F(MetaCtor, Functionalities) {
+TEST_F(MetaCtor, Functionalities) {
   auto any = rendu::resolve<clazz_t>().construct(42, 'c');
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, Func) {
+TEST_F(MetaCtor, Func) {
   auto any = rendu::resolve<clazz_t>().construct(42);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, MetaAnyArgs) {
+TEST_F(MetaCtor, MetaAnyArgs) {
   auto any = rendu::resolve<clazz_t>().construct(rendu::meta_any{42}, rendu::meta_any{'c'});
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, InvalidArgs) {
-  RD_ASSERT_FALSE(rendu::resolve<clazz_t>().construct(rendu::meta_any{}, derived_t{}));
+TEST_F(MetaCtor, InvalidArgs) {
+  ASSERT_FALSE(rendu::resolve<clazz_t>().construct(rendu::meta_any{}, derived_t{}));
 }
 
-RD_TEST_F(MetaCtor, CastAndConvert) {
+TEST_F(MetaCtor, CastAndConvert) {
   auto any = rendu::resolve<clazz_t>().construct(derived_t{}, clazz_t{42, 'd'});
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, ArithmeticConversion) {
+TEST_F(MetaCtor, ArithmeticConversion) {
   auto any = rendu::resolve<clazz_t>().construct(true, 4.2);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 1);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, char{4});
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 1);
+  ASSERT_EQ(any.cast<clazz_t>().c, char{4});
 }
 
-RD_TEST_F(MetaCtor, ConstNonConstRefArgs) {
+TEST_F(MetaCtor, ConstNonConstRefArgs) {
   int ivalue = 42;
   const char cvalue = 'c';
   auto any = rendu::resolve<clazz_t>().construct(rendu::forward_as_meta(ivalue), rendu::forward_as_meta(cvalue));
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, WrongConstness) {
+TEST_F(MetaCtor, WrongConstness) {
   int value = 42;
   auto any = rendu::resolve<clazz_t>().construct(derived_t{}, rendu::forward_as_meta(value));
   auto other = rendu::resolve<clazz_t>().construct(derived_t{}, rendu::forward_as_meta(std::as_const(value)));
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_FALSE(other);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_FALSE(other);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, FuncMetaAnyArgs) {
+TEST_F(MetaCtor, FuncMetaAnyArgs) {
   auto any = rendu::resolve<clazz_t>().construct(rendu::meta_any{42});
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, FuncCastAndConvert) {
+TEST_F(MetaCtor, FuncCastAndConvert) {
   auto any = rendu::resolve<clazz_t>().construct(derived_t{}, 3., clazz_t{3, 'd'});
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 9);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 9);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, FuncArithmeticConversion) {
+TEST_F(MetaCtor, FuncArithmeticConversion) {
   auto any = rendu::resolve<clazz_t>().construct(4.2);
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 4);
-  RD_ASSERT_EQ(any.cast<clazz_t>().c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.cast<clazz_t>().i, 4);
+  ASSERT_EQ(any.cast<clazz_t>().c, 'c');
 }
 
-RD_TEST_F(MetaCtor, FuncConstNonConstRefArgs) {
+TEST_F(MetaCtor, FuncConstNonConstRefArgs) {
   int ivalue = 42;
   auto any = rendu::resolve<clazz_t>().construct(rendu::forward_as_meta(ivalue));
   auto other = rendu::resolve<clazz_t>().construct(rendu::forward_as_meta(std::as_const(ivalue)));
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_TRUE(other);
-  RD_ASSERT_EQ(any.cast<clazz_t>().i, 42);
-  RD_ASSERT_EQ(other.cast<clazz_t>().i, 42);
+  ASSERT_TRUE(any);
+  ASSERT_TRUE(other);
+  ASSERT_EQ(any.cast<clazz_t>().i, 42);
+  ASSERT_EQ(other.cast<clazz_t>().i, 42);
 }
 
-RD_TEST_F(MetaCtor, ExternalMemberFunction) {
+TEST_F(MetaCtor, ExternalMemberFunction) {
   rendu::registry registry;
   const auto entity = registry.create();
 
-  RD_ASSERT_FALSE(registry.all_of<clazz_t>(entity));
+  ASSERT_FALSE(registry.all_of<clazz_t>(entity));
 
   const auto any = rendu::resolve<clazz_t>().construct(rendu::forward_as_meta(registry), entity, 3, 'c');
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_TRUE(registry.all_of<clazz_t>(entity));
-  RD_ASSERT_EQ(registry.get<clazz_t>(entity).i, 3);
-  RD_ASSERT_EQ(registry.get<clazz_t>(entity).c, 'c');
+  ASSERT_TRUE(any);
+  ASSERT_TRUE(registry.all_of<clazz_t>(entity));
+  ASSERT_EQ(registry.get<clazz_t>(entity).i, 3);
+  ASSERT_EQ(registry.get<clazz_t>(entity).c, 'c');
 }
 
-RD_TEST_F(MetaCtor, OverrideImplicitlyGeneratedDefaultConstructor) {
+TEST_F(MetaCtor, OverrideImplicitlyGeneratedDefaultConstructor) {
   auto type = rendu::resolve<double>();
   auto any = type.construct();
 
-  RD_ASSERT_TRUE(any);
-  RD_ASSERT_EQ(any.type(), rendu::resolve<double>());
-  RD_ASSERT_EQ(any.cast<double>(), 42.);
+  ASSERT_TRUE(any);
+  ASSERT_EQ(any.type(), rendu::resolve<double>());
+  ASSERT_EQ(any.cast<double>(), 42.);
 }
 
-RD_TEST_F(MetaCtor, NonDefaultConstructibleType) {
+TEST_F(MetaCtor, NonDefaultConstructibleType) {
   auto type = rendu::resolve<clazz_t>();
   // no implicitly generated default constructor
-  RD_ASSERT_FALSE(type.construct());
+  ASSERT_FALSE(type.construct());
 }
 
-RD_TEST_F(MetaCtor, ReRegistration) {
+TEST_F(MetaCtor, ReRegistration) {
   SetUp();
 
   auto &&node = rendu::internal::resolve<double>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
 
-  RD_ASSERT_TRUE(node.details);
-  RD_ASSERT_FALSE(node.details->ctor.empty());
+  ASSERT_TRUE(node.details);
+  ASSERT_FALSE(node.details->ctor.empty());
   // implicitly generated default constructor is not cleared
-  RD_ASSERT_NE(node.default_constructor, nullptr);
+  ASSERT_NE(node.default_constructor, nullptr);
 }
 }
