@@ -3,7 +3,6 @@
 //
 #include <test/rdtest.h>
 
-namespace {
 
 template<int N>
 class Fac {
@@ -68,5 +67,4 @@ TEST(TemplateTest, Metaprogramming) {
   EXPECT_EQ(120, Fac2<5>::value);
   EXPECT_EQ(120, f(Fac2<5>::value));
   EXPECT_EQ(120, f(Fac3<5>::value));
-}
 }

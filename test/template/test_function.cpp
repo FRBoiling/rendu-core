@@ -3,8 +3,6 @@
 //
 #include <test/rdtest.h>
 
-namespace {
-
 template<typename T>
 T max(T x, T y) {
   return x < y ? y : x;
@@ -26,4 +24,3 @@ TEST(TemplateTest, Function) {
   EXPECT_EQ(10, ::max<int64_t>(10, 20));
 }
 
-}

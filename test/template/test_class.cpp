@@ -2,7 +2,6 @@
 // Created by boil on 2023/2/14.
 //
 #include <test/rdtest.h>
-namespace {
 
 template<typename T>
 class A {
@@ -38,5 +37,4 @@ TEST(TemplateTest, Alias) {
   Container<int> v{1, 2, 3}; // 相当于std::vector<int> v{1, 2, 3};
   EXPECT_EQ(11, i);
   EXPECT_EQ(2, v[1]);
-}
 }
