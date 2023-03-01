@@ -767,7 +767,7 @@ TEST(StringTest, NULLInput) {
   EXPECT_EQ(s.data(), nullptr);
   EXPECT_EQ(s.size(), 0u);
 
-  s = std::string_view();
+  s = std::string_view(nullptr);
   EXPECT_EQ(s.data(), nullptr);
   EXPECT_EQ(s.size(), 0u);
 
