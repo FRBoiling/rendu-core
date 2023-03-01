@@ -6,7 +6,7 @@
 #include <string>
 #include <type_traits>
 #include <utility>
-namespace {
+
 TEST(StringTest, Ctor) {
   {
     // Null.
@@ -767,7 +767,7 @@ TEST(StringTest, NULLInput) {
   EXPECT_EQ(s.data(), nullptr);
   EXPECT_EQ(s.size(), 0u);
 
-  s = std::string_view(nullptr);
+  s = std::string_view();
   EXPECT_EQ(s.data(), nullptr);
   EXPECT_EQ(s.size(), 0u);
 
@@ -1080,4 +1080,3 @@ TEST_F(StringViewStreamTest, ResetsWidth) {
   }
 }
 
-}  // namespace

@@ -4,7 +4,6 @@
 #include <test/rdtest.h>
 #include <common/utils/string_util.h>
 
-
 TEST(StringTest, TruncSubstr) {
   const std::string_view hi("hi");
   EXPECT_EQ("", rendu::ClippedSubstr(hi, 0, 0));

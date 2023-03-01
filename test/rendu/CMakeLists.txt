@@ -5,11 +5,11 @@
 rendu_batch_test(
     NAME
     CMAKE_CUR_SOURCE_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/meta
     CMAKE_CUR_BINARY_DIR
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/core/meta
     CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/core/meta
     DEPS
     rendu::test
     rendu::core
@@ -18,22 +18,107 @@ rendu_batch_test(
     LINKOPTS
 )
 
-#rendu_add_test(
-#    NAME
-#    rendu
-#    CMAKE_CUR_SOURCE_DIR
-#    ${CMAKE_CURRENT_SOURCE_DIR}/core/meta
-#    CMAKE_CUR_BINARY_DIR
-#    ${CMAKE_CURRENT_BINARY_DIR}/core/meta
-#    CMAKE_BINARY_DIR
-#    ${CMAKE_BINARY_DIR}/core/meta
-#    DEPS
-#    rendu::test
-#    rendu::core
-#    rendu::common
-#    DEFINES
-#    LINKOPTS
-#)
+rendu_add_test(
+    NAME
+    rendu_base
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/base
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/base
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/base
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    rendu_container
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/container
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/container
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/container
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    rendu_define
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/define
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/define
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/define
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    rendu_ecs
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/esc
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/esc
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/esc
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    rendu_locator
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/locator
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/locator
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/locator
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_test(
+    NAME
+    rendu_signal
+    CMAKE_CUR_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/signal
+    CMAKE_CUR_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/core/signal
+    CMAKE_BINARY_DIR
+    ${CMAKE_BINARY_DIR}/core/locator
+    DEPS
+    rendu::test
+    rendu::core
+    rendu::common
+    DEFINES
+    LINKOPTS
+)
 
 #rendu_cc_test(
 #    NAME

@@ -17,7 +17,7 @@ rendu_batch_test(
     DEFINES
     LINKOPTS
 )
-
+#
 #rendu_add_test(
 #    NAME
 #    string
