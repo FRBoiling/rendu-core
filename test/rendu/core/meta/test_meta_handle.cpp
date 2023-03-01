@@ -6,7 +6,7 @@
 #include <core/meta/factory.h>
 #include <core/meta/meta.h>
 
-namespace meta_handle{
+namespace test::meta::handle {
 
 struct clazz_t {
   clazz_t()
@@ -23,7 +23,7 @@ struct clazz_t {
   int value;
 };
 
-struct MetaHandle: ::testing::Test {
+struct MetaHandle : ::testing::Test {
   void SetUp() override {
     using namespace rendu::literals;
 

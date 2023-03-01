@@ -6,6 +6,8 @@
 #define RENDU_TEST_TEST_H_
 
 #include <gtest/gtest.h>
+#include <test/throwing_allocator.h>
+#include <test/throwing_type.h>
 
 #ifdef NDEBUG
 #    define RD_DEBUG_TEST(Case, Test) TEST(Case, DISABLED_##Test)

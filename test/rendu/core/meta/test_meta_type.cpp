@@ -8,7 +8,7 @@
 #include <core/meta/pointer.h>
 #include <core/meta/template.h>
 
-namespace test_meta_type {
+namespace test::meta_type {
 
 template<typename Type>
 void set(Type &prop, Type value) {

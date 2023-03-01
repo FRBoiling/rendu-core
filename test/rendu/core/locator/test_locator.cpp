@@ -5,6 +5,8 @@
 #include <test/rdtest.h>
 #include <core/locator/locator.h>
 
+namespace test::locator {
+
 struct base_service {
   virtual ~base_service() = default;
   virtual void invoke() {}
@@ -77,4 +79,5 @@ RD_DEBUG_TEST(ServiceLocatorDeathTest, UninitializedValue) {
   rendu::locator<base_service>::reset();
 
   ASSERT_DEATH(rendu::locator<base_service>::value().invoke(), "");
+}
 }

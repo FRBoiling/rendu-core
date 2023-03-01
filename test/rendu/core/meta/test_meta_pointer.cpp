@@ -3,82 +3,13 @@
 */
 
 #include <test/rdtest.h>
-#include <core/meta/resolve.h>
-#include <core/meta/pointer.h>
+#include "test_meta_fwd.h"
 
-template<typename Type>
-struct wrapped_shared_ptr {
-  wrapped_shared_ptr(Type init)
-      : ptr{new Type{init}} {}
-
-  Type &deref() const {
-    return *ptr;
-  }
-
- private:
-  std::shared_ptr<Type> ptr;
-};
-
-struct self_ptr {
-  using element_type = self_ptr;
-
-  self_ptr(int v)
-      : value{v} {}
-
-  const self_ptr &operator*() const {
-    return *this;
-  }
-
-  int value;
-};
-
-struct proxy_ptr {
-  using element_type = proxy_ptr;
-
-  proxy_ptr(int &v)
-      : value{&v} {}
-
-  proxy_ptr operator*() const {
-    return *this;
-  }
-
-  int *value;
-};
-
-template<typename Type>
-struct adl_wrapped_shared_ptr : wrapped_shared_ptr<Type> {};
-
-template<typename Type>
-struct spec_wrapped_shared_ptr : wrapped_shared_ptr<Type> {};
-
-template<typename Type>
-struct rendu::is_meta_pointer_like<adl_wrapped_shared_ptr<Type>> : std::true_type {};
-
-template<typename Type>
-struct rendu::is_meta_pointer_like<spec_wrapped_shared_ptr<Type>> : std::true_type {};
-
-template<>
-struct rendu::is_meta_pointer_like<self_ptr> : std::true_type {};
-
-template<>
-struct rendu::is_meta_pointer_like<proxy_ptr> : std::true_type {};
-
-template<typename Type>
-struct rendu::adl_meta_pointer_like<spec_wrapped_shared_ptr<Type>> {
-  static decltype(auto) dereference(const spec_wrapped_shared_ptr<Type> &ptr) {
-    return ptr.deref();
-  }
-};
-
-template<typename Type>
-Type &dereference_meta_pointer_like(const adl_wrapped_shared_ptr<Type> &ptr) {
-  return ptr.deref();
-}
+namespace test::meta::pointer {
 
 int test_function() {
   return 42;
 }
-namespace meta_pointer {
 
 TEST(MetaPointerLike, DereferenceOperatorInvalidType) {
   int value = 0;

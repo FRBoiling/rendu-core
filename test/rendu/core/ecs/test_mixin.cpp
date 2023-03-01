@@ -3,37 +3,16 @@
 */
 
 #include <test/rdtest.h>
-#include <test/throwing_allocator.h>
-#include <test/throwing_type.h>
-#include <core/ecs/registry.h>
-#include <core/ecs/storage.h>
 #include <core/ecs/mixin.h>
+#include <core/ecs/registry.h>
+#include "test_ecs_pwd.h"
 
-struct empty_type {};
-
-struct stable_type {
-  static constexpr auto in_place_delete = true;
-  int value{};
-};
-
-struct non_default_constructible {
-  non_default_constructible() = delete;
-
-  non_default_constructible(int v)
-      : value{v} {}
-
-  int value{};
-};
-
-struct counter {
-  int value{};
-};
+namespace test::ecs::mixin {
 
 template<typename Registry>
 void listener(counter &counter, Registry &, typename Registry::entity_type) {
   ++counter.value;
 }
-
 
 TEST(SighMixin, GenericType) {
   rendu::entity entities[2u]{rendu::entity{3}, rendu::entity{42}};
@@ -427,7 +406,6 @@ TEST(SighMixin, Swap) {
   ASSERT_EQ(on_destroy.value, 3);
 }
 
-
 TEST(SighMixin, StorageEntity) {
   using traits_type = rendu::entity_traits<rendu::entity>;
 
@@ -547,9 +525,12 @@ TEST(SighMixin, CustomAllocator) {
 
   test::throwing_allocator<rendu::entity> allocator{};
 
-  test(rendu::sigh_mixin<rendu::basic_storage<int, rendu::entity, test::throwing_allocator<int>>>{allocator}, allocator);
-  test(rendu::sigh_mixin<rendu::basic_storage<std::true_type, rendu::entity, test::throwing_allocator<std::true_type>>>{allocator}, allocator);
-  test(rendu::sigh_mixin<rendu::basic_storage<stable_type, rendu::entity, test::throwing_allocator<stable_type>>>{allocator}, allocator);
+  test(rendu::sigh_mixin<rendu::basic_storage<int, rendu::entity, test::throwing_allocator<int>>>{allocator},
+       allocator);
+  test(rendu::sigh_mixin<rendu::basic_storage<std::true_type, rendu::entity, test::throwing_allocator<std::true_type>>>{
+      allocator}, allocator);
+  test(rendu::sigh_mixin<rendu::basic_storage<stable_type, rendu::entity, test::throwing_allocator<stable_type>>>{
+      allocator}, allocator);
 }
 
 TEST(SighMixin, ThrowingAllocator) {
@@ -607,7 +588,8 @@ TEST(SighMixin, ThrowingAllocator) {
     const rendu::entity entities[2u]{rendu::entity{1}, rendu::entity{sparse_page_size}};
     test::throwing_allocator<rendu::entity>::trigger_after_allocate = true;
 
-    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), value_type{0}), test::throwing_allocator<rendu::entity>::exception_type);
+    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), value_type{0}),
+                 test::throwing_allocator<rendu::entity>::exception_type);
     ASSERT_TRUE(pool.contains(rendu::entity{1}));
     ASSERT_FALSE(pool.contains(rendu::entity{sparse_page_size}));
 
@@ -616,7 +598,8 @@ TEST(SighMixin, ThrowingAllocator) {
     test::throwing_allocator<rendu::entity>::trigger_on_allocate = true;
     pool.compact();
 
-    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)), test::throwing_allocator<rendu::entity>::exception_type);
+    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)),
+                 test::throwing_allocator<rendu::entity>::exception_type);
     ASSERT_TRUE(pool.contains(rendu::entity{1}));
     ASSERT_FALSE(pool.contains(rendu::entity{sparse_page_size}));
 
@@ -650,17 +633,20 @@ TEST(SighMixin, ThrowingComponent) {
   const test::throwing_type components[2u]{42, 1};
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), test::throwing_type{42}), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), test::throwing_type{42}),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 0u);
   ASSERT_FALSE(pool.contains(rendu::entity{1}));
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 0u);
   ASSERT_FALSE(pool.contains(rendu::entity{1}));
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::rbegin(entities), std::rend(entities), std::rbegin(components)), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::rbegin(entities), std::rend(entities), std::rbegin(components)),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 1u);
   ASSERT_TRUE(pool.contains(rendu::entity{1}));
   ASSERT_EQ(pool.get(rendu::entity{1}), 1);
@@ -693,16 +679,6 @@ TEST(SighMixin, ThrowingComponent) {
   ASSERT_EQ(on_destroy.value, 3);
 }
 
-struct empty_each_tag final {};
-
-template<>
-struct rendu::basic_storage<empty_each_tag, rendu::entity, std::allocator<empty_each_tag>>: rendu::basic_storage<void, rendu::entity, std::allocator<void>> {
-  basic_storage(const std::allocator<empty_each_tag> &) {}
-
-  [[nodiscard]] iterable each() noexcept {
-    return {internal::extended_storage_iterator{base_type::end()}, internal::extended_storage_iterator{base_type::end()}};
-  }
-};
 
 TEST(SighMixin, EmptyEachStorage) {
   rendu::sigh_mixin<rendu::storage<empty_each_tag>> pool;
@@ -731,4 +707,5 @@ TEST(SighMixin, EmptyEachStorage) {
   ASSERT_EQ(pool.each().begin(), pool.each().end());
   // no signal at all because of the (fake) empty iterable
   ASSERT_EQ(on_destroy.value, 0);
+}
 }

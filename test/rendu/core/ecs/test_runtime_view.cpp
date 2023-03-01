@@ -7,19 +7,21 @@
 #include <core/ecs/registry.h>
 #include <core/ecs/runtime_view.h>
 
+namespace test::ecs::runtime_view {
+
 struct stable_type {
   static constexpr auto in_place_delete = true;
   int value;
 };
 
 template<typename Type>
-struct RuntimeView: testing::Test {
+struct RuntimeView : testing::Test {
   using type = Type;
 };
 
 using RuntimeViewTypes = ::testing::Types<rendu::runtime_view, rendu::const_runtime_view>;
 
-TYPED_TEST_SUITE(RuntimeView, RuntimeViewTypes, );
+TYPED_TEST_SUITE(RuntimeView, RuntimeViewTypes,);
 
 TYPED_TEST(RuntimeView, Functionalities) {
   using runtime_view_type = typename TestFixture::type;
@@ -67,7 +69,7 @@ TYPED_TEST(RuntimeView, Functionalities) {
   registry.get<char>(e1) = '2';
   registry.get<int>(e1) = 42;
 
-  for(auto entity: view) {
+  for (auto entity : view) {
     ASSERT_EQ(registry.get<int>(entity), 42);
     ASSERT_EQ(registry.get<char>(entity), '2');
   }
@@ -361,7 +363,7 @@ TYPED_TEST(RuntimeView, StableType) {
     ASSERT_EQ(e0, rendu);
   });
 
-  for(auto rendu: view) {
+  for (auto rendu : view) {
     static_assert(std::is_same_v<decltype(rendu), rendu::entity>);
     ASSERT_EQ(e0, rendu);
   }
@@ -396,7 +398,7 @@ TYPED_TEST(RuntimeView, StableTypeWithExcludedComponent) {
   ASSERT_FALSE(view.contains(entity));
   ASSERT_TRUE(view.contains(other));
 
-  for(auto rendu: view) {
+  for (auto rendu : view) {
     constexpr rendu::entity tombstone = rendu::tombstone;
     ASSERT_NE(rendu, tombstone);
     ASSERT_EQ(rendu, other);
@@ -407,4 +409,5 @@ TYPED_TEST(RuntimeView, StableTypeWithExcludedComponent) {
     ASSERT_NE(rendu, tombstone);
     ASSERT_EQ(rendu, other);
   });
+}
 }

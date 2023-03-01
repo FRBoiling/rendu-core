@@ -8,7 +8,7 @@
 #include <core/meta/node.h>
 #include <core/meta/resolve.h>
 
-namespace meta_conv{
+namespace test::meta::conv {
 
 struct clazz_t {
   clazz_t() = default;
@@ -28,7 +28,7 @@ double conv_to_double(const clazz_t &instance) {
   return instance.value * 2.;
 }
 
-struct MetaConv: ::testing::Test {
+struct MetaConv : ::testing::Test {
   void SetUp() override {
     using namespace rendu::literals;
 
@@ -66,7 +66,8 @@ TEST_F(MetaConv, Functionalities) {
 TEST_F(MetaConv, ReRegistration) {
   SetUp();
 
-  auto &&node = rendu::internal::resolve<clazz_t>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
+  auto &&node =
+      rendu::internal::resolve<clazz_t>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
 
   ASSERT_TRUE(node.details);
   ASSERT_FALSE(node.details->conv.empty());

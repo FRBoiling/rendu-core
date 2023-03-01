@@ -5,6 +5,8 @@
 #include <test/rdtest.h>
 #include <core/signal/sigh.h>
 
+namespace test::sigh{
+
 struct sigh_listener {
   static void f(int &v) {
     v = 42;
@@ -581,4 +583,5 @@ TEST_F(SigH, CustomAllocator) {
 
   ASSERT_TRUE(copy.empty());
   ASSERT_TRUE(move.empty());
+}
 }

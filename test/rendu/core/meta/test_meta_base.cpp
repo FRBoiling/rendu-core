@@ -9,7 +9,7 @@
 #include <core/meta/node.h>
 #include <core/meta/resolve.h>
 
-namespace meta_base {
+namespace test::meta::base {
 
 struct base_1_t {
   base_1_t() = default;
@@ -89,13 +89,13 @@ TEST_F(MetaBase, SetGetWithMutatingThis) {
   auto as_cref = std::as_const(any).as_ref();
 
   ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
-               static_cast<const void *>(static_cast<const base_2_t *>(&instance)));
+            static_cast<const void *>(static_cast<const base_2_t *>(&instance)));
   ASSERT_NE(static_cast<const void *>(static_cast<const base_1_t *>(&instance)),
-               static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
+            static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
   ASSERT_EQ(static_cast<const void *>(static_cast<const base_2_t *>(&instance)),
-               static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
+            static_cast<const void *>(static_cast<const base_3_t *>(&instance)));
   ASSERT_EQ(static_cast<const void *>(&instance),
-               static_cast<const void *>(static_cast<const base_1_t *>(&instance)));
+            static_cast<const void *>(static_cast<const base_1_t *>(&instance)));
 
   ASSERT_TRUE(any.set("value"_hs, 42));
   ASSERT_TRUE(any.set("value_1"_hs, 1));

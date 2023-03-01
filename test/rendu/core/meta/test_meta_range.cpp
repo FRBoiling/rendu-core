@@ -9,7 +9,7 @@
 #include <core/meta/range.h>
 #include <core/meta/resolve.h>
 
-namespace meta_range {
+namespace test::meta::range {
 
 struct MetaRange : ::testing::Test {
   void SetUp() override {

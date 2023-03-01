@@ -3,7 +3,9 @@
 */
 
 #include <test/rdtest.h>
-#include <core/ecs/component.h>
+#include "test_ecs_pwd.h"
+
+namespace test::ecs::component{
 
 struct empty {};
 
@@ -59,18 +61,11 @@ TEST(Component, SelfContained) {
   static_assert(traits_type::page_size == 4u);
 }
 
-
-struct traits_based {};
-template<>
-struct rendu::component_traits<traits_based> {
-  using type = traits_based;
-  static constexpr auto in_place_delete = false;
-  static constexpr auto page_size = 8u;
-};
-
 TEST(Component, TraitsBased) {
   using traits_type = rendu::component_traits<traits_based>;
 
   static_assert(!traits_type::in_place_delete);
   static_assert(traits_type::page_size == 8u);
+}
+
 }

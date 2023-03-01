@@ -9,7 +9,7 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
-namespace meta_func {
+namespace test::meta::func {
 
 struct base_t {
   base_t() {}

@@ -7,6 +7,8 @@
 #include <core/ecs/entity.h>
 #include <core/ecs/sparse_set.h>
 
+namespace test::ecs::sparse_set {
+
 struct empty_type {};
 
 struct boxed_int {
@@ -143,7 +145,7 @@ TEST(SparseSet, Current) {
   ASSERT_EQ(set.current(traits_type::construct(3, 0)), traits_type::to_version(traits_type::construct(3, 3)));
   ASSERT_EQ(set.current(traits_type::construct(42, 1)), traits_type::to_version(rendu::tombstone));
   ASSERT_EQ(set.current(traits_type::construct(traits_type::page_size, 1)),
-               traits_type::to_version(rendu::tombstone));
+            traits_type::to_version(rendu::tombstone));
 
   set.remove(rendu::entity{0});
 
@@ -390,7 +392,7 @@ RD_DEBUG_TEST(SparseSetDeathTest, Bump) {
   ASSERT_DEATH(set.bump(rendu::tombstone), "");
   ASSERT_DEATH(set.bump(rendu::entity{42}), "");
   ASSERT_DEATH(set.bump(traits_type::construct(traits_type::to_entity(rendu::entity{3}),
-                                                  traits_type::to_version(rendu::tombstone))), "");
+                                               traits_type::to_version(rendu::tombstone))), "");
 }
 
 TEST(SparseSet, Erase) {
@@ -1494,7 +1496,7 @@ TEST(SparseSet, ThrowingAllocator) {
   test::throwing_allocator<rendu::entity>::trigger_after_allocate = true;
 
   ASSERT_THROW(set.push(std::begin(entities), std::end(entities)),
-                  test::throwing_allocator<rendu::entity>::exception_type);
+               test::throwing_allocator<rendu::entity>::exception_type);
   ASSERT_EQ(set.extent(), 2 * traits_type::page_size);
   ASSERT_TRUE(set.contains(rendu::entity{0}));
   ASSERT_TRUE(set.contains(rendu::entity{1}));
@@ -1505,4 +1507,5 @@ TEST(SparseSet, ThrowingAllocator) {
   set.push(entities[1u]);
 
   ASSERT_TRUE(set.contains(rendu::entity{traits_type::page_size}));
+}
 }

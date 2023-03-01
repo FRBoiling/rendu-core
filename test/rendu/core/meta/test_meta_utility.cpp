@@ -8,7 +8,7 @@
 #include <core/meta/resolve.h>
 #include <core/meta/utility.h>
 
-namespace meta_utility {
+namespace test::meta::utility {
 
 struct clazz {
   void setter(int v) {

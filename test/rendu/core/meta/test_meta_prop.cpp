@@ -8,7 +8,7 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
-namespace meta_prop {
+namespace test::meta::prop {
 
 struct base_1_t {};
 struct base_2_t {};

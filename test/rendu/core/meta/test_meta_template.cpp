@@ -3,24 +3,9 @@
 */
 
 #include <test/rdtest.h>
-#include <core/base/type_traits.h>
-#include <core/meta/meta.h>
-#include <core/meta/resolve.h>
-#include <core/meta/template.h>
+#include "test_meta_fwd.h"
 
-template<typename>
-struct function_type;
-
-template<typename Ret, typename... Args>
-struct function_type<Ret(Args...)> {};
-
-template<typename Ret, typename... Args>
-struct rendu::meta_template_traits<function_type<Ret(Args...)>> {
-using class_type = meta_class_template_tag<function_type>;
-using args_type = type_list<Ret, Args...>;
-};
-
-namespace meta_template {
+namespace test::meta_template {
 
 TEST(MetaTemplate, Invalid) {
   const auto type = rendu::resolve<int>();

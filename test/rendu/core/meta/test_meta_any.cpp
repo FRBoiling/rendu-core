@@ -8,7 +8,7 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
-namespace meta_any {
+namespace test::meta::any {
 
 struct clazz_t {
   clazz_t()

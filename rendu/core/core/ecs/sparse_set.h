@@ -10,6 +10,7 @@
 #include "base/algorithm.h"
 #include "base/memory.h"
 #include "base/any.h"
+#include "entity.h"
 #include "fwd.h"
 
 namespace rendu {

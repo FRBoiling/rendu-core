@@ -6,6 +6,8 @@
 #include <core/ecs/entity.h>
 #include <core/ecs/registry.h>
 
+namespace test::ecs::entity {
+
 TEST(Entity, Traits) {
   using traits_type = rendu::entity_traits<rendu::entity>;
   constexpr rendu::entity tombstone = rendu::tombstone;
@@ -103,4 +105,5 @@ TEST(Entity, Tombstone) {
   ASSERT_FALSE(registry.valid(rendu::tombstone));
   ASSERT_NE(registry.destroy(entity, vers), vers);
   ASSERT_NE(registry.create(other), other);
+}
 }

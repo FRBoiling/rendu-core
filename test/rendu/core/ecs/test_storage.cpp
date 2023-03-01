@@ -3,19 +3,10 @@
 */
 
 #include <test/rdtest.h>
-#include <test/throwing_allocator.h>
-#include <test/throwing_type.h>
-#include <unordered_set>
-#include <core/ecs/entity.h>
-#include <core/ecs/sparse_set.h>
-#include <core/ecs/component.h>
-#include <core/ecs/storage.h>
 
-template<>
-struct rendu::component_traits<std::unordered_set<char>> {
-  static constexpr auto in_place_delete = true;
-  static constexpr auto page_size = 4u;
-};
+#include "test_ecs_pwd.h"
+
+namespace test::ecs::storage {
 
 struct pinned_type {
   const int value{42};
@@ -68,7 +59,7 @@ struct update_from_destructor {
   }
 
   ~update_from_destructor() {
-    if(target != rendu::null && storage->contains(target)) {
+    if (target != rendu::null && storage->contains(target)) {
       storage->erase(target);
     }
   }
@@ -81,7 +72,7 @@ struct update_from_destructor {
 struct create_from_constructor {
   create_from_constructor(rendu::storage<create_from_constructor> &ref, rendu::entity other)
       : child{other} {
-    if(child != rendu::null) {
+    if (child != rendu::null) {
       ref.emplace(child, ref, rendu::null);
     }
   }
@@ -89,12 +80,11 @@ struct create_from_constructor {
   rendu::entity child;
 };
 
-
 inline bool operator==(const boxed_int &lhs, const boxed_int &rhs) {
   return lhs.value == rhs.value;
 }
 
-struct Storage: ::testing::Test {
+struct Storage : ::testing::Test {
   void SetUp() override {
     aggregate_tracking_type::counter = 0;
   }
@@ -303,11 +293,11 @@ TEST_F(Storage, EmptyType) {
 }
 
 RD_DEBUG_TEST_F(StorageDeathTest, EmptyType) {
-rendu::storage<empty_stable_type> pool;
-pool.emplace(rendu::entity{99});
+  rendu::storage<empty_stable_type> pool;
+  pool.emplace(rendu::entity{99});
 
-ASSERT_DEATH(pool.get(rendu::entity{3}), "");
-ASSERT_DEATH([[maybe_unused]] auto tup = pool.get_as_tuple(rendu::entity{3}), "");
+  ASSERT_DEATH(pool.get(rendu::entity{3}), "");
+  ASSERT_DEATH([[maybe_unused]] auto tup = pool.get_as_tuple(rendu::entity{3}), "");
 }
 
 TEST_F(Storage, Insert) {
@@ -757,7 +747,7 @@ TEST_F(Storage, EmptyTypeFromBase) {
   ASSERT_FALSE(pool.empty());
   ASSERT_EQ(pool.size(), 5u);
 
-  for(std::size_t pos{}, last = base.size(); pos != last; ++pos) {
+  for (std::size_t pos{}, last = base.size(); pos != last; ++pos) {
     ASSERT_TRUE(base[pos] == rendu::tombstone);
   }
 }
@@ -890,7 +880,7 @@ TEST_F(Storage, ShrinkToFit) {
   rendu::storage<int> pool;
   constexpr auto page_size = decltype(pool)::traits_type::page_size;
 
-  for(std::size_t next{}; next < page_size; ++next) {
+  for (std::size_t next{}; next < page_size; ++next) {
     pool.emplace(rendu::entity(next));
   }
 
@@ -1233,7 +1223,7 @@ TEST_F(Storage, IteratorPageSizeAwareness) {
   constexpr auto page_size = decltype(pool)::traits_type::page_size;
   const std::unordered_set<char> check{'c'};
 
-  for(unsigned int next{}; next < page_size; ++next) {
+  for (unsigned int next{}; next < page_size; ++next) {
     pool.emplace(rendu::entity{next});
   }
 
@@ -1247,7 +1237,8 @@ TEST_F(Storage, Iterable) {
   using iterator = typename rendu::storage<boxed_int>::iterable::iterator;
 
   static_assert(std::is_same_v<iterator::value_type, std::tuple<rendu::entity, boxed_int &>>);
-  static_assert(std::is_same_v<typename iterator::pointer, rendu::input_iterator_pointer<std::tuple<rendu::entity, boxed_int &>>>);
+  static_assert(std::is_same_v<typename iterator::pointer,
+                               rendu::input_iterator_pointer<std::tuple<rendu::entity, boxed_int &>>>);
   static_assert(std::is_same_v<typename iterator::reference, typename iterator::value_type>);
 
   rendu::storage<boxed_int> pool;
@@ -1279,7 +1270,7 @@ TEST_F(Storage, Iterable) {
   ASSERT_EQ(++begin, iterable.end());
   ASSERT_EQ(begin.base(), base.end());
 
-  for(auto [entity, element]: iterable) {
+  for (auto [entity, element] : iterable) {
     static_assert(std::is_same_v<decltype(entity), rendu::entity>);
     static_assert(std::is_same_v<decltype(element), boxed_int &>);
     ASSERT_TRUE(entity != rendu::entity{1} || element == boxed_int{99});
@@ -1291,7 +1282,8 @@ TEST_F(Storage, ConstIterable) {
   using iterator = typename rendu::storage<boxed_int>::const_iterable::iterator;
 
   static_assert(std::is_same_v<iterator::value_type, std::tuple<rendu::entity, const boxed_int &>>);
-  static_assert(std::is_same_v<typename iterator::pointer, rendu::input_iterator_pointer<std::tuple<rendu::entity, const boxed_int &>>>);
+  static_assert(std::is_same_v<typename iterator::pointer,
+                               rendu::input_iterator_pointer<std::tuple<rendu::entity, const boxed_int &>>>);
   static_assert(std::is_same_v<typename iterator::reference, typename iterator::value_type>);
 
   rendu::storage<boxed_int> pool;
@@ -1323,7 +1315,7 @@ TEST_F(Storage, ConstIterable) {
   ASSERT_EQ(++begin, iterable.end());
   ASSERT_EQ(begin.base(), base.end());
 
-  for(auto [entity, element]: iterable) {
+  for (auto [entity, element] : iterable) {
     static_assert(std::is_same_v<decltype(entity), rendu::entity>);
     static_assert(std::is_same_v<decltype(element), const boxed_int &>);
     ASSERT_TRUE(entity != rendu::entity{1} || element == boxed_int{99});
@@ -1380,7 +1372,7 @@ TEST_F(Storage, EmptyTypeIterable) {
   ASSERT_EQ(++begin, iterable.end());
   ASSERT_EQ(begin.base(), base.end());
 
-  for(auto [entity]: iterable) {
+  for (auto [entity] : iterable) {
     static_assert(std::is_same_v<decltype(entity), rendu::entity>);
     ASSERT_TRUE(entity == rendu::entity{1} || entity == rendu::entity{3});
   }
@@ -1391,7 +1383,8 @@ TEST_F(Storage, IterableAlgorithmCompatibility) {
   pool.emplace(rendu::entity{3}, 42);
 
   const auto iterable = pool.each();
-  const auto it = std::find_if(iterable.begin(), iterable.end(), [](auto args) { return std::get<0>(args) == rendu::entity{3}; });
+  const auto it =
+      std::find_if(iterable.begin(), iterable.end(), [](auto args) { return std::get<0>(args) == rendu::entity{3}; });
 
   ASSERT_EQ(std::get<0>(*it), rendu::entity{3});
 }
@@ -1458,31 +1451,40 @@ TEST_F(Storage, StableSwapElements) {
 
 TEST_F(Storage, SortOrdered) {
   rendu::storage<boxed_int> pool;
-  rendu::entity entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
+  rendu::entity
+      entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
   boxed_int values[5u]{{12}, {9}, {6}, {3}, {1}};
 
   pool.insert(std::begin(entities), std::end(entities), values);
   pool.sort([&pool](auto lhs, auto rhs) { return pool.get(lhs).value < pool.get(rhs).value; });
 
-  ASSERT_TRUE(std::equal(std::rbegin(entities), std::rend(entities), pool.rendu::sparse_set::begin(), pool.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(entities),
+                         std::rend(entities),
+                         pool.rendu::sparse_set::begin(),
+                         pool.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(values), std::rend(values), pool.begin(), pool.end()));
 }
 
 TEST_F(Storage, SortReverse) {
   rendu::storage<boxed_int> pool;
-  rendu::entity entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
+  rendu::entity
+      entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
   boxed_int values[5u]{{1}, {3}, {6}, {9}, {12}};
 
   pool.insert(std::begin(entities), std::end(entities), values);
   pool.sort([&pool](auto lhs, auto rhs) { return pool.get(lhs).value < pool.get(rhs).value; });
 
-  ASSERT_TRUE(std::equal(std::begin(entities), std::end(entities), pool.rendu::sparse_set::begin(), pool.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::begin(entities),
+                         std::end(entities),
+                         pool.rendu::sparse_set::begin(),
+                         pool.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::begin(values), std::end(values), pool.begin(), pool.end()));
 }
 
 TEST_F(Storage, SortUnordered) {
   rendu::storage<boxed_int> pool;
-  rendu::entity entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
+  rendu::entity
+      entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
   boxed_int values[5u]{{6}, {3}, {1}, {9}, {12}};
 
   pool.insert(std::begin(entities), std::end(entities), values);
@@ -1507,13 +1509,17 @@ TEST_F(Storage, SortUnordered) {
 
 TEST_F(Storage, SortRange) {
   rendu::storage<boxed_int> pool;
-  rendu::entity entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
+  rendu::entity
+      entities[5u]{rendu::entity{12}, rendu::entity{42}, rendu::entity{7}, rendu::entity{3}, rendu::entity{9}};
   boxed_int values[5u]{{3}, {6}, {1}, {9}, {12}};
 
   pool.insert(std::begin(entities), std::end(entities), values);
   pool.sort_n(0u, [&pool](auto lhs, auto rhs) { return pool.get(lhs).value < pool.get(rhs).value; });
 
-  ASSERT_TRUE(std::equal(std::rbegin(entities), std::rend(entities), pool.rendu::sparse_set::begin(), pool.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(entities),
+                         std::rend(entities),
+                         pool.rendu::sparse_set::begin(),
+                         pool.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(values), std::rend(values), pool.begin(), pool.end()));
 
   pool.sort_n(2u, [&pool](auto lhs, auto rhs) { return pool.get(lhs).value < pool.get(rhs).value; });
@@ -1553,12 +1559,18 @@ TEST_F(Storage, RespectDisjoint) {
   int lhs_values[3u]{3, 6, 9};
   lhs.insert(std::begin(lhs_entities), std::end(lhs_entities), lhs_values);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 
   lhs.respect(rhs);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 }
 
@@ -1574,10 +1586,16 @@ TEST_F(Storage, RespectOverlap) {
   int rhs_values[1u]{6};
   rhs.insert(std::begin(rhs_entities), std::end(rhs_entities), rhs_values);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 
-  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities), std::rend(rhs_entities), rhs.rendu::sparse_set::begin(), rhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities),
+                         std::rend(rhs_entities),
+                         rhs.rendu::sparse_set::begin(),
+                         rhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(rhs_values), std::rend(rhs_values), rhs.begin(), rhs.end()));
 
   lhs.respect(rhs);
@@ -1599,23 +1617,34 @@ TEST_F(Storage, RespectOrdered) {
   rendu::storage<int> lhs;
   rendu::storage<int> rhs;
 
-  rendu::entity lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
+  rendu::entity
+      lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
   int lhs_values[5u]{1, 2, 3, 4, 5};
   lhs.insert(std::begin(lhs_entities), std::end(lhs_entities), lhs_values);
 
-  rendu::entity rhs_entities[6u]{rendu::entity{6}, rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
+  rendu::entity rhs_entities[6u]
+      {rendu::entity{6}, rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
   int rhs_values[6u]{6, 1, 2, 3, 4, 5};
   rhs.insert(std::begin(rhs_entities), std::end(rhs_entities), rhs_values);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 
-  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities), std::rend(rhs_entities), rhs.rendu::sparse_set::begin(), rhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities),
+                         std::rend(rhs_entities),
+                         rhs.rendu::sparse_set::begin(),
+                         rhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(rhs_values), std::rend(rhs_values), rhs.begin(), rhs.end()));
 
   rhs.respect(lhs);
 
-  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities), std::rend(rhs_entities), rhs.rendu::sparse_set::begin(), rhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities),
+                         std::rend(rhs_entities),
+                         rhs.rendu::sparse_set::begin(),
+                         rhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(rhs_values), std::rend(rhs_values), rhs.begin(), rhs.end()));
 }
 
@@ -1623,18 +1652,26 @@ TEST_F(Storage, RespectReverse) {
   rendu::storage<int> lhs;
   rendu::storage<int> rhs;
 
-  rendu::entity lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
+  rendu::entity
+      lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
   int lhs_values[5u]{1, 2, 3, 4, 5};
   lhs.insert(std::begin(lhs_entities), std::end(lhs_entities), lhs_values);
 
-  rendu::entity rhs_entities[6u]{rendu::entity{5}, rendu::entity{4}, rendu::entity{3}, rendu::entity{2}, rendu::entity{1}, rendu::entity{6}};
+  rendu::entity rhs_entities[6u]
+      {rendu::entity{5}, rendu::entity{4}, rendu::entity{3}, rendu::entity{2}, rendu::entity{1}, rendu::entity{6}};
   int rhs_values[6u]{5, 4, 3, 2, 1, 6};
   rhs.insert(std::begin(rhs_entities), std::end(rhs_entities), rhs_values);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 
-  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities), std::rend(rhs_entities), rhs.rendu::sparse_set::begin(), rhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities),
+                         std::rend(rhs_entities),
+                         rhs.rendu::sparse_set::begin(),
+                         rhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(rhs_values), std::rend(rhs_values), rhs.begin(), rhs.end()));
 
   rhs.respect(lhs);
@@ -1662,18 +1699,26 @@ TEST_F(Storage, RespectUnordered) {
   rendu::storage<int> lhs;
   rendu::storage<int> rhs;
 
-  rendu::entity lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
+  rendu::entity
+      lhs_entities[5u]{rendu::entity{1}, rendu::entity{2}, rendu::entity{3}, rendu::entity{4}, rendu::entity{5}};
   int lhs_values[5u]{1, 2, 3, 4, 5};
   lhs.insert(std::begin(lhs_entities), std::end(lhs_entities), lhs_values);
 
-  rendu::entity rhs_entities[6u]{rendu::entity{3}, rendu::entity{2}, rendu::entity{6}, rendu::entity{1}, rendu::entity{4}, rendu::entity{5}};
+  rendu::entity rhs_entities[6u]
+      {rendu::entity{3}, rendu::entity{2}, rendu::entity{6}, rendu::entity{1}, rendu::entity{4}, rendu::entity{5}};
   int rhs_values[6u]{3, 2, 6, 1, 4, 5};
   rhs.insert(std::begin(rhs_entities), std::end(rhs_entities), rhs_values);
 
-  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities), std::rend(lhs_entities), lhs.rendu::sparse_set::begin(), lhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(lhs_entities),
+                         std::rend(lhs_entities),
+                         lhs.rendu::sparse_set::begin(),
+                         lhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(lhs_values), std::rend(lhs_values), lhs.begin(), lhs.end()));
 
-  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities), std::rend(rhs_entities), rhs.rendu::sparse_set::begin(), rhs.rendu::sparse_set::end()));
+  ASSERT_TRUE(std::equal(std::rbegin(rhs_entities),
+                         std::rend(rhs_entities),
+                         rhs.rendu::sparse_set::begin(),
+                         rhs.rendu::sparse_set::end()));
   ASSERT_TRUE(std::equal(std::rbegin(rhs_values), std::rend(rhs_values), rhs.begin(), rhs.end()));
 
   rhs.respect(lhs);
@@ -1723,8 +1768,8 @@ TEST_F(Storage, ReferencesGuaranteed) {
   ASSERT_EQ(pool.get(rendu::entity{0}).value, 0);
   ASSERT_EQ(pool.get(rendu::entity{1}).value, 1);
 
-  for(auto &&type: pool) {
-    if(type.value) {
+  for (auto &&type : pool) {
+    if (type.value) {
       type.value = 42;
     }
   }
@@ -1734,7 +1779,7 @@ TEST_F(Storage, ReferencesGuaranteed) {
 
   auto begin = pool.begin();
 
-  while(begin != pool.end()) {
+  while (begin != pool.end()) {
     (begin++)->value = 3;
   }
 
@@ -1753,20 +1798,20 @@ TEST_F(Storage, PinnedComponent) {
 }
 
 RD_DEBUG_TEST_F(StorageDeathTest, PinnedComponent) {
-rendu::storage<pinned_type> pool;
-const rendu::entity entity{0};
-const rendu::entity destroy{1};
-const rendu::entity other{2};
+  rendu::storage<pinned_type> pool;
+  const rendu::entity entity{0};
+  const rendu::entity destroy{1};
+  const rendu::entity other{2};
 
-pool.emplace(entity);
-pool.emplace(destroy);
-pool.emplace(other);
+  pool.emplace(entity);
+  pool.emplace(destroy);
+  pool.emplace(other);
 
-pool.erase(destroy);
+  pool.erase(destroy);
 
-ASSERT_DEATH(pool.swap_elements(entity, other), "");
-ASSERT_DEATH(pool.compact(), "");
-ASSERT_DEATH(pool.sort([](auto &&lhs, auto &&rhs) { return lhs < rhs; }), "");
+  ASSERT_DEATH(pool.swap_elements(entity, other), "");
+  ASSERT_DEATH(pool.compact(), "");
+  ASSERT_DEATH(pool.sort([](auto &&lhs, auto &&rhs) { return lhs < rhs; }), "");
 }
 
 TEST_F(Storage, UpdateFromDestructor) {
@@ -1775,7 +1820,7 @@ TEST_F(Storage, UpdateFromDestructor) {
 
     rendu::storage<update_from_destructor> pool;
 
-    for(std::size_t next{}; next < size; ++next) {
+    for (std::size_t next{}; next < size; ++next) {
       const auto entity = rendu::entity(next);
       pool.emplace(entity, pool, entity == rendu::entity(size / 2) ? target : entity);
     }
@@ -1790,7 +1835,7 @@ TEST_F(Storage, UpdateFromDestructor) {
 
     ASSERT_TRUE(pool.empty());
 
-    for(std::size_t next{}; next < size; ++next) {
+    for (std::size_t next{}; next < size; ++next) {
       ASSERT_FALSE(pool.contains(rendu::entity(next)));
     }
   };
@@ -1854,7 +1899,8 @@ TEST_F(Storage, CustomAllocator) {
   test::throwing_allocator<rendu::entity> allocator{};
 
   test(rendu::basic_storage<int, rendu::entity, test::throwing_allocator<int>>{allocator}, allocator);
-  test(rendu::basic_storage<std::true_type, rendu::entity, test::throwing_allocator<std::true_type>>{allocator}, allocator);
+  test(rendu::basic_storage<std::true_type, rendu::entity, test::throwing_allocator<std::true_type>>{allocator},
+       allocator);
   test(rendu::basic_storage<stable_type, rendu::entity, test::throwing_allocator<stable_type>>{allocator}, allocator);
 }
 
@@ -1904,7 +1950,8 @@ TEST_F(Storage, ThrowingAllocator) {
     const rendu::entity entities[2u]{rendu::entity{1}, rendu::entity{sparse_page_size}};
     test::throwing_allocator<rendu::entity>::trigger_after_allocate = true;
 
-    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), value_type{0}), test::throwing_allocator<rendu::entity>::exception_type);
+    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), value_type{0}),
+                 test::throwing_allocator<rendu::entity>::exception_type);
     ASSERT_TRUE(pool.contains(rendu::entity{1}));
     ASSERT_FALSE(pool.contains(rendu::entity{sparse_page_size}));
 
@@ -1913,7 +1960,8 @@ TEST_F(Storage, ThrowingAllocator) {
     test::throwing_allocator<rendu::entity>::trigger_on_allocate = true;
     pool.compact();
 
-    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)), test::throwing_allocator<rendu::entity>::exception_type);
+    ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)),
+                 test::throwing_allocator<rendu::entity>::exception_type);
     ASSERT_TRUE(pool.contains(rendu::entity{1}));
     ASSERT_FALSE(pool.contains(rendu::entity{sparse_page_size}));
   };
@@ -1934,17 +1982,20 @@ TEST_F(Storage, ThrowingComponent) {
   const test::throwing_type components[2u]{42, 1};
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), test::throwing_type{42}), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), test::throwing_type{42}),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 0u);
   ASSERT_FALSE(pool.contains(rendu::entity{1}));
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::begin(entities), std::end(entities), std::begin(components)),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 0u);
   ASSERT_FALSE(pool.contains(rendu::entity{1}));
 
   // basic exception safety
-  ASSERT_THROW(pool.insert(std::rbegin(entities), std::rend(entities), std::rbegin(components)), typename test::throwing_type::exception_type);
+  ASSERT_THROW(pool.insert(std::rbegin(entities), std::rend(entities), std::rbegin(components)),
+               typename test::throwing_type::exception_type);
   ASSERT_EQ(pool.size(), 1u);
   ASSERT_TRUE(pool.contains(rendu::entity{1}));
   ASSERT_EQ(pool.get(rendu::entity{1}), 1);
@@ -2012,14 +2063,18 @@ TEST_F(Storage, UsesAllocatorConstruction) {
 
 TEST_F(Storage, StorageType) {
   // just a bunch of static asserts to avoid regressions
-  static_assert(std::is_same_v<rendu::storage_type_t<char, rendu::entity>, rendu::sigh_mixin<rendu::basic_storage<char, rendu::entity>>>);
+  static_assert(std::is_same_v<rendu::storage_type_t<char, rendu::entity>,
+                               rendu::sigh_mixin<rendu::basic_storage<char, rendu::entity>>>);
   static_assert(std::is_same_v<rendu::storage_type_t<int>, rendu::sigh_mixin<rendu::storage<int>>>);
 }
 
 TEST_F(Storage, StorageFor) {
   // just a bunch of static asserts to avoid regressions
-  static_assert(std::is_same_v<rendu::storage_for_t<const double, rendu::entity>, const rendu::sigh_mixin<rendu::basic_storage<double, rendu::entity>>>);
-  static_assert(std::is_same_v<rendu::storage_for_t<char, rendu::entity>, rendu::sigh_mixin<rendu::basic_storage<char, rendu::entity>>>);
+  static_assert(std::is_same_v<rendu::storage_for_t<const double, rendu::entity>,
+                               const rendu::sigh_mixin<rendu::basic_storage<double, rendu::entity>>>);
+  static_assert(std::is_same_v<rendu::storage_for_t<char, rendu::entity>,
+                               rendu::sigh_mixin<rendu::basic_storage<char, rendu::entity>>>);
   static_assert(std::is_same_v<rendu::storage_for_t<const bool>, const rendu::sigh_mixin<rendu::storage<bool>>>);
   static_assert(std::is_same_v<rendu::storage_for_t<int>, rendu::sigh_mixin<rendu::storage<int>>>);
+}
 }

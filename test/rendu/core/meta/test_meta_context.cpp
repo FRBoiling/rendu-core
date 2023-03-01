@@ -12,7 +12,7 @@
 #include <core/meta/factory.h>
 #include <core/base/hashed_string.h>
 
-namespace meta_context {
+namespace test::meta::context {
 
 struct base {
   base() = default;

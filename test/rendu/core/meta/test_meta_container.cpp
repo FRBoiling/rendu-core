@@ -10,7 +10,7 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
-namespace meta_container {
+namespace test::meta::container {
 
 struct invalid_type {};
 

@@ -9,7 +9,8 @@
 #include <core/meta/meta.h>
 #include <core/meta/node.h>
 #include <core/meta/resolve.h>
-namespace meta_data {
+
+namespace test::meta::data {
 
 struct base_t {
   virtual ~base_t() = default;

@@ -6,6 +6,8 @@
 #include <test/throwing_allocator.h>
 #include <core/signal/delegate.h>
 
+namespace test::delegate{
+
 int delegate_function(const int &i) {
   return i * i;
 }
@@ -439,4 +441,5 @@ TEST(Delegate, TheLessTheBetter) {
   unbound.connect<&delegate_functor::operator()>();
 
   ASSERT_EQ(unbound(functor, 3, 'c'), 6);
+}
 }

@@ -9,7 +9,7 @@
 #include <core/meta/node.h>
 #include <core/meta/resolve.h>
 
-namespace meta_dtor {
+namespace test::meta::dtor {
 
 struct clazz_t {
   clazz_t() {

@@ -9,6 +9,8 @@
 #include <core/ecs/entity.h>
 #include <core/ecs/registry.h>
 
+namespace test::ecs::registry {
+
 struct empty_type {};
 
 struct no_eto_type {
@@ -2254,7 +2256,7 @@ TEST(Registry, NoEtoType) {
   auto cview = std::as_const(registry).view<const no_eto_type, const int>();
 
   ASSERT_EQ((std::get<0>(view.get<no_eto_type, int>(entity))),
-               (std::get<0>(cview.get<const no_eto_type, const int>(entity))));
+            (std::get<0>(cview.get<const no_eto_type, const int>(entity))));
 }
 
 TEST(Registry, CtxAndPoolMemberDestructionOrder) {
@@ -2267,4 +2269,5 @@ TEST(Registry, CtxAndPoolMemberDestructionOrder) {
   registry.reset();
 
   ASSERT_TRUE(ctx_check);
+}
 }

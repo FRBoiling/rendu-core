@@ -11,7 +11,7 @@
 #include <core/meta/meta.h>
 #include <core/meta/resolve.h>
 
-namespace meta_ctor{
+namespace test::meta::ctor {
 
 struct base_t {
   base_t()
@@ -20,7 +20,7 @@ struct base_t {
   char value;
 };
 
-struct derived_t: base_t {
+struct derived_t : base_t {
   derived_t()
       : base_t{} {}
 };
@@ -52,7 +52,7 @@ double double_factory() {
   return 42.;
 }
 
-struct MetaCtor: ::testing::Test {
+struct MetaCtor : ::testing::Test {
   void SetUp() override {
     using namespace rendu::literals;
 
@@ -211,7 +211,8 @@ TEST_F(MetaCtor, NonDefaultConstructibleType) {
 TEST_F(MetaCtor, ReRegistration) {
   SetUp();
 
-  auto &&node = rendu::internal::resolve<double>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
+  auto &&node =
+      rendu::internal::resolve<double>(rendu::internal::meta_context::from(rendu::locator<rendu::meta_ctx>::value_or()));
 
   ASSERT_TRUE(node.details);
   ASSERT_FALSE(node.details->ctor.empty());
