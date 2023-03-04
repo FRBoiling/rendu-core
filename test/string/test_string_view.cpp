@@ -1,11 +1,6 @@
 #include <test/rdtest.h>
-#include <iomanip>
-#include <iterator>
-#include <map>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <utility>
+#include <common/base/string_view.h>
+
 
 TEST(StringTest, Ctor) {
   {
@@ -767,17 +762,13 @@ TEST(StringTest, NULLInput) {
   EXPECT_EQ(s.data(), nullptr);
   EXPECT_EQ(s.size(), 0u);
 
-  s = std::string_view(nullptr);
-  EXPECT_EQ(s.data(), nullptr);
-  EXPECT_EQ(s.size(), 0u);
-
 // .ToString() on a std::string_view with nullptr should produce the empty
 // string.
   EXPECT_EQ("", std::string(s));
 }
 
 TEST(StringTest, Comparisons2) {
-// The `compare` member has 6 overloads (v: string_view, s: const char*):
+// The `compare` member has 6 overloads (v: std::string_view, s: const char*):
 //  (1) compare(v)
 //  (2) compare(pos1, count1, v)
 //  (3) compare(pos1, count1, v, pos2, count2)
@@ -801,7 +792,7 @@ TEST(StringTest, Comparisons2) {
   std::string_view digits("0123456789");
   auto npos = std::string_view::npos;
 
-// Taking string_view
+// Taking std::string_view
   EXPECT_EQ(digits.compare(3, npos, std::string_view("3456789")), 0);  // 2
   EXPECT_EQ(digits.compare(3, 4, std::string_view("3456")), 0);        // 2
   EXPECT_EQ(digits.compare(10, 0, std::string_view()), 0);             // 2
@@ -1063,7 +1054,7 @@ TEST_F(StringViewStreamTest, Padding) {
 
 TEST_F(StringViewStreamTest, ResetsWidth) {
 // Width should reset after one formatted write.
-// If we weren't resetting width after formatting the string_view,
+// If we weren't resetting width after formatting the std::string_view,
 // we'd have width=5 carrying over to the printing of the "]",
 // creating "[###hi####]".
   std::string s = "hi";

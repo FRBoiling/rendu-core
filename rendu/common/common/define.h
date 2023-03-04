@@ -2,8 +2,8 @@
 * Created by boil on 2023/2/16.
 */
 
-#ifndef RENDU_COMMON_COMMON_DEFINE_H_
-#define RENDU_COMMON_COMMON_DEFINE_H_
+#ifndef RENDU_COMMON_DEFINE_H_
+#define RENDU_COMMON_DEFINE_H_
 
 #ifndef RD_EXPORT
 #    if defined _WIN32 || defined __CYGWIN__ || defined _MSC_VER
@@ -31,4 +31,4 @@
 #    endif
 #endif
 
-#endif //RENDU_COMMON_COMMON_DEFINE_H_
+#endif //RENDU_COMMON_DEFINE_H_
