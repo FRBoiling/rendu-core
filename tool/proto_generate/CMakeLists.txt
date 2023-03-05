@@ -12,6 +12,8 @@ rendu_add_executable(
     ${CMAKE_BINARY_DIR}
     PRIVATE_DEPS
     PUBLIC_DEPS
+    protobuf::libprotobuf
+    protobuf::libprotobuf-lite
     protobuf::libprotoc
     DEFINES
     LINKOPTS
