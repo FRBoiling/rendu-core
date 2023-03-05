@@ -23,6 +23,7 @@ function(CollectAllFiles current_dir variable)
         ${current_dir}/*.hpp
         ${current_dir}/*.ipp
         ${current_dir}/*.pb.h
+        ${current_dir}/*.inc
         )
     list(APPEND ${variable} ${COLLECTED_FILES})
     file(GLOB SUB_DIRECTORIES ${current_dir}/*)
@@ -83,6 +84,7 @@ function(CollectHeaderFiles current_dir variable)
         ${current_dir}/*.hpp
         ${current_dir}/*.ipp
         ${current_dir}/*.pb.h
+        ${current_dir}/*.inc
         )
     list(APPEND ${variable} ${COLLECTED_HEADERS})
     file(GLOB SUB_DIRECTORIES ${current_dir}/*)
