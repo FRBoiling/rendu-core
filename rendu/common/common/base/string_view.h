@@ -22,14 +22,14 @@ return s.substr(pos, n);
 
 // NullSafeStringView()
 //
-// Creates an `absl::string_view` from a pointer `p` even if it's null-valued.
-// This function should be used where an `absl::string_view` can be created from
+// Creates an `rendu::string_view` from a pointer `p` even if it's null-valued.
+// This function should be used where an `rendu::string_view` can be created from
 // a possibly-null pointer.
 constexpr string_view NullSafeStringView(const char* p) {
   return p ? string_view(p) : string_view();
 }
 
-}  // namespace absl
+}  // namespace rendu
 
 
 #endif //RENDU_COMMON_BASE_STRING_VIEW_H_

@@ -231,6 +231,102 @@ function(rendu_add_library)
   add_library(${PROJECT_NAME}::${RENDU_LIB_NAME} ALIAS ${_NAME})
 endfunction(rendu_add_library)
 
+function(rendu_add_dependence)
+  cmake_parse_arguments(RENDU_DEP
+      ""
+      "NAME"
+      "PRIVATE_SOURCES;PUBLIC_HEADERS;CMAKE_CUR_SOURCE_DIR;CMAKE_CUR_BINARY_DIR;CMAKE_BINARY_DIR;COPTS;DEFINES;LINKOPTS;
+      PUBLIC_DEPS;PRIVATE_DEPS"
+      ${ARGN}
+      )
+  set(_NAME "${PROJECT_NAME}_${RENDU_DEP_NAME}")
+
+  message(STATUS "[lib ] " ${_NAME})
+
+  set(_SRCS "${RENDU_DEP_PRIVATE_SOURCES}")
+  foreach (src_file IN LISTS _SRCS)
+    if (${src_file} MATCHES ".*\\.(h|inc)")
+      list(REMOVE_ITEM _SRCS "${src_file}")
+    endif ()
+  endforeach ()
+
+  if (_SRCS STREQUAL "")
+    set(LIB_IS_INTERFACE 1)
+  else ()
+    set(LIB_IS_INTERFACE 0)
+  endif ()
+  GroupSources(${RENDU_DEP_CMAKE_CUR_SOURCE_DIR})
+  #  add_definitions(-DTRINITY_API_EXPORT_COMMON)
+  CollectIncludeDirectories(
+      ${RENDU_DEP_CMAKE_CUR_SOURCE_DIR}
+      PUBLIC_INCLUDES
+      # Exclude
+      ${RENDU_DEP_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
+  if (LIB_IS_INTERFACE) #TODO:BOIL head only
+    add_library(${_NAME} INTERFACE)
+    target_sources(${_NAME} INTERFACE ${RENDU_DEP_PUBLIC_HEADERS})
+    target_compile_features(${_NAME}
+        INTERFACE
+        cxx_std_11
+        )
+
+    target_include_directories(${_NAME}
+        INTERFACE
+        $<BUILD_INTERFACE:${RENDU_DEP_CMAKE_CUR_SOURCE_DIR}>
+        # Provide the binary dir for all child targets
+        ${RENDU_DEP_CMAKE_BINARY_DIR}
+        ${RENDU_DEP_CMAKE_CUR_BINARY_DIR})
+
+    target_link_libraries(${_NAME}
+        INTERFACE
+        #
+        ${RENDU_DEP_PRIVATE_DEPS}
+        ${RENDU_DEP_PUBLIC_DEPS}
+        )
+
+  else ()
+    add_library(${_NAME})
+    target_sources(${_NAME} PRIVATE ${RENDU_DEP_PRIVATE_SOURCES} ${RENDU_DEP_PUBLIC_HEADERS})
+
+    target_include_directories(${_NAME}
+        PUBLIC
+        # Provide the binary dir for all child targets
+        ${RENDU_DEP_CMAKE_BINARY_DIR}
+        ${PUBLIC_INCLUDES}
+        PRIVATE
+        ${RENDU_DEP_CMAKE_CUR_BINARY_DIR})
+
+    target_link_libraries(${_NAME}
+        PRIVATE
+        #
+        ${RENDU_DEP_PRIVATE_DEPS}
+        PUBLIC
+        ${RENDU_DEP_PUBLIC_DEPS}
+        )
+
+  endif ()
+  target_compile_definitions(${_NAME} PUBLIC ${RENDU_DEP_DEFINES})
+  #  add_dependencies(${_NAME} ${RENDU_DEP_CMAKE_BINARY_DIR}/revision_data.h)
+  set_target_properties(${_NAME}
+      PROPERTIES
+      FOLDER
+      ${RENDU_DEP_NAME})
+
+  if (BUILD_SHARED_LIBS)
+    message(STATUS "build shared libs")
+    if (UNIX)
+      install(TARGETS ${_NAME}
+          LIBRARY
+          DESTINATION lib)
+    elseif (WIN32)
+      install(TARGETS ${_NAME}
+          RUNTIME
+          DESTINATION "${CMAKE_INSTALL_PREFIX}")
+    endif ()
+  endif ()
+  add_library(${PROJECT_NAME}::${RENDU_DEP_NAME} ALIAS ${_NAME})
+endfunction(rendu_add_dependence)
+
 function(rendu_add_executable)
   cmake_parse_arguments(RENDU_EXEC
       ""
