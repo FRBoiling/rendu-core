@@ -1,7 +1,7 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-set(PROJECT_NAME protobuf)
+
 set(protobuf_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
 # Find revision ID and hash of the sourcetree
 include(cmake/libprotobuf.cmake)
