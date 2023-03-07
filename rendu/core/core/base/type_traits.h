@@ -6,6 +6,7 @@
 #define RENDU_CORE_BASE_TYPE_TRAITS_H_
 
 #include <type_traits>
+#include <tuple>
 #include "fwd.h"
 
 namespace rendu {
