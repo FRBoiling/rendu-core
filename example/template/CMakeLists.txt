@@ -5,15 +5,10 @@
 rendu_add_executable(
     NAME
     template
-    CMAKE_CUR_SOURCE_DIR
+    SRC_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
-    CMAKE_CUR_BINARY_DIR
-    ${CMAKE_CURRENT_BINARY_DIR}
-    CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}
-    PRIVATE_DEPS
-    PUBLIC_DEPS
-    protobuf::libprotoc
+    PRIVATE
+    DEPS
     DEFINES
     LINKOPTS
 )

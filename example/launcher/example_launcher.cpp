@@ -3,9 +3,6 @@
 */
 
 #include <iostream>
-#include <base/hashed_string.h>
-#include <base/type_info.h>
-#include <ecs/entity.h>
 #include <ecs/registry.h>
 
 struct position {

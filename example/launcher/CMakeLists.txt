@@ -5,15 +5,11 @@
 rendu_add_executable(
     NAME
     launcher
-    CMAKE_CUR_SOURCE_DIR
+    SRC_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
-    CMAKE_CUR_BINARY_DIR
-    ${CMAKE_CURRENT_BINARY_DIR}
-    CMAKE_BINARY_DIR
-    ${CMAKE_BINARY_DIR}
-    PRIVATE_DEPS
-    PUBLIC_DEPS
-    rendu::common
+    PRIVATE
+    rendu-core-interface
+    DEPS
     rendu::core
     DEFINES
     LINKOPTS
