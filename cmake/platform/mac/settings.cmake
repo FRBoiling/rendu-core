@@ -6,7 +6,6 @@ if(NOT CONF_DIR)
   set(CONF_DIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH "Configuration directory")
   message(STATUS "MAC: Using default configuration directory")
 endif()
-
 # configure uninstaller
 configure_file(
   "${CMAKE_SOURCE_DIR}/cmake/platform/cmake_uninstall.in.cmake"

@@ -11,5 +11,4 @@ rendu_add_executable(
     PRIVATE
     DEPS
     DEFINES
-    LINKOPTS
 )

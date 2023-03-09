@@ -85,35 +85,51 @@ set(libprotobuf_lite_includes
   ${protobuf_source_dir}/src/google/protobuf/wire_format_lite.h
 )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-set(libprotobuf_lite_rc_files
-  ${CMAKE_CURRENT_BINARY_DIR}/version.rc
-)
-endif()
-
-add_library(libprotobuf-lite ${protobuf_SHARED_OR_STATIC}
-  ${libprotobuf_lite_files} ${libprotobuf_lite_includes} ${libprotobuf_lite_rc_files})
-if(protobuf_HAVE_LD_VERSION_SCRIPT)
-  if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
-    target_link_options(libprotobuf-lite PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotobuf-lite.map)
-  elseif(protobuf_BUILD_SHARED_LIBS)
-    target_link_libraries(libprotobuf-lite PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotobuf-lite.map)
-  endif()
-  set_target_properties(libprotobuf-lite PROPERTIES
-    LINK_DEPENDS ${protobuf_source_dir}/src/libprotobuf-lite.map)
-endif()
-target_link_libraries(libprotobuf-lite PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-if(protobuf_LINK_LIBATOMIC)
-  target_link_libraries(libprotobuf-lite PRIVATE atomic)
-endif()
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-  target_link_libraries(libprotobuf-lite PRIVATE log)
-endif()
+#if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+#set(libprotobuf_lite_rc_files
+#  ${CMAKE_CURRENT_BINARY_DIR}/version.rc
+#)
+#endif()
+#
+add_library(libprotobuf-lite
+  ${libprotobuf_lite_files} ${libprotobuf_lite_includes})
+#if(protobuf_HAVE_LD_VERSION_SCRIPT)
+#  if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
+#    target_link_options(libprotobuf-lite PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotobuf-lite.map)
+#  elseif(protobuf_BUILD_SHARED_LIBS)
+#    target_link_libraries(libprotobuf-lite PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotobuf-lite.map)
+#  endif()
+#  set_target_properties(libprotobuf-lite PROPERTIES
+#    LINK_DEPENDS ${protobuf_source_dir}/src/libprotobuf-lite.map)
+#endif()
+#target_link_libraries(libprotobuf-lite PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+#if(protobuf_LINK_LIBATOMIC)
+#  target_link_libraries(libprotobuf-lite PRIVATE atomic)
+#endif()
+#if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+#  target_link_libraries(libprotobuf-lite PRIVATE log)
+#endif()
 target_include_directories(libprotobuf-lite PUBLIC ${protobuf_source_dir}/src)
-if(protobuf_BUILD_SHARED_LIBS)
-  target_compile_definitions(libprotobuf-lite
-    PUBLIC  PROTOBUF_USE_DLLS
-    PRIVATE LIBPROTOBUF_EXPORTS)
-endif()
-
+#if(protobuf_BUILD_SHARED_LIBS)
+#  target_compile_definitions(libprotobuf-lite
+#    PUBLIC  PROTOBUF_USE_DLLS
+#    PRIVATE LIBPROTOBUF_EXPORTS)
+#endif()
+#
 add_library(protobuf::libprotobuf-lite ALIAS libprotobuf-lite)
+#
+#rendu_add_library(
+#    NAME
+#    libprotobuf-lite
+#    SRC_DIR
+#    ${protobuf_source_dir}
+#    SRCS
+#    ${libprotobuf_lite_files}
+#    HDRS
+#    ${libprotobuf_lite_includes}
+#    PRIVATE
+#    rendu-dependency-interface
+#    DEFINES
+#    DEPS
+#    LINKOPTS
+#)

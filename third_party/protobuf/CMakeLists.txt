@@ -10,63 +10,19 @@ include(cmake/libprotobuf-lite.cmake)
 # print out the results before continuing
 include(cmake/libprotoc.cmake)
 
-#rendu_add_dependence(
-#    NAME
-#    libprotobuf
-#    PRIVATE_SOURCES
-#    ${libprotobuf_lite_files}
-#    ${libprotobuf_files}
-#    PUBLIC_HEADERS
-#    ${libprotobuf_includes}
-#    CMAKE_CUR_SOURCE_DIR
-#    ${CMAKE_CURRENT_SOURCE_DIR}
-#    CMAKE_CUR_BINARY_DIR
-#    ${CMAKE_CURRENT_BINARY_DIR}
-#    CMAKE_BINARY_DIR
-#    ${CMAKE_BINARY_DIR}
-#    PRIVATE_DEPS
-#    rendu-dependency-interface
-#    PUBLIC_DEPS
-#    DEFINES
-#    LINKOPTS
-#)
-#
-#rendu_add_dependence(
-#    NAME
-#    libprotobuf-lite
-#    PRIVATE_SOURCES
-#    ${libprotobuf_lite_files}
-#    PUBLIC_HEADERS
-#    ${libprotobuf_lite_includes}
-#    CMAKE_CUR_SOURCE_DIR
-#    ${CMAKE_CURRENT_SOURCE_DIR}
-#    CMAKE_CUR_BINARY_DIR
-#    ${CMAKE_CURRENT_BINARY_DIR}
-#    CMAKE_BINARY_DIR
-#    ${CMAKE_BINARY_DIR}
-#    PRIVATE_DEPS
-#    rendu-dependency-interface
-#    PUBLIC_DEPS
-#    DEFINES
-#    LINKOPTS
-#)
-#
-#rendu_add_dependence(
-#    NAME
-#    libprotoc
-#    PRIVATE_SOURCES
-#    ${libprotoc_files}
-#    PUBLIC_HEADERS
-#    ${libprotoc_headers}
-#    CMAKE_CUR_SOURCE_DIR
-#    ${CMAKE_CURRENT_SOURCE_DIR}
-#    CMAKE_CUR_BINARY_DIR
-#    ${CMAKE_CURRENT_BINARY_DIR}
-#    CMAKE_BINARY_DIR
-#    ${CMAKE_BINARY_DIR}
-#    PRIVATE_DEPS
-#    rendu-dependency-interface
-#    PUBLIC_DEPS
-#    DEFINES
-#    LINKOPTS
-#)
+rendu_add_library(
+    NAME
+    protobuf
+    SRC_DIR
+    ${protobuf_source_dir}
+    SRCS
+    ${libprotobuf_lite_files}
+    ${libprotobuf_files}
+    HDRS
+    ${libprotobuf_includes}
+    PRIVATE
+    rendu-dependency-interface
+    DEFINES
+    DEPS
+    LINKOPTS
+)

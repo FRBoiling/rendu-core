@@ -11,7 +11,7 @@ rendu_add_executable(
     rendu-dependency-interface
     DEPS
     rendu::test
-    protobuf::libprotoc
+    deps::libprotoc
     DEFINES
     LINKOPTS
 )
