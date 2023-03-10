@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include <map>
+#include <vector>
 
 void MergeContainer(std::map<int, std::set<int>> &container1, const std::map<int, std::set<int>> &container3);
 template<typename T>
@@ -21,6 +22,15 @@ void MergeContainer(std::map<int, std::set<int>> &container1, std::map<int, std:
     container3[it->first].insert(it->second.begin(),it->second.end());
   }
 }
+
+class TestSortClass {
+ public:
+      TestSortClass():m_key(0),m_value(0){}
+ public:
+  int m_key;
+  int m_value;
+};
+
 
 int main() {
   bool b_ff = false;
@@ -45,6 +55,28 @@ int main() {
   }
   MergeContainer(container1, container3);
   MergeContainer(container2, container3);
+
+
+  std::map<int,TestSortClass> temp_back_groups;
+  int key = 10;
+  int value = 1;
+  while (key > 0) {
+    TestSortClass item;
+    item.m_value = value;
+    item.m_key = key;
+    temp_back_groups[item.m_key] = item;
+    key--;
+    value++;
+  }
+
+  std::vector<TestSortClass> temp_vec;
+  for (auto it = temp_back_groups.begin(); it != temp_back_groups.end(); ++it) {
+    temp_vec.push_back(it->second);
+  }
+  std::sort(temp_vec.begin(), temp_vec.end(),
+            [](const TestSortClass& l, const TestSortClass& r) {
+              return l.m_value < r.m_value;
+            });
 
   std::cout << "Hello container" << std::endl;
 

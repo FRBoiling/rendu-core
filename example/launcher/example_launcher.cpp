@@ -41,6 +41,10 @@ void update(std::uint64_t dt, rendu::registry &registry) {
   });
 }
 
+
+
+#include <map>
+
 int main() {
   rendu::registry registry;
   std::uint64_t dt = 16;
@@ -55,4 +59,5 @@ int main() {
   update(registry);
 
   // ...
+
 }
