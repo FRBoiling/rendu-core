@@ -40,7 +40,7 @@ else ()
   message("* Build unit tests       : No (default)")
 endif ()
 
-if (USE_COREPCH)
+if (USE_PCH)
   message("* Build core w/PCH       : Yes (default)")
 else ()
   message("* Build core w/PCH       : No")

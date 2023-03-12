@@ -4,11 +4,13 @@
 
 set(target_name bank_loan)
 rendu_add_executable(
+    PROJECT
+    ${PROJECT_NAME}
     NAME
     ${target_name}
-    SRC_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
+    SETTING
+    rendu-core-interface
+    DEPS
     DEPS
     DEFINES
 )

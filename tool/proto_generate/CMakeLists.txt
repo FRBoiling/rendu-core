@@ -1,12 +1,15 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
+
+set(target_name proto_generator)
 rendu_add_executable(
+    PROJECT
+    ${PROJECT_NAME}
     NAME
-    proto_generator
-    SRC_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
+    ${target_name}
+    SETTING
+    rendu-core-interface
 
     DEPS
     protobuf::libprotobuf

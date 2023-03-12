@@ -3,6 +3,8 @@
 #**********************************
 set(target_name launcher)
 rendu_add_executable(
+    PROJECT
+    ${PROJECT_NAME}
     NAME
     ${target_name}
     SRC_DIR

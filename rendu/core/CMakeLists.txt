@@ -3,6 +3,8 @@
 #**********************************
 set(target_name core)
 rendu_add_library(
+    PROJECT
+    ${PROJECT_NAME}
     NAME
     ${target_name}
     SRC_DIR

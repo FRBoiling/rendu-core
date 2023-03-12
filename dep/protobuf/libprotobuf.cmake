@@ -130,16 +130,16 @@ target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
 add_library(deps::libprotobuf ALIAS libprotobuf)
 
 rendu_add_library(
+    PROJECT
+    ${PROJECT_NAME}
     NAME
     protobuf
-    SRC_DIR
-    ${protobuf_source_dir}
     SRCS
     ${libprotobuf_lite_files}
     ${libprotobuf_files}
     HDRS
     ${libprotobuf_includes}
-    PRIVATE
+    SETTING
     rendu-dependency-interface
     DEFINES
     DEPS
