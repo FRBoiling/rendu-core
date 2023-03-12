@@ -7,9 +7,7 @@ rendu_add_library(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SRC_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
+    SETTING
     rendu-core-interface
     DEPS
     rendu::common

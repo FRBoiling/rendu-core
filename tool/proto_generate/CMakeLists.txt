@@ -10,7 +10,6 @@ rendu_add_executable(
     ${target_name}
     SETTING
     rendu-core-interface
-
     DEPS
     protobuf::libprotobuf
     protobuf::libprotobuf-lite
