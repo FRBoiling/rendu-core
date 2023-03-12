@@ -20,9 +20,9 @@ class TestSortClass {
   int m_key;
   int m_value;
  public:
-  bool operator == (const TestSortClass& ps)
+  bool operator == (const TestSortClass& ps) const
   {
-      return this->m_value < ps.m_value;
+      return this->m_value == ps.m_value;
   }
 
   bool operator < (const TestSortClass& ps) const

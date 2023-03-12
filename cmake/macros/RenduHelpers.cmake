@@ -5,24 +5,7 @@
 include(CMakeParseArguments)
 include(CheckCXXSourceCompiles)
 
-check_cxx_source_compiles(
-    [==[
-#ifdef _MSC_VER
-#  if _MSVC_LANG < 201700L
-#    error "The compiler defaults or is configured for C++ < 17"
-#  endif
-#elif __cplusplus < 201700L
-#  error "The compiler defaults or is configured for C++ < 17"
-#endif
-int main() { return 0; }
-]==]
-    RENDU_INTERNAL_AT_LEAST_CXX17)
 
-if (RENDU_INTERNAL_AT_LEAST_CXX17)
-  set(RENDU_INTERNAL_CXX_STD_FEATURE cxx_std_17)
-else ()
-  set(RENDU_INTERNAL_CXX_STD_FEATURE cxx_std_14)
-endif ()
 
 # 将所有子目录添加。忽略可变参数中列出的完全限定目录。
 # Use it like:
@@ -33,17 +16,17 @@ endif ()
 #   ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/precompiled_headers
 #   ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/platform)
 #
-function(rendu_add_subdirectory current_dir)
-  list(FIND ARGN "${current_dir}" IS_EXCLUDED)
-  if (IS_EXCLUDED EQUAL -1)
-    list(APPEND DIRS ${current_dir})
-    file(GLOB SUB_DIRECTORIES ${current_dir}/*)
-    foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
-      if (IS_DIRECTORY ${SUB_DIRECTORY})
-        list(FIND ARGN "${SUB_DIRECTORY}" IS_EXCLUDED)
-        if (IS_EXCLUDED EQUAL -1)
-          get_filename_component(element_name ${SUB_DIRECTORY} NAME)
-          add_subdirectory(${element_name})
+function(rendu_add_subdirectory _cur_dir)
+  list(FIND ARGN "${_cur_dir}" _is_excluded)
+  if (_is_excluded EQUAL -1)
+    list(APPEND _dir ${_cur_dir})
+    file(GLOB _sub_dirs ${_cur_dir}/*)
+    foreach (_sub_dir ${_sub_dirs})
+      if (IS_DIRECTORY ${_sub_dir})
+        list(FIND ARGN "${_sub_dir}" _is_excluded)
+        if (_is_excluded EQUAL -1)
+          get_filename_component(_element_name ${_sub_dir} NAME)
+          add_subdirectory(${_element_name})
         endif ()
       endif ()
     endforeach ()
@@ -52,7 +35,8 @@ endfunction(rendu_add_subdirectory)
 
 # Parameters:
 # NAME: name of target (see Note)
-# DIR: dir
+# SRC_DIR: src_dir
+# BIN_DIR: bin_dir
 # HDRS: List of public header files for the library
 # SRCS: List of source files for the library
 # DEPS: List of other libraries to be linked in to the binary targets
@@ -84,7 +68,7 @@ function(rendu_add_library)
   cmake_parse_arguments(RD_LIB
       ""
       "NAME"
-      "SRC_DIR;HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
+      "SRC_DIR;BIN_DIR;HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RD_LIB_NAME}")
@@ -93,8 +77,8 @@ function(rendu_add_library)
   CollectSourceFiles(
       ${RD_LIB_SRC_DIR}
       PRIVATE_SRCS
-#      # Exclude
-#      ${RD_LIB_SRC_DIR}/precompiled_headers
+      #      # Exclude
+      #      ${RD_LIB_SRC_DIR}/precompiled_headers
   )
   CollectHeaderFiles(
       ${RD_LIB_SRC_DIR}
@@ -138,11 +122,17 @@ function(rendu_add_library)
       ${RD_LIB_SRC_DIR}
       _INCLUDES
       # Exclude
-      ${RD_LIB_SRC_DIR}/precompiled_headers)
+      ${RD_LIB_SRC_DIR}/precompiled_headers
+  )
 
   if (_LIB_IS_INTERFACE) #TODO:BOIL head only
-    add_library(${_NAME} INTERFACE)
-    target_sources(${_NAME} INTERFACE ${_SRCS})
+    add_library(${_NAME}
+        INTERFACE
+        )
+    target_sources(${_NAME}
+        INTERFACE
+        ${_SRCS}
+        )
 
     target_link_libraries(${_NAME}
         INTERFACE
@@ -152,7 +142,9 @@ function(rendu_add_library)
     target_include_directories(${_NAME}
         INTERFACE
         "$<BUILD_INTERFACE:${_INCLUDES}>"
+        ${RD_LIB_BIN_DIR}
         )
+    target_compile_definitions(${_NAME} INTERFACE ${RD_LIB_DEFINES})
 
   else ()
     add_library(${_NAME})
@@ -166,15 +158,16 @@ function(rendu_add_library)
     target_include_directories(${_NAME}
         PUBLIC
         ${_INCLUDES}
+        ${RD_LIB_BIN_DIR}
         )
-
+    target_compile_definitions(${_NAME} PUBLIC ${RD_LIB_DEFINES})
   endif ()
-  target_compile_definitions(${_NAME} PUBLIC ${RD_LIB_DEFINES})
+
   #  add_dependencies(${_NAME} ${RENDU_LIB_CMAKE_BINARY_DIR}/revision_data.h)
   set_target_properties(${_NAME}
       PROPERTIES
       FOLDER
-      ${RD_LIB_NAME})
+      ${PROJECT_NAME})
 
   if (BUILD_SHARED_LIBS)
     message(STATUS "build shared libs")
@@ -205,7 +198,7 @@ function(rendu_add_executable)
   cmake_parse_arguments(RD_EXEC
       ""
       "NAME"
-      "SRC_DIR;HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
+      "SRC_DIR;BIN_DIR;HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
   set(_NAME "${PROJECT_NAME}_${RD_EXEC_NAME}")
@@ -232,9 +225,8 @@ function(rendu_add_executable)
   GroupSources(${RD_EXEC_SRC_DIR})
   add_executable(${_NAME} ${_SRCS})
   target_link_libraries(${_NAME}
-      PRIVATE
-      ${RD_EXEC_PRIVATE}
       PUBLIC
+      ${RD_EXEC_PRIVATE}
       ${RD_EXEC_DEPS}
       )
 
@@ -247,7 +239,8 @@ function(rendu_add_executable)
   target_include_directories(${_NAME}
       PRIVATE
       ${_INCLUDES}
-     )
+      ${RD_EXEC_BIN_DIR}
+      )
   set_target_properties(${_NAME}
       PROPERTIES
       FOLDER
@@ -319,7 +312,7 @@ function(rendu_add_test)
       ${RENDU_TEST_CMAKE_CUR_SOURCE_DIR}/precompiled_headers)
   target_include_directories(${_NAME}
       PUBLIC
-      # Provide the binary dir for all child targets
+      # Provide the binary _dir for all child targets
       ${RENDU_TEST_CMAKE_BINARY_DIR}
       ${PUBLIC_INCLUDES}
       PRIVATE

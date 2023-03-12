@@ -7,6 +7,8 @@ rendu_add_library(
     ${target_name}
     SRC_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
+    BIN_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}
     PRIVATE
     rendu-core-interface
     DEPS

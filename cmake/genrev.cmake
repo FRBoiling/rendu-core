@@ -4,6 +4,24 @@
 
 # User has manually chosen to ignore the git-tests, so throw them a warning.
 # This is done EACH compile so they can be alerted about the consequences.
+check_cxx_source_compiles(
+    [==[
+#ifdef _MSC_VER
+#  if _MSVC_LANG < 201700L
+#    error "The compiler defaults or is configured for C++ < 17"
+#  endif
+#elif __cplusplus < 201700L
+#  error "The compiler defaults or is configured for C++ < 17"
+#endif
+int main() { return 0; }
+]==]
+    RENDU_INTERNAL_AT_LEAST_CXX17)
+
+if (RENDU_INTERNAL_AT_LEAST_CXX17)
+  set(RENDU_INTERNAL_CXX_STD_FEATURE cxx_std_17)
+else ()
+  set(RENDU_INTERNAL_CXX_STD_FEATURE cxx_std_14)
+endif ()
 
 if(NOT BUILDDIR)
   # Workaround for funny MSVC behaviour - this segment is only used when using cmake gui

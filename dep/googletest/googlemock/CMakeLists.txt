@@ -7,5 +7,5 @@ rendu_add_library(
     PRIVATE
     rendu-dependency-interface
     DEPS
-    deps::gtest
+    dep::gtest
 )

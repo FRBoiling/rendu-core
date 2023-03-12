@@ -8,6 +8,7 @@ rendu_add_executable(
     SRC_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE
+    rendu-core-interface
     DEPS
     DEFINES
     LINKOPTS

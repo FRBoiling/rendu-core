@@ -10,8 +10,8 @@ rendu_add_library(
     PRIVATE
     rendu-dependency-interface
     DEPS
-    deps::gtest
-    deps::gmock
+    dep::gtest
+    dep::gmock
 
 )
 

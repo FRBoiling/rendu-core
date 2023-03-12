@@ -58,7 +58,7 @@ include(cmake/showoptions.cmake)
 
 find_package(PCHSupport)
 # add third_party dependencies
-add_subdirectory(third_party)
+add_subdirectory(dep)
 ## add core sources
 add_subdirectory(rendu)
 ## add tool project

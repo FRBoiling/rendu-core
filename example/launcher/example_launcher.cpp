@@ -3,7 +3,7 @@
 */
 
 #include <iostream>
-#include <ecs/registry.h>
+#include <rendu/ecs/registry.h>
 
 struct position {
   float x;
