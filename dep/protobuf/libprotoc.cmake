@@ -149,19 +149,21 @@ target_link_libraries(libprotoc PRIVATE libprotobuf)
 #
 add_library(protobuf::libprotoc ALIAS libprotoc)
 
-#rendu_add_library(
-#    NAME
-#    libprotoc
-#    SRC_DIR
-#    ${protobuf_source_dir}
-#    SRCS
-#    ${libprotoc_files}
-#    HDRS
-#    ${libprotoc_headers}
-#    PRIVATE
-#    rendu-dependency-interface
-#    DEPS
-#    DEFINES
-#    LIBPROTOC_EXPORTS
-#    LINKOPTS
-#)
+rendu_add_library(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    protoc
+    HDRS
+    ${libprotoc_headers}
+    SRCS
+    ${libprotoc_files}
+    SETTING
+    rendu-dependency-interface
+    DEFINES
+    DEPS
+    dep::threads
+    LINKOPTS
+)
