@@ -6,6 +6,7 @@
 #define RENDU_CORE_BASE_ALGORITHM_H_
 
 #include <algorithm>
+#include <vector>
 #include "utility.h"
 
 namespace rendu {

@@ -238,14 +238,14 @@ function(rendu_add_executable)
       ${src_dir}/precompiled_headers)
 
   target_include_directories(${target_name}
-      PRIVATE
+      PUBLIC
       ${include_dirs}
       )
 
-  #  set_target_properties(${target_name}
-  #      PROPERTIES
-  #      FOLDER
-  #      ${RD_EXEC_NAME})
+  set_target_properties(${target_name}
+      PROPERTIES
+      FOLDER
+      ${PROJECT_NAME})
 
 
   # Generate precompiled header
