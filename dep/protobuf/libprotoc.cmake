@@ -123,35 +123,9 @@ set(libprotoc_headers
   ${protobuf_source_dir}/src/google/protobuf/compiler/ruby/ruby_generator.h
 )
 
-#if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-#set(libprotoc_rc_files
-#  ${CMAKE_CURRENT_BINARY_DIR}/version.rc
-#)
-#endif()
-#
-add_library(libprotoc
-  ${libprotoc_files} ${libprotoc_headers})
-#if(protobuf_HAVE_LD_VERSION_SCRIPT)
-#  if(${CMAKE_VERSION} VERSION_GREATER 3.13 OR ${CMAKE_VERSION} VERSION_EQUAL 3.13)
-#    target_link_options(libprotoc PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotoc.map)
-#  elseif(protobuf_BUILD_SHARED_LIBS)
-#    target_link_libraries(libprotoc PRIVATE -Wl,--version-script=${protobuf_source_dir}/src/libprotoc.map)
-#  endif()
-#  set_target_properties(libprotoc PROPERTIES
-#    LINK_DEPENDS ${protobuf_source_dir}/src/libprotoc.map)
-#endif()
-target_link_libraries(libprotoc PRIVATE libprotobuf)
-#if(protobuf_BUILD_SHARED_LIBS)
-#  target_compile_definitions(libprotoc
-#    PUBLIC  PROTOBUF_USE_DLLS
-#    PRIVATE LIBPROTOC_EXPORTS)
-#endif()
-#
-add_library(protobuf::libprotoc ALIAS libprotoc)
-
 rendu_add_library(
     DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
     ${PROJECT_NAME}
     NAME

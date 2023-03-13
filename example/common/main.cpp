@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <algorithm>
 
 void MergeContainer(std::map<int, std::set<int>> &container1, std::map<int, std::set<int>> &container3) {
   for (auto it = container1.begin(); it != container1.end(); ++it) {

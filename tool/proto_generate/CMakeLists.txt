@@ -4,6 +4,8 @@
 
 set(target_name proto_generator)
 rendu_add_executable(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
     ${PROJECT_NAME}
     NAME
@@ -11,9 +13,8 @@ rendu_add_executable(
     SETTING
     rendu-core-interface
     DEPS
-    protobuf::libprotobuf
-    protobuf::libprotobuf-lite
-    protobuf::libprotoc
+    dep::protobuf
+    dep::protoc
     DEFINES
     LINKOPTS
 )
