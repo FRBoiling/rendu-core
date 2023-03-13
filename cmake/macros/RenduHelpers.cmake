@@ -193,7 +193,7 @@ function(rendu_add_executable)
   cmake_parse_arguments(RD
       ""
       "PROJECT;NAME;SETTING;DIR"
-      "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
+      "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE;INCLUDES"
       ${ARGN}
       )
   set(target_name ${RD_PROJECT}_${RD_NAME})
@@ -240,6 +240,8 @@ function(rendu_add_executable)
   target_include_directories(${target_name}
       PUBLIC
       ${include_dirs}
+      PRIVATE
+      ${RD_INCLUDES}
       )
 
   set_target_properties(${target_name}
