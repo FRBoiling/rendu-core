@@ -4,6 +4,8 @@
 
 set(target_name string)
 rendu_add_executable(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
     ${PROJECT_NAME}
     NAME

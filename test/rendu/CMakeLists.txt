@@ -4,6 +4,8 @@
 
 set(target_name rendu)
 rendu_add_test(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
     ${PROJECT_NAME}
     NAME

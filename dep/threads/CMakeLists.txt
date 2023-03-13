@@ -14,3 +14,7 @@ add_library(threads INTERFACE)
 target_link_libraries(threads
   INTERFACE
     ${CMAKE_THREAD_LIBS_INIT})
+
+add_library(dep::threads ALIAS threads)
+
+

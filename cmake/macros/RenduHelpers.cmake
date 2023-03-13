@@ -63,33 +63,40 @@ endfunction(rendu_add_subdirectory)
 function(rendu_add_library)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;SETTING"
+      "PROJECT;NAME;SETTING;DIR"
       "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
   set(target_name ${RD_PROJECT}_${RD_NAME})
-  set(src_dir ${RENDU_PROJECT_DIR}/${RD_PREFIX})
+  set(src_dir ${RD_DIR})
 
   message(STATUS "[lib ] " ${target_name})
 
-  CollectAllFiles(
-      ${src_dir}
-      ${target_name}_srcs
-      # Exclude
-      ${src_dir}/precompiled_headers
-  )
-
-  if (USE_PCH)
-    CollectHeaderFiles(
-        ${src_dir}/precompiled_headers
-        precompiled_headers
-    )
-  endif (USE_PCH)
 
   list(APPEND target_srcs
-      ${${target_name}_srcs}
-      ${precompiled_headers}
+      ${RD_HDRS}
+      ${RD_SRCS}
       )
+
+  set(target_srcs_str "${target_srcs}")
+  if (target_srcs_str STREQUAL "")
+    CollectAllFiles(
+        ${src_dir}
+        ${target_name}_srcs
+        # Exclude
+        ${src_dir}/precompiled_headers
+    )
+    if (USE_PCH)
+      CollectHeaderFiles(
+          ${src_dir}/precompiled_headers
+          precompiled_headers
+      )
+    endif (USE_PCH)
+    list(APPEND target_srcs
+        ${${target_name}_srcs}
+        ${precompiled_headers}
+        )
+  endif ()
 
   list(APPEND temp_SRCS
       ${target_srcs}
@@ -185,12 +192,12 @@ endfunction(rendu_add_library)
 function(rendu_add_executable)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;SETTING"
+      "PROJECT;NAME;SETTING;DIR"
       "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
   set(target_name ${RD_PROJECT}_${RD_NAME})
-  set(src_dir ${RENDU_PROJECT_DIR}/${RD_PREFIX})
+  set(src_dir ${RD_DIR})
 
   message(STATUS "[exec] " ${target_name})
 
@@ -215,9 +222,7 @@ function(rendu_add_executable)
 
   GroupSources(${src_dir})
 
-
   add_executable(${target_name} ${target_srcs})
-
 
   target_link_libraries(${target_name}
       PRIVATE
@@ -258,12 +263,12 @@ endfunction(rendu_add_executable)
 function(rendu_add_test)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;SETTING"
+      "PROJECT;NAME;SETTING;DIR"
       "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
   set(target_name ${RD_PROJECT}_${RD_NAME})
-  set(src_dir ${RENDU_PROJECT_DIR}/${RD_PREFIX})
+  set(src_dir ${RD_DIR})
 
   message(STATUS "[exec] " ${target_name})
 

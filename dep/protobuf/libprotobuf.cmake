@@ -130,35 +130,22 @@ target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
 add_library(deps::libprotobuf ALIAS libprotobuf)
 
 rendu_add_library(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     PROJECT
     ${PROJECT_NAME}
     NAME
     protobuf
+    HDRS
+    ${libprotobuf_includes}
     SRCS
     ${libprotobuf_lite_files}
     ${libprotobuf_files}
-    HDRS
-    ${libprotobuf_includes}
     SETTING
     rendu-dependency-interface
     DEFINES
     DEPS
+    dep::threads
     LINKOPTS
 )
 
-#rendu_add_library(
-#    NAME
-#    libprotobuf
-#    SRC_DIR
-#    ${protobuf_source_dir}
-#    SRCS
-#    ${libprotobuf_lite_files}
-#    ${libprotobuf_files}
-#    HDRS
-#    ${libprotobuf_includes}
-#    PRIVATE
-#    rendu-dependency-interface
-#    DEFINES
-#    DEPS
-#    LINKOPTS
-#)

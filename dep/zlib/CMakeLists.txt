@@ -3,6 +3,8 @@
 #**********************************
 set(target_name zlib)
 rendu_add_library(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     PROJECT
     ${PROJECT_NAME}
     NAME
@@ -10,6 +12,5 @@ rendu_add_library(
     SETTING
     rendu-dependency-interface
     DEPS
-
 )
 
