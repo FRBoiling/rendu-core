@@ -17,6 +17,4 @@ rendu_add_executable(
     dep::protoc
     DEFINES
     LINKOPTS
-#    INCLUDES
-#    ${CMAKE_CURRENT_BINARY_DIR}
 )
