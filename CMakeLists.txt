@@ -7,7 +7,7 @@ cmake_minimum_required (VERSION 3.21.7)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
-# Set projectname (must be done AFTER setting configurationtypes)
+# Set project name (must be done AFTER setting configuration types)
 set(RENDU_PROJECT_NAME rendu)
 set(RENDU_PROJECT_DIR ${CMAKE_SOURCE_DIR})
 set(RENDU_PROJECT_VERSION 2.0.0)
