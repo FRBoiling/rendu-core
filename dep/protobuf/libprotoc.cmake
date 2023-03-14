@@ -138,6 +138,7 @@ rendu_add_library(
     rendu-dependency-interface
     DEFINES
     DEPS
-    dep::threads
+    dep::protobuf
+    dep::protobuf-lite
     LINKOPTS
 )
