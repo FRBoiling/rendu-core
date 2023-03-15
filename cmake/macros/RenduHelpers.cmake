@@ -222,8 +222,8 @@ function(rendu_add_executable)
 
   GroupSources(${src_dir})
 
-  add_executable(${target_name} ${target_srcs})
-
+  add_executable(${target_name} "")
+  target_sources(${target_name} PRIVATE ${target_srcs})
   target_link_libraries(${target_name}
       PRIVATE
       ${RD_SETTING}
@@ -293,10 +293,8 @@ function(rendu_add_test)
 
   GroupSources(${src_dir})
 
-
-  add_executable(${target_name} ${target_srcs})
-
-
+  add_executable(${target_name} "")
+  target_sources(${target_name} PRIVATE ${target_srcs})
   target_link_libraries(${target_name}
       PRIVATE
       ${RD_SETTING}
@@ -330,5 +328,7 @@ function(rendu_add_test)
       add_cxx_pch(${target_name} ${precompiled_headers})
     endif ()
   endif ()
+
+  add_test(NAME ${target_name} COMMAND ${target_name})
 
 endfunction(rendu_add_test)

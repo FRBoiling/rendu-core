@@ -3,7 +3,7 @@
 #**********************************
 
 set(target_name template)
-rendu_add_executable(
+rendu_add_test(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
