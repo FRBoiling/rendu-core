@@ -26,7 +26,7 @@ double average_capital_plus_interest(double principal, int months, double rate) 
   double total_principal_interest;//本金和利息总额
   double rate_month = rate / 12;//月利率
   total_per_month = principal * rate_month * pow(rate_month + 1, months)
-                    / (pow(rate_month + 1, months) - 1);
+      / (pow(rate_month + 1, months) - 1);
   total_principal_interest = total_per_month * months;
   cout << "等额本息还款详情为：" << endl;
   cout << "每个月还款额为:" << setiosflags(ios::fixed) << setprecision(2) << total_per_month << endl;
