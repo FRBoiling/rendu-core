@@ -270,7 +270,7 @@ function(rendu_add_test)
   set(target_name ${RD_PROJECT}_${RD_NAME})
   set(src_dir ${RD_DIR})
 
-  message(STATUS "[exec] " ${target_name})
+  message(STATUS "[test] " ${target_name})
 
   CollectAllFiles(
       ${src_dir}
