@@ -11,7 +11,12 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(RENDU_PROJECT_NAME rendu)
 set(RENDU_PROJECT_DIR ${CMAKE_SOURCE_DIR})
 set(RENDU_PROJECT_VERSION 2.0.0)
-project(${RENDU_PROJECT_NAME} LANGUAGES C CXX)
+project(
+    ${RENDU_PROJECT_NAME}
+    DESCRIPTION "Gaming meets modern C++ - a study project"
+    HOMEPAGE_URL "https://github.com/FRBoiling/rendu-core"
+    LANGUAGES C CXX
+)
 #
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/archive)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/library)
@@ -62,19 +67,17 @@ include(cmake/options.cmake)
 include(cmake/showoptions.cmake)
 
 find_package(PCHSupport)
-# add third_party dependencies
-add_subdirectory(dep)
-## add core sources
-add_subdirectory(rendu)
-## add tool project
-add_subdirectory(tool)
-# add example project
-add_subdirectory(example)
 
+set(test_dir ${CMAKE_CURRENT_SOURCE_DIR}/test)
 if (BUILD_TESTING)
   include(CTest)
   enable_testing()
   # add test project
-  add_subdirectory(test)
+  set(test_dir "")
 endif ()
 
+rendu_add_subdirectory(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    # Exclude
+    ${test_dir}
+)

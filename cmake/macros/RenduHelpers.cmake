@@ -24,7 +24,16 @@ function(rendu_add_subdirectory _cur_dir)
         list(FIND ARGN "${_sub_dir}" _is_excluded)
         if (_is_excluded EQUAL -1)
           get_filename_component(_element_name ${_sub_dir} NAME)
-          add_subdirectory(${_element_name})
+          file(GLOB COLLECTED_SOURCES
+              ${_element_name}/CMakeLists.txt
+              )
+          set(target_srcs_str "${COLLECTED_SOURCES}")
+          if (target_srcs_str STREQUAL "")
+            message("can't find CMakeLists.txt in  ${_element_name}!")
+          else ()
+            add_subdirectory(${_element_name})
+            message("add_subdirectory ${_element_name}!")
+          endif ()
         endif ()
       endif ()
     endforeach ()
@@ -72,7 +81,6 @@ function(rendu_add_library)
 
   message(STATUS "[lib ] " ${target_name})
 
-
   list(APPEND target_srcs
       ${RD_HDRS}
       ${RD_SRCS}
@@ -113,80 +121,86 @@ function(rendu_add_library)
     set(is_interface 0)
   endif ()
 
-  GroupSources(${src_dir})
-
-  CollectIncludeDirectories(
-      ${src_dir}
-      include_dirs
-      # Exclude
-      ${src_dir}/precompiled_headers
-  )
-
-  if (is_interface) #TODO:BOIL head only
-    add_library(${target_name}
-        INTERFACE
-        )
-    target_sources(${target_name}
-        INTERFACE
-        ${target_srcs}
-        )
-
-    target_link_libraries(${target_name}
-        INTERFACE
-        ${RD_SETTING}
-        ${RD_DEPS}
-        )
-    target_include_directories(${target_name}
-        INTERFACE
-        "$<BUILD_INTERFACE:${include_dirs}>"
-        )
-    target_compile_definitions(${target_name} INTERFACE ${RD_DEFINES})
-
+  set(target_srcs_str "${target_srcs}")
+  if (target_srcs_str STREQUAL "")
+    message(STATUS ${target_name} " can't find src files!")
   else ()
-    add_library(${target_name})
-    target_sources(${target_name} PRIVATE ${target_srcs})
-    target_link_libraries(${target_name}
-        PRIVATE
-        ${RD_SETTING}
-        PUBLIC
-        ${RD_DEPS}
-        )
-    target_include_directories(${target_name}
-        PUBLIC
-        ${include_dirs}
-        )
-    target_compile_definitions(${target_name} PUBLIC ${RD_DEFINES})
-  endif ()
-  #  add_dependencies(${target_name} ${RENDU_LIB_CMAKE_BINARY_DIR}/revision_data.h)
-  #  set_target_properties(${target_name}
-  #      PROPERTIES
-  #      FOLDER
-  #      ${RD_PROJECT})
+    GroupSources(${src_dir})
 
-  if (BUILD_SHARED_LIBS)
-    message(STATUS "build shared libs")
-    if (UNIX)
-      install(TARGETS ${target_name}
-          LIBRARY
-          DESTINATION lib)
-    elseif (WIN32)
-      install(TARGETS ${target_name}
-          RUNTIME
-          DESTINATION "${CMAKE_INSTALL_PREFIX}")
-    endif ()
-  endif ()
+    CollectIncludeDirectories(
+        ${src_dir}
+        include_dirs
+        # Exclude
+        ${src_dir}/precompiled_headers
+    )
 
-  # Generate precompiled header
-  if (USE_PCH)
-    message(STATUS "use precompiled header !")
-    set(headers "${precompiled_headers}")
-    if (headers STREQUAL "")
+    if (is_interface) #TODO:BOIL head only
+      add_library(${target_name}
+          INTERFACE
+          )
+      target_sources(${target_name}
+          INTERFACE
+          ${target_srcs}
+          )
+
+      target_link_libraries(${target_name}
+          INTERFACE
+          ${RD_SETTING}
+          ${RD_DEPS}
+          )
+      target_include_directories(${target_name}
+          INTERFACE
+          "$<BUILD_INTERFACE:${include_dirs}>"
+          )
+      target_compile_definitions(${target_name} INTERFACE ${RD_DEFINES})
+
     else ()
-      add_cxx_pch(${target_name} ${precompiled_headers})
+      add_library(${target_name})
+      target_sources(${target_name} PRIVATE ${target_srcs})
+      target_link_libraries(${target_name}
+          PRIVATE
+          ${RD_SETTING}
+          PUBLIC
+          ${RD_DEPS}
+          )
+      target_include_directories(${target_name}
+          PUBLIC
+          ${include_dirs}
+          )
+      target_compile_definitions(${target_name} PUBLIC ${RD_DEFINES})
     endif ()
+    #  add_dependencies(${target_name} ${RENDU_LIB_CMAKE_BINARY_DIR}/revision_data.h)
+    #  set_target_properties(${target_name}
+    #      PROPERTIES
+    #      FOLDER
+    #      ${RD_PROJECT})
+
+    if (BUILD_SHARED_LIBS)
+      message(STATUS "build shared libs")
+      if (UNIX)
+        install(TARGETS ${target_name}
+            LIBRARY
+            DESTINATION lib)
+      elseif (WIN32)
+        install(TARGETS ${target_name}
+            RUNTIME
+            DESTINATION "${CMAKE_INSTALL_PREFIX}")
+      endif ()
+    endif ()
+
+    # Generate precompiled header
+    if (USE_PCH)
+      message(STATUS "use precompiled header !")
+      set(headers "${precompiled_headers}")
+      if (headers STREQUAL "")
+      else ()
+        add_cxx_pch(${target_name} ${precompiled_headers})
+      endif ()
+    endif ()
+    add_library(${RD_PROJECT}::${RD_NAME} ALIAS ${target_name})
+
+    #  message(STATUS " [ALIAS]" ${RD_PROJECT}::${RD_NAME})
   endif ()
-  add_library(${RD_PROJECT}::${RD_NAME} ALIAS ${target_name})
-  #  message(STATUS " [ALIAS]" ${RD_PROJECT}::${RD_NAME})
 endfunction(rendu_add_library)
 
 function(rendu_add_executable)
