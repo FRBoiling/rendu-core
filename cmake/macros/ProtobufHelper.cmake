@@ -5,7 +5,7 @@ function(rendu_proto_cxx)
       "SRCS;INPUT_DIRS;OUTPUT_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
-  set(target_name ${RD_NAME})
+  set(target_name ${RD_PROJECT}_${RD_NAME})
   list(APPEND input_str "")
   if (EXISTS ${RD_OUTPUT_DIR} AND IS_DIRECTORY ${RD_OUTPUT_DIR})
     foreach (dir ${RD_INPUT_DIRS})
@@ -45,7 +45,7 @@ function(rendu_proto_cxx)
     # 添加自定义target
     add_custom_target(${target_name} ALL
         DEPENDS ${temp_op_srcs} ${temp_op_hdrs}
-        COMMENT "generate ${target_name} target"
+        COMMENT "generate protobuf ${target_name} target"
         VERBATIM
         )
     ## 拷贝文件夹

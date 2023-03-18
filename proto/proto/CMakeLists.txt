@@ -8,7 +8,7 @@ set(proto_model_output_dir ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 rendu_proto_cxx(
     PROJECT
-    rendu
+    proto
     NAME
     cxx
     PROTOC
