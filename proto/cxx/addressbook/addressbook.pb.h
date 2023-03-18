@@ -46,7 +46,8 @@ struct TableStruct_addressbook_2faddressbook_2eproto {
   static const uint32_t offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_addressbook_2faddressbook_2eproto;
-namespace tutorial {
+namespace game {
+namespace address_book {
 class AddressBook;
 struct AddressBookDefaultTypeInternal;
 extern AddressBookDefaultTypeInternal _AddressBook_default_instance_;
@@ -56,13 +57,15 @@ extern PersonDefaultTypeInternal _Person_default_instance_;
 class Person_PhoneNumber;
 struct Person_PhoneNumberDefaultTypeInternal;
 extern Person_PhoneNumberDefaultTypeInternal _Person_PhoneNumber_default_instance_;
-}  // namespace tutorial
+}  // namespace address_book
+}  // namespace game
 PROTOBUF_NAMESPACE_OPEN
-template<> ::tutorial::AddressBook* Arena::CreateMaybeMessage<::tutorial::AddressBook>(Arena*);
-template<> ::tutorial::Person* Arena::CreateMaybeMessage<::tutorial::Person>(Arena*);
-template<> ::tutorial::Person_PhoneNumber* Arena::CreateMaybeMessage<::tutorial::Person_PhoneNumber>(Arena*);
+template<> ::game::address_book::AddressBook* Arena::CreateMaybeMessage<::game::address_book::AddressBook>(Arena*);
+template<> ::game::address_book::Person* Arena::CreateMaybeMessage<::game::address_book::Person>(Arena*);
+template<> ::game::address_book::Person_PhoneNumber* Arena::CreateMaybeMessage<::game::address_book::Person_PhoneNumber>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
-namespace tutorial {
+namespace game {
+namespace address_book {
 
 enum Person_PhoneType : int {
   Person_PhoneType_MOBILE = 0,
@@ -93,7 +96,7 @@ inline bool Person_PhoneType_Parse(
 // ===================================================================
 
 class Person_PhoneNumber final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:tutorial.Person.PhoneNumber) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.address_book.Person.PhoneNumber) */ {
  public:
   inline Person_PhoneNumber() : Person_PhoneNumber(nullptr) {}
   ~Person_PhoneNumber() override;
@@ -194,7 +197,7 @@ class Person_PhoneNumber final :
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "tutorial.Person.PhoneNumber";
+    return "game.address_book.Person.PhoneNumber";
   }
   protected:
   explicit Person_PhoneNumber(::PROTOBUF_NAMESPACE_ID::Arena* arena,
@@ -228,16 +231,16 @@ class Person_PhoneNumber final :
   std::string* _internal_mutable_number();
   public:
 
-  // .tutorial.Person.PhoneType type = 2;
+  // .game.address_book.Person.PhoneType type = 2;
   void clear_type();
-  ::tutorial::Person_PhoneType type() const;
-  void set_type(::tutorial::Person_PhoneType value);
+  ::game::address_book::Person_PhoneType type() const;
+  void set_type(::game::address_book::Person_PhoneType value);
   private:
-  ::tutorial::Person_PhoneType _internal_type() const;
-  void _internal_set_type(::tutorial::Person_PhoneType value);
+  ::game::address_book::Person_PhoneType _internal_type() const;
+  void _internal_set_type(::game::address_book::Person_PhoneType value);
   public:
 
-  // @@protoc_insertion_point(class_scope:tutorial.Person.PhoneNumber)
+  // @@protoc_insertion_point(class_scope:game.address_book.Person.PhoneNumber)
  private:
   class _Internal;
 
@@ -252,7 +255,7 @@ class Person_PhoneNumber final :
 // -------------------------------------------------------------------
 
 class Person final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:tutorial.Person) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.address_book.Person) */ {
  public:
   inline Person() : Person(nullptr) {}
   ~Person() override;
@@ -353,7 +356,7 @@ class Person final :
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "tutorial.Person";
+    return "game.address_book.Person";
   }
   protected:
   explicit Person(::PROTOBUF_NAMESPACE_ID::Arena* arena,
@@ -410,22 +413,22 @@ class Person final :
     kLastUpdatedFieldNumber = 5,
     kIdFieldNumber = 2,
   };
-  // repeated .tutorial.Person.PhoneNumber phones = 4;
+  // repeated .game.address_book.Person.PhoneNumber phones = 4;
   int phones_size() const;
   private:
   int _internal_phones_size() const;
   public:
   void clear_phones();
-  ::tutorial::Person_PhoneNumber* mutable_phones(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person_PhoneNumber >*
+  ::game::address_book::Person_PhoneNumber* mutable_phones(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person_PhoneNumber >*
       mutable_phones();
   private:
-  const ::tutorial::Person_PhoneNumber& _internal_phones(int index) const;
-  ::tutorial::Person_PhoneNumber* _internal_add_phones();
+  const ::game::address_book::Person_PhoneNumber& _internal_phones(int index) const;
+  ::game::address_book::Person_PhoneNumber* _internal_add_phones();
   public:
-  const ::tutorial::Person_PhoneNumber& phones(int index) const;
-  ::tutorial::Person_PhoneNumber* add_phones();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person_PhoneNumber >&
+  const ::game::address_book::Person_PhoneNumber& phones(int index) const;
+  ::game::address_book::Person_PhoneNumber* add_phones();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person_PhoneNumber >&
       phones() const;
 
   // string name = 1;
@@ -483,14 +486,14 @@ class Person final :
   void _internal_set_id(int32_t value);
   public:
 
-  // @@protoc_insertion_point(class_scope:tutorial.Person)
+  // @@protoc_insertion_point(class_scope:game.address_book.Person)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person_PhoneNumber > phones_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person_PhoneNumber > phones_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr email_;
   ::PROTOBUF_NAMESPACE_ID::Timestamp* last_updated_;
@@ -501,7 +504,7 @@ class Person final :
 // -------------------------------------------------------------------
 
 class AddressBook final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:tutorial.AddressBook) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.address_book.AddressBook) */ {
  public:
   inline AddressBook() : AddressBook(nullptr) {}
   ~AddressBook() override;
@@ -602,7 +605,7 @@ class AddressBook final :
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "tutorial.AddressBook";
+    return "game.address_book.AddressBook";
   }
   protected:
   explicit AddressBook(::PROTOBUF_NAMESPACE_ID::Arena* arena,
@@ -621,32 +624,32 @@ class AddressBook final :
   enum : int {
     kPeopleFieldNumber = 1,
   };
-  // repeated .tutorial.Person people = 1;
+  // repeated .game.address_book.Person people = 1;
   int people_size() const;
   private:
   int _internal_people_size() const;
   public:
   void clear_people();
-  ::tutorial::Person* mutable_people(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person >*
+  ::game::address_book::Person* mutable_people(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person >*
       mutable_people();
   private:
-  const ::tutorial::Person& _internal_people(int index) const;
-  ::tutorial::Person* _internal_add_people();
+  const ::game::address_book::Person& _internal_people(int index) const;
+  ::game::address_book::Person* _internal_add_people();
   public:
-  const ::tutorial::Person& people(int index) const;
-  ::tutorial::Person* add_people();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person >&
+  const ::game::address_book::Person& people(int index) const;
+  ::game::address_book::Person* add_people();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person >&
       people() const;
 
-  // @@protoc_insertion_point(class_scope:tutorial.AddressBook)
+  // @@protoc_insertion_point(class_scope:game.address_book.AddressBook)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person > people_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person > people_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_addressbook_2faddressbook_2eproto;
 };
@@ -666,7 +669,7 @@ inline void Person_PhoneNumber::clear_number() {
   number_.ClearToEmpty();
 }
 inline const std::string& Person_PhoneNumber::number() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.PhoneNumber.number)
+  // @@protoc_insertion_point(field_get:game.address_book.Person.PhoneNumber.number)
   return _internal_number();
 }
 template <typename ArgT0, typename... ArgT>
@@ -674,11 +677,11 @@ inline PROTOBUF_ALWAYS_INLINE
 void Person_PhoneNumber::set_number(ArgT0&& arg0, ArgT... args) {
  
  number_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:tutorial.Person.PhoneNumber.number)
+  // @@protoc_insertion_point(field_set:game.address_book.Person.PhoneNumber.number)
 }
 inline std::string* Person_PhoneNumber::mutable_number() {
   std::string* _s = _internal_mutable_number();
-  // @@protoc_insertion_point(field_mutable:tutorial.Person.PhoneNumber.number)
+  // @@protoc_insertion_point(field_mutable:game.address_book.Person.PhoneNumber.number)
   return _s;
 }
 inline const std::string& Person_PhoneNumber::_internal_number() const {
@@ -693,7 +696,7 @@ inline std::string* Person_PhoneNumber::_internal_mutable_number() {
   return number_.Mutable(GetArenaForAllocation());
 }
 inline std::string* Person_PhoneNumber::release_number() {
-  // @@protoc_insertion_point(field_release:tutorial.Person.PhoneNumber.number)
+  // @@protoc_insertion_point(field_release:game.address_book.Person.PhoneNumber.number)
   return number_.Release();
 }
 inline void Person_PhoneNumber::set_allocated_number(std::string* number) {
@@ -708,27 +711,27 @@ inline void Person_PhoneNumber::set_allocated_number(std::string* number) {
     number_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:tutorial.Person.PhoneNumber.number)
+  // @@protoc_insertion_point(field_set_allocated:game.address_book.Person.PhoneNumber.number)
 }
 
-// .tutorial.Person.PhoneType type = 2;
+// .game.address_book.Person.PhoneType type = 2;
 inline void Person_PhoneNumber::clear_type() {
   type_ = 0;
 }
-inline ::tutorial::Person_PhoneType Person_PhoneNumber::_internal_type() const {
-  return static_cast< ::tutorial::Person_PhoneType >(type_);
+inline ::game::address_book::Person_PhoneType Person_PhoneNumber::_internal_type() const {
+  return static_cast< ::game::address_book::Person_PhoneType >(type_);
 }
-inline ::tutorial::Person_PhoneType Person_PhoneNumber::type() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.PhoneNumber.type)
+inline ::game::address_book::Person_PhoneType Person_PhoneNumber::type() const {
+  // @@protoc_insertion_point(field_get:game.address_book.Person.PhoneNumber.type)
   return _internal_type();
 }
-inline void Person_PhoneNumber::_internal_set_type(::tutorial::Person_PhoneType value) {
+inline void Person_PhoneNumber::_internal_set_type(::game::address_book::Person_PhoneType value) {
   
   type_ = value;
 }
-inline void Person_PhoneNumber::set_type(::tutorial::Person_PhoneType value) {
+inline void Person_PhoneNumber::set_type(::game::address_book::Person_PhoneType value) {
   _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:tutorial.Person.PhoneNumber.type)
+  // @@protoc_insertion_point(field_set:game.address_book.Person.PhoneNumber.type)
 }
 
 // -------------------------------------------------------------------
@@ -740,7 +743,7 @@ inline void Person::clear_name() {
   name_.ClearToEmpty();
 }
 inline const std::string& Person::name() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.name)
+  // @@protoc_insertion_point(field_get:game.address_book.Person.name)
   return _internal_name();
 }
 template <typename ArgT0, typename... ArgT>
@@ -748,11 +751,11 @@ inline PROTOBUF_ALWAYS_INLINE
 void Person::set_name(ArgT0&& arg0, ArgT... args) {
  
  name_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:tutorial.Person.name)
+  // @@protoc_insertion_point(field_set:game.address_book.Person.name)
 }
 inline std::string* Person::mutable_name() {
   std::string* _s = _internal_mutable_name();
-  // @@protoc_insertion_point(field_mutable:tutorial.Person.name)
+  // @@protoc_insertion_point(field_mutable:game.address_book.Person.name)
   return _s;
 }
 inline const std::string& Person::_internal_name() const {
@@ -767,7 +770,7 @@ inline std::string* Person::_internal_mutable_name() {
   return name_.Mutable(GetArenaForAllocation());
 }
 inline std::string* Person::release_name() {
-  // @@protoc_insertion_point(field_release:tutorial.Person.name)
+  // @@protoc_insertion_point(field_release:game.address_book.Person.name)
   return name_.Release();
 }
 inline void Person::set_allocated_name(std::string* name) {
@@ -782,7 +785,7 @@ inline void Person::set_allocated_name(std::string* name) {
     name_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:tutorial.Person.name)
+  // @@protoc_insertion_point(field_set_allocated:game.address_book.Person.name)
 }
 
 // int32 id = 2;
@@ -793,7 +796,7 @@ inline int32_t Person::_internal_id() const {
   return id_;
 }
 inline int32_t Person::id() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.id)
+  // @@protoc_insertion_point(field_get:game.address_book.Person.id)
   return _internal_id();
 }
 inline void Person::_internal_set_id(int32_t value) {
@@ -802,7 +805,7 @@ inline void Person::_internal_set_id(int32_t value) {
 }
 inline void Person::set_id(int32_t value) {
   _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:tutorial.Person.id)
+  // @@protoc_insertion_point(field_set:game.address_book.Person.id)
 }
 
 // string email = 3;
@@ -810,7 +813,7 @@ inline void Person::clear_email() {
   email_.ClearToEmpty();
 }
 inline const std::string& Person::email() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.email)
+  // @@protoc_insertion_point(field_get:game.address_book.Person.email)
   return _internal_email();
 }
 template <typename ArgT0, typename... ArgT>
@@ -818,11 +821,11 @@ inline PROTOBUF_ALWAYS_INLINE
 void Person::set_email(ArgT0&& arg0, ArgT... args) {
  
  email_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:tutorial.Person.email)
+  // @@protoc_insertion_point(field_set:game.address_book.Person.email)
 }
 inline std::string* Person::mutable_email() {
   std::string* _s = _internal_mutable_email();
-  // @@protoc_insertion_point(field_mutable:tutorial.Person.email)
+  // @@protoc_insertion_point(field_mutable:game.address_book.Person.email)
   return _s;
 }
 inline const std::string& Person::_internal_email() const {
@@ -837,7 +840,7 @@ inline std::string* Person::_internal_mutable_email() {
   return email_.Mutable(GetArenaForAllocation());
 }
 inline std::string* Person::release_email() {
-  // @@protoc_insertion_point(field_release:tutorial.Person.email)
+  // @@protoc_insertion_point(field_release:game.address_book.Person.email)
   return email_.Release();
 }
 inline void Person::set_allocated_email(std::string* email) {
@@ -852,10 +855,10 @@ inline void Person::set_allocated_email(std::string* email) {
     email_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:tutorial.Person.email)
+  // @@protoc_insertion_point(field_set_allocated:game.address_book.Person.email)
 }
 
-// repeated .tutorial.Person.PhoneNumber phones = 4;
+// repeated .game.address_book.Person.PhoneNumber phones = 4;
 inline int Person::_internal_phones_size() const {
   return phones_.size();
 }
@@ -865,33 +868,33 @@ inline int Person::phones_size() const {
 inline void Person::clear_phones() {
   phones_.Clear();
 }
-inline ::tutorial::Person_PhoneNumber* Person::mutable_phones(int index) {
-  // @@protoc_insertion_point(field_mutable:tutorial.Person.phones)
+inline ::game::address_book::Person_PhoneNumber* Person::mutable_phones(int index) {
+  // @@protoc_insertion_point(field_mutable:game.address_book.Person.phones)
   return phones_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person_PhoneNumber >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person_PhoneNumber >*
 Person::mutable_phones() {
-  // @@protoc_insertion_point(field_mutable_list:tutorial.Person.phones)
+  // @@protoc_insertion_point(field_mutable_list:game.address_book.Person.phones)
   return &phones_;
 }
-inline const ::tutorial::Person_PhoneNumber& Person::_internal_phones(int index) const {
+inline const ::game::address_book::Person_PhoneNumber& Person::_internal_phones(int index) const {
   return phones_.Get(index);
 }
-inline const ::tutorial::Person_PhoneNumber& Person::phones(int index) const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.phones)
+inline const ::game::address_book::Person_PhoneNumber& Person::phones(int index) const {
+  // @@protoc_insertion_point(field_get:game.address_book.Person.phones)
   return _internal_phones(index);
 }
-inline ::tutorial::Person_PhoneNumber* Person::_internal_add_phones() {
+inline ::game::address_book::Person_PhoneNumber* Person::_internal_add_phones() {
   return phones_.Add();
 }
-inline ::tutorial::Person_PhoneNumber* Person::add_phones() {
-  ::tutorial::Person_PhoneNumber* _add = _internal_add_phones();
-  // @@protoc_insertion_point(field_add:tutorial.Person.phones)
+inline ::game::address_book::Person_PhoneNumber* Person::add_phones() {
+  ::game::address_book::Person_PhoneNumber* _add = _internal_add_phones();
+  // @@protoc_insertion_point(field_add:game.address_book.Person.phones)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person_PhoneNumber >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person_PhoneNumber >&
 Person::phones() const {
-  // @@protoc_insertion_point(field_list:tutorial.Person.phones)
+  // @@protoc_insertion_point(field_list:game.address_book.Person.phones)
   return phones_;
 }
 
@@ -908,7 +911,7 @@ inline const ::PROTOBUF_NAMESPACE_ID::Timestamp& Person::_internal_last_updated(
       ::PROTOBUF_NAMESPACE_ID::_Timestamp_default_instance_);
 }
 inline const ::PROTOBUF_NAMESPACE_ID::Timestamp& Person::last_updated() const {
-  // @@protoc_insertion_point(field_get:tutorial.Person.last_updated)
+  // @@protoc_insertion_point(field_get:game.address_book.Person.last_updated)
   return _internal_last_updated();
 }
 inline void Person::unsafe_arena_set_allocated_last_updated(
@@ -922,7 +925,7 @@ inline void Person::unsafe_arena_set_allocated_last_updated(
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:tutorial.Person.last_updated)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:game.address_book.Person.last_updated)
 }
 inline ::PROTOBUF_NAMESPACE_ID::Timestamp* Person::release_last_updated() {
   
@@ -940,7 +943,7 @@ inline ::PROTOBUF_NAMESPACE_ID::Timestamp* Person::release_last_updated() {
   return temp;
 }
 inline ::PROTOBUF_NAMESPACE_ID::Timestamp* Person::unsafe_arena_release_last_updated() {
-  // @@protoc_insertion_point(field_release:tutorial.Person.last_updated)
+  // @@protoc_insertion_point(field_release:game.address_book.Person.last_updated)
   
   ::PROTOBUF_NAMESPACE_ID::Timestamp* temp = last_updated_;
   last_updated_ = nullptr;
@@ -956,7 +959,7 @@ inline ::PROTOBUF_NAMESPACE_ID::Timestamp* Person::_internal_mutable_last_update
 }
 inline ::PROTOBUF_NAMESPACE_ID::Timestamp* Person::mutable_last_updated() {
   ::PROTOBUF_NAMESPACE_ID::Timestamp* _msg = _internal_mutable_last_updated();
-  // @@protoc_insertion_point(field_mutable:tutorial.Person.last_updated)
+  // @@protoc_insertion_point(field_mutable:game.address_book.Person.last_updated)
   return _msg;
 }
 inline void Person::set_allocated_last_updated(::PROTOBUF_NAMESPACE_ID::Timestamp* last_updated) {
@@ -977,14 +980,14 @@ inline void Person::set_allocated_last_updated(::PROTOBUF_NAMESPACE_ID::Timestam
     
   }
   last_updated_ = last_updated;
-  // @@protoc_insertion_point(field_set_allocated:tutorial.Person.last_updated)
+  // @@protoc_insertion_point(field_set_allocated:game.address_book.Person.last_updated)
 }
 
 // -------------------------------------------------------------------
 
 // AddressBook
 
-// repeated .tutorial.Person people = 1;
+// repeated .game.address_book.Person people = 1;
 inline int AddressBook::_internal_people_size() const {
   return people_.size();
 }
@@ -994,33 +997,33 @@ inline int AddressBook::people_size() const {
 inline void AddressBook::clear_people() {
   people_.Clear();
 }
-inline ::tutorial::Person* AddressBook::mutable_people(int index) {
-  // @@protoc_insertion_point(field_mutable:tutorial.AddressBook.people)
+inline ::game::address_book::Person* AddressBook::mutable_people(int index) {
+  // @@protoc_insertion_point(field_mutable:game.address_book.AddressBook.people)
   return people_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person >*
 AddressBook::mutable_people() {
-  // @@protoc_insertion_point(field_mutable_list:tutorial.AddressBook.people)
+  // @@protoc_insertion_point(field_mutable_list:game.address_book.AddressBook.people)
   return &people_;
 }
-inline const ::tutorial::Person& AddressBook::_internal_people(int index) const {
+inline const ::game::address_book::Person& AddressBook::_internal_people(int index) const {
   return people_.Get(index);
 }
-inline const ::tutorial::Person& AddressBook::people(int index) const {
-  // @@protoc_insertion_point(field_get:tutorial.AddressBook.people)
+inline const ::game::address_book::Person& AddressBook::people(int index) const {
+  // @@protoc_insertion_point(field_get:game.address_book.AddressBook.people)
   return _internal_people(index);
 }
-inline ::tutorial::Person* AddressBook::_internal_add_people() {
+inline ::game::address_book::Person* AddressBook::_internal_add_people() {
   return people_.Add();
 }
-inline ::tutorial::Person* AddressBook::add_people() {
-  ::tutorial::Person* _add = _internal_add_people();
-  // @@protoc_insertion_point(field_add:tutorial.AddressBook.people)
+inline ::game::address_book::Person* AddressBook::add_people() {
+  ::game::address_book::Person* _add = _internal_add_people();
+  // @@protoc_insertion_point(field_add:game.address_book.AddressBook.people)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::tutorial::Person >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::game::address_book::Person >&
 AddressBook::people() const {
-  // @@protoc_insertion_point(field_list:tutorial.AddressBook.people)
+  // @@protoc_insertion_point(field_list:game.address_book.AddressBook.people)
   return people_;
 }
 
@@ -1034,14 +1037,15 @@ AddressBook::people() const {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace tutorial
+}  // namespace address_book
+}  // namespace game
 
 PROTOBUF_NAMESPACE_OPEN
 
-template <> struct is_proto_enum< ::tutorial::Person_PhoneType> : ::std::true_type {};
+template <> struct is_proto_enum< ::game::address_book::Person_PhoneType> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::tutorial::Person_PhoneType>() {
-  return ::tutorial::Person_PhoneType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::game::address_book::Person_PhoneType>() {
+  return ::game::address_book::Person_PhoneType_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE
