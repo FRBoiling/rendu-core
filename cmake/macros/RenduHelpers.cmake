@@ -271,6 +271,7 @@ function(rendu_add_executable)
       add_cxx_pch(${target_name} ${precompiled_headers})
     endif ()
   endif ()
+  add_executable(${RD_PROJECT}::${RD_NAME} ALIAS ${target_name})
 
 endfunction(rendu_add_executable)
 

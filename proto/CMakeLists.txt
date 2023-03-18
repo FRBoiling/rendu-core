@@ -3,6 +3,7 @@
 #**********************************
 
 if (RENDU_FLAG_EXAMPLES)
+  include(ProtobufHelper)
   set(PROJECT_NAME proto)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
