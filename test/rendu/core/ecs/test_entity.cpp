@@ -39,7 +39,8 @@ TEST(Entity, Traits) {
 
   ASSERT_EQ(traits_type::next(entity),
             traits_type::construct(rendu::to_integral(entity), rendu::to_version(entity) + 1u));
-  ASSERT_EQ(traits_type::next(other), traits_type::construct(rendu::to_integral(other), rendu::to_version(other) + 1u));
+  ASSERT_EQ(traits_type::next(other),
+            traits_type::construct(rendu::to_integral(other), rendu::to_version(other) + 1u));
 
   ASSERT_EQ(traits_type::next(rendu::tombstone), traits_type::construct(rendu::null, {}));
   ASSERT_EQ(traits_type::next(rendu::null), traits_type::construct(rendu::null, {}));

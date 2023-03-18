@@ -802,8 +802,7 @@ TEST(Registry, ReleaseVersion) {
   ASSERT_EQ(registry.current(entities[1u]), 3u);
 }
 
-RD_DEBUG_TEST(RegistryDeathTest, ReleaseVersion
-) {
+RD_DEBUG_TEST(RegistryDeathTest, ReleaseVersion) {
   rendu::registry registry;
   rendu::entity entity = registry.create();
 
