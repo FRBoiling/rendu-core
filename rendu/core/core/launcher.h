@@ -5,9 +5,14 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
+#include "framework/main_loop.h"
+namespace rendu {
+
 class Launcher {
+ public:
+  int Run();
 
 };
 
-
+}
 #endif //RENDU_CORE_LAUNCHER_H_

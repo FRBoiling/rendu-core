@@ -13,7 +13,6 @@ rendu_add_executable(
     rendu-core-interface
     DEPS
     rendu::core
-    rendu::common
     DEFINES
     LINKOPTS
 )
