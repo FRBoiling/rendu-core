@@ -4,7 +4,7 @@
 
 #include "launcher.h"
 #include "framework/main_loop.h"
-#include "plugin/base_plugin.h"
+#include "base/base_plugin.h"
 
 int rendu::Launcher::Run() {
 

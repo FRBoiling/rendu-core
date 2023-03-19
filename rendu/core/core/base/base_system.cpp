@@ -2,10 +2,10 @@
 * Created by boil on 2023/3/19.
 */
 
-#include "debug_system.h"
+#include "base_system.h"
 #include <iostream>
 
-void rendu::debug_system::run(entt::registry &registry) {
+void rendu::base_system::run(entt::registry &registry) {
   // gather inputs
   std::cout << "run -------" << std::endl;
   if (m_open) {

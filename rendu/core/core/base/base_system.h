@@ -9,7 +9,7 @@
 
 namespace rendu {
 
-class debug_system final : public system {
+class base_system final : public system {
 
  private:
   entt::entity m_current_entity;
