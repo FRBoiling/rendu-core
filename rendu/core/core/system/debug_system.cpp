@@ -6,10 +6,9 @@
 #include <iostream>
 
 void rendu::debug_system::run(entt::registry &registry) {
-  std::cout << "run --=-----";
   // gather inputs
+  std::cout << "run -------" << std::endl;
   if (m_open) {
-    // 稍后再详细讲
 //    auto &add_ui_command = registry.ctx().get<ui_command_request>();
 //    add_ui_command([&](entt::registry& registry) {
 //      ImGui::Begin("Inspector");
