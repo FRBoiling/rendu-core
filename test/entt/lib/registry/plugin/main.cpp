@@ -4,6 +4,7 @@
 #include <cr.h>
 #include <entt/entity/registry.hpp>
 #include "../common/types.h"
+
 namespace plugin {
 
 TEST(Lib, Registry) {

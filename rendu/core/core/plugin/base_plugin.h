@@ -22,11 +22,12 @@ class base_plugin final : public plugin {
 
  private:
   command_line_plugin m_cmd_line;
-  std::shared_ptr<rendu::debug_system> m_debug_system;
+  std::shared_ptr<debug_system> m_debug_system;
 
  public:
   explicit base_plugin(config &config)
-      : m_cmd_line(config.win_title, config.cap_fps) {}
+      : m_cmd_line(config.win_title, config.cap_fps),
+        m_debug_system(std::make_shared<debug_system>()) {}
 
   void mount(main_loop &main_loop) override;
 };

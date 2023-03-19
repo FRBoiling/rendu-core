@@ -55,11 +55,11 @@ class Fac3<0> {
   static inline constexpr auto value = 1;
 };
 
-int f(const int &a) {
+int f(const int &a) {  //函数参数是引用
   return a;
-}  //函数参数是引用
+}
 
-//一个模板元编程一般包括：递归构造的手段、表示状态的模板参数、一个表示终点的特化以及具体实现的算法。
+// 一个模板元编程一般包括：递归构造的手段、表示状态的模板参数、一个表示终点的特化以及具体实现的算法。
 TEST(TemplateTest, Metaprogramming) {
   EXPECT_EQ(120, Fac<5>::value);
 //EXPECT_EQ(120, Fac1<5>::value); //TODO:BOIL 这个编译不通过。不知道什么原因

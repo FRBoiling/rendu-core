@@ -8,10 +8,8 @@ T max(T x, T y) {
   return x < y ? y : x;
 }
 
-template<>
-// template<>表示这是一个特化版本
-int64_t max<int64_t>(int64_t x, int64_t y) // 加上一个尖括号并指定特化类型，如果可以推断出也可以省略
-{
+template<> //template<>表示这是一个特化版本
+int64_t max<int64_t>(int64_t x, int64_t y) {  // 加上一个尖括号并指定特化类型，如果可以推断出也可以省略
   return x < y ? x : y; // 返回较小值
 }
 

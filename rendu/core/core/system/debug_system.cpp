@@ -3,8 +3,10 @@
 */
 
 #include "debug_system.h"
+#include <iostream>
 
 void rendu::debug_system::run(entt::registry &registry) {
+  std::cout << "run --=-----";
   // gather inputs
   if (m_open) {
     // 稍后再详细讲

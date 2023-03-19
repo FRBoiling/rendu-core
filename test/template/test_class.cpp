@@ -6,15 +6,13 @@
 template<typename T>
 class A {
  public:
-  A(T y) : x(y) {}
-
+  explicit A(T y) : x(y) {}
  private:
   T x;
  public:
   T get_value() {
     return x;
   }
-
 };
 
 TEST(TemplateTest, Class) {
@@ -24,13 +22,11 @@ TEST(TemplateTest, Class) {
   EXPECT_EQ(0.1f, b.get_value());
 }
 
-// 变量模板
-template<typename T>
-T zero = 0;
-
-// 别名模板
-template<typename T>
+template<typename T> // 别名模板
 using Container = std::vector<T>;
+
+template<typename T> // 变量模板
+T zero = 0;
 
 TEST(TemplateTest, Alias) {
   auto i = zero<int> = 11; // 相当于int i = 11;

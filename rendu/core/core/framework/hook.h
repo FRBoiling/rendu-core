@@ -5,6 +5,7 @@
 #ifndef RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
 #define RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
 
+#include <entt/entt.hpp>
 #include <vector>
 
 namespace rendu {
@@ -19,8 +20,18 @@ class hook<Ret(Args...)> {
   std::vector<callback_type> m_callbacks;
 
  public:
-  void connect(callback_type callback, bool front = false);
-  void publish(Args... args);
+  void connect(callback_type callback, bool front = false) {
+    if (front) {
+      m_callbacks.insert(m_callbacks.begin(), callback);
+    } else {
+      m_callbacks.push_back(callback);
+    }
+  }
+  void publish(Args... args) {
+    for (auto callback : m_callbacks) {
+      callback(args...);
+    }
+  }
 };
 
 }
