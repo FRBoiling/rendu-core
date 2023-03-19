@@ -15,7 +15,6 @@ int64_t max<int64_t>(int64_t x, int64_t y) // 加上一个尖括号并指定特�
   return x < y ? x : y; // 返回较小值
 }
 
-
 TEST(TemplateTest, Function) {
   EXPECT_EQ(20, ::max(10, 20));
   EXPECT_EQ(2.2, ::max(1.2, 2.2));

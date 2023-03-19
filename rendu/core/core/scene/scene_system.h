@@ -18,6 +18,7 @@ class scene_system final : public system {
  public:
   void run(entt::registry &registry) override;
   void change_scene(entt::registry &registry, std::unique_ptr<scene> new_scene);
+
 };
 
 }

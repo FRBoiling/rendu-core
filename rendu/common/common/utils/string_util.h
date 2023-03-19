@@ -9,15 +9,14 @@
 
 namespace rendu {
 
-  inline std::string_view ClippedSubstr(std::string_view s, size_t pos,
-                                        size_t n = std::string_view::npos) {
-    pos = (std::min)(pos, static_cast<size_t>(s.size()));
-    return s.substr(pos, n);
-  }
+inline std::string_view ClippedSubstr(std::string_view s, size_t pos, size_t n = std::string_view::npos) {
+  pos = (std::min)(pos, static_cast<size_t>(s.size()));
+  return s.substr(pos, n);
+}
 
-  constexpr std::string_view NullSafeStringView(const char *p) {
-    return p ? std::string_view(p) : std::string_view();
-  }
+constexpr std::string_view NullSafeStringView(const char *p) {
+  return p ? std::string_view(p) : std::string_view();
+}
 
 }//namespace rendu
 

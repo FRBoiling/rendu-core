@@ -1,7 +1,6 @@
 #include <test/rdtest.h>
 #include <common/base/string_view.h>
 
-
 TEST(StringTest, Ctor) {
   {
     // Null.
@@ -373,9 +372,9 @@ TEST(StringTest, STL2) {
   EXPECT_EQ(a.find(b.data(), 1, 0), 1u);
   EXPECT_EQ(a.find(c.data(), 9, 0), 9u);
   EXPECT_EQ(a.find(c.data(), std::string_view::npos, 0),
-               std::string_view::npos);
+            std::string_view::npos);
   EXPECT_EQ(b.find(c.data(), std::string_view::npos, 0),
-               std::string_view::npos);
+            std::string_view::npos);
 // empty string nonsense
   EXPECT_EQ(d.find(b.data(), 4, 0), std::string_view::npos);
   EXPECT_EQ(e.find(b.data(), 7, 0), std::string_view::npos);
@@ -496,9 +495,9 @@ TEST(StringTest, STL2FindFirst) {
   EXPECT_EQ(a.find_first_not_of(d, a.size()), std::string_view::npos);
   EXPECT_EQ(a.find_first_not_of(e, a.size()), std::string_view::npos);
   EXPECT_EQ(a.find_first_not_of(d, std::string_view::npos),
-               std::string_view::npos);
+            std::string_view::npos);
   EXPECT_EQ(a.find_first_not_of(e, std::string_view::npos),
-               std::string_view::npos);
+            std::string_view::npos);
   EXPECT_EQ(d.find_first_not_of(a), std::string_view::npos);
   EXPECT_EQ(e.find_first_not_of(a), std::string_view::npos);
   EXPECT_EQ(d.find_first_not_of(d), std::string_view::npos);
@@ -676,17 +675,17 @@ TEST(StringTest, FindConformance) {
       size_t pos = (i == sp.size()) ? std::string_view::npos : i;
       SCOPED_TRACE(pos);
       EXPECT_EQ(sp.find(s.needle, pos),
-                   st.find(s.needle, pos));
+                st.find(s.needle, pos));
       EXPECT_EQ(sp.rfind(s.needle, pos),
-                   st.rfind(s.needle, pos));
+                st.rfind(s.needle, pos));
       EXPECT_EQ(sp.find_first_of(s.needle, pos),
-                   st.find_first_of(s.needle, pos));
+                st.find_first_of(s.needle, pos));
       EXPECT_EQ(sp.find_first_not_of(s.needle, pos),
-                   st.find_first_not_of(s.needle, pos));
+                st.find_first_not_of(s.needle, pos));
       EXPECT_EQ(sp.find_last_of(s.needle, pos),
-                   st.find_last_of(s.needle, pos));
+                st.find_last_of(s.needle, pos));
       EXPECT_EQ(sp.find_last_not_of(s.needle, pos),
-                   st.find_last_not_of(s.needle, pos));
+                st.find_last_not_of(s.needle, pos));
     }
   }
 }
@@ -797,11 +796,11 @@ TEST(StringTest, Comparisons2) {
   EXPECT_EQ(digits.compare(3, 4, std::string_view("3456")), 0);        // 2
   EXPECT_EQ(digits.compare(10, 0, std::string_view()), 0);             // 2
   EXPECT_EQ(digits.compare(3, 4, std::string_view("0123456789"), 3, 4),
-               0);  // 3
+            0);  // 3
   EXPECT_LT(digits.compare(3, 4, std::string_view("0123456789"), 3, 5),
-               0);  // 3
+            0);  // 3
   EXPECT_LT(digits.compare(0, npos, std::string_view("0123456789"), 3, 5),
-               0);  // 3
+            0);  // 3
 // Taking const char*
   EXPECT_EQ(digits.compare(3, 4, "3456"), 0);                 // 5
   EXPECT_EQ(digits.compare(3, npos, "3456789"), 0);           // 5
@@ -916,9 +915,9 @@ TEST(StringTest, ConstexprMethods) {
 
 TEST(StringTest, Noexcept) {
   EXPECT_TRUE((std::is_nothrow_constructible<std::string_view,
-                                                const std::string &>::value));
+                                             const std::string &>::value));
   EXPECT_TRUE((std::is_nothrow_constructible<std::string_view,
-                                                const std::string &>::value));
+                                             const std::string &>::value));
   EXPECT_TRUE(std::is_nothrow_constructible<std::string_view>::value);
   constexpr std::string_view sp;
   EXPECT_TRUE(noexcept(sp.begin()));

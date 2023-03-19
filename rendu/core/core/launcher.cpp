@@ -7,10 +7,12 @@
 #include "plugin/base_plugin.h"
 
 int rendu::Launcher::Run() {
+
   base_plugin::config config = {
       .win_title = "Warmonger Dynasty",
       .cap_fps = 60
   };
+
   base_plugin base(config);
   main_loop()
       .add_plugin((plugin &) base)

@@ -60,7 +60,6 @@ void average_interest(double principal, int months, double rate, double vs) {
   cout << "还款总额为：" << setiosflags(ios::fixed) << setprecision(2) << total_principal_interest << endl;
 }
 
-
 int main() {
   double principal = 2000000.0;//本金
   double rate = 0.035;//年利率
