@@ -5,9 +5,8 @@
 #ifndef RENDU_CORE_CORE_SCENE_SYSTEM_H_
 #define RENDU_CORE_CORE_SCENE_SYSTEM_H_
 
-#include "framework/system.h"
-#include <scene/scene.h>
-#include <iostream>
+#include "base/system.h"
+#include "scene.h"
 
 namespace rendu {
 

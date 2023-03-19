@@ -6,14 +6,20 @@
 #define RENDU_CORE_CORE_PLUGIN_COMMAND_LINE_PLUGIN_H_
 
 #include <string>
-#include "framework/plugin.h"
+#include "base/plugin.h"
 
 namespace rendu {
 
-class command_line_plugin final : public plugin {
+class cmd_io_plugin final : public plugin {
  public:
-  command_line_plugin(std::string basic_string_1, int i);
-  void mount(main_loop &game_loop) override;
+  struct config {
+    std::string win_title;
+    int cap_fps;
+  };
+ public:
+  cmd_io_plugin(config &config)
+  {}
+  void mount(host &game_loop) override;
 
 };
 }

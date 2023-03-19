@@ -2,11 +2,12 @@
 * Created by boil on 2023/3/19.
 */
 
-#include "base_system.h"
+#include "cmd_io_system.h"
 #include <iostream>
 
-void rendu::base_system::run(entt::registry &registry) {
+void rendu::cmd_io_system::run(entt::registry &registry) {
   // gather inputs
+  std::cout<<" " << std:: endl;
   if (m_open) {
 //    auto &add_ui_command = registry.ctx().get<ui_command_request>();
 //    add_ui_command([&](entt::registry& registry) {

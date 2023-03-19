@@ -3,9 +3,9 @@
 */
 
 #include "scene_plugin.h"
-#include "framework/main_loop.h"
+#include "base/host.h"
 
-void rendu::scene_plugin::mount(rendu::main_loop &main_loop) {
+void rendu::scene_plugin::mount(rendu::host &main_loop) {
   main_loop
       .add_setup_callback([&](entt::registry &registry) {
         registry.ctx().emplace<std::shared_ptr<scene_system>>(m_scene_manager);

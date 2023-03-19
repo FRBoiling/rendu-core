@@ -3,3 +3,4 @@
 */
 
 #include "net_plugin.h"
+#include "base/host.h"

@@ -5,13 +5,13 @@
 #ifndef RENDU_CORE_CORE_FRAMEWORK_PLUGIN_H_
 #define RENDU_CORE_CORE_FRAMEWORK_PLUGIN_H_
 
-
 namespace rendu {
 
-class main_loop;
+class host;
+
 class plugin {
  public:
-  virtual void mount(main_loop &game_loop) = 0;
+  virtual void mount(host &game_loop) = 0;
 };
 
 }

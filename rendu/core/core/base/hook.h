@@ -5,8 +5,8 @@
 #ifndef RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
 #define RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
 
-#include <entt/entt.hpp>
 #include <vector>
+#include "plugin.h"
 
 namespace rendu {
 

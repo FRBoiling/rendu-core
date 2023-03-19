@@ -5,7 +5,8 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
-#include "framework/main_loop.h"
+#include "base/host.h"
+
 namespace rendu {
 
 class Launcher {

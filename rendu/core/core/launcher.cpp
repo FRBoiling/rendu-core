@@ -3,19 +3,19 @@
 */
 
 #include "launcher.h"
-#include "framework/main_loop.h"
-#include "base/base_plugin.h"
+#include "base/host.h"
+#include "io/cmd_io_plugin.h"
 
 int rendu::Launcher::Run() {
 
-  base_plugin::config config = {
-      .win_title = "Warmonger Dynasty",
+  cmd_io_plugin::config config = {
+      .win_title = "rendu core",
       .cap_fps = 60
   };
 
-  base_plugin base(config);
-  main_loop()
-      .add_plugin((plugin &) base)
+  cmd_io_plugin io(config);
+  host()
+      .add_plugin((plugin &) io)
       .run();
 
   return 0;

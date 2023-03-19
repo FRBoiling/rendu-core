@@ -5,11 +5,11 @@
 #ifndef RENDU_CORE_CORE_SYSTEM_DEBUG_SYSTEM_H_
 #define RENDU_CORE_CORE_SYSTEM_DEBUG_SYSTEM_H_
 
-#include "framework/system.h"
+#include "base/system.h"
 
 namespace rendu {
 
-class base_system final : public system {
+class cmd_io_system final : public system {
 
  private:
   entt::entity m_current_entity;
