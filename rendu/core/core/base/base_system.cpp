@@ -7,7 +7,6 @@
 
 void rendu::base_system::run(entt::registry &registry) {
   // gather inputs
-  std::cout << "run -------" << std::endl;
   if (m_open) {
 //    auto &add_ui_command = registry.ctx().get<ui_command_request>();
 //    add_ui_command([&](entt::registry& registry) {
