@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_SCENE_SYSTEM_H_
-#define RENDU_CORE_CORE_SCENE_SYSTEM_H_
+#ifndef RENDU_CORE_SCENE_SCENE_SYSTEM_H_
+#define RENDU_CORE_SCENE_SCENE_SYSTEM_H_
 
 #include "base/system.h"
 #include "scene.h"
@@ -22,4 +22,4 @@ class scene_system final : public system {
 
 }
 
-#endif //RENDU_CORE_CORE_SCENE_SYSTEM_H_
+#endif //RENDU_CORE_SCENE_SCENE_SYSTEM_H_

@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_FRAMEWORK_SYSTEM_H_
-#define RENDU_CORE_CORE_FRAMEWORK_SYSTEM_H_
+#ifndef RENDU_CORE_BASE_SYSTEM_H_
+#define RENDU_CORE_BASE_SYSTEM_H_
 
 #include <entt/entt.hpp>
 namespace rendu {
@@ -15,4 +15,4 @@ class system {
 
 }
 
-#endif //RENDU_CORE_CORE_FRAMEWORK_SYSTEM_H_
+#endif //RENDU_CORE_BASE_SYSTEM_H_
