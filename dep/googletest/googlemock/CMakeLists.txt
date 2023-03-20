@@ -1,5 +1,5 @@
 set(target_name gmock)
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

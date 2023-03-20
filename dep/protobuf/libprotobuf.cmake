@@ -99,7 +99,7 @@ set(libprotobuf_includes
     ${protobuf_source_dir}/src/google/protobuf/wrappers.pb.h
     )
 
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

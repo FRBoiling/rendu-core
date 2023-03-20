@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_FRAMEWORK_PLUGIN_H_
-#define RENDU_CORE_CORE_FRAMEWORK_PLUGIN_H_
+#ifndef RENDU_CORE_BASE_PLUGIN_H_
+#define RENDU_CORE_BASE_PLUGIN_H_
 
 namespace rendu {
 
@@ -16,4 +16,4 @@ class plugin {
 
 }
 
-#endif //RENDU_CORE_CORE_FRAMEWORK_PLUGIN_H_
+#endif //RENDU_CORE_BASE_PLUGIN_H_

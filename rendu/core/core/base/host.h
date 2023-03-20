@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_FRAMEWORK_HOST_H_
-#define RENDU_CORE_CORE_FRAMEWORK_HOST_H_
+#ifndef RENDU_CORE_BASE_HOST_H_
+#define RENDU_CORE_BASE_HOST_H_
 
 #include <entt/entt.hpp>
 #include "hook.h"
@@ -82,4 +82,4 @@ class host {
 
 }
 
-#endif //RENDU_CORE_CORE_FRAMEWORK_HOST_H_
+#endif //RENDU_CORE_BASE_HOST_H_

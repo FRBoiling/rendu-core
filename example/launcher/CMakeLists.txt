@@ -14,6 +14,7 @@ rendu_add_executable(
     rendu-core-interface
     DEPS
     rendu::core
+    dep::openssl
     DEFINES
     LINKOPTS
 )

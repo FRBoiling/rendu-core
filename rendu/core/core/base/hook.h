@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
-#define RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
+#ifndef RENDU_CORE_BASE_HOOK_H_
+#define RENDU_CORE_BASE_HOOK_H_
 
 #include <vector>
 #include "plugin.h"
@@ -36,4 +36,4 @@ class hook<Ret(Args...)> {
 
 }
 
-#endif //RENDU_CORE_CORE_FRAMEWORK_HOOK_H_
+#endif //RENDU_CORE_BASE_HOOK_H_

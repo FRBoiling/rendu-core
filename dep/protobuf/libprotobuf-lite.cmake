@@ -86,7 +86,7 @@ set(libprotobuf_lite_includes
     ${protobuf_source_dir}/src/google/protobuf/stubs/time.h
     )
 
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

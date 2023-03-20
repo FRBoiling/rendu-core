@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_SCENE_MAIN_SCENE_H_
-#define RENDU_CORE_CORE_SCENE_MAIN_SCENE_H_
+#ifndef RENDU_CORE_SCENE_SCENE_MAIN_SCENE_H_
+#define RENDU_CORE_SCENE_SCENE_MAIN_SCENE_H_
 
 #include "scene.h"
 
@@ -21,4 +21,4 @@ class main_scene final : public scene {
 
 }
 
-#endif //RENDU_CORE_CORE_SCENE_MAIN_SCENE_H_
+#endif //RENDU_CORE_SCENE_SCENE_MAIN_SCENE_H_

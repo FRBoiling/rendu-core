@@ -1,0 +1,18 @@
+rendu_add_component(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    caf_core
+    HDRS
+#    ${caf_core_headers}
+    SRCS
+#    ${caf_core_files}
+    SETTING
+    rendu-dependency-interface
+    DEPS
+    dep::threads
+    LINKOPTS
+)
+

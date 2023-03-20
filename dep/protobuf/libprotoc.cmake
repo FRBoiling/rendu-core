@@ -123,7 +123,7 @@ set(libprotoc_headers
   ${protobuf_source_dir}/src/google/protobuf/compiler/ruby/ruby_generator.h
 )
 
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

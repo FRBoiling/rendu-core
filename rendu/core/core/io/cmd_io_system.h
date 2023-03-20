@@ -2,8 +2,8 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_CORE_SYSTEM_DEBUG_SYSTEM_H_
-#define RENDU_CORE_CORE_SYSTEM_DEBUG_SYSTEM_H_
+#ifndef RENDU_CORE_IO_CMD_IO_SYSTEM_H_
+#define RENDU_CORE_IO_CMD_IO_SYSTEM_H_
 
 #include "base/system.h"
 
@@ -24,4 +24,4 @@ class cmd_io_system final : public system {
 
 }
 
-#endif //RENDU_CORE_CORE_SYSTEM_DEBUG_SYSTEM_H_
+#endif //RENDU_CORE_IO_CMD_IO_SYSTEM_H_
