@@ -1,16 +1,11 @@
-#**********************************
-#  Created by boil on 2022/9/10.
-#**********************************
-set(target_name openssl)
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    SETTING
-    rendu-dependency-interface
-    DEPS
-)
 
+find_package(OpenSSL REQUIRED COMPONENTS Crypto SSL)
+
+add_library(openssl INTERFACE)
+
+target_link_libraries(openssl
+    INTERFACE
+    OpenSSL::Crypto
+    OpenSSL::SSL)
+
+add_library(dep::openssl ALIAS openssl)

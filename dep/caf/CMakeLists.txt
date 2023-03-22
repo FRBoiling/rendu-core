@@ -36,6 +36,7 @@ rendu_add_library(
     rendu-dependency-interface
     DEPS
     dep::caf_core
+    dep::openssl
 )
 
 rendu_add_library(
@@ -49,4 +50,5 @@ rendu_add_library(
     rendu-dependency-interface
     DEPS
     dep::caf_io
+    dep::openssl
 )
