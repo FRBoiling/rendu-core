@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package org.caf;
+
+message Ping {
+  int32 id = 1;
+}
+message Pong {
+  int32 id = 1;
+}
+
+message PingOrPong {
+  optional Ping ping = 1;
+  optional Pong pong = 2;
+}
