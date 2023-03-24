@@ -1,0 +1,69 @@
+
+set(io_dir ${CMAKE_CURRENT_SOURCE_DIR}/io)
+
+CollectHeaderFiles(
+    ${io_dir}/io
+    caf_io_headers
+)
+
+set(caf_io_files
+    ${io_dir}/src/detail/prometheus_broker.cpp
+    ${io_dir}/src/detail/remote_group_module.cpp
+    ${io_dir}/src/detail/socket_guard.cpp
+    ${io_dir}/src/io/abstract_broker.cpp
+    ${io_dir}/src/io/basp/header.cpp
+    ${io_dir}/src/io/basp/instance.cpp
+    ${io_dir}/src/io/basp/message_queue.cpp
+    ${io_dir}/src/io/basp/routing_table.cpp
+    ${io_dir}/src/io/basp/worker.cpp
+    ${io_dir}/src/io/basp_broker.cpp
+    ${io_dir}/src/io/broker.cpp
+    ${io_dir}/src/io/connection_helper.cpp
+    ${io_dir}/src/io/datagram_servant.cpp
+    ${io_dir}/src/io/doorman.cpp
+    ${io_dir}/src/io/middleman.cpp
+    ${io_dir}/src/io/middleman_actor.cpp
+    ${io_dir}/src/io/middleman_actor_impl.cpp
+    ${io_dir}/src/io/network/acceptor.cpp
+    ${io_dir}/src/io/network/acceptor_manager.cpp
+    ${io_dir}/src/io/network/datagram_handler.cpp
+    ${io_dir}/src/io/network/datagram_manager.cpp
+    ${io_dir}/src/io/network/datagram_servant_impl.cpp
+    ${io_dir}/src/io/network/default_multiplexer.cpp
+    ${io_dir}/src/io/network/doorman_impl.cpp
+    ${io_dir}/src/io/network/event_handler.cpp
+    ${io_dir}/src/io/network/interfaces.cpp
+    ${io_dir}/src/io/network/ip_endpoint.cpp
+    ${io_dir}/src/io/network/manager.cpp
+    ${io_dir}/src/io/network/multiplexer.cpp
+    ${io_dir}/src/io/network/native_socket.cpp
+    ${io_dir}/src/io/network/pipe_reader.cpp
+    ${io_dir}/src/io/network/protocol.cpp
+    ${io_dir}/src/io/network/receive_buffer.cpp
+    ${io_dir}/src/io/network/scribe_impl.cpp
+    ${io_dir}/src/io/network/stream.cpp
+    ${io_dir}/src/io/network/stream_manager.cpp
+    ${io_dir}/src/io/network/test_multiplexer.cpp
+    ${io_dir}/src/io/scribe.cpp
+    ${io_dir}/src/policy/tcp.cpp
+    ${io_dir}/src/policy/udp.cpp
+    )
+
+rendu_add_library(
+    DIR
+    ${io_dir}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    caf_io
+    HDRS
+    ${caf_io_headers}
+    SRCS
+    ${caf_io_files}
+    SETTING
+    rendu-dependency-interface
+    DEPS
+    dep::threads
+    LINKOPTS
+)
+

@@ -1,54 +1,8 @@
+include(libcafcore.cmake)
+include(libcafio.cmake)
+include(libcafnet.cmake)
+include(libcafopenssl.cmake)
 
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/core
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    caf_core
-    SETTING
-    rendu-dependency-interface
-    DEPS
-    dep::threads
-)
 
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/io
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    caf_io
-    SETTING
-    rendu-dependency-interface
-    DEPS
-    dep::caf_core
-)
 
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/net
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    caf_net
-    SETTING
-    rendu-dependency-interface
-    DEPS
-    dep::caf_core
-    dep::openssl
-)
 
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/openssl
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    caf_openssl
-    SETTING
-    rendu-dependency-interface
-    DEPS
-    dep::caf_io
-    dep::openssl
-)
