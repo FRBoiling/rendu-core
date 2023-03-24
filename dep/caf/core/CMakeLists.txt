@@ -1,7 +1,7 @@
-set(core_dir ${CMAKE_CURRENT_SOURCE_DIR}/core)
+set(core_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 CollectHeaderFiles(
-    ${core_dir}/core
+    ${core_dir}
     caf_core_headers
 )
 

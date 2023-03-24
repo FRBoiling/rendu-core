@@ -1,7 +1,7 @@
-set(net_dir ${CMAKE_CURRENT_SOURCE_DIR}/net)
+set(net_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 CollectHeaderFiles(
-    ${net_dir}/net
+    ${net_dir}
     caf_net_headers
 )
 

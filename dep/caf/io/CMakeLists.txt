@@ -1,8 +1,8 @@
 
-set(io_dir ${CMAKE_CURRENT_SOURCE_DIR}/io)
+set(io_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 CollectHeaderFiles(
-    ${io_dir}/io
+    ${io_dir}
     caf_io_headers
 )
 
@@ -63,7 +63,7 @@ rendu_add_library(
     SETTING
     rendu-dependency-interface
     DEPS
-    dep::threads
+    dep::caf_core
     LINKOPTS
 )
 

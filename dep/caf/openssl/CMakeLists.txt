@@ -1,7 +1,7 @@
-set(openssl_dir ${CMAKE_CURRENT_SOURCE_DIR}/openssl)
+set(openssl_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 CollectHeaderFiles(
-    ${openssl_dir}/openssl
+    ${openssl_dir}
     caf_openssl_headers
 )
 
@@ -28,6 +28,7 @@ rendu_add_library(
     rendu-dependency-interface
     DEPS
     dep::caf_io
+    dep::caf_core
     dep::openssl
     LINKOPTS
 )
