@@ -8,10 +8,10 @@
 #else
 #  ifndef CAF_NET_EXPORT
 #    ifdef libcaf_net_EXPORTS
-        /* We are building this library */
+/* We are building this library */
 #      define CAF_NET_EXPORT __attribute__((visibility("default")))
 #    else
-        /* We are using this library */
+/* We are using this library */
 #      define CAF_NET_EXPORT __attribute__((visibility("default")))
 #    endif
 #  endif
