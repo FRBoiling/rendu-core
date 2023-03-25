@@ -1,6 +1,6 @@
 
 set(target_name cereal)
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

@@ -13,8 +13,8 @@ rendu_add_executable(
     SETTING
     rendu-core-interface
     DEPS
-    dep::protobuf-lite
     proto::model
+    dep::protobuf-lite
     dep::caf_core
     dep::caf_io
     DEFINES

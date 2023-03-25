@@ -2,7 +2,7 @@
 #  Created by boil on 2022/9/10.
 #**********************************
 set(target_name core)
-rendu_add_library(
+rendu_add_component(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

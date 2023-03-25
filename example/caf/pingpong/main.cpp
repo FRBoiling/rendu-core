@@ -1,14 +1,11 @@
-/*
-* Created by boil on 2022/10/5.
-*/
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "caf/all.hpp"
 #include "caf/io/all.hpp"
+#include "caf/all.hpp"
 
 #ifdef CAF_WINDOWS
 #  include <winsock2.h>
@@ -18,7 +15,7 @@
 
 CAF_PUSH_WARNINGS
 #include "pingpong.pb.h"
-    CAF_POP_WARNINGS
+CAF_POP_WARNINGS
 
 CAF_BEGIN_TYPE_ID_BLOCK(protobuf_example, first_custom_type_id)
 
@@ -197,4 +194,3 @@ void caf_main(actor_system& system, const config& cfg) {
 } // namespace
 
 CAF_MAIN(id_block::protobuf_example, io::middleman)
-
