@@ -298,7 +298,6 @@ function(rendu_add_test)
 endfunction(rendu_add_test)
 
 function(rendu_export_and_install_lib alias component)
-  add_library(${alias} ALIAS ${component})
   string(TOUPPER "${component}_EXPORT" export_macro_name)
   target_include_directories(${component} INTERFACE
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -308,7 +307,7 @@ function(rendu_export_and_install_lib alias component)
       ${component}
       EXPORT_MACRO_NAME ${export_macro_name}
       EXPORT_FILE_NAME "caf/detail/${component}_export.hpp")
-  set_target_properties(libcaf_${component} PROPERTIES
+  set_target_properties(${component} PROPERTIES
       EXPORT_NAME ${component}
       SOVERSION ${RD_VERSION}
       VERSION ${RD_LIB_VERSION}
