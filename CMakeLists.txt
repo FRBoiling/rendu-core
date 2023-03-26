@@ -21,7 +21,6 @@ project(
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/archive)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/library)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/runtime)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/path)
 
 #|--------------------------------
 #| Set supported build types
