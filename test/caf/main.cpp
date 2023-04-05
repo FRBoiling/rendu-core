@@ -45,5 +45,5 @@ TEST(CAF,ThreePings) {
 //disallow((ping_atom, int), from(ping_actor).to(pong_actor).with(_, 1));
 }
 
-CAF_TEST_FIXTURE_SCOPE_END()
-// --(rst-ping-pong-end)--
+
+
