@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(target_name ecs_pong)
+set(target_name caf_pong)
 rendu_add_executable(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -17,6 +17,6 @@ rendu_add_executable(
     proto::model
     dep::entt
     dep::caf_io
-    example::ecs_type_id
+    example::caf_ping_pong_define
     LINKOPTS
 )

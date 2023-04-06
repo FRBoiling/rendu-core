@@ -4,7 +4,7 @@ rendu_add_component(
     PROJECT
     ${PROJECT_NAME}
     NAME
-    ecs_type_id
+    caf_ping_pong_define
     HDRS
 #    ${caf_openssl_headers}
     SRCS
