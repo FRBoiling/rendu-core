@@ -1,0 +1,59 @@
+#**********************************
+#  Created by boil on 2022/8/14.
+#**********************************
+
+rendu_add_executable(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    protobuf_broker
+    SETTING
+    rendu-core-interface
+    SRCS
+    protobuf.cpp
+    DEPS
+    dep::caf_core
+    dep::caf_io
+    dep::protobuf-lite
+    proto::model
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_executable(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    simple_broker
+    SETTING
+    rendu-core-interface
+    SRCS
+    simple.cpp
+    DEPS
+    dep::caf_io
+    dep::caf_core
+    DEFINES
+    LINKOPTS
+)
+
+rendu_add_executable(
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    simple_http_broker
+    SETTING
+    rendu-core-interface
+    SRCS
+    simple_http.cpp
+    DEPS
+    dep::caf_core
+    dep::caf_io
+    DEFINES
+    LINKOPTS
+)
