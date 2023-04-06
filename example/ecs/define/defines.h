@@ -9,6 +9,7 @@
 #include <caf/io/all.hpp>
 
 #ifdef CAF_WINDOWS
+#pragma comment(lib, "ws2_32")
 #  include <winsock2.h>
 #else
 #  include <arpa/inet.h>
@@ -17,7 +18,6 @@
 CAF_PUSH_WARNINGS
 #include "pingpong.pb.h"
 CAF_POP_WARNINGS
-
 CAF_BEGIN_TYPE_ID_BLOCK(pingpong_example, first_custom_type_id)
 
 CAF_ADD_ATOM(pingpong_example, kickoff_atom)
