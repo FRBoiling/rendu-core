@@ -4,8 +4,8 @@
 #include <iostream>
 #include <chrono>
 
-#include "caf/all.hpp"
-#include "caf/io/all.hpp"
+#include <caf/all.hpp>
+#include <caf/io/all.hpp>
 
 using std::cout;
 using std::cerr;

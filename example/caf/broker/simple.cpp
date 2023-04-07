@@ -10,7 +10,7 @@
  * - simple_broker -c localhost 4242                                          *
 \******************************************************************************/
 
-#include "caf/config.hpp"
+#include <caf/config.hpp>
 
 #ifdef CAF_WINDOWS
 #  define _WIN32_WINNT 0x0600
@@ -28,10 +28,9 @@
 #include <string>
 #include <vector>
 
-#include "caf/all.hpp"
-#include "caf/io/all.hpp"
+#include <caf/all.hpp>
+#include <caf/io/all.hpp>
 
-using std::cerr;
 using std::cout;
 using std::endl;
 

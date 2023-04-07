@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "caf/all.hpp"
-#include "caf/io/all.hpp"
+#include <caf/all.hpp>
+#include <caf/io/all.hpp>
 
 #ifdef CAF_WINDOWS
 #  include <winsock2.h>
