@@ -10,7 +10,7 @@ rendu_add_test(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
     proto::model
@@ -19,5 +19,4 @@ rendu_add_test(
     dep::caf_io
     rendu::test
     DEFINES
-    LINKOPTS
 )

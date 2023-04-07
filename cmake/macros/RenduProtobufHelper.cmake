@@ -1,7 +1,7 @@
 function(rendu_proto_cxx)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;PROTOC;SETTING"
+      "PROJECT;NAME;PROTOC"
       "SRCS;INPUT_DIRS;OUTPUT_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
@@ -59,7 +59,7 @@ endfunction(rendu_proto_cxx)
 function(rendu_proto_csharp)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;PROTOC;SETTING"
+      "PROJECT;NAME;PROTOC"
       "SRCS;INPUT_DIRS;OUTPUT_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )

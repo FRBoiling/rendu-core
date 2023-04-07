@@ -10,10 +10,9 @@ rendu_add_component(
 #    ${caf_io_headers}
     SRCS
 #    ${caf_io_files}
-    SETTING
+    LINKOPTS
     rendu-dependency-interface
     DEPS
     dep::caf_core
-    LINKOPTS
 )
 

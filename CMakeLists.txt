@@ -72,6 +72,7 @@ find_package(PCHSupport)
 
 set(test_dir ${CMAKE_CURRENT_SOURCE_DIR}/test)
 if (BUILD_TESTING)
+  include(RenduAddTest)
   include(CTest)
   enable_testing()
   # add test project

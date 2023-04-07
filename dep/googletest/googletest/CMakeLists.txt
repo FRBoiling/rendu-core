@@ -6,7 +6,7 @@ rendu_add_component(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-dependency-interface
     DEPS
 )

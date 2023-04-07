@@ -9,7 +9,7 @@ rendu_add_executable(
     ${PROJECT_NAME}
     NAME
     protobuf_broker
-    SETTING
+    LINKOPTS
     rendu-core-interface
     SRCS
     protobuf.cpp
@@ -19,7 +19,6 @@ rendu_add_executable(
     dep::protobuf-lite
     proto::model
     DEFINES
-    LINKOPTS
 )
 
 rendu_add_executable(
@@ -29,7 +28,7 @@ rendu_add_executable(
     ${PROJECT_NAME}
     NAME
     simple_broker
-    SETTING
+    LINKOPTS
     rendu-core-interface
     SRCS
     simple.cpp
@@ -37,7 +36,6 @@ rendu_add_executable(
     dep::caf_io
     dep::caf_core
     DEFINES
-    LINKOPTS
 )
 
 rendu_add_executable(
@@ -47,7 +45,7 @@ rendu_add_executable(
     ${PROJECT_NAME}
     NAME
     simple_http_broker
-    SETTING
+    LINKOPTS
     rendu-core-interface
     SRCS
     simple_http.cpp
@@ -55,5 +53,4 @@ rendu_add_executable(
     dep::caf_core
     dep::caf_io
     DEFINES
-    LINKOPTS
 )

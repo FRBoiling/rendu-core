@@ -9,10 +9,10 @@ rendu_add_executable(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
+    rendu::common
     DEFINES
-    LINKOPTS
 )
 

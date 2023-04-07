@@ -97,10 +97,9 @@ rendu_add_component(
     ${libprotobuf_lite_includes}
     SRCS
     ${libprotobuf_lite_files}
-    SETTING
+    LINKOPTS
     rendu-dependency-interface
     DEFINES
     DEPS
     dep::threads
-    LINKOPTS
 )

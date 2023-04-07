@@ -6,7 +6,7 @@ rendu_add_component(
     ${target_name}
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
     dep::protobuf

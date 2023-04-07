@@ -18,7 +18,7 @@ include(CheckCXXSourceCompiles)
 function(rendu_add_library)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;SETTING;DIR"
+      "PROJECT;NAME;LINKOPTS;DIR"
       "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
