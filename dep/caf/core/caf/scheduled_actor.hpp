@@ -320,7 +320,7 @@ public:
   template <class F>
   std::enable_if_t<std::is_invocable_v<F, down_msg&>> set_down_handler(F fun) {
     using std::move;
-    down_handler_ = [fn{move(fun)}](scheduled_actor*, down_msg& x) mutable {
+    down_handler_ = [fn{std::move(fun)}](scheduled_actor*, down_msg& x) mutable {
       fn(x);
     };
   }
