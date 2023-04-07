@@ -1,5 +1,5 @@
 set(target_name gtest)
-rendu_add_component(
+rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT

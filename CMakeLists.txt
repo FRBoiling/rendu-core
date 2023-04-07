@@ -57,10 +57,10 @@ include(GroupSources)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 include(RenduAutoCollect)
-include(RenduAddSubdirectory)
-include(RenduAddComponent)
 include(RenduAddLibrary)
 include(RenduAddExecutable)
+include(RenduAddSubdirectory)
+
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
 # set default buildoptions and print them

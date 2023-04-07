@@ -2,7 +2,7 @@
 #  Created by boil on 2022/9/10.
 #**********************************
 set(target_name zlib)
-rendu_add_component(
+rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     PROJECT

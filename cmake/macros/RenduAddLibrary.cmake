@@ -1,99 +1,97 @@
 #**********************************
-#  Created by boil on 2023/04/06.
+#  Created by boil on 2022/10/19.
 #**********************************
 
 include(CMakeParseArguments)
 include(CheckCXXSourceCompiles)
 
-#
-# rendu_add_library(
-#   NAME
-#     awesome
-#   HDRS
-#     "a.h"
-#   SRCS
-#     "a.cc"
-# )
+# Parameters:
+# PROJECT: name of project (see Note)
+# NAME: name of target (see Note)
+# HDRS: List of public header files for the library
+# SRCS: List of source files for the library
+# DEPS: List of other libraries to be linked in to the binary targets
+# LINKOPTS: List of link options
+# COPTS: List of private compile options
+# DEFINES: List of public defines
 
 function(rendu_add_library)
-  cmake_parse_arguments(RD
+  cmake_parse_arguments(RD_LIB
       ""
-      "PROJECT;NAME;LINKOPTS;DIR"
-      "HDRS;SRCS;DEPS;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
+      "PROJECT;NAME;DIR"
+      "HDRS;SRCS;DEPS;LINKOPTS;DEFINES;COPTS"
       ${ARGN}
       )
-  set(pub_lib_target "${RD_PROJECT}_${RD_NAME}")
-  set(header_lib_target "${pub_lib_target}_obj")
+  set(RD_LIB_TARGET "${RD_LIB_PROJECT}_${RD_LIB_NAME}")
+  set(RD_OBJ_TARGET "${RD_LIB_TARGET}_obj")
 
-  list(APPEND target_hdrs ${RD_HDRS})
-  list(APPEND target_srcs ${RD_SRCS})
-
-  if ("${target_srcs}${target_hdrs}" STREQUAL "")
-    CollectSourceFiles(
-        ${RD_DIR}
-        ${target_name}_srcs
-    )
+  list(APPEND RD_TARGET_HDRS ${RD_LIB_HDRS})
+  if ("${RD_TARGET_HDRS}" STREQUAL "")
     CollectHeaderFiles(
-        ${RD_DIR}
-        ${target_name}_hdrs
+        ${RD_LIB_DIR}
+        RD_TARGET_HDRS
         # Exclude
-        ${RD_DIR}/precompiled_headers
+        ${RD_LIB_DIR}/precompiled_headers
     )
     if (USE_PCH)
       CollectHeaderFiles(
-          ${RD_DIR}/precompiled_headers
-          precompiled_headers
+          ${RD_LIB_DIR}/precompiled_headers
+          RD_PCH_HEADERS
       )
     endif (USE_PCH)
-    list(APPEND target_srcs ${${target_name}_srcs})
-    list(APPEND target_hdrs ${${target_name}_hdrs} ${precompiled_headers})
   endif ()
 
-  if ("${target_srcs}" STREQUAL "")
-    set(is_interface 1)
-  else ()
-    set(is_interface 0)
-  endif ()
-
-  if ("${target_srcs}${target_hdrs}" STREQUAL "")
-    message(STATUS ${target_name} " can't find src files!")
-  else ()
-    GroupSources(${RD_DIR})
-    CollectIncludeDirectories(
-        ${RD_DIR}
-        include_dirs
-        # Exclude
-        ${RD_DIR}/precompiled_headers
+  list(APPEND RD_TARGET_SRCS ${RD_LIB_SRCS})
+  if ("${RD_TARGET_SRCS}" STREQUAL "")
+    CollectSourceFiles(
+        ${RD_LIB_DIR}
+        RD_TARGET_SRCS
     )
-    if (is_interface) #TODO:BOIL head only
-      add_library(${pub_lib_target} INTERFACE)
-      target_sources(${pub_lib_target} INTERFACE ${target_hdrs})
-      target_include_directories(${pub_lib_target} INTERFACE "$<BUILD_INTERFACE:${include_dirs}>")
-      target_compile_definitions(${pub_lib_target} INTERFACE ${RD_DEFINES})
-      target_link_libraries(${pub_lib_target} INTERFACE ${RD_SETTING} ${RD_DEPS})
-    else ()
-      if (BUILD_SHARED_LIBS)
-        add_library(${pub_lib_target} SHARED $<TARGET_OBJECTS:${obj_lib_target}>)
-      else ()
-        add_library(${pub_lib_target} STATIC $<TARGET_OBJECTS:${obj_lib_target}>)
-      endif ()
-      target_sources(${pub_lib_target} PRIVATE ${target_hdrs} ${target_srcs})
-      target_link_libraries(${pub_lib_target} PRIVATE ${RD_SETTING} PUBLIC ${RD_DEPS})
-      target_include_directories(${pub_lib_target} PUBLIC ${include_dirs})
-      target_compile_definitions(${pub_lib_target} PUBLIC ${RD_DEFINES})
-      #  add_dependencies(${target_name} ${RENDU_LIB_CMAKE_BINARY_DIR}/revision_data.h)
-    endif ()
-    set_target_properties(${pub_lib_target} PROPERTIES FOLDER ${RD_PROJECT})
-    add_library(${RD_PROJECT}::${RD_NAME} ALIAS ${pub_lib_target})
-    # Generate precompiled header
-    if (USE_PCH)
-      message(STATUS "use precompiled header !")
-      set(headers "${precompiled_headers}")
-      if (headers STREQUAL "")
-      else ()
-        add_cxx_pch(${RD_PROJECT}::${RD_NAME} ${precompiled_headers})
-      endif ()
-    endif ()
-    message(STATUS "[lib ]" ${RD_PROJECT}::${RD_NAME})
   endif ()
+  GroupSources(${RD_LIB_DIR})
+  CollectIncludeDirectories(${RD_LIB_DIR}
+      RD_LIB_INCLUDES
+      # Exclude
+      ${RD_LIB_DIR}/precompiled_headers
+      )
+  if ("${RD_TARGET_SRCS}" STREQUAL "")
+    if ("${RD_TARGET_HDRS}" STREQUAL "")
+      message(STATUS ${RD_LIB_TARGET} " can't find src files!")
+    else ()
+      add_library(${RD_LIB_TARGET} INTERFACE)
+      target_sources(${RD_LIB_TARGET} INTERFACE ${RD_TARGET_HDRS})
+      target_include_directories(${RD_LIB_TARGET} INTERFACE "$<BUILD_INTERFACE:${RD_LIB_INCLUDES}>")
+      target_compile_options(${RD_LIB_TARGET} INTERFACE ${RD_LIB_COPTS})
+      target_compile_definitions(${RD_LIB_TARGET} INTERFACE ${RD_LIB_DEFINES})
+      target_link_libraries(${RD_LIB_TARGET} INTERFACE ${RD_LIB_LINKOPTS} ${RD_LIB_DEPS})
+    endif ()
+  else ()
+    add_library(${RD_OBJ_TARGET} OBJECT ${RD_TARGET_HDRS} ${RD_TARGET_SRCS})
+    set_property(TARGET ${RD_OBJ_TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)
+    target_include_directories(${RD_OBJ_TARGET} PUBLIC ${RD_LIB_INCLUDES})
+    target_compile_options(${RD_OBJ_TARGET} PUBLIC ${RD_LIB_COPTS})
+    target_compile_definitions(${RD_OBJ_TARGET} PUBLIC ${RD_LIB_DEFINES})
+    target_link_libraries(${RD_OBJ_TARGET} PRIVATE ${RD_LIB_LINKOPTS} PUBLIC ${RD_LIB_DEPS})
+
+    if (BUILD_SHARED_LIBS)
+      add_library(${RD_LIB_TARGET} SHARED $<TARGET_OBJECTS:${RD_OBJ_TARGET}>)
+    else ()
+      add_library(${RD_LIB_TARGET} STATIC $<TARGET_OBJECTS:${RD_OBJ_TARGET}>)
+    endif ()
+    target_link_libraries(${RD_LIB_TARGET} PRIVATE ${RD_LIB_LINKOPTS} PUBLIC ${RD_LIB_DEPS})
+    target_include_directories(${RD_LIB_TARGET} PUBLIC ${RD_LIB_INCLUDES})
+  endif ()
+
+  set_target_properties(${RD_LIB_TARGET} PROPERTIES FOLDER ${RD_LIB_PROJECT})
+  add_library(${RD_LIB_PROJECT}::${RD_LIB_NAME} ALIAS ${RD_LIB_TARGET})
+  # Generate precompiled header
+  if (USE_PCH)
+    message(STATUS "use precompiled header !")
+    if ("${RD_PCH_HEADERS}" STREQUAL "")
+    else ()
+      add_cxx_pch(${RD_LIB_PROJECT}::${RD_LIB_NAME} ${RD_PCH_HEADERS})
+    endif ()
+  endif ()
+  message(STATUS "[lib ]" ${RD_LIB_PROJECT}::${RD_LIB_NAME})
+
 endfunction(rendu_add_library)

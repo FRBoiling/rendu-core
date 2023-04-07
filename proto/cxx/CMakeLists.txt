@@ -1,5 +1,5 @@
 set(target_name model)
-rendu_add_component(
+rendu_add_library(
     PROJECT
     ${PROJECT_NAME}
     NAME
