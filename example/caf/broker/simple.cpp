@@ -14,6 +14,7 @@
 
 #ifdef CAF_WINDOWS
 #  define _WIN32_WINNT 0x0600
+#pragma comment(lib, "ws2_32")
 #  include <winsock2.h>
 #else
 #  include <arpa/inet.h> // htonl
