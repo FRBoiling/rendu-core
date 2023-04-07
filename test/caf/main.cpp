@@ -4,7 +4,7 @@
 #define CAF_SUITE ping_pong
 
 #include <test/rdtest.h>
-#include "caf/all.hpp"
+#include <caf/all.hpp>
 
 using namespace caf;
 
