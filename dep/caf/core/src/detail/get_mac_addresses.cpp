@@ -158,8 +158,8 @@ std::vector<iface_info> get_mac_addresses() {
 #else
 
 // windows
-
 // clang-format off
+#pragma comment(lib, "iphlpapi")
 #  include <ws2tcpip.h>
 #  include <winsock2.h>
 #  include <iphlpapi.h>

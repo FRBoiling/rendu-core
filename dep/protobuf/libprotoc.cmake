@@ -134,11 +134,10 @@ rendu_add_component(
     ${libprotoc_headers}
     SRCS
     ${libprotoc_files}
-    SETTING
+    LINKOPTS
     rendu-dependency-interface
     DEFINES
     DEPS
     dep::protobuf
     dep::protobuf-lite
-    LINKOPTS
 )

@@ -10,7 +10,7 @@ rendu_add_test(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
     dep::entt
@@ -18,5 +18,4 @@ rendu_add_test(
     dep::cereal
     rendu::test
     DEFINES
-    LINKOPTS
 )

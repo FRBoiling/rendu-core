@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.21.7)
 # add this options before PROJECT keyword
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set project name (must be done AFTER setting configuration types)
 set(RENDU_PROJECT_NAME rendu)
 set(RENDU_PROJECT_DIR ${CMAKE_SOURCE_DIR})
@@ -51,13 +51,17 @@ list(APPEND CMAKE_MODULE_PATH
 include(ConfigureScripts)
 include(CheckCXXSourceRuns)
 include(CheckIncludeFiles)
-include(ConfigureBaseTargets)
-include(CheckPlatform)
-include(GroupSources)
-include(AutoCollect)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-include(RenduHelpers)
+
+include(RenduGroupSources)
+include(RenduBaseTargets)
+include(RenduCheckPlatform)
+include(RenduAutoCollect)
+include(RenduAddLibrary)
+include(RenduAddExecutable)
+include(RenduAddSubdirectory)
+
 # Find revision ID and hash of the sourcetree
 include(cmake/genrev.cmake)
 # set default buildoptions and print them
@@ -69,6 +73,7 @@ find_package(PCHSupport)
 
 set(test_dir ${CMAKE_CURRENT_SOURCE_DIR}/test)
 if (BUILD_TESTING)
+  include(RenduAddTest)
   include(CTest)
   enable_testing()
   # add test project

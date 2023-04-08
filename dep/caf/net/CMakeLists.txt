@@ -1,4 +1,4 @@
-rendu_add_component(
+rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
@@ -9,11 +9,10 @@ rendu_add_component(
 #    ${caf_net_headers}
     SRCS
 #    ${caf_net_files}
-    SETTING
+    LINKOPTS
     rendu-dependency-interface
     DEPS
     dep::caf_core
     dep::openssl
-    LINKOPTS
 )
 

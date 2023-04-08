@@ -10,7 +10,7 @@ rendu_add_executable(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
     dep::protobuf-lite
@@ -18,5 +18,4 @@ rendu_add_executable(
     dep::entt
     dep::caf_io
     example::caf_ping_pong_define
-    LINKOPTS
 )

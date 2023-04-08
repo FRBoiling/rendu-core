@@ -569,6 +569,7 @@ void default_multiplexer::handle_socket_event(native_socket fd, int mask,
 
 void default_multiplexer::init() {
 #ifdef CAF_WINDOWS
+#pragma comment(lib, "iphlpapi")
   WSADATA WinsockData;
   if (WSAStartup(MAKEWORD(2, 2), &WinsockData) != 0) {
     CAF_CRITICAL("WSAStartup failed");

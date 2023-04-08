@@ -1,7 +1,7 @@
 function(rendu_proto_cxx)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;PROTOC;SETTING"
+      "PROJECT;NAME;PROTOC"
       "SRCS;INPUT_DIRS;OUTPUT_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
@@ -9,7 +9,7 @@ function(rendu_proto_cxx)
   list(APPEND input_str "")
   if (EXISTS ${RD_OUTPUT_DIR} AND IS_DIRECTORY ${RD_OUTPUT_DIR})
     foreach (dir ${RD_INPUT_DIRS})
-      CollectProtoFiles(
+      rendu_collect_proto_files(
           ${dir}
           proto_files
       )
@@ -59,7 +59,7 @@ endfunction(rendu_proto_cxx)
 function(rendu_proto_csharp)
   cmake_parse_arguments(RD
       ""
-      "PROJECT;NAME;PROTOC;SETTING"
+      "PROJECT;NAME;PROTOC"
       "SRCS;INPUT_DIRS;OUTPUT_DIR;COPTS;DEFINES;LINKOPTS;PUBLIC;PRIVATE"
       ${ARGN}
       )
@@ -67,7 +67,7 @@ function(rendu_proto_csharp)
   list(APPEND input_str "")
   if (EXISTS ${RD_OUTPUT_DIR} AND IS_DIRECTORY ${RD_OUTPUT_DIR})
     foreach (dir ${RD_INPUT_DIRS})
-      CollectProtoFiles(
+      rendu_collect_proto_files(
           ${dir}
           proto_files
       )

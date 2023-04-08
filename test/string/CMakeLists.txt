@@ -10,11 +10,10 @@ rendu_add_test(
     ${PROJECT_NAME}
     NAME
     ${target_name}
-    SETTING
+    LINKOPTS
     rendu-core-interface
     DEPS
     rendu::common
     rendu::test
     DEFINES
-    LINKOPTS
 )
