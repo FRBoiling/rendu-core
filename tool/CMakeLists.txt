@@ -9,5 +9,6 @@ if (BUILD_TOOLS)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
+      ${CMAKE_CURRENT_SOURCE_DIR}/bank_loan
   )
 endif ()
