@@ -1,9 +1,6 @@
 #**********************************
 #  Created by boil on 2022/10/19.
 #**********************************
-#
-#include(CMakeParseArguments)
-#include(CheckCXXSourceCompiles)
 
 function(rendu_export_and_install_lib alias component)
   string(TOUPPER "${component}_EXPORT" export_macro_name)

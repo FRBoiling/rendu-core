@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-macro(GroupSources dir)
+macro(rendu_source_groups dir)
   # 如果没有设置WITH_SOURCE_TREE(空字符串)，则跳过此步骤。
   if(NOT ${WITH_SOURCE_TREE} STREQUAL "")
     # 包括所有头文件和c文件

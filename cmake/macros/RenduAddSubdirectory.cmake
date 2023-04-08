@@ -2,9 +2,6 @@
 #  Created by boil on 2023/04/06.
 #**********************************
 
-#include(CMakeParseArguments)
-#include(CheckCXXSourceCompiles)
-
 # 将所有子目录添加。忽略可变参数中列出的完全限定目录。
 # Use it like:
 # rendu_add_subdirectory(
@@ -15,25 +12,24 @@
 #   ${RENDU_LIB_CMAKE_CUR_SOURCE_DIR}/platform)
 #
 
-function(rendu_add_subdirectory _cur_dir)
-  list(FIND ARGN "${_cur_dir}" _is_excluded)
-  if (_is_excluded EQUAL -1)
-    list(APPEND _dir ${_cur_dir})
-    file(GLOB _sub_dirs ${_cur_dir}/*)
-    foreach (_sub_dir ${_sub_dirs})
-      if (IS_DIRECTORY ${_sub_dir})
-        list(FIND ARGN "${_sub_dir}" _is_excluded)
-        if (_is_excluded EQUAL -1)
-          get_filename_component(_element_name ${_sub_dir} NAME)
+function(rendu_add_subdirectory current_dir)
+  list(FIND ARGN "${current_dir}" IS_EXCLUDED)
+  if (IS_EXCLUDED EQUAL -1)
+    file(GLOB sub_dirs ${current_dir}/*)
+    foreach (sub_dir ${sub_dirs})
+      if (IS_DIRECTORY ${sub_dir})
+        list(FIND ARGN "${sub_dir}" IS_EXCLUDED)
+        if (IS_EXCLUDED EQUAL -1)
+          get_filename_component(element_name ${sub_dir} NAME)
           file(GLOB COLLECTED_SOURCES
-              ${_element_name}/CMakeLists.txt
+              ${element_name}/CMakeLists.txt
               )
           set(target_srcs_str "${COLLECTED_SOURCES}")
           if (target_srcs_str STREQUAL "")
-            message("can't find CMakeLists.txt in  ${_element_name}!")
+            message("can't find CMakeLists.txt in  ${element_name}!")
           else ()
-            add_subdirectory(${_element_name})
-            #            message("add_subdirectory ${_element_name}!")
+            add_subdirectory(${element_name})
+            #            message("add_subdirectory ${element_name}!")
           endif ()
         endif ()
       endif ()

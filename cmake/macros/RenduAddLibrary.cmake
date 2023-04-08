@@ -2,9 +2,6 @@
 #  Created by boil on 2022/10/19.
 #**********************************
 
-include(CMakeParseArguments)
-include(CheckCXXSourceCompiles)
-
 # Parameters:
 # PROJECT: name of project (see Note)
 # NAME: name of target (see Note)
@@ -27,14 +24,14 @@ function(rendu_add_library)
 
   list(APPEND RD_TARGET_HDRS ${RD_LIB_HDRS})
   if ("${RD_TARGET_HDRS}" STREQUAL "")
-    CollectHeaderFiles(
+    rendu_collect_header_files(
         ${RD_LIB_DIR}
         RD_TARGET_HDRS
         # Exclude
         ${RD_LIB_DIR}/precompiled_headers
     )
     if (USE_PCH)
-      CollectHeaderFiles(
+      rendu_collect_header_files(
           ${RD_LIB_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
@@ -43,13 +40,13 @@ function(rendu_add_library)
 
   list(APPEND RD_TARGET_SRCS ${RD_LIB_SRCS})
   if ("${RD_TARGET_SRCS}" STREQUAL "")
-    CollectSourceFiles(
+    rendu_collect_source_files(
         ${RD_LIB_DIR}
         RD_TARGET_SRCS
     )
   endif ()
-  GroupSources(${RD_LIB_DIR})
-  CollectIncludeDirectories(${RD_LIB_DIR}
+  rendu_source_groups(${RD_LIB_DIR})
+  rendu_collect_include_directories(${RD_LIB_DIR}
       RD_LIB_INCLUDES
       # Exclude
       ${RD_LIB_DIR}/precompiled_headers

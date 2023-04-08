@@ -9,7 +9,7 @@ function(rendu_proto_cxx)
   list(APPEND input_str "")
   if (EXISTS ${RD_OUTPUT_DIR} AND IS_DIRECTORY ${RD_OUTPUT_DIR})
     foreach (dir ${RD_INPUT_DIRS})
-      CollectProtoFiles(
+      rendu_collect_proto_files(
           ${dir}
           proto_files
       )
@@ -67,7 +67,7 @@ function(rendu_proto_csharp)
   list(APPEND input_str "")
   if (EXISTS ${RD_OUTPUT_DIR} AND IS_DIRECTORY ${RD_OUTPUT_DIR})
     foreach (dir ${RD_INPUT_DIRS})
-      CollectProtoFiles(
+      rendu_collect_proto_files(
           ${dir}
           proto_files
       )

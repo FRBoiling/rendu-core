@@ -1,10 +1,6 @@
 #**********************************
 #  Created by boil on 2022/10/19.
 #**********************************
-
-include(CMakeParseArguments)
-include(CheckCXXSourceCompiles)
-
 #
 # rendu_add_executable(
 #   NAME
@@ -28,14 +24,14 @@ function(rendu_add_executable)
 
   list(APPEND RD_TARGET_HDRS ${RD_EXEC_HDRS})
   if ("${RD_TARGET_HDRS}" STREQUAL "")
-    CollectHeaderFiles(
+    rendu_collect_header_files(
         ${RD_EXEC_HDRS}
         RD_TARGET_HDRS
         # Exclude
         ${RD_EXEC_DIR}/precompiled_headers
     )
     if (USE_PCH)
-      CollectHeaderFiles(
+      rendu_collect_header_files(
           ${RD_EXEC_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
@@ -44,7 +40,7 @@ function(rendu_add_executable)
 
   list(APPEND RD_TARGET_SRCS ${RD_EXEC_SRCS})
   if ("${RD_TARGET_SRCS}" STREQUAL "")
-    CollectSourceFiles(
+    rendu_collect_source_files(
         ${RD_EXEC_DIR}
         RD_TARGET_SRCS
     )
@@ -53,8 +49,8 @@ function(rendu_add_executable)
   if ("${RD_TARGET_HDRS}${RD_TARGET_SRCS}" STREQUAL "")
     message(STATUS ${RD_EXEC_TARGET} " can't find src files!")
   else ()
-    GroupSources(${RD_EXEC_DIR})
-    CollectIncludeDirectories(${RD_EXEC_DIR}
+    rendu_source_groups(${RD_EXEC_DIR})
+    rendu_collect_include_directories(${RD_EXEC_DIR}
         RD_EXEC_INCLUDES
         # Exclude
         ${RD_EXEC_DIR}/precompiled_headers

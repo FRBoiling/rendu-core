@@ -2,8 +2,6 @@
 #  Created by boil on 2022/10/19.
 #**********************************
 
-include(CMakeParseArguments)
-include(CheckCXXSourceCompiles)
 #
 # rendu_add_executable(
 #   NAME
@@ -27,14 +25,14 @@ function(rendu_add_test)
 
   list(APPEND RD_TARGET_HDRS ${RD_TEST_HDRS})
   if ("${RD_TARGET_HDRS}" STREQUAL "")
-    CollectHeaderFiles(
+    rendu_collect_header_files(
         ${RD_TEST_HDRS}
         RD_TARGET_HDRS
         # Exclude
         ${RD_TEST_DIR}/precompiled_headers
     )
     if (USE_PCH)
-      CollectHeaderFiles(
+      rendu_collect_header_files(
           ${RD_TEST_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
@@ -43,7 +41,7 @@ function(rendu_add_test)
 
   list(APPEND RD_TARGET_SRCS ${RD_TEST_SRCS})
   if ("${RD_TARGET_SRCS}" STREQUAL "")
-    CollectSourceFiles(
+    rendu_collect_source_files(
         ${RD_TEST_DIR}
         RD_TARGET_SRCS
     )
@@ -52,8 +50,8 @@ function(rendu_add_test)
   if ("${RD_TARGET_HDRS}${RD_TARGET_SRCS}" STREQUAL "")
     message(STATUS ${RD_TEST_TARGET} " can't find src files!")
   else ()
-    GroupSources(${RD_TEST_DIR})
-    CollectIncludeDirectories(${RD_TEST_DIR}
+    rendu_source_groups(${RD_TEST_DIR})
+    rendu_collect_include_directories(${RD_TEST_DIR}
         RD_TEST_INCLUDES
         # Exclude
         ${RD_TEST_DIR}/precompiled_headers

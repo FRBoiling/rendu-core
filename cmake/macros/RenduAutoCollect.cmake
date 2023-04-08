@@ -3,14 +3,14 @@
 #**********************************
 # 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
 # Use it like:
-# CollectSourceFiles(
+# rendu_collect_source_files(
 #   ${CMAKE_CURRENT_SOURCE_DIR}
 #   COMMON_PRIVATE_SOURCES
 #   # Exclude
 #   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
 #   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 #
-function(CollectAllFiles current_dir variable)
+function(rendu_collect_all_files current_dir variable)
   list(FIND ARGN ${current_dir} IS_EXCLUDED)
   if (IS_EXCLUDED EQUAL -1)
     file(GLOB COLLECTED_FILES
@@ -29,24 +29,24 @@ function(CollectAllFiles current_dir variable)
     file(GLOB SUB_DIRECTORIES ${current_dir}/*)
     foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
       if (IS_DIRECTORY ${SUB_DIRECTORY})
-        CollectAllFiles(${SUB_DIRECTORY} ${variable} ${ARGN})
+        rendu_collect_all_files(${SUB_DIRECTORY} ${variable} ${ARGN})
       endif ()
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction(CollectAllFiles)
+endfunction(rendu_collect_all_files)
 
 
 # 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
 # Use it like:
-# CollectSourceFiles(
+# rendu_collect_source_files(
 #   ${CMAKE_CURRENT_SOURCE_DIR}
 #   COMMON_PRIVATE_SOURCES
 #   # Exclude
 #   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
 #   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 #
-function(CollectSourceFiles current_dir variable)
+function(rendu_collect_source_files current_dir variable)
   list(FIND ARGN ${current_dir} IS_EXCLUDED)
   if (IS_EXCLUDED EQUAL -1)
     file(GLOB COLLECTED_SOURCES
@@ -59,7 +59,7 @@ function(CollectSourceFiles current_dir variable)
     file(GLOB SUB_DIRECTORIES ${current_dir}/*)
     foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
       if (IS_DIRECTORY ${SUB_DIRECTORY})
-        CollectSourceFiles(${SUB_DIRECTORY} ${variable} ${ARGN})
+        rendu_collect_source_files(${SUB_DIRECTORY} ${variable} ${ARGN})
       endif ()
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
@@ -68,14 +68,14 @@ endfunction()
 
 # 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
 # Use it like:
-# CollectHeaderFiles(
+# rendu_collect_header_files(
 #   ${CMAKE_CURRENT_SOURCE_DIR}
 #   COMMON_PRIVATE_SOURCES
 #   # Exclude
 #   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
 #   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 #
-function(CollectHeaderFiles current_dir variable)
+function(rendu_collect_header_files current_dir variable)
   list(FIND ARGN ${current_dir} IS_EXCLUDED)
   if (IS_EXCLUDED EQUAL -1)
     file(GLOB COLLECTED_HEADERS
@@ -90,23 +90,50 @@ function(CollectHeaderFiles current_dir variable)
     file(GLOB SUB_DIRECTORIES ${current_dir}/*)
     foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
       if (IS_DIRECTORY ${SUB_DIRECTORY})
-        CollectHeaderFiles(${SUB_DIRECTORY} ${variable} ${ARGN})
+        rendu_collect_header_files(${SUB_DIRECTORY} ${variable} ${ARGN})
       endif ()
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction(CollectHeaderFiles)
+endfunction(rendu_collect_header_files)
+
+# 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
+# Use it like:
+# rendu_collect_proto_files(
+#   ${CMAKE_CURRENT_SOURCE_DIR}
+#   COMMON_PRIVATE_SOURCES
+#   # Exclude
+#   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
+#   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
+#
+function(rendu_collect_proto_files current_dir variable)
+  list(FIND ARGN ${current_dir} IS_EXCLUDED)
+  if (IS_EXCLUDED EQUAL -1)
+    file(GLOB COLLECTED_SOURCES
+            ${current_dir}/*.proto
+            )
+    list(APPEND ${variable} ${COLLECTED_SOURCES})
+
+    file(GLOB SUB_DIRECTORIES ${current_dir}/*)
+    foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
+      if (IS_DIRECTORY ${SUB_DIRECTORY})
+        rendu_collect_proto_files(${SUB_DIRECTORY} ${variable} ${ARGN})
+      endif ()
+    endforeach ()
+    set(${variable} ${${variable}} PARENT_SCOPE)
+  endif ()
+endfunction(rendu_collect_proto_files)
 
 # 收集所有子目录到给定的变量，用于包含所有子目录。忽略可变参数中列出的完全限定目录。
 # Use it like:
-# CollectIncludeDirectories(
+# rendu_collect_include_directories(
 #   ${CMAKE_CURRENT_SOURCE_DIR}
 #   COMMON_PUBLIC_INCLUDES
 #   # Exclude
 #   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
 #   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 #
-function(CollectIncludeDirectories current_dir variable)
+function(rendu_collect_include_directories current_dir variable)
   list(FIND ARGN "${current_dir}" IS_EXCLUDED)
   if (IS_EXCLUDED EQUAL -1)
     list(APPEND ${variable} ${current_dir})
@@ -114,36 +141,11 @@ function(CollectIncludeDirectories current_dir variable)
     foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
       if (IS_DIRECTORY ${SUB_DIRECTORY})
         list(APPEND ${variable} ${SUB_DIRECTORY})
-#        CollectIncludeDirectories(${SUB_DIRECTORY} ${variable} ${ARGN})
+#        rendu_collect_include_directories(${SUB_DIRECTORY} ${variable} ${ARGN})
       endif ()
     endforeach ()
     set(${variable} ${${variable}} PARENT_SCOPE)
   endif ()
-endfunction(CollectIncludeDirectories)
+endfunction(rendu_collect_include_directories)
 
-# 将所有源文件收集到给定变量中，用于包含子目录中的所有源。忽略可变参数中列出的完全限定目录。
-# Use it like:
-# CollectProtoFiles(
-#   ${CMAKE_CURRENT_SOURCE_DIR}
-#   COMMON_PRIVATE_SOURCES
-#   # Exclude
-#   ${CMAKE_CURRENT_SOURCE_DIR}/precompiled_headers
-#   ${CMAKE_CURRENT_SOURCE_DIR}/platform)
-#
-function(CollectProtoFiles current_dir variable)
-  list(FIND ARGN ${current_dir} IS_EXCLUDED)
-  if (IS_EXCLUDED EQUAL -1)
-    file(GLOB COLLECTED_SOURCES
-        ${current_dir}/*.proto
-    )
-    list(APPEND ${variable} ${COLLECTED_SOURCES})
 
-    file(GLOB SUB_DIRECTORIES ${current_dir}/*)
-    foreach (SUB_DIRECTORY ${SUB_DIRECTORIES})
-      if (IS_DIRECTORY ${SUB_DIRECTORY})
-        CollectProtoFiles(${SUB_DIRECTORY} ${variable} ${ARGN})
-      endif ()
-    endforeach ()
-    set(${variable} ${${variable}} PARENT_SCOPE)
-  endif ()
-endfunction(CollectProtoFiles)
