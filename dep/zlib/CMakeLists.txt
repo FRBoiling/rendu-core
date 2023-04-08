@@ -1,16 +1,11 @@
 #**********************************
 #  Created by boil on 2022/9/10.
 #**********************************
-set(target_name zlib)
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    LINKOPTS
-    rendu-dependency-interface
-    DEPS
-)
+find_package(ZLIB REQUIRED)
+add_library(zlib INTERFACE)
+target_link_libraries(zlib
+    INTERFACE
+    ZLIB
+    )
+add_library(dep::zlib ALIAS zlib)
 

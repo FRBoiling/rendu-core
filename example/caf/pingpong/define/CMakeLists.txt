@@ -12,8 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-dependency-interface
     DEPS
-    dep::caf_io
-    dep::caf_core
+    dep::caf
     dep::protobuf
     proto::model
 )

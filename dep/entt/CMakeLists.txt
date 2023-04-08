@@ -1,16 +1,11 @@
 #**********************************
-#  Created by boil on 2022/9/10.
+#  Created by boil on 2023/4/9.
 #**********************************
-set(target_name entt)
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    LINKOPTS
-    rendu-dependency-interface
-    DEPS
-)
+find_package(EnTT CONFIG REQUIRED)
+add_library(entt INTERFACE)
+target_link_libraries(entt
+    INTERFACE
+    EnTT::EnTT
+    )
+add_library(dep::entt ALIAS entt)
 

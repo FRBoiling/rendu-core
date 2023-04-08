@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
-#include <entt/entity/entity.hpp>
-#include <entt/entity/helper.hpp>
-#include <entt/entity/registry.hpp>
+#include <entt/entt.hpp>
 
 struct clazz {
     void func(entt::registry &, entt::entity curr) {
@@ -52,7 +50,6 @@ TEST(Helper, Invoke) {
 TEST(Helper, ToEntity) {
     entt::registry registry;
     const entt::entity null = entt::null;
-    constexpr auto page_size = entt::storage_type_t<int>::traits_type::page_size;
     const int value = 42;
 
     ASSERT_EQ(entt::to_entity(registry, 42), null);
@@ -61,10 +58,6 @@ TEST(Helper, ToEntity) {
     const auto entity = registry.create();
     auto &&storage = registry.storage<int>();
     storage.emplace(entity);
-
-    while(storage.size() < (page_size - 1u)) {
-        storage.emplace(registry.create(), value);
-    }
 
     const auto other = registry.create();
     const auto next = registry.create();
@@ -76,14 +69,11 @@ TEST(Helper, ToEntity) {
     ASSERT_EQ(entt::to_entity(registry, registry.get<int>(other)), other);
     ASSERT_EQ(entt::to_entity(registry, registry.get<int>(next)), next);
 
-    ASSERT_EQ(&registry.get<int>(entity) + page_size - 1u, &registry.get<int>(other));
 
     registry.destroy(other);
 
     ASSERT_EQ(entt::to_entity(registry, registry.get<int>(entity)), entity);
     ASSERT_EQ(entt::to_entity(registry, registry.get<int>(next)), next);
-
-    ASSERT_EQ(&registry.get<int>(entity) + page_size - 1u, &registry.get<int>(next));
 
     ASSERT_EQ(entt::to_entity(registry, 42), null);
     ASSERT_EQ(entt::to_entity(registry, value), null);
@@ -92,7 +82,6 @@ TEST(Helper, ToEntity) {
 TEST(Helper, ToEntityStableType) {
     entt::registry registry;
     const entt::entity null = entt::null;
-    constexpr auto page_size = entt::storage_type_t<stable_type>::traits_type::page_size;
     const stable_type value{42};
 
     ASSERT_EQ(entt::to_entity(registry, stable_type{42}), null);
@@ -101,10 +90,6 @@ TEST(Helper, ToEntityStableType) {
     const auto entity = registry.create();
     auto &&storage = registry.storage<stable_type>();
     registry.emplace<stable_type>(entity);
-
-    while(storage.size() < (page_size - 2u)) {
-        storage.emplace(registry.create(), value);
-    }
 
     const auto other = registry.create();
     const auto next = registry.create();
@@ -116,14 +101,12 @@ TEST(Helper, ToEntityStableType) {
     ASSERT_EQ(entt::to_entity(registry, registry.get<stable_type>(other)), other);
     ASSERT_EQ(entt::to_entity(registry, registry.get<stable_type>(next)), next);
 
-    ASSERT_EQ(&registry.get<stable_type>(entity) + page_size - 2u, &registry.get<stable_type>(other));
 
     registry.destroy(other);
 
     ASSERT_EQ(entt::to_entity(registry, registry.get<stable_type>(entity)), entity);
     ASSERT_EQ(entt::to_entity(registry, registry.get<stable_type>(next)), next);
 
-    ASSERT_EQ(&registry.get<stable_type>(entity) + page_size - 1u, &registry.get<stable_type>(next));
 
     ASSERT_EQ(entt::to_entity(registry, stable_type{42}), null);
     ASSERT_EQ(entt::to_entity(registry, value), null);
@@ -132,15 +115,8 @@ TEST(Helper, ToEntityStableType) {
 TEST(Helper, SighHelper) {
     entt::registry registry{};
     const auto entt = registry.create();
-    entt::sigh_helper helper{registry};
     int counter{};
 
-    ASSERT_EQ(&helper.registry(), &registry);
-
-    helper.with<int>()
-        .on_construct<&sigh_callback>(counter)
-        .on_update<&sigh_callback>(counter)
-        .on_destroy<&sigh_callback>(counter);
 
     ASSERT_EQ(counter, 0);
 

@@ -23,8 +23,9 @@ namespace _pbi = _pb::internal;
 namespace org {
 namespace caf {
 PROTOBUF_CONSTEXPR Ping::Ping(
-    ::_pbi::ConstantInitialized)
-  : id_(0){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.id_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PingDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PingDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -35,8 +36,9 @@ struct PingDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PingDefaultTypeInternal _Ping_default_instance_;
 PROTOBUF_CONSTEXPR Pong::Pong(
-    ::_pbi::ConstantInitialized)
-  : id_(0){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.id_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PongDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PongDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -47,9 +49,11 @@ struct PongDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PongDefaultTypeInternal _Pong_default_instance_;
 PROTOBUF_CONSTEXPR PingOrPong::PingOrPong(
-    ::_pbi::ConstantInitialized)
-  : ping_(nullptr)
-  , pong_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_._has_bits_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}
+  , /*decltype(_impl_.ping_)*/nullptr
+  , /*decltype(_impl_.pong_)*/nullptr} {}
 struct PingOrPongDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PingOrPongDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -72,22 +76,22 @@ const uint32_t TableStruct_pingpong_2fpingpong_2eproto::offsets[] PROTOBUF_SECTI
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::org::caf::Ping, id_),
+  PROTOBUF_FIELD_OFFSET(::org::caf::Ping, _impl_.id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::org::caf::Pong, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::org::caf::Pong, id_),
-  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::org::caf::Pong, _impl_.id_),
+  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, _impl_._has_bits_),
   PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, ping_),
-  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, pong_),
+  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, _impl_.ping_),
+  PROTOBUF_FIELD_OFFSET(::org::caf::PingOrPong, _impl_.pong_),
   0,
   1,
 };
@@ -137,18 +141,29 @@ class Ping::_Internal {
 Ping::Ping(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:org.caf.Ping)
 }
 Ping::Ping(const Ping& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Ping* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  id_ = from.id_;
+  _this->_impl_.id_ = from._impl_.id_;
   // @@protoc_insertion_point(copy_constructor:org.caf.Ping)
 }
 
-inline void Ping::SharedCtor() {
-id_ = 0;
+inline void Ping::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.id_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 Ping::~Ping() {
@@ -165,7 +180,7 @@ inline void Ping::SharedDtor() {
 }
 
 void Ping::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Ping::Clear() {
@@ -174,7 +189,7 @@ void Ping::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  id_ = 0;
+  _impl_.id_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -187,7 +202,7 @@ const char* Ping::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
       // int32 id = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -248,32 +263,28 @@ size_t Ping::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Ping::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Ping::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Ping::GetClassData() const { return &_class_data_; }
 
-void Ping::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Ping *>(to)->MergeFrom(
-      static_cast<const Ping &>(from));
-}
 
-
-void Ping::MergeFrom(const Ping& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:org.caf.Ping)
-  GOOGLE_DCHECK_NE(&from, this);
+void Ping::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Ping*>(&to_msg);
+  auto& from = static_cast<const Ping&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:org.caf.Ping)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_id() != 0) {
-    _internal_set_id(from._internal_id());
+    _this->_internal_set_id(from._internal_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Ping::CopyFrom(const Ping& from) {
@@ -290,7 +301,7 @@ bool Ping::IsInitialized() const {
 void Ping::InternalSwap(Ping* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(id_, other->id_);
+  swap(_impl_.id_, other->_impl_.id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Ping::GetMetadata() const {
@@ -308,18 +319,29 @@ class Pong::_Internal {
 Pong::Pong(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:org.caf.Pong)
 }
 Pong::Pong(const Pong& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Pong* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  id_ = from.id_;
+  _this->_impl_.id_ = from._impl_.id_;
   // @@protoc_insertion_point(copy_constructor:org.caf.Pong)
 }
 
-inline void Pong::SharedCtor() {
-id_ = 0;
+inline void Pong::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.id_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 Pong::~Pong() {
@@ -336,7 +358,7 @@ inline void Pong::SharedDtor() {
 }
 
 void Pong::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Pong::Clear() {
@@ -345,7 +367,7 @@ void Pong::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  id_ = 0;
+  _impl_.id_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -358,7 +380,7 @@ const char* Pong::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
       // int32 id = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -419,32 +441,28 @@ size_t Pong::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Pong::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Pong::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Pong::GetClassData() const { return &_class_data_; }
 
-void Pong::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Pong *>(to)->MergeFrom(
-      static_cast<const Pong &>(from));
-}
 
-
-void Pong::MergeFrom(const Pong& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:org.caf.Pong)
-  GOOGLE_DCHECK_NE(&from, this);
+void Pong::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Pong*>(&to_msg);
+  auto& from = static_cast<const Pong&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:org.caf.Pong)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_id() != 0) {
-    _internal_set_id(from._internal_id());
+    _this->_internal_set_id(from._internal_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Pong::CopyFrom(const Pong& from) {
@@ -461,7 +479,7 @@ bool Pong::IsInitialized() const {
 void Pong::InternalSwap(Pong* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(id_, other->id_);
+  swap(_impl_.id_, other->_impl_.id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Pong::GetMetadata() const {
@@ -474,7 +492,7 @@ void Pong::InternalSwap(Pong* other) {
 
 class PingOrPong::_Internal {
  public:
-  using HasBits = decltype(std::declval<PingOrPong>()._has_bits_);
+  using HasBits = decltype(std::declval<PingOrPong>()._impl_._has_bits_);
   static const ::org::caf::Ping& ping(const PingOrPong* msg);
   static void set_has_ping(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
@@ -487,40 +505,47 @@ class PingOrPong::_Internal {
 
 const ::org::caf::Ping&
 PingOrPong::_Internal::ping(const PingOrPong* msg) {
-  return *msg->ping_;
+  return *msg->_impl_.ping_;
 }
 const ::org::caf::Pong&
 PingOrPong::_Internal::pong(const PingOrPong* msg) {
-  return *msg->pong_;
+  return *msg->_impl_.pong_;
 }
 PingOrPong::PingOrPong(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:org.caf.PingOrPong)
 }
 PingOrPong::PingOrPong(const PingOrPong& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  PingOrPong* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.ping_){nullptr}
+    , decltype(_impl_.pong_){nullptr}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_ping()) {
-    ping_ = new ::org::caf::Ping(*from.ping_);
-  } else {
-    ping_ = nullptr;
+    _this->_impl_.ping_ = new ::org::caf::Ping(*from._impl_.ping_);
   }
   if (from._internal_has_pong()) {
-    pong_ = new ::org::caf::Pong(*from.pong_);
-  } else {
-    pong_ = nullptr;
+    _this->_impl_.pong_ = new ::org::caf::Pong(*from._impl_.pong_);
   }
   // @@protoc_insertion_point(copy_constructor:org.caf.PingOrPong)
 }
 
-inline void PingOrPong::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&ping_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&pong_) -
-    reinterpret_cast<char*>(&ping_)) + sizeof(pong_));
+inline void PingOrPong::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.ping_){nullptr}
+    , decltype(_impl_.pong_){nullptr}
+  };
 }
 
 PingOrPong::~PingOrPong() {
@@ -534,12 +559,12 @@ PingOrPong::~PingOrPong() {
 
 inline void PingOrPong::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete ping_;
-  if (this != internal_default_instance()) delete pong_;
+  if (this != internal_default_instance()) delete _impl_.ping_;
+  if (this != internal_default_instance()) delete _impl_.pong_;
 }
 
 void PingOrPong::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void PingOrPong::Clear() {
@@ -548,18 +573,18 @@ void PingOrPong::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000003u) {
     if (cached_has_bits & 0x00000001u) {
-      GOOGLE_DCHECK(ping_ != nullptr);
-      ping_->Clear();
+      GOOGLE_DCHECK(_impl_.ping_ != nullptr);
+      _impl_.ping_->Clear();
     }
     if (cached_has_bits & 0x00000002u) {
-      GOOGLE_DCHECK(pong_ != nullptr);
-      pong_->Clear();
+      GOOGLE_DCHECK(_impl_.pong_ != nullptr);
+      _impl_.pong_->Clear();
     }
   }
-  _has_bits_.Clear();
+  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -602,7 +627,7 @@ const char* PingOrPong::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
     CHK_(ptr != nullptr);
   }  // while
 message_done:
-  _has_bits_.Or(has_bits);
+  _impl_._has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -646,55 +671,53 @@ size_t PingOrPong::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000003u) {
     // optional .org.caf.Ping ping = 1;
     if (cached_has_bits & 0x00000001u) {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *ping_);
+          *_impl_.ping_);
     }
 
     // optional .org.caf.Pong pong = 2;
     if (cached_has_bits & 0x00000002u) {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *pong_);
+          *_impl_.pong_);
     }
 
   }
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PingOrPong::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     PingOrPong::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PingOrPong::GetClassData() const { return &_class_data_; }
 
-void PingOrPong::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<PingOrPong *>(to)->MergeFrom(
-      static_cast<const PingOrPong &>(from));
-}
 
-
-void PingOrPong::MergeFrom(const PingOrPong& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:org.caf.PingOrPong)
-  GOOGLE_DCHECK_NE(&from, this);
+void PingOrPong::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<PingOrPong*>(&to_msg);
+  auto& from = static_cast<const PingOrPong&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:org.caf.PingOrPong)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
+  cached_has_bits = from._impl_._has_bits_[0];
   if (cached_has_bits & 0x00000003u) {
     if (cached_has_bits & 0x00000001u) {
-      _internal_mutable_ping()->::org::caf::Ping::MergeFrom(from._internal_ping());
+      _this->_internal_mutable_ping()->::org::caf::Ping::MergeFrom(
+          from._internal_ping());
     }
     if (cached_has_bits & 0x00000002u) {
-      _internal_mutable_pong()->::org::caf::Pong::MergeFrom(from._internal_pong());
+      _this->_internal_mutable_pong()->::org::caf::Pong::MergeFrom(
+          from._internal_pong());
     }
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PingOrPong::CopyFrom(const PingOrPong& from) {
@@ -711,13 +734,13 @@ bool PingOrPong::IsInitialized() const {
 void PingOrPong::InternalSwap(PingOrPong* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(PingOrPong, pong_)
-      + sizeof(PingOrPong::pong_)
-      - PROTOBUF_FIELD_OFFSET(PingOrPong, ping_)>(
-          reinterpret_cast<char*>(&ping_),
-          reinterpret_cast<char*>(&other->ping_));
+      PROTOBUF_FIELD_OFFSET(PingOrPong, _impl_.pong_)
+      + sizeof(PingOrPong::_impl_.pong_)
+      - PROTOBUF_FIELD_OFFSET(PingOrPong, _impl_.ping_)>(
+          reinterpret_cast<char*>(&_impl_.ping_),
+          reinterpret_cast<char*>(&other->_impl_.ping_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata PingOrPong::GetMetadata() const {

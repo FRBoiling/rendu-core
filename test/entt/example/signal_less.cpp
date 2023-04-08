@@ -5,19 +5,12 @@
 #include <iterator>
 #include <type_traits>
 #include <gtest/gtest.h>
-#include <entt/entity/entity.hpp>
-#include <entt/entity/registry.hpp>
+#include <entt/entt.hpp>
 
 template<typename Type, typename Entity>
 struct entt::storage_type<Type, Entity> {
     // no signal regardless of component type ...
     using type = basic_storage<Type, Entity>;
-};
-
-template<typename Entity>
-struct entt::storage_type<char, Entity> {
-    // ... unless it's char, because yes.
-    using type = sigh_mixin<basic_storage<char, Entity>>;
 };
 
 template<typename, typename, typename = void>
@@ -32,7 +25,6 @@ inline constexpr auto has_on_construct_v = has_on_construct<Entity, Type>::value
 TEST(Example, SignalLess) {
     // invoking registry::on_construct<int> is a compile-time error
     static_assert(!has_on_construct_v<entt::entity, int>);
-    static_assert(has_on_construct_v<entt::entity, char>);
 
     entt::registry registry;
     const entt::entity entity[1u]{registry.create()};

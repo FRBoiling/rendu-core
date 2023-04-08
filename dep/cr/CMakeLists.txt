@@ -1,13 +1,10 @@
-
-set(target_name cr)
-rendu_add_library(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    LINKOPTS
-    rendu-dependency-interface
-    DEPS
-)
+#**********************************
+#  Created by boil on 2023/4/9.
+#**********************************
+find_path(CR_INCLUDE_DIRS "cr.h")
+add_library(cr INTERFACE)
+target_include_directories(cr
+    INTERFACE
+    ${CR_INCLUDE_DIRS}
+    )
+add_library(dep::cr ALIAS cr)

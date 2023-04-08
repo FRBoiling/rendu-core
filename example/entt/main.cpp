@@ -2,7 +2,7 @@
 * Created by boil on 2023/3/26.
 */
 #include <string>
-#include <entity/registry.hpp>
+#include <entt/entt.hpp>
 
 //为了使用entt实现ECS（Entity-Component-System）架构，您可以按照以下步骤操作：
 

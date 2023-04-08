@@ -23,10 +23,10 @@ namespace _pbi = _pb::internal;
 namespace game {
 namespace address_book {
 PROTOBUF_CONSTEXPR Person_PhoneNumber::Person_PhoneNumber(
-    ::_pbi::ConstantInitialized)
-  : number_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , type_(0)
-{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.number_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct Person_PhoneNumberDefaultTypeInternal {
   PROTOBUF_CONSTEXPR Person_PhoneNumberDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -37,12 +37,13 @@ struct Person_PhoneNumberDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Person_PhoneNumberDefaultTypeInternal _Person_PhoneNumber_default_instance_;
 PROTOBUF_CONSTEXPR Person::Person(
-    ::_pbi::ConstantInitialized)
-  : phones_()
-  , name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , email_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , last_updated_(nullptr)
-  , id_(0){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.phones_)*/{}
+  , /*decltype(_impl_.name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.email_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.last_updated_)*/nullptr
+  , /*decltype(_impl_.id_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PersonDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PersonDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -53,8 +54,9 @@ struct PersonDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PersonDefaultTypeInternal _Person_default_instance_;
 PROTOBUF_CONSTEXPR AddressBook::AddressBook(
-    ::_pbi::ConstantInitialized)
-  : people_(){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.people_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AddressBookDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddressBookDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -77,26 +79,26 @@ const uint32_t TableStruct_addressbook_2faddressbook_2eproto::offsets[] PROTOBUF
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person_PhoneNumber, number_),
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person_PhoneNumber, type_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person_PhoneNumber, _impl_.number_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person_PhoneNumber, _impl_.type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, name_),
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, id_),
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, email_),
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, phones_),
-  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, last_updated_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _impl_.name_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _impl_.id_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _impl_.email_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _impl_.phones_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::Person, _impl_.last_updated_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::address_book::AddressBook, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::game::address_book::AddressBook, people_),
+  PROTOBUF_FIELD_OFFSET(::game::address_book::AddressBook, _impl_.people_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::game::address_book::Person_PhoneNumber)},
@@ -177,30 +179,43 @@ class Person_PhoneNumber::_Internal {
 Person_PhoneNumber::Person_PhoneNumber(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:game.address_book.Person.PhoneNumber)
 }
 Person_PhoneNumber::Person_PhoneNumber(const Person_PhoneNumber& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Person_PhoneNumber* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.number_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  number_.InitDefault();
+  _impl_.number_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    number_.Set("", GetArenaForAllocation());
+    _impl_.number_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_number().empty()) {
-    number_.Set(from._internal_number(), 
-      GetArenaForAllocation());
+    _this->_impl_.number_.Set(from._internal_number(), 
+      _this->GetArenaForAllocation());
   }
-  type_ = from.type_;
+  _this->_impl_.type_ = from._impl_.type_;
   // @@protoc_insertion_point(copy_constructor:game.address_book.Person.PhoneNumber)
 }
 
-inline void Person_PhoneNumber::SharedCtor() {
-number_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  number_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-type_ = 0;
+inline void Person_PhoneNumber::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.number_){}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.number_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.number_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 Person_PhoneNumber::~Person_PhoneNumber() {
@@ -214,11 +229,11 @@ Person_PhoneNumber::~Person_PhoneNumber() {
 
 inline void Person_PhoneNumber::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  number_.Destroy();
+  _impl_.number_.Destroy();
 }
 
 void Person_PhoneNumber::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Person_PhoneNumber::Clear() {
@@ -227,8 +242,8 @@ void Person_PhoneNumber::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  number_.ClearToEmpty();
-  type_ = 0;
+  _impl_.number_.ClearToEmpty();
+  _impl_.type_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -332,35 +347,31 @@ size_t Person_PhoneNumber::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Person_PhoneNumber::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Person_PhoneNumber::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Person_PhoneNumber::GetClassData() const { return &_class_data_; }
 
-void Person_PhoneNumber::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Person_PhoneNumber *>(to)->MergeFrom(
-      static_cast<const Person_PhoneNumber &>(from));
-}
 
-
-void Person_PhoneNumber::MergeFrom(const Person_PhoneNumber& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.Person.PhoneNumber)
-  GOOGLE_DCHECK_NE(&from, this);
+void Person_PhoneNumber::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Person_PhoneNumber*>(&to_msg);
+  auto& from = static_cast<const Person_PhoneNumber&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.Person.PhoneNumber)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_number().empty()) {
-    _internal_set_number(from._internal_number());
+    _this->_internal_set_number(from._internal_number());
   }
   if (from._internal_type() != 0) {
-    _internal_set_type(from._internal_type());
+    _this->_internal_set_type(from._internal_type());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Person_PhoneNumber::CopyFrom(const Person_PhoneNumber& from) {
@@ -380,10 +391,10 @@ void Person_PhoneNumber::InternalSwap(Person_PhoneNumber* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &number_, lhs_arena,
-      &other->number_, rhs_arena
+      &_impl_.number_, lhs_arena,
+      &other->_impl_.number_, rhs_arena
   );
-  swap(type_, other->type_);
+  swap(_impl_.type_, other->_impl_.type_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Person_PhoneNumber::GetMetadata() const {
@@ -401,63 +412,75 @@ class Person::_Internal {
 
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 Person::_Internal::last_updated(const Person* msg) {
-  return *msg->last_updated_;
+  return *msg->_impl_.last_updated_;
 }
 void Person::clear_last_updated() {
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
+  _impl_.last_updated_ = nullptr;
 }
 Person::Person(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  phones_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:game.address_book.Person)
 }
 Person::Person(const Person& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      phones_(from.phones_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Person* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.phones_){from._impl_.phones_}
+    , decltype(_impl_.name_){}
+    , decltype(_impl_.email_){}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  name_.InitDefault();
+  _impl_.name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    name_.Set("", GetArenaForAllocation());
+    _impl_.name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_name().empty()) {
-    name_.Set(from._internal_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.name_.Set(from._internal_name(), 
+      _this->GetArenaForAllocation());
   }
-  email_.InitDefault();
+  _impl_.email_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    email_.Set("", GetArenaForAllocation());
+    _impl_.email_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_email().empty()) {
-    email_.Set(from._internal_email(), 
-      GetArenaForAllocation());
+    _this->_impl_.email_.Set(from._internal_email(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_last_updated()) {
-    last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.last_updated_);
-  } else {
-    last_updated_ = nullptr;
+    _this->_impl_.last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.last_updated_);
   }
-  id_ = from.id_;
+  _this->_impl_.id_ = from._impl_.id_;
   // @@protoc_insertion_point(copy_constructor:game.address_book.Person)
 }
 
-inline void Person::SharedCtor() {
-name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-email_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  email_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&last_updated_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&id_) -
-    reinterpret_cast<char*>(&last_updated_)) + sizeof(id_));
+inline void Person::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.phones_){arena}
+    , decltype(_impl_.name_){}
+    , decltype(_impl_.email_){}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.id_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.email_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.email_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 Person::~Person() {
@@ -471,13 +494,14 @@ Person::~Person() {
 
 inline void Person::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  name_.Destroy();
-  email_.Destroy();
-  if (this != internal_default_instance()) delete last_updated_;
+  _impl_.phones_.~RepeatedPtrField();
+  _impl_.name_.Destroy();
+  _impl_.email_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.last_updated_;
 }
 
 void Person::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Person::Clear() {
@@ -486,14 +510,14 @@ void Person::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  phones_.Clear();
-  name_.ClearToEmpty();
-  email_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  _impl_.phones_.Clear();
+  _impl_.name_.ClearToEmpty();
+  _impl_.email_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
-  id_ = 0;
+  _impl_.last_updated_ = nullptr;
+  _impl_.id_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -516,7 +540,7 @@ const char* Person::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
       // int32 id = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -640,7 +664,7 @@ size_t Person::ByteSizeLong() const {
 
   // repeated .game.address_book.Person.PhoneNumber phones = 4;
   total_size += 1UL * this->_internal_phones_size();
-  for (const auto& msg : this->phones_) {
+  for (const auto& msg : this->_impl_.phones_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
@@ -663,7 +687,7 @@ size_t Person::ByteSizeLong() const {
   if (this->_internal_has_last_updated()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *last_updated_);
+        *_impl_.last_updated_);
   }
 
   // int32 id = 2;
@@ -671,42 +695,39 @@ size_t Person::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Person::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Person::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Person::GetClassData() const { return &_class_data_; }
 
-void Person::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Person *>(to)->MergeFrom(
-      static_cast<const Person &>(from));
-}
 
-
-void Person::MergeFrom(const Person& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.Person)
-  GOOGLE_DCHECK_NE(&from, this);
+void Person::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Person*>(&to_msg);
+  auto& from = static_cast<const Person&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.Person)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  phones_.MergeFrom(from.phones_);
+  _this->_impl_.phones_.MergeFrom(from._impl_.phones_);
   if (!from._internal_name().empty()) {
-    _internal_set_name(from._internal_name());
+    _this->_internal_set_name(from._internal_name());
   }
   if (!from._internal_email().empty()) {
-    _internal_set_email(from._internal_email());
+    _this->_internal_set_email(from._internal_email());
   }
   if (from._internal_has_last_updated()) {
-    _internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_last_updated());
+    _this->_internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_last_updated());
   }
   if (from._internal_id() != 0) {
-    _internal_set_id(from._internal_id());
+    _this->_internal_set_id(from._internal_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Person::CopyFrom(const Person& from) {
@@ -725,21 +746,21 @@ void Person::InternalSwap(Person* other) {
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  phones_.InternalSwap(&other->phones_);
+  _impl_.phones_.InternalSwap(&other->_impl_.phones_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &name_, lhs_arena,
-      &other->name_, rhs_arena
+      &_impl_.name_, lhs_arena,
+      &other->_impl_.name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &email_, lhs_arena,
-      &other->email_, rhs_arena
+      &_impl_.email_, lhs_arena,
+      &other->_impl_.email_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Person, id_)
-      + sizeof(Person::id_)
-      - PROTOBUF_FIELD_OFFSET(Person, last_updated_)>(
-          reinterpret_cast<char*>(&last_updated_),
-          reinterpret_cast<char*>(&other->last_updated_));
+      PROTOBUF_FIELD_OFFSET(Person, _impl_.id_)
+      + sizeof(Person::_impl_.id_)
+      - PROTOBUF_FIELD_OFFSET(Person, _impl_.last_updated_)>(
+          reinterpret_cast<char*>(&_impl_.last_updated_),
+          reinterpret_cast<char*>(&other->_impl_.last_updated_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Person::GetMetadata() const {
@@ -756,19 +777,29 @@ class AddressBook::_Internal {
 
 AddressBook::AddressBook(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  people_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:game.address_book.AddressBook)
 }
 AddressBook::AddressBook(const AddressBook& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      people_(from.people_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AddressBook* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.people_){from._impl_.people_}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:game.address_book.AddressBook)
 }
 
-inline void AddressBook::SharedCtor() {
+inline void AddressBook::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.people_){arena}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 AddressBook::~AddressBook() {
@@ -782,10 +813,11 @@ AddressBook::~AddressBook() {
 
 inline void AddressBook::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.people_.~RepeatedPtrField();
 }
 
 void AddressBook::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void AddressBook::Clear() {
@@ -794,7 +826,7 @@ void AddressBook::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  people_.Clear();
+  _impl_.people_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -872,35 +904,31 @@ size_t AddressBook::ByteSizeLong() const {
 
   // repeated .game.address_book.Person people = 1;
   total_size += 1UL * this->_internal_people_size();
-  for (const auto& msg : this->people_) {
+  for (const auto& msg : this->_impl_.people_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AddressBook::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     AddressBook::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddressBook::GetClassData() const { return &_class_data_; }
 
-void AddressBook::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<AddressBook *>(to)->MergeFrom(
-      static_cast<const AddressBook &>(from));
-}
 
-
-void AddressBook::MergeFrom(const AddressBook& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.AddressBook)
-  GOOGLE_DCHECK_NE(&from, this);
+void AddressBook::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AddressBook*>(&to_msg);
+  auto& from = static_cast<const AddressBook&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:game.address_book.AddressBook)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  people_.MergeFrom(from.people_);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.people_.MergeFrom(from._impl_.people_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AddressBook::CopyFrom(const AddressBook& from) {
@@ -917,7 +945,7 @@ bool AddressBook::IsInitialized() const {
 void AddressBook::InternalSwap(AddressBook* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  people_.InternalSwap(&other->people_);
+  _impl_.people_.InternalSwap(&other->_impl_.people_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AddressBook::GetMetadata() const {

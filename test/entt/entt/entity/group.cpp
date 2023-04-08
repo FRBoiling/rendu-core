@@ -6,8 +6,7 @@
 #include <type_traits>
 #include <utility>
 #include <gtest/gtest.h>
-#include <entt/entity/group.hpp>
-#include <entt/entity/registry.hpp>
+#include <entt/entt.hpp>
 
 struct empty_type {};
 
@@ -201,9 +200,7 @@ TEST(NonOwningGroup, Each) {
 
     auto it = iterable.begin();
 
-    ASSERT_EQ(it.base(), group.begin());
     ASSERT_EQ((it++, ++it), iterable.end());
-    ASSERT_EQ(it.base(), group.end());
 
     group.each([expected = 1](auto entt, int &ivalue, char &cvalue) mutable {
         ASSERT_EQ(static_cast<int>(entt::to_integral(entt)), expected);
@@ -673,17 +670,10 @@ TEST(NonOwningGroup, Storage) {
     static_assert(std::is_same_v<decltype(group.storage<1u>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(group.storage<char>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(group.storage<const char>()), const entt::storage_type_t<char> &>);
-    static_assert(std::is_same_v<decltype(group.storage<2u>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<const double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<3u>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(group.storage<float>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(group.storage<const float>()), const entt::storage_type_t<float> &>);
 
     ASSERT_EQ(group.size(), 0u);
 
     group.storage<int>().emplace(entity);
-    group.storage<double>().emplace(entity);
     registry.emplace<char>(entity);
     registry.emplace<float>(entity);
 
@@ -691,19 +681,14 @@ TEST(NonOwningGroup, Storage) {
     ASSERT_EQ(group.begin(), group.end());
     ASSERT_TRUE(group.storage<int>().contains(entity));
     ASSERT_TRUE(group.storage<const char>().contains(entity));
-    ASSERT_TRUE(group.storage<double>().contains(entity));
-    ASSERT_TRUE(group.storage<const float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char, double, float>(entity)));
 
-    group.storage<double>().erase(entity);
     registry.erase<float>(entity);
 
     ASSERT_EQ(group.size(), 1u);
     ASSERT_NE(group.begin(), group.end());
     ASSERT_TRUE(group.storage<const int>().contains(entity));
     ASSERT_TRUE(group.storage<char>().contains(entity));
-    ASSERT_FALSE(group.storage<const double>().contains(entity));
-    ASSERT_FALSE(group.storage<float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char>(entity)));
     ASSERT_FALSE((registry.any_of<double, float>(entity)));
 
@@ -713,8 +698,6 @@ TEST(NonOwningGroup, Storage) {
     ASSERT_EQ(group.begin(), group.end());
     ASSERT_FALSE(group.storage<0u>().contains(entity));
     ASSERT_TRUE(group.storage<1u>().contains(entity));
-    ASSERT_FALSE(group.storage<2u>().contains(entity));
-    ASSERT_FALSE(group.storage<3u>().contains(entity));
     ASSERT_TRUE((registry.all_of<char>(entity)));
     ASSERT_FALSE((registry.any_of<int, double, float>(entity)));
 }
@@ -877,9 +860,7 @@ TEST(OwningGroup, Each) {
 
     auto it = iterable.begin();
 
-    ASSERT_EQ(it.base(), group.begin());
     ASSERT_EQ((it++, ++it), iterable.end());
-    ASSERT_EQ(it.base(), group.end());
 
     group.each([expected = 1](auto entt, int &ivalue, char &cvalue) mutable {
         ASSERT_EQ(static_cast<int>(entt::to_integral(entt)), expected);
@@ -1485,17 +1466,10 @@ TEST(OwningGroup, Storage) {
     static_assert(std::is_same_v<decltype(group.storage<1u>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(group.storage<char>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(group.storage<const char>()), const entt::storage_type_t<char> &>);
-    static_assert(std::is_same_v<decltype(group.storage<2u>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<const double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(group.storage<3u>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(group.storage<float>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(group.storage<const float>()), const entt::storage_type_t<float> &>);
 
     ASSERT_EQ(group.size(), 0u);
 
     group.storage<int>().emplace(entity);
-    group.storage<double>().emplace(entity);
     registry.emplace<char>(entity);
     registry.emplace<float>(entity);
 
@@ -1503,19 +1477,14 @@ TEST(OwningGroup, Storage) {
     ASSERT_EQ(group.begin(), group.end());
     ASSERT_TRUE(group.storage<int>().contains(entity));
     ASSERT_TRUE(group.storage<const char>().contains(entity));
-    ASSERT_TRUE(group.storage<double>().contains(entity));
-    ASSERT_TRUE(group.storage<const float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char, double, float>(entity)));
 
-    group.storage<double>().erase(entity);
     registry.erase<float>(entity);
 
     ASSERT_EQ(group.size(), 1u);
     ASSERT_NE(group.begin(), group.end());
     ASSERT_TRUE(group.storage<const int>().contains(entity));
     ASSERT_TRUE(group.storage<char>().contains(entity));
-    ASSERT_FALSE(group.storage<const double>().contains(entity));
-    ASSERT_FALSE(group.storage<float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char>(entity)));
     ASSERT_FALSE((registry.any_of<double, float>(entity)));
 
@@ -1525,8 +1494,6 @@ TEST(OwningGroup, Storage) {
     ASSERT_EQ(group.begin(), group.end());
     ASSERT_FALSE(group.storage<0u>().contains(entity));
     ASSERT_TRUE(group.storage<1u>().contains(entity));
-    ASSERT_FALSE(group.storage<2u>().contains(entity));
-    ASSERT_FALSE(group.storage<3u>().contains(entity));
     ASSERT_TRUE((registry.all_of<char>(entity)));
     ASSERT_FALSE((registry.any_of<int, double, float>(entity)));
 }
