@@ -30,12 +30,12 @@ function(rendu_add_library)
         # Exclude
         ${RD_LIB_DIR}/precompiled_headers
     )
-    if (USE_PCH)
+    if (RD_USE_PCH)
       rendu_collect_header_files(
           ${RD_LIB_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
-    endif (USE_PCH)
+    endif (RD_USE_PCH)
   endif ()
 
   list(APPEND RD_TARGET_SRCS ${RD_LIB_SRCS})
@@ -70,7 +70,7 @@ function(rendu_add_library)
     target_compile_definitions(${RD_OBJ_TARGET} PUBLIC ${RD_LIB_DEFINES})
     target_link_libraries(${RD_OBJ_TARGET} PRIVATE ${RD_LIB_LINKOPTS} PUBLIC ${RD_LIB_DEPS})
 
-    if (BUILD_SHARED_LIBS)
+    if (RD_BUILD_SHARED_LIBS)
       add_library(${RD_LIB_TARGET} SHARED $<TARGET_OBJECTS:${RD_OBJ_TARGET}>)
     else ()
       add_library(${RD_LIB_TARGET} STATIC $<TARGET_OBJECTS:${RD_OBJ_TARGET}>)
@@ -82,7 +82,7 @@ function(rendu_add_library)
   set_target_properties(${RD_LIB_TARGET} PROPERTIES FOLDER ${RD_LIB_PROJECT})
   add_library(${RD_LIB_PROJECT}::${RD_LIB_NAME} ALIAS ${RD_LIB_TARGET})
   # Generate precompiled header
-  if (USE_PCH)
+  if (RD_USE_PCH)
     message(STATUS "use precompiled header !")
     if ("${RD_PCH_HEADERS}" STREQUAL "")
     else ()

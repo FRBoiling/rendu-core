@@ -4,7 +4,7 @@
 
 macro(rendu_source_groups dir)
   # 如果没有设置WITH_SOURCE_TREE(空字符串)，则跳过此步骤。
-  if(NOT ${WITH_SOURCE_TREE} STREQUAL "")
+  if(NOT ${RD_WITH_SOURCE_TREE} STREQUAL "")
     # 包括所有头文件和c文件
     file(GLOB_RECURSE elements RELATIVE ${dir} *.h *.hpp *.c *.cpp *.cc)
 
@@ -15,7 +15,7 @@ macro(rendu_source_groups dir)
 
       if(NOT ${element_dir} STREQUAL "")
         # 如果文件在子目录中，则将其用作源组。
-        if(${WITH_SOURCE_TREE} STREQUAL "flat")
+        if(${RD_WITH_SOURCE_TREE} STREQUAL "flat")
           # 只使用第一个子目录构建平面结构
           string(FIND ${element_dir} "/" delemiter_pos)
           if(NOT ${delemiter_pos} EQUAL -1)
@@ -39,7 +39,7 @@ macro(rendu_source_groups dir)
   endif()
 endmacro()
 
-if(WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
+if(RD_WITH_SOURCE_TREE STREQUAL "hierarchical-folders")
   # 使用文件夹
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()

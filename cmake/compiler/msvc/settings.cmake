@@ -77,7 +77,7 @@ target_compile_options(rendu-compile-option-interface
   INTERFACE
     /MP)
 
-if((PLATFORM EQUAL 64) OR (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0.23026.0) OR BUILD_SHARED_LIBS)
+if((PLATFORM EQUAL 64) OR (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0.23026.0) OR RD_BUILD_SHARED_LIBS)
   # Enable extended object support
   target_compile_options(rendu-compile-option-interface
     INTERFACE
@@ -124,7 +124,7 @@ target_compile_options(rendu-compile-option-interface
     /wd4351
     /wd4091)
 
-if(NOT WITH_WARNINGS)
+if(NOT RD_WITH_WARNINGS)
   target_compile_options(rendu-compile-option-interface
     INTERFACE
       /wd4996
@@ -138,7 +138,7 @@ if(NOT WITH_WARNINGS)
   message(STATUS "MSVC: Disabled generic compiletime warnings")
 endif()
 
-if(BUILD_SHARED_LIBS)
+if(RD_BUILD_SHARED_LIBS)
   # C4251: needs to have dll-interface to be used by clients of class '...'
   # C4275: non dll-interface class ...' used as base for dll-interface class '...'
   target_compile_options(rendu-compile-option-interface

@@ -20,7 +20,7 @@ add_custom_target(uninstall
 )
 message(STATUS "MAC: Created uninstall target")
 
-if(USE_LD_GOLD)
+if(RD_USE_LD_GOLD)
   execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version ERROR_QUIET OUTPUT_VARIABLE LD_VERSION)
   if("${LD_VERSION}" MATCHES "GNU gold")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")

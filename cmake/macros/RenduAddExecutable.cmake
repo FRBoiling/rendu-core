@@ -30,12 +30,12 @@ function(rendu_add_executable)
         # Exclude
         ${RD_EXEC_DIR}/precompiled_headers
     )
-    if (USE_PCH)
+    if (RD_USE_PCH)
       rendu_collect_header_files(
           ${RD_EXEC_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
-    endif (USE_PCH)
+    endif (RD_USE_PCH)
   endif ()
 
   list(APPEND RD_TARGET_SRCS ${RD_EXEC_SRCS})
@@ -66,7 +66,7 @@ function(rendu_add_executable)
     
     add_executable(${RD_EXEC_PROJECT}::${RD_EXEC_NAME} ALIAS ${RD_EXEC_TARGET})
     # Generate precompiled header
-    if (USE_PCH)
+    if (RD_USE_PCH)
       message(STATUS "use precompiled header !")
       if ("${RD_PCH_HEADERS}" STREQUAL "")
       else ()
