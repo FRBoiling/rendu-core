@@ -9,6 +9,9 @@
 
 class scene {
 public:
+    scene() = default;
+    virtual ~scene() = default;
+public:
     virtual void on_enter(entt::registry &registry) = 0;
     virtual void on_update(entt::registry &registry) = 0;
     virtual void on_exit(entt::registry &registry) = 0;

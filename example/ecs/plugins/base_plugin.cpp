@@ -6,7 +6,6 @@
 #include "base/game_loop.h"
 #include "systems/event_system.h"
 #include "systems/input_system.h"
-#include "systems/input_system.h"
 #include "systems/render_system.h"
 #include "systems/messaging_system.h"
 #include "components/transform_component.h"

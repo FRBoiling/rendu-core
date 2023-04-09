@@ -13,7 +13,8 @@ namespace input {
     namespace details {
         class binding_check {
         public:
-            virtual ~binding_check() { };
+            binding_check() = default;
+            virtual ~binding_check() = default;
 
             virtual bool check(entt::registry &registry, const state &state) const {
                 return false;
