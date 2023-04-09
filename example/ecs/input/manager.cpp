@@ -4,7 +4,6 @@
 
 #include "manager.h"
 #include "helper.h"
-#include "details/binding_check.h"
 
 namespace input {
 

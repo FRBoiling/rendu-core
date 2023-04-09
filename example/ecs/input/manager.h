@@ -7,7 +7,6 @@
 
 #include <SDL.h>
 #include "controls.h"
-#include "state.h"
 
 namespace input {
     class manager {

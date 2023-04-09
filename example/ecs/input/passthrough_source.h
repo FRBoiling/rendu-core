@@ -15,6 +15,16 @@ namespace input {
     template<typename T>
     class passthrough_source {
         static_assert(sizeof(T) == 0, "unsupported passthrough data type");
+    public:
+        using type = std::variant<float>;
+
+        static void read(
+                type source,
+                entt::registry &registry,
+                const state &state,
+                T &out
+        ) {}
+
     };
 
     template<>
@@ -87,6 +97,8 @@ namespace input {
             }
         }
     };
+
+    using passthrough_vec2_source_type = typename passthrough_source<math::vec2>::type;
 }
 
 #endif //RENDU_PASSTHROUGH_SOURCE_H

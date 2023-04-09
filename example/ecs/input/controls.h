@@ -5,18 +5,20 @@
 #ifndef RENDU_CONTROLS_H
 #define RENDU_CONTROLS_H
 
-#include "helper.h"
 #include "action.h"
 #include "passthrough_source.h"
+#include "helper.h"
 #include <math/math.pb.h>
 
 namespace input {
-    using passthrough_vec2_source_type = typename passthrough_source<math::vec2>::type;
-
-    /* forward */ class manager;
 
     class controls {
         friend class manager;
+
+    public:
+        controls() = default;
+
+        controls(const controls &) = delete;
 
     public:
         struct trigger_context {
@@ -40,11 +42,6 @@ namespace input {
             source_type source;
         };
 
-
-    public:
-        controls() = default;
-
-        controls(const controls &) = delete;
 
     private:
         std::unordered_map<std::string, trigger_context> m_triggers;
