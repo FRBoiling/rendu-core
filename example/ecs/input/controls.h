@@ -6,14 +6,15 @@
 #define RENDU_CONTROLS_H
 
 #include "action.h"
-#include "passthrough_source.h"
-#include "helper.h"
 #include <math/math.pb.h>
+#include "details/binding_check.h"
+#include "passthrough_source.h"
 
 namespace input {
 
+    class manager;
+
     class controls {
-        friend class manager;
 
     public:
         controls() = default;
@@ -21,6 +22,8 @@ namespace input {
         controls(const controls &) = delete;
 
     public:
+        friend class manager;
+
         struct trigger_context {
             action_trigger value;
             binding_type bindings;

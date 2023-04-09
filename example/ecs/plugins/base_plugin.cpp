@@ -8,7 +8,6 @@
 #include "systems/input_system.h"
 #include "systems/render_system.h"
 #include "systems/messaging_system.h"
-#include "components/transform_component.h"
 
 void BasePlugin::mount(game_loop &game_loop) {
     game_loop

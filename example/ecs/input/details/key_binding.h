@@ -19,6 +19,12 @@ namespace input {
             }
         };
     }
+
+    template<uint8_t scancode>
+    binding_type key() {
+        return std::make_unique<details::key_binding<scancode>>();
+    }
+
 }
 
 #endif //RENDU_KEY_BINDING_H

@@ -3,7 +3,6 @@
 */
 
 #include "manager.h"
-#include "helper.h"
 
 namespace input {
 

@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 #include "controls.h"
+#include "state.h"
 
 namespace input {
     class manager {
@@ -26,7 +27,6 @@ namespace input {
         void frame_begin();
         void update(entt::registry &registry);
 
-        // ...
     public:
         const action_trigger &read_trigger(const std::string &name) {
             return m_controls.m_triggers.at(name).value;
