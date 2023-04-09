@@ -25,7 +25,7 @@ function(rendu_add_executable)
   list(APPEND RD_TARGET_HDRS ${RD_EXEC_HDRS})
   if ("${RD_TARGET_HDRS}" STREQUAL "")
     rendu_collect_header_files(
-        ${RD_EXEC_HDRS}
+        ${RD_EXEC_DIR}
         RD_TARGET_HDRS
         # Exclude
         ${RD_EXEC_DIR}/precompiled_headers

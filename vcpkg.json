@@ -29,5 +29,8 @@
   }, {
     "name" : "cereal",
     "version>=" : "1.3.2#1"
+  }, {
+    "name" : "sdl2",
+    "version>=" : "2.26.5"
   } ]
 }

@@ -23,8 +23,8 @@ void rendu::cmd_io_plugin::mount(rendu::host &game_loop) {
 //        m_input_manager->frame_begin();
 //      })
 //      .add_system(m_debug_system)
-//      .add_system(std::make_shared<event_system>())
+//      .add_system(std::make_shared<EventSystem>())
 //      .add_system(std::make_shared<input_system>())
 //      .add_system_last(std::make_shared<messaging_system>())
-//      .add_system_last(std::make_shared<render_system>());
+//      .add_system_last(std::make_shared<RenderSystem>());
 }

@@ -14,6 +14,7 @@ rendu_add_executable(
         DEPS
         proto::model
         dep::entt
+        dep::sdl
         DEFINES
 )
 
