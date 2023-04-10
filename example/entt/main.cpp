@@ -4,42 +4,48 @@
 #include <string>
 #include <entt/entt.hpp>
 
-//为了使用entt实现ECS（Entity-Component-System）架构，您可以按照以下步骤操作：
+#include <entt/entt.hpp>
 
-//1.使用entt::component定义组件：
-struct Position {
-  float x;
-  float y;
+struct position {
+    float x;
+    float y;
 };
 
-struct Velocity {
-  float x;
-  float y;
+struct velocity {
+    float dx;
+    float dy;
 };
 
-struct Sprite {
-  std::string texturePath;
-};
+void update(entt::registry &registry) {
+    auto view = registry.view<const position, velocity>();
+
+    // use a callback
+    view.each([](const auto &pos, auto &vel) { /* ... */ });
+
+    // use an extended callback
+    view.each([](const auto entity, const auto &pos, auto &vel) { /* ... */ });
+
+    // use a range-for
+    for(auto [entity, pos, vel]: view.each()) {
+        // ...
+    }
+
+    // use forward iterators and get only the components of interest
+    for(auto entity: view) {
+        auto &vel = view.get<velocity>(entity);
+        // ...
+    }
+}
 
 int main() {
-  //2.使用entt::entity定义实体：
-  entt::registry registry;
-  auto entity = registry.create();
-  //3.使用entt::registry::emplace将组件分配给实体：
-  registry.emplace<Position>(entity, 0.0f, 0.0f);
-  registry.emplace<Velocity>(entity, 1.0f, 1.0f);
-  registry.emplace<Sprite>(entity, "path/to/texture.png");
-  //4.使用entt::registry::get访问实体的组件：
-  auto &position = registry.get<Position>(entity);
-  auto &velocity = registry.get<Velocity>(entity);
-  auto &sprite = registry.get<Sprite>(entity);
+    entt::registry registry;
 
-  //5.使用entt::registry::view迭代具有特定组件的实体：
-  for (auto entity : registry.view<Position, Velocity>()) {
-    auto &position = registry.get<Position>(entity);
-    auto &velocity = registry.get<Velocity>(entity);
-    // ...
-  }
+    for(auto i = 0u; i < 10u; ++i) {
+        const auto entity = registry.create();
+        registry.emplace<position>(entity, i * 1.f, i * 1.f);
+        if(i % 2 == 0) { registry.emplace<velocity>(entity, i * .1f, i * .1f); }
+    }
 
+    update(registry);
 }
 

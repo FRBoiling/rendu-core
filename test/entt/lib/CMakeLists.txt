@@ -4,7 +4,7 @@
 #|--------------------------------
 #| rendu-core tests module
 #|--------------------------------
-if (RENDU_BUILD_TESTING)
+if (RD_BUILD_TESTING)
   set(PROJECT_NAME test)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}

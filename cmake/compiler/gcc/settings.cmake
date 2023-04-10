@@ -29,7 +29,7 @@ if(NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
   message(STATUS "GCC: SFMT enabled, SSE2 flags forced")
 endif()
 
-if(WITH_WARNINGS)
+if(RD_WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
     INTERFACE
       -W
@@ -69,7 +69,7 @@ if(ASAN)
   message(STATUS "GCC: Enabled Address Sanitizer")
 endif()
 
-if(BUILD_SHARED_LIBS)
+if(RD_BUILD_SHARED_LIBS)
   target_compile_options(rendu-compile-option-interface
     INTERFACE
       -fPIC

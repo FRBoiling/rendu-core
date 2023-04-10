@@ -4,7 +4,7 @@
 #|--------------------------------
 #| rendu-core examples project
 #|--------------------------------
-if (RENDU_FLAG_EXAMPLES)
+if (RD_BUILD_EXAMPLES)
   set(PROJECT_NAME example)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}

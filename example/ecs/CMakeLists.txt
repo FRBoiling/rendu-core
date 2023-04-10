@@ -1,12 +1,20 @@
 #**********************************
 #  Created by boil on 2022/10/24.
 #**********************************
-#|--------------------------------
-#| rendu-core examples project
-#|--------------------------------
-rendu_add_subdirectory(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    # Exclude
+set(target_name ecs)
+rendu_add_executable(
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        ${target_name}
+        LINKOPTS
+        rendu-core-interface
+        DEPS
+        proto::model
+        dep::entt
+        dep::sdl
+        DEFINES
 )
-
 

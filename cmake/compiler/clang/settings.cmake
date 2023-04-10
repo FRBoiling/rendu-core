@@ -40,7 +40,7 @@ if (NOT CLANG_HAVE_PROPER_CHARCONV)
       )
 endif ()
 
-if (WITH_WARNINGS)
+if (RD_WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
       INTERFACE
       -W
@@ -135,7 +135,7 @@ target_compile_options(rendu-compile-option-interface
     -Wno-narrowing
     -Wno-deprecated-register)
 
-if (BUILD_SHARED_LIBS)
+if (RD_BUILD_SHARED_LIBS)
   # -fPIC is needed to allow static linking in shared libs.
   # -fvisibility=hidden sets the default visibility to hidden to prevent exporting of all symbols.
   target_compile_options(rendu-compile-option-interface
