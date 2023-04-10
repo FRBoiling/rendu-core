@@ -6,7 +6,6 @@
 #define RENDU_KEY_BINDING_H
 
 #include "binding_check.h"
-#include "ImGuiIO.h"
 
 namespace input {
     namespace details {
@@ -14,8 +13,7 @@ namespace input {
         class key_binding final : public binding_check {
         public:
             bool check(entt::registry &registry, const state &state) const override {
-                auto &io = registry.ctx().get<ImGuiIO &>();
-                return (!io.WantCaptureKeyboard && state.keyboard_state[scancode]);
+                return state.keyboard_state[scancode];
             }
         };
     }

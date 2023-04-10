@@ -5,7 +5,6 @@
 #ifndef RENDU_PASSTHROUGH_SOURCE_H
 #define RENDU_PASSTHROUGH_SOURCE_H
 
-#include "details/ImGuiIO.h"
 #include "state.h"
 #include <math/math.pb.h>
 #include <variant>
@@ -64,11 +63,11 @@ namespace input {
                 const state &state,
                 math::vec2 &out
         ) {
-            auto &io = registry.ctx().get<ImGuiIO &>();
-            if (!io.WantCaptureMouse) {
-                out.set_x(state.mouse_x);
-                out.set_y(state.mouse_y);
-            }
+//            auto &io = registry.ctx().get<ImGuiIO &>();
+//            if (!io.WantCaptureMouse) {
+//                out.set_x(state.mouse_x);
+//                out.set_y(state.mouse_y);
+//            }
         }
 
         static void read_source(
@@ -77,11 +76,11 @@ namespace input {
                 const state &state,
                 math::vec2 &out
         ) {
-            auto &io = registry.ctx().get<ImGuiIO &>();
-            if (!io.WantCaptureMouse) {
-                out.set_x(state.mouse_motion_x);
-                out.set_y(state.mouse_motion_y);
-            }
+//            auto &io = registry.ctx().get<ImGuiIO &>();
+//            if (!io.WantCaptureMouse) {
+//                out.set_x(state.mouse_motion_x);
+//                out.set_y(state.mouse_motion_y);
+//            }
         }
 
         static void read_source(
@@ -90,11 +89,11 @@ namespace input {
                 const state &state,
                 math::vec2 &out
         ) {
-            auto &io = registry.ctx().get<ImGuiIO &>();
-            if (!io.WantCaptureMouse) {
-                out.set_x(state.mouse_wheel_x);
-                out.set_y(state.mouse_wheel_y);
-            }
+//            auto &io = registry.ctx().get<ImGuiIO &>();
+//            if (!io.WantCaptureMouse) {
+//                out.set_x(state.mouse_wheel_x);
+//                out.set_y(state.mouse_wheel_y);
+//            }
         }
     };
 

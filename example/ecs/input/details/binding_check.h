@@ -57,30 +57,6 @@ namespace input {
 
     using binding_type = std::unique_ptr<details::binding_check>;
 
-    binding_type nobinding() {
-        return std::make_unique<details::binding_check>();
-    }
-
-}
-
-input::binding_type operator|(
-        input::binding_type a,
-        input::binding_type b
-) {
-    return std::make_unique<input::details::binding_or_combinator>(
-            std::move(a),
-            std::move(b)
-    );
-}
-
-input::binding_type operator&(
-        input::binding_type a,
-        input::binding_type b
-) {
-    return std::make_unique<input::details::binding_and_combinator>(
-            std::move(a),
-            std::move(b)
-    );
 }
 
 #endif //RENDU_BINDING_CHECK_H
