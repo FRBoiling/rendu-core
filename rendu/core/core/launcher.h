@@ -10,23 +10,23 @@
 
 namespace rendu {
 
-class Launcher {
- public:
-  int Run(){
+    class Launcher {
+    public:
+        static int Run() {
 
-    cmd_io_plugin::config config = {
-        .win_title = "rendu core",
-        .cap_fps = 60
+            cmd_io_plugin::config config = {
+                    .win_title = "rendu core",
+                    .cap_fps = 60
+            };
+
+            cmd_io_plugin io(config);
+            host()
+                    .add_plugin(io)
+                    .run();
+
+            return 0;
+        }
     };
-
-    cmd_io_plugin io(config);
-    host()
-        .add_plugin((plugin &) io)
-        .run();
-
-    return 0;
-  }
-};
 
 }
 #endif //RENDU_CORE_LAUNCHER_H_
