@@ -4,16 +4,17 @@
 
 set(target_name entt)
 rendu_add_executable(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    LINKOPTS
-    rendu-core-interface
-    DEPS
-    proto::model
-    dep::entt
-    DEFINES
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        ${target_name}
+        LINKOPTS
+        rendu-core-interface
+        DEPS
+        proto::model
+        dep::entt
+        dep::spdlog
+        DEFINES
 )

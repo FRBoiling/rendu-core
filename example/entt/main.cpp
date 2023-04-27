@@ -1,51 +1,42 @@
 /*
 * Created by boil on 2023/3/26.
 */
-#include <string>
-#include <entt/entt.hpp>
 
-#include <entt/entt.hpp>
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#include <spdlog/spdlog.h>
+#include "fake_process.h"
 
-struct position {
-    float x;
-    float y;
-};
-
-struct velocity {
-    float dx;
-    float dy;
-};
-
-void update(entt::registry &registry) {
-    auto view = registry.view<const position, velocity>();
-
-    // use a callback
-    view.each([](const auto &pos, auto &vel) { /* ... */ });
-
-    // use an extended callback
-    view.each([](const auto entity, const auto &pos, auto &vel) { /* ... */ });
-
-    // use a range-for
-    for(auto [entity, pos, vel]: view.each()) {
-        // ...
-    }
-
-    // use forward iterators and get only the components of interest
-    for(auto entity: view) {
-        auto &vel = view.get<velocity>(entity);
-        // ...
-    }
-}
 
 int main() {
-    entt::registry registry;
+    spdlog::set_level(spdlog::level::trace); // or spdlog::set_level(spdlog::level::trace);
+    SPDLOG_INFO("------entt begin----------");
+    entt::scheduler<int> scheduler;
+    fake_process<int> process{};
+    bool first_functor = false;
+    bool second_functor = false;
 
-    for(auto i = 0u; i < 10u; ++i) {
-        const auto entity = registry.create();
-        registry.emplace<position>(entity, i * 1.f, i * 1.f);
-        if(i % 2 == 0) { registry.emplace<velocity>(entity, i * .1f, i * .1f); }
+    auto attach = [&first_functor](auto, void *, auto resolve, auto) {
+        first_functor = true;
+        resolve();
+        SPDLOG_DEBUG("1");
+    };
+
+    auto then = [&second_functor](auto, void *, auto, auto reject) {
+        second_functor = true;
+        reject();
+        SPDLOG_DEBUG("2");
+    };
+
+    scheduler.attach(std::move(attach)).then(std::move(then)).then([](auto...) {
+        SPDLOG_ERROR("3");
+    });
+
+    while(!scheduler.empty()) {
+        scheduler.update(0);
     }
 
-    update(registry);
+    SPDLOG_INFO(first_functor);
+    SPDLOG_INFO(second_functor);
+    SPDLOG_INFO("-----------entt end----------");
 }
 
