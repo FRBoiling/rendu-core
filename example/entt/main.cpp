@@ -3,6 +3,7 @@
 */
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include <spdlog/spdlog.h>
 #include "fake_process.h"
 
@@ -12,6 +13,21 @@ int main() {
     SPDLOG_INFO("------entt begin----------");
     entt::scheduler<int> scheduler;
     fake_process<int> process{};
+    process.tick(0);
+    process.tick(0);
+    process.fail();
+    process.tick(0);
+
+    process.alive();
+    process.finished();
+    process.paused();
+    process.rejected();
+
+    process.init_invoked;
+    process.update_invoked;
+    process.succeeded_invoked;
+    process.failed_invoked;
+    process.aborted_invoked;
     bool first_functor = false;
     bool second_functor = false;
 
@@ -31,7 +47,7 @@ int main() {
         SPDLOG_ERROR("3");
     });
 
-    while(!scheduler.empty()) {
+    while (!scheduler.empty()) {
         scheduler.update(0);
     }
 
