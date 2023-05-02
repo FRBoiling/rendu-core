@@ -5,26 +5,27 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
-#include "base/host.h"
-#include "io/cmd_io_plugin.h"
+#include "base/host_scheduler.h"
+#include "base/host_process.h"
 
 namespace rendu {
 
     class Launcher {
+    private:
+        Host m_host;
+        HostScheduler m_scheduler;
     public:
-        static int Run() {
+        template<typename T>
+        Host &AddPlugin() {
+            return m_host.AddPlugin<T>();
+        }
 
-            cmd_io_plugin::config config = {
-                    .win_title = "rendu core",
-                    .cap_fps = 60
-            };
-
-            cmd_io_plugin io(config);
-            host()
-                    .add_plugin(io)
-                    .run();
-
-            return 0;
+        void Run() {
+            m_scheduler.attach<HostProcess>(&m_host);
+            while (!m_scheduler.empty()) {
+                m_scheduler.update(0);
+            }
+            m_scheduler.abort();
         }
     };
 

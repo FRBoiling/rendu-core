@@ -3,12 +3,15 @@
 */
 
 #include "cmd_io_system.h"
-#include <iostream>
 
-void rendu::cmd_io_system::run(entt::registry &registry) {
-  // gather inputs
-  std::cout<<" " << std:: endl;
-  if (m_open) {
+using namespace rendu;
 
-  }
+CmdIoSystem::CmdIoSystem() = default;
+
+void CmdIoSystem::Run(EntityPool &registry) {
+
+}
+
+SystemType CmdIoSystem::GetSystemType() {
+    return SystemType::Update;
 }

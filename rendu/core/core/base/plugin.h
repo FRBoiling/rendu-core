@@ -5,15 +5,14 @@
 #ifndef RENDU_CORE_BASE_PLUGIN_H_
 #define RENDU_CORE_BASE_PLUGIN_H_
 
+
 namespace rendu {
+    class Host;
 
-class host;
-
-class plugin {
- public:
-  virtual void mount(host &game_loop) = 0;
-};
-
+    class Plugin {
+    public:
+        virtual void Mount(Host &host) = 0;
+    };
 }
 
 #endif //RENDU_CORE_BASE_PLUGIN_H_
