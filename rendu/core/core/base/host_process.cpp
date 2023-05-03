@@ -13,7 +13,12 @@ HostProcess::HostProcess(Host *host) : m_host(host) {
 
 void HostProcess::update(Process<HostProcess, std::uint32_t>::delta_type delta, void *data) {
     RD_INFO("host process update : {}", delta);
-
+    auto systems = m_host->GetSystems(SystemType::Update);
+    for(const auto& iter:systems){
+        auto& system = iter.second;
+        auto& system_key =iter.first;
+        system->Run(m_host->m_entity_pool);
+    }
 }
 
 void HostProcess::init() {

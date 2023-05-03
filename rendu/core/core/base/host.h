@@ -13,16 +13,11 @@
 namespace rendu {
 
     class Host : public Process<Host, std::uint32_t> {
-    private:
+    public:
         EntityPool m_entity_pool;
+    private:
         SystemPool m_system_pool;
     public:
-        Host &AddSystem(std::shared_ptr<System> system) {
-            RD_INFO("AddSystem {}  ",typeid(system->GetClassType()).name());
-            m_system_pool.AddSystem(system);
-            return *this;
-        }
-
         template<typename T>
         Host &AddPlugin() {
             T plugin;
@@ -32,8 +27,14 @@ namespace rendu {
             return *this;
         }
 
+        Host &AddSystem(std::shared_ptr<System> system);
+
+        system_map &GetSystems(system_type systemType);
+
 
     };
+
+
 
 }
 

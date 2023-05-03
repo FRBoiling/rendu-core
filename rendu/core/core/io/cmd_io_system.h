@@ -9,17 +9,12 @@
 
 namespace rendu {
 
-    class CmdIoSystem final : public System {
+    class CmdIoUpdateSystem final : public System {
     public:
-        explicit CmdIoSystem();
+        explicit CmdIoUpdateSystem();
 
     private:
     public:
-        template<typename Component>
-        void register_component(const std::string &display_name) {
-//    m_editor.registerComponent<Component>(display_name);
-        }
-
         void Run(EntityPool &registry) override;
 
         SystemType GetSystemType() override;

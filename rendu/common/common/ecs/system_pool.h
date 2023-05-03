@@ -8,14 +8,21 @@
 #include "system.h"
 
 namespace rendu {
+
+    using system_type = SystemType;
+    using system_key = std::string;
+    using system_map = std::unordered_map<system_key, std::shared_ptr<System>>;
+
     class SystemPool {
     private:
-        std::map<SystemType, std::unordered_map<std::string, std::shared_ptr<System>>> m_systems;
-
+        std::map<system_type,system_map> m_systems;
     public:
         void AddSystem(std::shared_ptr<System> &system);
 
         void RemoveSystem(std::shared_ptr<System> &system);
+
+        system_map& GetSystems(system_type systemType);
+
     };
 
 }
