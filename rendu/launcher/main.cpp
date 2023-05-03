@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     Launcher launcher;
     launcher.AddPlugin<EnvPlugin>();
     launcher.AddPlugin<ConfigPlugin>();
-    launcher.AddPlugin<CmdIoPlugin>();
+//    launcher.AddPlugin<CmdIoPlugin>();
     launcher.Run();
     return 0;
 }

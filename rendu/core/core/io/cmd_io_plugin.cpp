@@ -3,7 +3,7 @@
 */
 
 #include "cmd_io_plugin.h"
-#include "base/Host.h"
+#include "base/host.h"
 #include "cmd_io_system.h"
 
 using namespace rendu;
@@ -11,7 +11,7 @@ using namespace rendu;
 CmdIoPlugin::CmdIoPlugin() = default;
 
 void CmdIoPlugin::Mount(Host &host) {
-   host.AddSystem(std::make_shared<CmdIoSystem>());
+   host.AddSystem(std::make_shared<CmdIoUpdateSystem>());
 //        .add_setup_handler([&](entt::registry &registry) {
 //        registry.ctx().emplace<std::shared_ptr<input::manager>>(m_input_manager);
 //        registry.ctx().emplace<std::shared_ptr<messaging::bus>>(m_message_bus);
