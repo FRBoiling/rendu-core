@@ -14,9 +14,8 @@ rendu_add_executable(
     SRCS
     protobuf.cpp
     DEPS
-    dep::caf_core
-    dep::caf_io
-    dep::protobuf-lite
+    dep::caf
+    dep::protobuf
     proto::model
     DEFINES
 )
@@ -33,8 +32,7 @@ rendu_add_executable(
     SRCS
     simple.cpp
     DEPS
-    dep::caf_io
-    dep::caf_core
+    dep::caf
     DEFINES
 )
 
@@ -50,7 +48,6 @@ rendu_add_executable(
     SRCS
     simple_http.cpp
     DEPS
-    dep::caf_core
-    dep::caf_io
+    dep::caf
     DEFINES
 )

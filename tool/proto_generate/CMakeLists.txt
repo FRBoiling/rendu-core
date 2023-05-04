@@ -14,6 +14,6 @@ rendu_add_executable(
     rendu-core-interface
     DEPS
     dep::protobuf
-    dep::protoc
+    dep::protobuf
     DEFINES
 )

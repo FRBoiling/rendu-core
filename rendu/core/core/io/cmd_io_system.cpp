@@ -3,28 +3,23 @@
 */
 
 #include "cmd_io_system.h"
+#include "log/logger.h"
 #include <iostream>
 
-void rendu::cmd_io_system::run(entt::registry &registry) {
-  // gather inputs
-  std::cout<<" " << std:: endl;
-  if (m_open) {
-//    auto &add_ui_command = registry.ctx().get<ui_command_request>();
-//    add_ui_command([&](entt::registry& registry) {
-//      ImGui::Begin("Inspector");
-//
-//      ImGui::Columns(2);
-//      ImGui::BeginChild("Entity List");
-//      m_editor.renderEntityList(registry, m_components_filter);
-//      ImGui::EndChild();
-//      ImGui::NextColumn();
-//
-//      ImGui::BeginChild("Entity Editor");
-//      m_editor.renderEditor(registry, m_current_entity);
-//      ImGui::EndChild();
-//      ImGui::NextColumn();
-//
-//      ImGui::End();
-//    });
-  }
+using namespace rendu;
+
+CmdIoUpdateSystem::CmdIoUpdateSystem() = default;
+
+void CmdIoUpdateSystem::Run(EntityPool &registry) {
+    RD_INFO("{} Run", typeid(GetClassType()).name());
+    std::string name;
+    RD_INFO("Enter the name: ");
+    // Get the input from std::cin and store into name
+    std::getline(std::cin, name);
+
+    RD_INFO("the is name: {}",name);
+}
+
+SystemType CmdIoUpdateSystem::GetSystemType() {
+    return SystemType::Update;
 }

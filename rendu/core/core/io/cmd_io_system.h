@@ -5,22 +5,20 @@
 #ifndef RENDU_CORE_IO_CMD_IO_SYSTEM_H_
 #define RENDU_CORE_IO_CMD_IO_SYSTEM_H_
 
-#include "base/system.h"
+#include "ecs/system.h"
 
 namespace rendu {
 
-class cmd_io_system final : public system {
+    class CmdIoUpdateSystem final : public System {
+    public:
+        explicit CmdIoUpdateSystem();
 
- private:
-  entt::entity m_current_entity;
-  bool m_open{false};
- public:
-  template<typename Component>
-  void register_component(const std::string &display_name) {
-//    m_editor.registerComponent<Component>(display_name);
-  }
-  void run(entt::registry &registry) override;
-};
+    private:
+    public:
+        void Run(EntityPool &registry) override;
+
+        SystemType GetSystemType() override;
+    };
 
 }
 

@@ -4,10 +4,11 @@
 #|--------------------------------
 #| rendu-core tools module
 #|--------------------------------
-if (BUILD_TOOLS)
+if (RD_BUILD_TOOLS)
   set(PROJECT_NAME tool)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
+      ${CMAKE_CURRENT_SOURCE_DIR}/bank_loan
   )
 endif ()

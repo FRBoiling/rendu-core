@@ -13,9 +13,9 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::protobuf-lite
+    dep::protobuf
     proto::model
     dep::entt
-    dep::caf_io
+    dep::caf
     example::caf_ping_pong_define
 )

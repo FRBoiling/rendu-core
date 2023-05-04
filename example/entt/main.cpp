@@ -1,45 +1,58 @@
 /*
 * Created by boil on 2023/3/26.
 */
-#include <string>
-#include <entity/registry.hpp>
 
-//为了使用entt实现ECS（Entity-Component-System）架构，您可以按照以下步骤操作：
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-//1.使用entt::component定义组件：
-struct Position {
-  float x;
-  float y;
-};
+#include <spdlog/spdlog.h>
+#include "fake_process.h"
 
-struct Velocity {
-  float x;
-  float y;
-};
-
-struct Sprite {
-  std::string texturePath;
-};
 
 int main() {
-  //2.使用entt::entity定义实体：
-  entt::registry registry;
-  auto entity = registry.create();
-  //3.使用entt::registry::emplace将组件分配给实体：
-  registry.emplace<Position>(entity, 0.0f, 0.0f);
-  registry.emplace<Velocity>(entity, 1.0f, 1.0f);
-  registry.emplace<Sprite>(entity, "path/to/texture.png");
-  //4.使用entt::registry::get访问实体的组件：
-  auto &position = registry.get<Position>(entity);
-  auto &velocity = registry.get<Velocity>(entity);
-  auto &sprite = registry.get<Sprite>(entity);
+    spdlog::set_level(spdlog::level::trace); // or spdlog::set_level(spdlog::level::trace);
+    SPDLOG_INFO("------entt begin----------");
+    entt::scheduler<int> scheduler;
+    fake_process<int> process{};
+    process.tick(0);
+    process.tick(0);
+    process.fail();
+    process.tick(0);
 
-  //5.使用entt::registry::view迭代具有特定组件的实体：
-  for (auto entity : registry.view<Position, Velocity>()) {
-    auto &position = registry.get<Position>(entity);
-    auto &velocity = registry.get<Velocity>(entity);
-    // ...
-  }
+    process.alive();
+    process.finished();
+    process.paused();
+    process.rejected();
 
+    process.init_invoked;
+    process.update_invoked;
+    process.succeeded_invoked;
+    process.failed_invoked;
+    process.aborted_invoked;
+    bool first_functor = false;
+    bool second_functor = false;
+
+    auto attach = [&first_functor](auto, void *, auto resolve, auto) {
+        first_functor = true;
+        resolve();
+        SPDLOG_DEBUG("1");
+    };
+
+    auto then = [&second_functor](auto, void *, auto, auto reject) {
+        second_functor = true;
+        reject();
+        SPDLOG_DEBUG("2");
+    };
+
+    scheduler.attach(std::move(attach)).then(std::move(then)).then([](auto...) {
+        SPDLOG_ERROR("3");
+    });
+
+    while (!scheduler.empty()) {
+        scheduler.update(0);
+    }
+
+    SPDLOG_INFO(first_functor);
+    SPDLOG_INFO(second_functor);
+    SPDLOG_INFO("-----------entt end----------");
 }
 

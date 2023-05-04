@@ -22,7 +22,7 @@ target_compile_definitions(rendu-compile-option-interface
     -D__SSE2__)
 message(STATUS "GCC: SFMT enabled, SSE2 flags forced")
 
-if(WITH_WARNINGS)
+if(RD_WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
     INTERFACE
       -W

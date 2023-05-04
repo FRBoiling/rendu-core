@@ -15,7 +15,7 @@ else()
       -xSSE2)
 endif()
 
-if(WITH_WARNINGS)
+if(RD_WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
     INTERFACE
       -w1)

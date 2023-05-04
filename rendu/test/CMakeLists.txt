@@ -13,7 +13,5 @@ rendu_add_component(
     rendu-core-interface
     DEPS
     dep::gtest
-    dep::gmock
-
 )
 

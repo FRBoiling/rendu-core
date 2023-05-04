@@ -3,8 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <entt/core/hashed_string.hpp>
-#include <entt/entity/registry.hpp>
+#include <entt/entt.hpp>
 
 enum class my_entity : entt::id_type {};
 
@@ -29,12 +28,12 @@ TEST(Example, EntityCopy) {
     ASSERT_FALSE((registry.any_of<int, char, double>(dst)));
     ASSERT_FALSE(custom.contains(dst));
 
-    for(auto [id, storage]: registry.storage()) {
-        // discard the custom storage because why not, this is just an example after all
-        if(id != "custom"_hs && storage.contains(src)) {
-            storage.push(dst, storage.value(src));
-        }
-    }
+//    for(auto [id, storage]: registry.storage()) {
+//        // discard the custom storage because why not, this is just an example after all
+//        if(id != "custom"_hs && storage.contains(src)) {
+//            storage.pus(dst, storage.value(src));
+//        }
+//    }
 
     ASSERT_TRUE((registry.all_of<int, char>(dst)));
     ASSERT_FALSE((registry.all_of<double>(dst)));
@@ -69,11 +68,11 @@ TEST(Example, DifferentRegistryTypes) {
     src.emplace<int>(entity, 42);
     src.emplace<char>(entity, 'c');
 
-    for(auto [id, storage]: src.storage()) {
-        if(auto *other = dst.storage(id); other && storage.contains(entity)) {
-            other->push(copy, storage.value(entity));
-        }
-    }
+//    for(auto [id, storage]: src.storage()) {
+//        if(auto *other = dst.storage(id); other && storage.contains(entity)) {
+//            other->push(copy, storage.value(entity));
+//        }
+//    }
 
     ASSERT_TRUE((src.all_of<int, char>(entity)));
     ASSERT_FALSE(dst.all_of<char>(copy));

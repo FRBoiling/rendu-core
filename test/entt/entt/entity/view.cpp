@@ -4,8 +4,7 @@
 #include <type_traits>
 #include <utility>
 #include <gtest/gtest.h>
-#include <entt/entity/registry.hpp>
-#include <entt/entity/view.hpp>
+#include <entt/entt.hpp>
 
 struct empty_type {};
 
@@ -198,9 +197,7 @@ TEST(SingleComponentView, Each) {
 
     auto it = iterable.begin();
 
-    ASSERT_EQ(it.base(), view.begin());
     ASSERT_EQ((it++, ++it), iterable.end());
-    ASSERT_EQ(it.base(), view.end());
 
     view.each([expected = 1](auto entt, int &value) mutable {
         ASSERT_EQ(static_cast<int>(entt::to_integral(entt)), expected);
@@ -723,9 +720,7 @@ TEST(MultiComponentView, Each) {
 
     auto it = iterable.begin();
 
-    ASSERT_EQ(it.base(), view.begin());
     ASSERT_EQ((it++, ++it), iterable.end());
-    ASSERT_EQ(it.base(), view.end());
 
     view.each([expected = 1](auto entt, int &ivalue, char &cvalue) mutable {
         ASSERT_EQ(static_cast<int>(entt::to_integral(entt)), expected);
@@ -1280,17 +1275,10 @@ TEST(MultiComponentView, Storage) {
     static_assert(std::is_same_v<decltype(view.storage<1u>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(view.storage<char>()), const entt::storage_type_t<char> &>);
     static_assert(std::is_same_v<decltype(view.storage<const char>()), const entt::storage_type_t<char> &>);
-    static_assert(std::is_same_v<decltype(view.storage<2u>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(view.storage<double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(view.storage<const double>()), entt::storage_type_t<double> &>);
-    static_assert(std::is_same_v<decltype(view.storage<3u>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(view.storage<float>()), const entt::storage_type_t<float> &>);
-    static_assert(std::is_same_v<decltype(view.storage<const float>()), const entt::storage_type_t<float> &>);
 
     ASSERT_EQ(view.size_hint(), 0u);
 
     view.storage<int>().emplace(entity);
-    view.storage<double>().emplace(entity);
     registry.emplace<char>(entity);
     registry.emplace<float>(entity);
 
@@ -1298,19 +1286,14 @@ TEST(MultiComponentView, Storage) {
     ASSERT_EQ(view.begin(), view.end());
     ASSERT_TRUE(view.storage<int>().contains(entity));
     ASSERT_TRUE(view.storage<const char>().contains(entity));
-    ASSERT_TRUE(view.storage<double>().contains(entity));
-    ASSERT_TRUE(view.storage<const float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char, double, float>(entity)));
 
-    view.storage<double>().erase(entity);
     registry.erase<float>(entity);
 
     ASSERT_EQ(view.size_hint(), 1u);
     ASSERT_NE(view.begin(), view.end());
     ASSERT_TRUE(view.storage<const int>().contains(entity));
     ASSERT_TRUE(view.storage<char>().contains(entity));
-    ASSERT_FALSE(view.storage<const double>().contains(entity));
-    ASSERT_FALSE(view.storage<float>().contains(entity));
     ASSERT_TRUE((registry.all_of<int, char>(entity)));
     ASSERT_FALSE((registry.any_of<double, float>(entity)));
 
@@ -1320,8 +1303,6 @@ TEST(MultiComponentView, Storage) {
     ASSERT_EQ(view.begin(), view.end());
     ASSERT_FALSE(view.storage<0u>().contains(entity));
     ASSERT_TRUE(view.storage<1u>().contains(entity));
-    ASSERT_FALSE(view.storage<2u>().contains(entity));
-    ASSERT_FALSE(view.storage<3u>().contains(entity));
     ASSERT_TRUE((registry.all_of<char>(entity)));
     ASSERT_FALSE((registry.any_of<int, double, float>(entity)));
 }

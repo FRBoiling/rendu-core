@@ -31,12 +31,12 @@ function(rendu_add_test)
         # Exclude
         ${RD_TEST_DIR}/precompiled_headers
     )
-    if (USE_PCH)
+    if (RD_USE_PCH)
       rendu_collect_header_files(
           ${RD_TEST_DIR}/precompiled_headers
           RD_PCH_HEADERS
       )
-    endif (USE_PCH)
+    endif (RD_USE_PCH)
   endif ()
 
   list(APPEND RD_TARGET_SRCS ${RD_TEST_SRCS})
@@ -67,7 +67,7 @@ function(rendu_add_test)
 
     add_executable(${RD_TEST_PROJECT}::${RD_TEST_NAME} ALIAS ${RD_TEST_TARGET})
     # Generate precompiled header
-    if (USE_PCH)
+    if (RD_USE_PCH)
       message(STATUS "use precompiled header !")
       if ("${RD_PCH_HEADERS}" STREQUAL "")
       else ()
