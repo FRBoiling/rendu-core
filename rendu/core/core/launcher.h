@@ -5,12 +5,41 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
-#include "base/host_scheduler.h"
-#include "base/host_process.h"
+#include "host/host_scheduler.h"
+#include "host/host_process.h"
+#include <csignal>
 
 namespace rendu {
 
+    template<typename T>
+    class Singleton
+    {
+    public:
+        static T& GetInstance()
+        {
+            static T instance;
+            return instance;
+        }
+
+        Singleton(T&&) = delete;
+        Singleton(const T&) = delete;
+        void operator= (const T&) = delete;
+
+    protected:
+        Singleton() = default;
+        virtual ~Singleton() = default;
+    };
+
+
     class Launcher {
+    private:
+        Launcher()= default;
+    public:
+        static Launcher& GetInst(){
+            static Launcher instance;
+            return instance;
+        }
+
     private:
         Host m_host;
         HostScheduler m_scheduler;
@@ -20,14 +49,22 @@ namespace rendu {
             return m_host.AddPlugin<T>();
         }
 
+
+        void Exit(int sigval) {
+            m_scheduler.Exit();
+        }
+
         void Run() {
-            m_scheduler.attach<HostProcess>(&m_host);
-            while (!m_scheduler.empty()) {
-                m_scheduler.update(0);
+            m_scheduler.Init(&m_host);
+            m_scheduler.LaterInit();
+            while (m_scheduler.IsRunning()) {
+                m_scheduler.Update();
+                m_scheduler.LaterUpdate();
             }
-            m_scheduler.abort();
+            m_scheduler.Stopping();
+            m_scheduler.Release();
         }
     };
-
 }
+
 #endif //RENDU_CORE_LAUNCHER_H_

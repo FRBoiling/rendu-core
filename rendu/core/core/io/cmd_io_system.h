@@ -2,10 +2,10 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_CORE_IO_CMD_IO_SYSTEM_H_
-#define RENDU_CORE_IO_CMD_IO_SYSTEM_H_
+#ifndef RENDU_CMD_IO_SYSTEM_H_
+#define RENDU_CMD_IO_SYSTEM_H_
 
-#include "ecs/system.h"
+#include "adapter/ecs/system.h"
 
 namespace rendu {
 
@@ -22,4 +22,4 @@ namespace rendu {
 
 }
 
-#endif //RENDU_CORE_IO_CMD_IO_SYSTEM_H_
+#endif //RENDU_CMD_IO_SYSTEM_H_

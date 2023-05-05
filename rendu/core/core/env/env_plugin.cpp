@@ -3,6 +3,7 @@
 */
 
 #include "env_plugin.h"
+#include "host/host.h"
 
 using namespace rendu;
 

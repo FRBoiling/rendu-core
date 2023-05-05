@@ -5,7 +5,6 @@
 #ifndef RENDU_CORE_IO_CMD_IO_PLUGIN_H_
 #define RENDU_CORE_IO_CMD_IO_PLUGIN_H_
 
-#include <string>
 #include "base/plugin.h"
 
 namespace rendu {
