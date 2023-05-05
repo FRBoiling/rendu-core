@@ -9,11 +9,19 @@ using namespace rendu;
 void HostScheduler::Init(Host *host) {
     m_host = host;
     RD_INFO("HostScheduler Init success");
+    auto& systems = m_host->GetSystems(SystemType::Init);
+    for(auto & system : systems){
+        system.second->Run(m_host->m_entity_pool);
+    }
 }
 
 void HostScheduler::LaterInit() {
     m_current_state = state::running;
     RD_INFO("HostScheduler LaterInit success");
+    auto& systems = m_host->GetSystems(SystemType::LateInit);
+    for(auto & system : systems){
+        system.second->Run(m_host->m_entity_pool);
+    }
 }
 
 bool HostScheduler::IsRunning() {
@@ -21,11 +29,17 @@ bool HostScheduler::IsRunning() {
 }
 
 void HostScheduler::Update() {
-
+    auto& systems = m_host->GetSystems(SystemType::Update);
+    for(auto & system : systems){
+        system.second->Run(m_host->m_entity_pool);
+    }
 }
 
 void HostScheduler::LaterUpdate() {
-    
+    auto& systems = m_host->GetSystems(SystemType::LateUpdate);
+    for(auto & system : systems){
+        system.second->Run(m_host->m_entity_pool);
+    }
 }
 
 bool HostScheduler::IsStopping() {
