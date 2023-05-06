@@ -9,12 +9,7 @@
 
 using namespace rendu;
 
-void Exit(int sigval) {
-    Launcher::GetInst().Exit(sigval);
-}
-
 int main(int argc, char **argv) {
-    signal(SIGKILL, Exit);
     Launcher::GetInst().AddPlugin<EnvPlugin>();
     Launcher::GetInst().AddPlugin<ConfigPlugin>();
 //    launcher.AddPlugin<CmdIoPlugin>();
