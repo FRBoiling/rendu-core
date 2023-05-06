@@ -11,7 +11,8 @@ SystemType ConfigInitSystem::GetSystemType() {
     return SystemType::Init;
 }
 
-void ConfigInitSystem::Run(EntityPool &registry) {
+void ConfigInitSystem::Run(Entity &entity) {
+
     RD_INFO("ConfigInitSystem Run!");
 }
 
@@ -19,7 +20,7 @@ SystemType ConfigLaterInitSystem::GetSystemType() {
     return SystemType::LateInit;
 }
 
-void ConfigLaterInitSystem::Run(EntityPool &registry) {
+void ConfigLaterInitSystem::Run(Entity &entity) {
     RD_INFO("ConfigLaterInitSystem Run!");
 }
 
@@ -27,7 +28,7 @@ SystemType ConfigUpdateSystem::GetSystemType() {
     return SystemType::Update;
 }
 
-void ConfigUpdateSystem::Run(EntityPool &registry) {
+void ConfigUpdateSystem::Run(Entity &registry) {
     RD_INFO("ConfigUpdateSystem Run!");
 }
 

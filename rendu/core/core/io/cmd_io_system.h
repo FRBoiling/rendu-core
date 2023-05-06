@@ -15,7 +15,7 @@ namespace rendu {
 
     private:
     public:
-        void Run(EntityPool &registry) override;
+        void Run(Entity &entity) override;
 
         SystemType GetSystemType() override;
     };

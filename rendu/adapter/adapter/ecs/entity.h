@@ -7,8 +7,12 @@
 
 #include <entt/entt.hpp>
 
-namespace rendu{
-    using Entity = entt::entity;
+namespace rendu {
+
+    class Entity : entt::registry {
+        using entity_type = entt::entity;
+    };
+
 }
 
 #endif //RENDU_ENTITY_H

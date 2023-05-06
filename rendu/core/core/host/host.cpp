@@ -14,7 +14,7 @@ Host &Host::AddSystem(std::shared_ptr<System> system) {
     return *this;
 }
 
-system_map &Host::GetSystems(system_type systemType) {
+Systems &Host::GetSystems(system_type systemType) {
     return m_system_pool.GetSystems(systemType);
 }
 

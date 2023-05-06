@@ -14,7 +14,7 @@ namespace rendu {
 
     class Host{
     public:
-        EntityPool m_entity_pool;
+        Entity m_entity_pool;
     private:
         SystemPool m_system_pool;
     public:
@@ -29,7 +29,7 @@ namespace rendu {
 
         Host &AddSystem(std::shared_ptr<System> system);
 
-        system_map &GetSystems(system_type systemType);
+        Systems &GetSystems(system_type systemType);
     };
 }
 

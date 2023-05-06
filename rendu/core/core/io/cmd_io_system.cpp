@@ -10,7 +10,11 @@ using namespace rendu;
 
 CmdIoUpdateSystem::CmdIoUpdateSystem() = default;
 
-void CmdIoUpdateSystem::Run(EntityPool &registry) {
+SystemType CmdIoUpdateSystem::GetSystemType() {
+    return SystemType::Update;
+}
+
+void CmdIoUpdateSystem::Run(Entity &entity) {
     RD_INFO("{} Run", typeid(GetClassType()).name());
     std::string name;
     RD_INFO("Enter the name: ");
@@ -18,8 +22,4 @@ void CmdIoUpdateSystem::Run(EntityPool &registry) {
     std::getline(std::cin, name);
 
     RD_INFO("the is name: {}",name);
-}
-
-SystemType CmdIoUpdateSystem::GetSystemType() {
-    return SystemType::Update;
 }

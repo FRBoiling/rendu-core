@@ -8,6 +8,7 @@
 #include "host/host_scheduler.h"
 #include "host/host_process.h"
 #include <csignal>
+#include <unistd.h>
 
 namespace rendu {
 
@@ -58,6 +59,7 @@ namespace rendu {
             m_scheduler.Init(&m_host);
             m_scheduler.LaterInit();
             while (m_scheduler.IsRunning()) {
+                sleep(1);
                 m_scheduler.Update();
                 m_scheduler.LaterUpdate();
             }

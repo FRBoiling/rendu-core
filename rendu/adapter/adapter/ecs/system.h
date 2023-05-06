@@ -20,7 +20,7 @@ namespace rendu {
     public:
         System *GetClassType() { return this; }
         virtual SystemType GetSystemType() = 0;
-        virtual void Run(EntityPool &registry) = 0;
+        virtual void Run(Entity &entity) = 0;
     };
 
 }

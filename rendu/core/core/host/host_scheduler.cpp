@@ -11,7 +11,7 @@ void HostScheduler::Init(Host *host) {
     RD_INFO("HostScheduler Init success");
     auto& systems = m_host->GetSystems(SystemType::Init);
     for(auto & system : systems){
-        system.second->Run(m_host->m_entity_pool);
+        system->Run(m_host->m_entity_pool);
     }
 }
 
@@ -20,7 +20,7 @@ void HostScheduler::LaterInit() {
     RD_INFO("HostScheduler LaterInit success");
     auto& systems = m_host->GetSystems(SystemType::LateInit);
     for(auto & system : systems){
-        system.second->Run(m_host->m_entity_pool);
+        system->Run(m_host->m_entity_pool);
     }
 }
 
@@ -31,14 +31,14 @@ bool HostScheduler::IsRunning() {
 void HostScheduler::Update() {
     auto& systems = m_host->GetSystems(SystemType::Update);
     for(auto & system : systems){
-        system.second->Run(m_host->m_entity_pool);
+        system->Run(m_host->m_entity_pool);
     }
 }
 
 void HostScheduler::LaterUpdate() {
     auto& systems = m_host->GetSystems(SystemType::LateUpdate);
     for(auto & system : systems){
-        system.second->Run(m_host->m_entity_pool);
+        system->Run(m_host->m_entity_pool);
     }
 }
 

@@ -13,21 +13,21 @@ namespace rendu{
     public:
         SystemType GetSystemType() override;
 
-        void Run(EntityPool &registry) override;
+        void Run(Entity &entity) override;
     };
 
     class ConfigLaterInitSystem :public System{
     public:
         SystemType GetSystemType() override;
 
-        void Run(EntityPool &registry) override;
+        void Run(Entity &entity) override;
     };
 
     class ConfigUpdateSystem :public System{
     public:
         SystemType GetSystemType() override;
 
-        void Run(EntityPool &registry) override;
+        void Run(Entity &entity) override;
     };
 }
 

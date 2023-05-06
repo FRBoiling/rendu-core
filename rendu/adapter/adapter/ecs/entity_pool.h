@@ -7,8 +7,14 @@
 
 #include "entity.h"
 
-namespace rendu{
-    using EntityPool = entt::registry;
+namespace rendu {
+
+    class EntityPool {
+    private:
+        std::vector<Entity> m_entitys;
+    public:
+
+    };
 }
 
 #endif //RENDU_ENTITY_POOL_H
