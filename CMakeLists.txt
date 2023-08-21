@@ -12,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Set project name (must be done AFTER setting configuration types)
 set(RENDU_PROJECT_NAME rendu)
-set(RENDU_PROJECT_DIR ${CMAKE_SOURCE_DIR})
+set(RENDU_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(RENDU_PROJECT_VERSION 2.0.0)
 project(
     ${RENDU_PROJECT_NAME}
@@ -21,9 +21,10 @@ project(
     LANGUAGES C CXX
 )
 #
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/archive)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/library)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/runtime)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/lib) #默认存放静态库的文件夹位置
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/dll) #默认存放动态库的文件夹位置
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/exe) #存放可执行软件的目录
+set(LIBRARY_OUTPUT_PATH ${RENDU_PROJECT_DIR}/bin/library)
 
 #|--------------------------------
 #| Set supported build types
@@ -90,5 +91,5 @@ rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}/.git
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
-    ${CMAKE_CURRENT_SOURCE_DIR}/.idea
+    ${CMAKE_CURRENT_SOURCE_DIR}/bin
 )
