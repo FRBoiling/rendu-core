@@ -88,7 +88,10 @@ rendu_add_subdirectory(
     # Exclude
     ${test_dir}
     ${CMAKE_CURRENT_SOURCE_DIR}/.git
+    ${CMAKE_CURRENT_SOURCE_DIR}/.cache
+    ${CMAKE_CURRENT_SOURCE_DIR}/.vscode
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
+    ${CMAKE_CURRENT_SOURCE_DIR}/bin
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
 )

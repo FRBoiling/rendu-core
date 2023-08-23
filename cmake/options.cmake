@@ -11,7 +11,7 @@ option(RD_USE_PCH          "Use precompiled headers when compiling servers"     
 option(RD_WITHOUT_GIT      "Disable the GIT testing routines"                       0)
 option(RD_WITH_WARNINGS    "Show all warnings during compile"                       0)
 
-option(RD_WITH_DYNAMIC_LINKING "Enable dynamic library linking."                    0)
+option(RD_WITH_DYNAMIC_LINKING "Enable dynamic library linking."                    1)
 IsDynamicLinkingRequired(RD_WITH_DYNAMIC_LINKING_FORCED)
 if(RD_WITH_DYNAMIC_LINKING AND RD_WITH_DYNAMIC_LINKING_FORCED)
   set(RD_WITH_DYNAMIC_LINKING_FORCED OFF)
