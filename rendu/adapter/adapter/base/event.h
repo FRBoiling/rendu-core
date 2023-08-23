@@ -7,7 +7,7 @@
 
 namespace rendu {
 
-class event {};
+class Event {};
 
 } // namespace rendu
 

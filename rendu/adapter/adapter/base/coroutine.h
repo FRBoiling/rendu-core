@@ -7,7 +7,7 @@
 
 namespace rendu {
 
-class coroutine {};
+class Coroutine {};
 
 } // namespace rendu
 
