@@ -5,7 +5,8 @@
 #ifndef RENDU_CORE_LAUNCHER_H_
 #define RENDU_CORE_LAUNCHER_H_
 
-#include "host/host_scheduler.h"
+#include "run_scheduler.h"
+#include "host/host.h"
 #include <csignal>
 
 namespace rendu {
@@ -40,8 +41,8 @@ namespace rendu {
         }
 
     private:
+        RunScheduler m_scheduler;
         Host m_host;
-        HostScheduler m_scheduler;
     public:
         template<typename T>
         Host &AddPlugin() {

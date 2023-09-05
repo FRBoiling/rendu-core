@@ -94,6 +94,5 @@ rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/build
     ${CMAKE_CURRENT_SOURCE_DIR}/bin
-<<<<<<< HEAD
     ${CMAKE_CURRENT_SOURCE_DIR}/.idea
 )

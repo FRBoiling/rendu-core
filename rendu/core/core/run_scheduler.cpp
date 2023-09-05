@@ -2,64 +2,64 @@
 * Created by boil on 2023/5/2.
 */
 
-#include "host_scheduler.h"
+#include "run_scheduler.h"
 
 using namespace rendu;
 
-void HostScheduler::Init(Host *host) {
+void RunScheduler::Init(Host *host) {
     m_host = host;
-    RD_INFO("HostScheduler Init success");
+    RD_INFO("RunScheduler Init success");
     auto& systems = m_host->GetSystems(SystemType::Init);
     for(auto & system : systems){
         system->Run(m_host->m_entity_pool);
     }
 }
 
-void HostScheduler::LaterInit() {
+void RunScheduler::LaterInit() {
     m_current_state = state::running;
-    RD_INFO("HostScheduler LaterInit success");
+    RD_INFO("RunScheduler LaterInit success");
     auto& systems = m_host->GetSystems(SystemType::LateInit);
     for(auto & system : systems){
         system->Run(m_host->m_entity_pool);
     }
 }
 
-bool HostScheduler::IsRunning() {
+bool RunScheduler::IsRunning() {
     return state::running == m_current_state;
 }
 
-void HostScheduler::Update() {
+void RunScheduler::Update() {
     auto& systems = m_host->GetSystems(SystemType::Update);
     for(auto & system : systems){
         system->Run(m_host->m_entity_pool);
     }
 }
 
-void HostScheduler::LaterUpdate() {
+void RunScheduler::LaterUpdate() {
     auto& systems = m_host->GetSystems(SystemType::LateUpdate);
     for(auto & system : systems){
         system->Run(m_host->m_entity_pool);
     }
 }
 
-bool HostScheduler::IsStopping() {
+bool RunScheduler::IsStopping() {
     return state::stopping == m_current_state;
 }
 
-void HostScheduler::Stopping() {
+void RunScheduler::Stopping() {
     if (!IsStopping()){
         return;
     }
-    RD_INFO("HostScheduler Stopping...");
+    RD_INFO("RunScheduler Stopping...");
 }
 
-void HostScheduler::Release() {
-    RD_INFO("HostScheduler Release...");
+void RunScheduler::Release() {
+    RD_INFO("RunScheduler Release...");
     m_current_state = state::release;
-    RD_INFO("HostScheduler Exit...");
+    RD_INFO("RunScheduler Exit...");
 }
 
-void HostScheduler::Exit() {
+void RunScheduler::Exit() {
     m_current_state = state::stopping;
 }
 

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package rendu.core.options;
+
+enum EnvType{
+    ETDebug = 0;
+    ETRelease = 1;
+}
+
+enum HostType{
+    ALL = 0;
+    Zone = 1;
+    Gate = 2;
+    Realm =3;
+    World = 4;
+    Scene = 5;
+}
+
+message Options {
+    EnvType envType = 1;
+    HostType hostType = 2;
+}

@@ -2,15 +2,14 @@
 * Created by boil on 2023/5/2.
 */
 
-#ifndef RENDU_HOST_SCHEDULER_H
-#define RENDU_HOST_SCHEDULER_H
+#ifndef RENDU_RUN_SCHEDULER_H
+#define RENDU_RUN_SCHEDULER_H
 
 #include "host/host.h"
-#include "adapter/base/scheduler.h"
 
 namespace rendu {
 
-    class HostScheduler {
+    class RunScheduler {
         enum class state : std::uint8_t {
             uninitialized = 0,
             running,
@@ -45,4 +44,4 @@ namespace rendu {
 }
 
 
-#endif //RENDU_HOST_SCHEDULER_H
+#endif //RENDU_RUN_SCHEDULER_H

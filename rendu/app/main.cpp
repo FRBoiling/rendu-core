@@ -11,7 +11,7 @@ using namespace rendu;
 
 int main(int argc, char **argv) {
     Launcher::GetInst().AddPlugin<EnvPlugin>();
-    Launcher::GetInst().AddPlugin<ConfigPlugin>();
+//    Launcher::GetInst().AddPlugin<ConfigPlugin>();
 //    launcher.AddPlugin<CmdIoPlugin>();
     Launcher::GetInst().Run();
     return 0;

@@ -27,7 +27,7 @@ namespace rendu {
             return *this;
         }
 
-        Host &AddSystem(std::shared_ptr<System> system);
+        Host &AddSystem(std::shared_ptr<BaseSystem> system);
 
         Systems &GetSystems(system_type systemType);
     };

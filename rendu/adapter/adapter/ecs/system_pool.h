@@ -10,13 +10,13 @@
 namespace rendu {
 
     using system_type = SystemType;
-    using Systems = std::vector<std::shared_ptr<System>>;
+    using Systems = std::vector<std::shared_ptr<BaseSystem>>;
 
     class SystemPool {
     private:
         std::map<system_type,Systems> m_systems;
     public:
-        void AddSystem(std::shared_ptr<System> &system);
+        void AddSystem(std::shared_ptr<BaseSystem> &system);
         Systems& GetSystems(system_type systemType);
     };
 

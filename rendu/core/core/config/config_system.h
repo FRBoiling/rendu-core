@@ -9,24 +9,18 @@
 
 namespace rendu{
 
-    class ConfigInitSystem :public System{
+    class ConfigInitSystem :public BaseSystem{
     public:
-        SystemType GetSystemType() override;
-
         void Run(Entity &entity) override;
     };
 
-    class ConfigLaterInitSystem :public System{
+    class ConfigLaterInitSystem :public BaseSystem{
     public:
-        SystemType GetSystemType() override;
-
         void Run(Entity &entity) override;
     };
 
-    class ConfigUpdateSystem :public System{
+    class ConfigUpdateSystem :public BaseSystem{
     public:
-        SystemType GetSystemType() override;
-
         void Run(Entity &entity) override;
     };
 }

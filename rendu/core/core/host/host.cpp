@@ -8,9 +8,9 @@ using namespace rendu;
 
 
 
-Host &Host::AddSystem(std::shared_ptr<System> system) {
+Host &Host::AddSystem(std::shared_ptr<BaseSystem> system) {
     m_system_pool.AddSystem(system);
-    RD_INFO("AddSystem {} success !",typeid(system->GetClassType()).name());
+    RD_INFO("AddSystem {} success !",system->ToString());
     return *this;
 }
 

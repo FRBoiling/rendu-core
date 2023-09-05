@@ -9,15 +9,11 @@
 
 namespace rendu {
 
-    class CmdIoUpdateSystem final : public System {
+    class CmdIoUpdateSystem final : public BaseSystem {
     public:
         explicit CmdIoUpdateSystem();
-
-    private:
     public:
         void Run(Entity &entity) override;
-
-        SystemType GetSystemType() override;
     };
 
 }

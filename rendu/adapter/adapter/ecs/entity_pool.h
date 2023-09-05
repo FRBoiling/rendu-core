@@ -11,9 +11,8 @@ namespace rendu {
 
     class EntityPool {
     private:
-        std::vector<Entity> m_entitys;
+        std::vector<Entity> m_entities;
     public:
-
     };
 }
 

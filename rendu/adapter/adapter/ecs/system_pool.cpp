@@ -7,7 +7,7 @@
 using namespace rendu;
 
 
-void SystemPool::AddSystem(std::shared_ptr<System> &system) {
+void SystemPool::AddSystem(std::shared_ptr<BaseSystem> &system) {
     auto system_type = system->GetSystemType();
     m_systems[system_type].push_back(system);
 }
