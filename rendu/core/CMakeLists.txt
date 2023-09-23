@@ -14,5 +14,6 @@ rendu_add_library(
     DEPS
     rendu::adapter
     proto::model
+    rendu::common
     dep::entt
 )

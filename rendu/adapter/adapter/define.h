@@ -31,4 +31,7 @@
 #    endif
 #endif
 
+#define RD_NAMESPACE_BEGIN  namespace rendu {
+#define RD_NAMESPACE_END } // namespace rendu
+
 #endif //RENDU_COMMON_DEFINE_H_

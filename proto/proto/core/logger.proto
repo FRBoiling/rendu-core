@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package rendu.proto.core;
+
+message LogSetting {
+  int32 level = 1;
+  string path = 2;
+  string perHeader = 3;
+}

@@ -1,28 +1,41 @@
-//
-// Created by boil on 2023/3/10.
-//
+#include <cstdio>
 
-#include <iostream>
+#define DEFINE_TYPE(name, type) \
+    typedef struct { \
+        type value; \
+    } name##_t;
 
-class Base{
-public:
-    virtual Base *GetBaseType() { return this; }
-    Base *GetClassType() { return this; }
-};
+DEFINE_TYPE(Int, int);
+DEFINE_TYPE(Double, double);
 
-class Son:public Base{
-public:
-    Base *GetBaseType() override { return Base::GetBaseType(); }
-};
+#define FUNC(name, type) name##_##type
+void FUNC(add, int)() {}//add_int()
+void FUNC(add, float)() {}//add_float()
 
-int main() {
-    Base base;
-    Son son;
-    const std::type_info &base_Info = typeid(base);
-    const std::type_info &son_Info = typeid(son);
-    std::cout << base_Info.name() << std::endl;
+#include <argparse/argparse.hpp>
 
-    std::cout << son_Info.name() << std::endl;
+int main(int argc, const char* argv[]) {
+  argparse::ArgumentParser program("argparse_example");
+  program.add_argument("--name")
+      .help("Enter your name")
+      .default_value(std::string("World"));
 
-    std::cout << "hello world" << std::endl;
+  try {
+    program.parse_args(argc, argv);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
+    exit(0);
+  }
+
+  auto name = program.get<std::string>("--name");
+  Int_t i = {10};
+  Double_t d = {3.1415926};
+  printf("%d %lf\n", i.value, d.value);
+
+  add_int();
+  add_float();
+
+  return 0;
 }

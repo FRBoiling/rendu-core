@@ -21,12 +21,16 @@ namespace _pb = ::PROTOBUF_NAMESPACE_ID;
 namespace _pbi = _pb::internal;
 
 namespace rendu {
+namespace proto {
 namespace core {
-namespace options {
 PROTOBUF_CONSTEXPR Options::Options(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.envtype_)*/0
-  , /*decltype(_impl_.hosttype_)*/0
+    /*decltype(_impl_.startconfig_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.apptype_)*/0
+  , /*decltype(_impl_.process_)*/0
+  , /*decltype(_impl_.develop_)*/0
+  , /*decltype(_impl_.loglevel_)*/0
+  , /*decltype(_impl_.console_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct OptionsDefaultTypeInternal {
   PROTOBUF_CONSTEXPR OptionsDefaultTypeInternal()
@@ -37,8 +41,8 @@ struct OptionsDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 OptionsDefaultTypeInternal _Options_default_instance_;
-}  // namespace options
 }  // namespace core
+}  // namespace proto
 }  // namespace rendu
 static ::_pb::Metadata file_level_metadata_core_2foptions_2eproto[1];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_core_2foptions_2eproto[2];
@@ -46,34 +50,42 @@ static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors
 
 const uint32_t TableStruct_core_2foptions_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::rendu::core::options::Options, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::rendu::core::options::Options, _impl_.envtype_),
-  PROTOBUF_FIELD_OFFSET(::rendu::core::options::Options, _impl_.hosttype_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.apptype_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.startconfig_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.process_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.develop_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.loglevel_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.console_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::rendu::core::options::Options)},
+  { 0, -1, -1, sizeof(::rendu::proto::core::Options)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::rendu::core::options::_Options_default_instance_._instance,
+  &::rendu::proto::core::_Options_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_core_2foptions_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\022core/options.proto\022\022rendu.core.options"
-  "\"g\n\007Options\022,\n\007envType\030\001 \001(\0162\033.rendu.cor"
-  "e.options.EnvType\022.\n\010hostType\030\002 \001(\0162\034.re"
-  "ndu.core.options.HostType*%\n\007EnvType\022\013\n\007"
-  "ETDebug\020\000\022\r\n\tETRelease\020\001*H\n\010HostType\022\007\n\003"
-  "ALL\020\000\022\010\n\004Zone\020\001\022\010\n\004Gate\020\002\022\t\n\005Realm\020\003\022\t\n\005"
-  "World\020\004\022\t\n\005Scene\020\005b\006proto3"
+  "\n\022core/options.proto\022\020rendu.proto.core\"\262"
+  "\001\n\007Options\022*\n\007appType\030\001 \001(\0162\031.rendu.prot"
+  "o.core.AppType\022\023\n\013startConfig\030\002 \001(\t\022\017\n\007p"
+  "rocess\030\003 \001(\005\0222\n\007develop\030\004 \001(\0162!.rendu.pr"
+  "oto.core.DevelopModeType\022\020\n\010logLevel\030\005 \001"
+  "(\005\022\017\n\007console\030\006 \001(\005*:\n\017DevelopModeType\022\014"
+  "\n\010Official\020\000\022\013\n\007Develop\020\001\022\014\n\010Pressure\020\002*"
+  "\223\001\n\007AppType\022\n\n\006Server\020\000\022\013\n\007Watcher\020\001\022\014\n\010"
+  "GameTool\020\002\022\021\n\rExcelExporter\020\003\022\014\n\010Proto2C"
+  "S\020\004\022\023\n\017BenchmarkClient\020\005\022\023\n\017BenchmarkSer"
+  "ver\020\006\022\010\n\004Demo\020\n\022\014\n\010LockStep\020\013b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_core_2foptions_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_core_2foptions_2eproto = {
-    false, false, 266, descriptor_table_protodef_core_2foptions_2eproto,
+    false, false, 437, descriptor_table_protodef_core_2foptions_2eproto,
     "core/options.proto",
     &descriptor_table_core_2foptions_2eproto_once, nullptr, 0, 1,
     schemas, file_default_instances, TableStruct_core_2foptions_2eproto::offsets,
@@ -87,27 +99,28 @@ PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_core_2fo
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_core_2foptions_2eproto(&descriptor_table_core_2foptions_2eproto);
 namespace rendu {
+namespace proto {
 namespace core {
-namespace options {
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* EnvType_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* DevelopModeType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_core_2foptions_2eproto);
   return file_level_enum_descriptors_core_2foptions_2eproto[0];
 }
-bool EnvType_IsValid(int value) {
+bool DevelopModeType_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;
   }
 }
 
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HostType_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AppType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_core_2foptions_2eproto);
   return file_level_enum_descriptors_core_2foptions_2eproto[1];
 }
-bool HostType_IsValid(int value) {
+bool AppType_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -115,6 +128,9 @@ bool HostType_IsValid(int value) {
     case 3:
     case 4:
     case 5:
+    case 6:
+    case 10:
+    case 11:
       return true;
     default:
       return false;
@@ -132,21 +148,33 @@ Options::Options(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
-  // @@protoc_insertion_point(arena_constructor:rendu.core.options.Options)
+  // @@protoc_insertion_point(arena_constructor:rendu.proto.core.Options)
 }
 Options::Options(const Options& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   Options* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.envtype_){}
-    , decltype(_impl_.hosttype_){}
+      decltype(_impl_.startconfig_){}
+    , decltype(_impl_.apptype_){}
+    , decltype(_impl_.process_){}
+    , decltype(_impl_.develop_){}
+    , decltype(_impl_.loglevel_){}
+    , decltype(_impl_.console_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&_impl_.envtype_, &from._impl_.envtype_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.hosttype_) -
-    reinterpret_cast<char*>(&_impl_.envtype_)) + sizeof(_impl_.hosttype_));
-  // @@protoc_insertion_point(copy_constructor:rendu.core.options.Options)
+  _impl_.startconfig_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.startconfig_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_startconfig().empty()) {
+    _this->_impl_.startconfig_.Set(from._internal_startconfig(), 
+      _this->GetArenaForAllocation());
+  }
+  ::memcpy(&_impl_.apptype_, &from._impl_.apptype_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.console_) -
+    reinterpret_cast<char*>(&_impl_.apptype_)) + sizeof(_impl_.console_));
+  // @@protoc_insertion_point(copy_constructor:rendu.proto.core.Options)
 }
 
 inline void Options::SharedCtor(
@@ -154,14 +182,22 @@ inline void Options::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.envtype_){0}
-    , decltype(_impl_.hosttype_){0}
+      decltype(_impl_.startconfig_){}
+    , decltype(_impl_.apptype_){0}
+    , decltype(_impl_.process_){0}
+    , decltype(_impl_.develop_){0}
+    , decltype(_impl_.loglevel_){0}
+    , decltype(_impl_.console_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
+  _impl_.startconfig_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.startconfig_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 Options::~Options() {
-  // @@protoc_insertion_point(destructor:rendu.core.options.Options)
+  // @@protoc_insertion_point(destructor:rendu.proto.core.Options)
   if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
@@ -171,6 +207,7 @@ Options::~Options() {
 
 inline void Options::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.startconfig_.Destroy();
 }
 
 void Options::SetCachedSize(int size) const {
@@ -178,14 +215,15 @@ void Options::SetCachedSize(int size) const {
 }
 
 void Options::Clear() {
-// @@protoc_insertion_point(message_clear_start:rendu.core.options.Options)
+// @@protoc_insertion_point(message_clear_start:rendu.proto.core.Options)
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&_impl_.envtype_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.hosttype_) -
-      reinterpret_cast<char*>(&_impl_.envtype_)) + sizeof(_impl_.hosttype_));
+  _impl_.startconfig_.ClearToEmpty();
+  ::memset(&_impl_.apptype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.console_) -
+      reinterpret_cast<char*>(&_impl_.apptype_)) + sizeof(_impl_.console_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -195,21 +233,55 @@ const char* Options::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // .rendu.core.options.EnvType envType = 1;
+      // .rendu.proto.core.AppType appType = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          _internal_set_envtype(static_cast<::rendu::core::options::EnvType>(val));
+          _internal_set_apptype(static_cast<::rendu::proto::core::AppType>(val));
         } else
           goto handle_unusual;
         continue;
-      // .rendu.core.options.HostType hostType = 2;
+      // string startConfig = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_startconfig();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "rendu.proto.core.Options.startConfig"));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 process = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          _impl_.process_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .rendu.proto.core.DevelopModeType develop = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          _internal_set_hosttype(static_cast<::rendu::core::options::HostType>(val));
+          _internal_set_develop(static_cast<::rendu::proto::core::DevelopModeType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 logLevel = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+          _impl_.loglevel_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 console = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
+          _impl_.console_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -238,50 +310,100 @@ failure:
 
 uint8_t* Options::_InternalSerialize(
     uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:rendu.core.options.Options)
+  // @@protoc_insertion_point(serialize_to_array_start:rendu.proto.core.Options)
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .rendu.core.options.EnvType envType = 1;
-  if (this->_internal_envtype() != 0) {
+  // .rendu.proto.core.AppType appType = 1;
+  if (this->_internal_apptype() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
-      1, this->_internal_envtype(), target);
+      1, this->_internal_apptype(), target);
   }
 
-  // .rendu.core.options.HostType hostType = 2;
-  if (this->_internal_hosttype() != 0) {
+  // string startConfig = 2;
+  if (!this->_internal_startconfig().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_startconfig().data(), static_cast<int>(this->_internal_startconfig().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "rendu.proto.core.Options.startConfig");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_startconfig(), target);
+  }
+
+  // int32 process = 3;
+  if (this->_internal_process() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_process(), target);
+  }
+
+  // .rendu.proto.core.DevelopModeType develop = 4;
+  if (this->_internal_develop() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
-      2, this->_internal_hosttype(), target);
+      4, this->_internal_develop(), target);
+  }
+
+  // int32 logLevel = 5;
+  if (this->_internal_loglevel() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_loglevel(), target);
+  }
+
+  // int32 console = 6;
+  if (this->_internal_console() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(6, this->_internal_console(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:rendu.core.options.Options)
+  // @@protoc_insertion_point(serialize_to_array_end:rendu.proto.core.Options)
   return target;
 }
 
 size_t Options::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:rendu.core.options.Options)
+// @@protoc_insertion_point(message_byte_size_start:rendu.proto.core.Options)
   size_t total_size = 0;
 
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // .rendu.core.options.EnvType envType = 1;
-  if (this->_internal_envtype() != 0) {
+  // string startConfig = 2;
+  if (!this->_internal_startconfig().empty()) {
     total_size += 1 +
-      ::_pbi::WireFormatLite::EnumSize(this->_internal_envtype());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_startconfig());
   }
 
-  // .rendu.core.options.HostType hostType = 2;
-  if (this->_internal_hosttype() != 0) {
+  // .rendu.proto.core.AppType appType = 1;
+  if (this->_internal_apptype() != 0) {
     total_size += 1 +
-      ::_pbi::WireFormatLite::EnumSize(this->_internal_hosttype());
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_apptype());
+  }
+
+  // int32 process = 3;
+  if (this->_internal_process() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_process());
+  }
+
+  // .rendu.proto.core.DevelopModeType develop = 4;
+  if (this->_internal_develop() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_develop());
+  }
+
+  // int32 logLevel = 5;
+  if (this->_internal_loglevel() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_loglevel());
+  }
+
+  // int32 console = 6;
+  if (this->_internal_console() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_console());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -297,22 +419,34 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Options::GetClassData() const 
 void Options::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
   auto* const _this = static_cast<Options*>(&to_msg);
   auto& from = static_cast<const Options&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:rendu.core.options.Options)
+  // @@protoc_insertion_point(class_specific_merge_from_start:rendu.proto.core.Options)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_envtype() != 0) {
-    _this->_internal_set_envtype(from._internal_envtype());
+  if (!from._internal_startconfig().empty()) {
+    _this->_internal_set_startconfig(from._internal_startconfig());
   }
-  if (from._internal_hosttype() != 0) {
-    _this->_internal_set_hosttype(from._internal_hosttype());
+  if (from._internal_apptype() != 0) {
+    _this->_internal_set_apptype(from._internal_apptype());
+  }
+  if (from._internal_process() != 0) {
+    _this->_internal_set_process(from._internal_process());
+  }
+  if (from._internal_develop() != 0) {
+    _this->_internal_set_develop(from._internal_develop());
+  }
+  if (from._internal_loglevel() != 0) {
+    _this->_internal_set_loglevel(from._internal_loglevel());
+  }
+  if (from._internal_console() != 0) {
+    _this->_internal_set_console(from._internal_console());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Options::CopyFrom(const Options& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:rendu.core.options.Options)
+// @@protoc_insertion_point(class_specific_copy_from_start:rendu.proto.core.Options)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -324,13 +458,19 @@ bool Options::IsInitialized() const {
 
 void Options::InternalSwap(Options* other) {
   using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.startconfig_, lhs_arena,
+      &other->_impl_.startconfig_, rhs_arena
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Options, _impl_.hosttype_)
-      + sizeof(Options::_impl_.hosttype_)
-      - PROTOBUF_FIELD_OFFSET(Options, _impl_.envtype_)>(
-          reinterpret_cast<char*>(&_impl_.envtype_),
-          reinterpret_cast<char*>(&other->_impl_.envtype_));
+      PROTOBUF_FIELD_OFFSET(Options, _impl_.console_)
+      + sizeof(Options::_impl_.console_)
+      - PROTOBUF_FIELD_OFFSET(Options, _impl_.apptype_)>(
+          reinterpret_cast<char*>(&_impl_.apptype_),
+          reinterpret_cast<char*>(&other->_impl_.apptype_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Options::GetMetadata() const {
@@ -340,13 +480,13 @@ void Options::InternalSwap(Options* other) {
 }
 
 // @@protoc_insertion_point(namespace_scope)
-}  // namespace options
 }  // namespace core
+}  // namespace proto
 }  // namespace rendu
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::rendu::core::options::Options*
-Arena::CreateMaybeMessage< ::rendu::core::options::Options >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::rendu::core::options::Options >(arena);
+template<> PROTOBUF_NOINLINE ::rendu::proto::core::Options*
+Arena::CreateMaybeMessage< ::rendu::proto::core::Options >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::rendu::proto::core::Options >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

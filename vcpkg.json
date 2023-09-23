@@ -32,5 +32,17 @@
   }, {
     "name" : "sdl2",
     "version>=" : "2.26.5"
+  }, {
+    "name" : "argparse",
+    "version>=" : "2.9"
+  }, {
+    "name" : "magic-enum",
+    "version>=" : "0.9.3"
+  }, {
+    "name" : "abseil",
+    "version>=" : "20230802.0"
+  }, {
+    "name" : "date",
+    "version>=" : "3.0.1#4"
   } ]
 }

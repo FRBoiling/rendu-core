@@ -2,7 +2,7 @@
 * Created by boil on 2023/4/9.
 */
 
-#ifndef RENDU_SYSTEM_H
+#ifndef RENDU_COMPONENT_SYSTEM_H
 #define RENDU_SYSTEM_H
 
 #include <entt/entt.hpp>
@@ -21,4 +21,4 @@ public:
     virtual void run(entt::registry &registry) = 0;
 };
 
-#endif //RENDU_SYSTEM_H
+#endif //RENDU_COMPONENT_SYSTEM_H

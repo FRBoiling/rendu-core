@@ -56,4 +56,4 @@ namespace rendu {
 
 }
 
-#endif //RENDU_SYSTEM_H
+#endif //RENDU_COMPONENT_SYSTEM_H

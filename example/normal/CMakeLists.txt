@@ -12,6 +12,7 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
+    dep::argparse
     DEFINES
 )
 

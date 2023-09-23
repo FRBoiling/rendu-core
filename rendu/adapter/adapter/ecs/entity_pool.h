@@ -9,10 +9,13 @@
 
 namespace rendu {
 
-    class EntityPool {
-    private:
-        std::vector<Entity> m_entities;
+    class EntityPool: public entt::registry {
     public:
+      template<typename Component>
+      auto GetEntities(){
+        entt::registry registry;
+        return registry.view<Component>();
+      }
     };
 }
 

@@ -9,9 +9,7 @@
 
 namespace rendu {
 
-    class Entity : entt::registry {
-        using entity_type = entt::entity;
-    };
+    using Entity = entt::entity;
 
 }
 

@@ -2,17 +2,22 @@
 * Created by boil on 2022/12/31.
 */
 
-#include "core/launcher.h"
-#include "io/cmd_io_plugin.h"
-#include "env/env_plugin.h"
-#include "config/config_plugin.h"
+#include <exception>
+#include "log/logger.h"
+#include "api.h"
 
 using namespace rendu;
 
 int main(int argc, char **argv) {
-    Launcher::GetInst().AddPlugin<EnvPlugin>();
-//    Launcher::GetInst().AddPlugin<ConfigPlugin>();
-//    launcher.AddPlugin<CmdIoPlugin>();
-    Launcher::GetInst().Run();
-    return 0;
+  Api::Start(argc,argv);
+  while (true) {
+    try {
+      Api::Update();
+      Api::LateUpdate();
+    }
+    catch (const std::exception &ex) {
+      RD_CRITICAL("{}", ex.what());
+    }
+  }
+  return 0;
 }
