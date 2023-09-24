@@ -6,6 +6,6 @@
 #define RENDU_ADAPTER_FWD_H
 
 #include "define.h"
-#include "log/logger.h"
+#include "logger/log.h"
 
 #endif //RENDU_ADAPTER_FWD_H

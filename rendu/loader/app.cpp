@@ -2,7 +2,7 @@
 * Created by boil on 2023/9/6.
 */
 
-#include "api.h"
+#include "app.h"
 #include "world/world.h"
 #include "world/env/console_argument_parser_system.h"
 #include "world/logger/logger_system.h"
@@ -11,19 +11,19 @@
 
 RD_NAMESPACE_BEGIN
 
-    void Api::Start(int argc, char **argv) {
+    void App::Start(int argc, char **argv) {
       World::Instance().AddSingleton<ConsoleArgumentParserSystem>(argc, argv);
       World::Instance().AddSingleton<LoggerSystem>();
       World::Instance().AddSingleton<TimeSystem>();
       World::Instance().AddSingleton<FiberManagerSystem>();
     }
 
-    void Api::Update() {
+    void App::Update() {
       TimeSystem::Instance().Update();
       FiberManagerSystem::Instance().Update();
     }
 
-    void Api::LateUpdate() {
+    void App::LateUpdate() {
       FiberManagerSystem::Instance().LateUpdate();
     }
 

@@ -5,6 +5,8 @@
 #ifndef RENDU_CORE_FWD_H
 #define RENDU_CORE_FWD_H
 
+#include "logger/log.h"
+
 namespace rendu{
     class Host;
     class Plugin;

@@ -4,9 +4,7 @@
 
 #include "console_argument_parser_system.h"
 #include <argparse/argparse.hpp>
-#include "log/logger.h"
 #include "world/world.h"
-#include "world/logger/logger_system.h"
 
 using namespace rendu;
 
@@ -15,7 +13,7 @@ template<>
 struct fmt::formatter<proto::core::Options> : formatter<std::string> {
   auto format(proto::core::Options& options, format_context &ctx) -> decltype(ctx.out()) {
     return fmt::format_to(ctx.out(),
-                          "[程序类型：{}]-[区：{}][服：{}][进程编号：{}]-[运行模式：{}]\n[配置文件目录：{}]",
+                          "[程序类型：{}]-[进程编号：{}][开发模式：{}][日志等级：{}]-[命令行：{}]\n[配置文件目录：{}]",
                           proto::core::AppType_descriptor()->FindValueByNumber(options.apptype())->name(),
                           options.process(),
                           proto::core::DevelopModeType_descriptor()->FindValueByNumber(options.develop())->name(),
@@ -27,14 +25,15 @@ struct fmt::formatter<proto::core::Options> : formatter<std::string> {
 };
 
 void ConsoleArgumentParserSystem::Show(proto::core::Options& options) {
-  RD_INFO("\n{}\n{}\n{}\n{}\n{}\n{}\n 进程名称：{}",
+  RD_INFO("\n{}\n{}\n{}\n{}\n{}\n{}\n 进程名称：{}_{}",
           options,
           "*************************************************",
           "             R E N D U    C O R E                ",
           "   https://github.com/FRBoiling/rendu-core.git   ",
           "*************************************************",
           " <Ctrl-C> to stop.",
-          "1"
+          proto::core::AppType_descriptor()->FindValueByNumber(options.apptype())->name(),
+          options.process()
   );
 }
 
@@ -55,7 +54,7 @@ proto::core::Options& ConsoleArgumentParserSystem::Parser(int argc, char **argv)
   parser.add_argument("--Develop", "-d").help("运行模式, 0正式 1开发 2压测").required()
       .default_value(proto::core::DevelopModeType::Develop);
   parser.add_argument("--LogLevel", "-l").help("日志等级").required()
-      .default_value(1).scan<'i', int>();
+      .default_value(0).scan<'i', int>();
   parser.add_argument("--Console", "-c").help("命令行").required()
       .default_value(1).scan<'i', int>();
   try {

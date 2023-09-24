@@ -7,9 +7,9 @@
 
 #include "define.h"
 #include <ctime>
-#include "time_info.h"
 #include "entity/component_system.h"
 #include "base/singleton.h"
+#include "timer/date_time.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -24,12 +24,8 @@ RD_NAMESPACE_BEGIN
       void Update() override;
 
     private:
-      time_t FrameTime;
-
-      time_t ClientNow();
-
-    private:
       DateTime* m_dateTime;
+      uint64_t m_lastFrameTime;
     };
 
 

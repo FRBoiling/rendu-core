@@ -5,8 +5,7 @@
 #ifndef RENDU_CONSOLE_ARGUMENT_PARSER_SYSTEM_H
 #define RENDU_CONSOLE_ARGUMENT_PARSER_SYSTEM_H
 
-#include "define.h"
-
+#include "fwd/core_fwd.h"
 #include "options.pb.h"
 #include "entity/component_system.h"
 #include "base/singleton.h"

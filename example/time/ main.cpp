@@ -35,6 +35,9 @@ int main() {
   std::cout << "目标时区(" << cur_time_zone << "）的时间：" << cur_zt << std::endl;
   std::cout << "目标时区(" << target_time_zone2 << "）的时间：" << target_zt2 << std::endl;
   std::cout << "目标时区(" << target_time_zone3 << "）的时间：" << target_zt3 << std::endl;
-
+  auto now = std::chrono::system_clock::now();
+  auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+  auto value = now_ms.time_since_epoch().count();
+  std::cout << "当前时间的毫秒数: " << value << std::endl;
   return 0;
 }

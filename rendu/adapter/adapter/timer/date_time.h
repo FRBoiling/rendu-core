@@ -20,24 +20,27 @@ RD_NAMESPACE_BEGIN
     public:
       DateTime();
 
-      DateTime(std::time_t timeT, std::string timeZ = "Asia/Shanghai");
+      DateTime(int64_t timeS, std::string timeZ = "Asia/Shanghai");
 
       DateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, DateTimeKind kind = Local);
 
     public:
       static DateTime GetCurrentDateTime(std::string timeZ = "Asia/Shanghai");
+
     public:
-      time_t GetTimeT() const;
+      void SetDateTime(DateTime& dateTime);
+
+      int64_t GetTimeStamp() const;
 
       std::string GetTimeZone();
 
-      std::string ToString(const std::string& timeZone = "") const;
+      std::string ToString(const std::string &timeZone = "") const;
 
       std::string ToUtc();
 
     private:
-      time_t m_timeT;
-      std::string m_timeZ;
+      int64_t m_timeStamp;
+      std::string m_timeZone;
     };
 
 

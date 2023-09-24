@@ -2,14 +2,14 @@
 * Created by boil on 2023/9/6.
 */
 
-#ifndef RENDU_API_H
-#define RENDU_API_H
+#ifndef RENDU_APP_H
+#define RENDU_APP_H
 
 #include "define.h"
 
 RD_NAMESPACE_BEGIN
 
-    class Api {
+    class App {
     public :
       static void Start(int argc, char **argv);
 
@@ -20,4 +20,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_API_H
+#endif //RENDU_APP_H

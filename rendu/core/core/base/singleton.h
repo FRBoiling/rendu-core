@@ -6,27 +6,30 @@
 #define RENDU_SINGLETON_H
 
 #include <typeindex>
+#include "define.h"
 
-namespace rendu {
+RD_NAMESPACE_BEGIN
 
     template<typename T>
-    class Singleton
-    {
+    class Singleton {
     public:
-      static T& Instance(){
+      static T &Instance() {
         static T instance;
         return instance;
       }
 
-      Singleton(T&&) = delete;
-      Singleton(const T&) = delete;
-      void operator= (const T&) = delete;
+      Singleton(T &&) = delete;
+
+      Singleton(const T &) = delete;
+
+      void operator=(const T &) = delete;
 
     protected:
       Singleton() = default;
+
       virtual ~Singleton() = default;
     };
 
-} // namespace rendu
+RD_NAMESPACE_END
 
 #endif //RENDU_SINGLETON_H

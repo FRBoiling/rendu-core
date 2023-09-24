@@ -5,11 +5,12 @@
 #ifndef RENDU_WORLD_H
 #define RENDU_WORLD_H
 
+#include "fwd/core_fwd.h"
+
 #include <typeindex>
 #include <unordered_map>
 #include "ecs/entity.h"
 #include "entity/component_system.h"
-#include "log/logger.h"
 #include "base/singleton.h"
 
 namespace rendu {
@@ -41,7 +42,7 @@ namespace rendu {
         auto &system = System::Instance();
         system.Init(m_registry);
         system.Awake();
-        RD_INFO(" world add singleton {} awake", typeid(System).name());
+        RD_TRACE(" AddSingleton success. {} awake", typeid(System).name());
       }
 
       template<typename System, typename... Args>
@@ -49,7 +50,7 @@ namespace rendu {
         auto &system = System::Instance();
         system.Init(m_registry);
         system.Awake(args...);
-        RD_INFO(" world add singleton {} awake , args", typeid(System).name());
+        RD_TRACE(" AddSingleton with args success. {} awake , ", typeid(System).name());
       }
 
     private:

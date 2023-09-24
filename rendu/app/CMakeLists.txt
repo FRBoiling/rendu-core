@@ -14,7 +14,7 @@ rendu_add_executable(
     DEPS
     rendu::core
     rendu::common
-    rendu::shared
     rendu::loader
     DEFINES
+    -DSPDLOG_ACTIVE_LEVEL=0
 )
