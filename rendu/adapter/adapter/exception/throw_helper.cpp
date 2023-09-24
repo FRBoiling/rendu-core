@@ -7,7 +7,11 @@
 RD_NAMESPACE_BEGIN
 
     ArgumentException ThrowHelper::ArgumentException(const char *message) {
-   throw ArgumentException(message);
-}
+      throw ArgumentException(message);
+    }
+
+    EntityException ThrowHelper::EntityException(const char *message) {
+      return EntityException(message);
+    }
 
 RD_NAMESPACE_END

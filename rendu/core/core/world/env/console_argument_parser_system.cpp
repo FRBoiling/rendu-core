@@ -24,25 +24,25 @@ struct fmt::formatter<proto::core::Options> : formatter<std::string> {
   }
 };
 
-void ConsoleArgumentParserSystem::Show(proto::core::Options& options) {
+void ConsoleArgumentParserSystem::Show() {
   RD_INFO("\n{}\n{}\n{}\n{}\n{}\n{}\n 进程名称：{}_{}",
-          options,
+          *m_options,
           "*************************************************",
           "             R E N D U    C O R E                ",
           "   https://github.com/FRBoiling/rendu-core.git   ",
           "*************************************************",
           " <Ctrl-C> to stop.",
-          proto::core::AppType_descriptor()->FindValueByNumber(options.apptype())->name(),
-          options.process()
+          proto::core::AppType_descriptor()->FindValueByNumber(m_options->apptype())->name(),
+          m_options->process()
   );
 }
 
 
 void ConsoleArgumentParserSystem::Awake(int argc,char **argv) {
-   Show(Parser(argc,argv));
+    Parser(argc,argv);
 }
 
-proto::core::Options& ConsoleArgumentParserSystem::Parser(int argc, char **argv) {
+void ConsoleArgumentParserSystem::Parser(int argc, char **argv) {
 
   argparse::ArgumentParser parser("allowed options");
   parser.add_argument("--AppType", "-a").help("程序类型").required()
@@ -73,7 +73,6 @@ proto::core::Options& ConsoleArgumentParserSystem::Parser(int argc, char **argv)
   m_options->set_develop(parser.get<proto::core::DevelopModeType>("-d"));
   m_options->set_loglevel(parser.get<int>("-l"));
   m_options->set_console(parser.get<int>("-c"));
-  return *m_options;
 }
 
 

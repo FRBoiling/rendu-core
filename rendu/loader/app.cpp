@@ -16,6 +16,9 @@ RD_NAMESPACE_BEGIN
       World::Instance().AddSingleton<LoggerSystem>();
       World::Instance().AddSingleton<TimeSystem>();
       World::Instance().AddSingleton<FiberManagerSystem>();
+
+
+      ConsoleArgumentParserSystem::Instance().Show();
     }
 
     void App::Update() {

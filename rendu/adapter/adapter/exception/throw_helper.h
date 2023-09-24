@@ -7,13 +7,15 @@
 
 #include "define.h"
 #include "argument_exception.h"
+#include "entity_exception.h"
 
 RD_NAMESPACE_BEGIN
 
     class ThrowHelper {
 
     public:
-        static ArgumentException ArgumentException(const char *message);
+      static ArgumentException ArgumentException(const char *message);
+      static EntityException EntityException(const char *message);
 
     };
 

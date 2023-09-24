@@ -8,7 +8,7 @@
 #include "fwd/core_fwd.h"
 #include "options.pb.h"
 #include "entity/component_system.h"
-#include "base/singleton.h"
+#include "utils/singleton.h"
 
 namespace rendu {
 
@@ -19,10 +19,10 @@ namespace rendu {
     public:
       void Awake(int argc, char **argv) override;
 
-    private:
-      proto::core::Options &Parser(int argc, char **argv);
+      void Show();
 
-      void Show(proto::core::Options &options);
+    private:
+      void Parser(int argc, char **argv);
 
     private:
       proto::core::Options *m_options;

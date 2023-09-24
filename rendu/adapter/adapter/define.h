@@ -34,4 +34,6 @@
 #define RD_NAMESPACE_BEGIN  namespace rendu {
 #define RD_NAMESPACE_END } // namespace rendu
 
+#include <string>
+
 #endif //RENDU_COMMON_DEFINE_H_

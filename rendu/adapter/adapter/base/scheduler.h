@@ -9,9 +9,10 @@
 
 namespace rendu {
 
-    template<typename Delta>
-    class Scheduler : public entt::scheduler<Delta> {
-
+    class Scheduler : public entt::scheduler<int> {
+    public:
+      virtual void Add(int fiberId) {
+      };
     };
 }
 

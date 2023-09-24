@@ -4,6 +4,7 @@
 
 #include "time_system.h"
 #include "world/world.h"
+#include "thread/thread.h"
 
 RD_NAMESPACE_BEGIN
 

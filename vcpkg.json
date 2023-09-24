@@ -44,5 +44,11 @@
   }, {
     "name" : "date",
     "version>=" : "3.0.1#4"
+  }, {
+    "name" : "concurrentqueue",
+    "version>=" : "1.0.4"
+  }, {
+    "name" : "cppcoro",
+    "version>=" : "2022-10-25"
   } ]
 }

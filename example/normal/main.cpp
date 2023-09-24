@@ -1,41 +1,73 @@
-#include <cstdio>
+//#include "task_test.h"
+//#include "task_test1.h"
+//#include "task_test2.h"
+#include <iostream>
 
-#define DEFINE_TYPE(name, type) \
-    typedef struct { \
-        type value; \
-    } name##_t;
+using namespace std;
 
-DEFINE_TYPE(Int, int);
-DEFINE_TYPE(Double, double);
+class Data {
+public:
+  int data;
+public:
+  Data(int i) {
 
-#define FUNC(name, type) name##_##type
-void FUNC(add, int)() {}//add_int()
-void FUNC(add, float)() {}//add_float()
-
-#include <argparse/argparse.hpp>
-
-int main(int argc, const char* argv[]) {
-  argparse::ArgumentParser program("argparse_example");
-  program.add_argument("--name")
-      .help("Enter your name")
-      .default_value(std::string("World"));
-
-  try {
-    program.parse_args(argc, argv);
-  }
-  catch (const std::runtime_error& err) {
-    std::cout << err.what() << std::endl;
-    std::cout << program;
-    exit(0);
   }
 
-  auto name = program.get<std::string>("--name");
-  Int_t i = {10};
-  Double_t d = {3.1415926};
-  printf("%d %lf\n", i.value, d.value);
+  Data() {
+    cout << "Data 构造" << endl;
+    data = 0;
+  }
 
-  add_int();
-  add_float();
+  Data(const Data &m) {
+    cout << "Data 拷贝构造" << endl;
+    this->data = m.data;
+  }
+
+  ~Data() {
+    cout << "Data 析构" << endl;
+  }
+};
+
+class Man {
+public:
+  Man() {
+    cout << "Man 构造" << endl;
+    data = new Data(0);
+  }
+
+  Man(const Man &m) {
+    cout << "Man 拷贝构造" << endl;
+    this->data = m.data;
+  }
+
+  ~Man() {
+    cout << "Man 析构" << endl;
+    delete data;
+  }
+
+  Data *data;
+};
+
+
+Man& get() {
+  Man m;
+  m.data->data = 1111;
+  cout << "----" << endl;
+  return m;
+}
+
+
+int main() {
+  Man m = get();;
+  //cout << "before m=" << &m << "n=" << &n << endl;
+  printf("m.data is %d\n", m.data->data);
+
 
   return 0;
+//  task_test_fuc();
+//  task_test1();
+// task_test2::task_test_fuc();
 }
+
+
+

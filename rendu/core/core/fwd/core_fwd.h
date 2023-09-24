@@ -7,9 +7,10 @@
 
 #include "logger/log.h"
 
-namespace rendu{
-    class Host;
-    class Plugin;
-}
+RD_NAMESPACE_BEGIN
+
+
+
+RD_NAMESPACE_END
 
 #endif //RENDU_CORE_FWD_H

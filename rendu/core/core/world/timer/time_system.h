@@ -8,7 +8,7 @@
 #include "define.h"
 #include <ctime>
 #include "entity/component_system.h"
-#include "base/singleton.h"
+#include "utils/singleton.h"
 #include "timer/date_time.h"
 
 RD_NAMESPACE_BEGIN

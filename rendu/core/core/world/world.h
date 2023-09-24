@@ -11,9 +11,9 @@
 #include <unordered_map>
 #include "ecs/entity.h"
 #include "entity/component_system.h"
-#include "base/singleton.h"
+#include "utils/singleton.h"
 
-namespace rendu {
+RD_NAMESPACE_BEGIN
 
     class World {
     public:
@@ -42,7 +42,7 @@ namespace rendu {
         auto &system = System::Instance();
         system.Init(m_registry);
         system.Awake();
-        RD_TRACE(" AddSingleton success. {} awake", typeid(System).name());
+        RD_TRACE("AddSingleton success. {} Awake .", typeid(System).name());
       }
 
       template<typename System, typename... Args>
@@ -50,7 +50,7 @@ namespace rendu {
         auto &system = System::Instance();
         system.Init(m_registry);
         system.Awake(args...);
-        RD_TRACE(" AddSingleton with args success. {} awake , ", typeid(System).name());
+        RD_TRACE("AddSingleton with args success. {} Awake .", typeid(System).name());
       }
 
     private:
@@ -58,6 +58,7 @@ namespace rendu {
       Entity m_entity;
 
     };
-}// namespace rendu
+
+RD_NAMESPACE_END
 
 #endif //RENDU_WORLD_H
