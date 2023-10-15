@@ -143,6 +143,12 @@ RD_NAMESPACE_BEGIN
       return sockfd;
     }
 
+    SOCKET Connect(const SOCKET sockfd, struct sockaddr_storage &storage) {
+      if (connect(sockfd, (sockaddr *) &storage, GetSockLen((sockaddr *) &storage)) != 0) {
+        return -1;
+      }
+      return sockfd;
+    }
 
     SOCKET Connect(const char *remote_host, uint16_t remote_port) {
       SOCKET sockfd = -1;
@@ -217,18 +223,35 @@ RD_NAMESPACE_BEGIN
       return -1;
     }
 
-    ssize_t Read(int sockfd, void *buf, size_t count)
-    {
+    bool IsSelfConnect(int sockfd) {
+      struct sockaddr_storage localaddr;
+      GetSockLocalAddr(sockfd, localaddr);
+      struct sockaddr_storage peeraddr;
+      GetSockPeerAddr(sockfd, peeraddr);
+      if (localaddr.ss_family == AF_INET) {
+        auto &laddr4 = reinterpret_cast<struct sockaddr_in & >(localaddr);
+        auto &raddr4 = reinterpret_cast<struct sockaddr_in & >(peeraddr);
+        return laddr4.sin_port == raddr4.sin_port
+               && laddr4.sin_addr.s_addr == raddr4.sin_addr.s_addr;
+      } else if (localaddr.ss_family == AF_INET6) {
+        auto &laddr6 = reinterpret_cast<struct sockaddr_in6 &>(localaddr);
+        auto &raddr6 = reinterpret_cast<struct sockaddr_in6 &>(peeraddr);
+        return laddr6.sin6_port == raddr6.sin6_port
+               && (memcmp(&laddr6.sin6_addr, &raddr6.sin6_addr, sizeof laddr6.sin6_addr) == 0);
+      } else {
+        return false;
+      }
+    }
+
+    ssize_t Read(int sockfd, void *buf, size_t count) {
       return read(sockfd, buf, count);
     }
 
-    ssize_t Readv(int sockfd, const struct iovec *iov, int iovcnt)
-    {
+    ssize_t Readv(int sockfd, const struct iovec *iov, int iovcnt) {
       return readv(sockfd, iov, iovcnt);
     }
 
-    ssize_t Write(int sockfd, const void *buf, size_t count)
-    {
+    ssize_t Write(int sockfd, const void *buf, size_t count) {
       return write(sockfd, buf, count);
     }
 

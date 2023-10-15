@@ -28,12 +28,12 @@ RD_NAMESPACE_BEGIN
 
     bool hasChannel(Channel *channel) const override;
 
+    void AddEvent(Channel *channel) const;
+    void DelEvent(Channel *channel) const;
   private:
     static const int kInitEventListSize = 16;
 
     static const char *operationToString(int op);
-
-    void update(int operation, Channel *channel);
 
   private:
     int poller_fd_;

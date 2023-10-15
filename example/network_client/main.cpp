@@ -1,22 +1,17 @@
-#include "tcp/tcp_client.h"
-#include "echo_session.h"
-#include "logger/log.h"
+#include "echo_client.h"
 
-using namespace std;
 using namespace rendu;
 
+int main(int argc, char *argv[]) {
+//  LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
+  EventLoop loop;
+  g_clients.reserve(1);
+  for (int i = 0; i < 1; ++i) {
+    char buf[32];
+    snprintf(buf, sizeof buf, "%d", i + 1);
+    g_clients.emplace_back(new EchoClient(&loop, IPEndPoint::FromString("127.0.0.1:11111").value(), buf));
+  }
 
-int main() {
-  // 设置日志系统
-  Logger::Instance().Add(std::make_shared<ConsoleChannel>());
-  Logger::Instance().SetWriter(std::make_shared<AsyncLogWriter>());
-
-  TcpClient::Ptr client(new TcpClient());//必须使用智能指针
-  client->Connect<EchoSession>("127.0.0.1",9000);//连接服务器
-
-  //退出程序事件处理
-  static Semaphore sem;
-  signal(SIGINT, [](int) { sem.Post(); });// 设置退出信号
-  sem.Wait();
-  return 0;
+  g_clients[g_current]->connect();
+  loop.loop();
 }

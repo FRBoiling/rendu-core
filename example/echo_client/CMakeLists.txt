@@ -1,7 +1,7 @@
 #**********************************
 #  Created by boil on 2022/8/14.
 #**********************************
-set(target_name network_client)
+set(target_name echo_client)
 rendu_add_executable(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -12,7 +12,7 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::network
+    dep::rdnet
     DEFINES
 )
 

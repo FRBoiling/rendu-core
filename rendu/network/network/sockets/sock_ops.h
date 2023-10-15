@@ -51,9 +51,13 @@ RD_NAMESPACE_BEGIN
     SOCKET Accept(const SOCKET listen_sfd);
     SOCKET Accept(const SOCKET listen_sfd,struct sockaddr_storage& storage,socklen_t& addr_len) ;
 
-    SOCKET Connect(const char *remote_host, uint16_t remote_port);
 
+    SOCKET Connect(const SOCKET sfd, struct sockaddr_storage &storage);
+    SOCKET Connect(const char *remote_host, uint16_t remote_port);
     int Connect(const char *host, uint16_t port, bool async, const char *local_ip, uint16_t local_port);
+
+    bool IsSelfConnect(int sockfd);
+
 
     ssize_t Read(int sockfd, void *buf, size_t count);
 

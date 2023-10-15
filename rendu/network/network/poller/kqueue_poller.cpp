@@ -89,7 +89,7 @@ RD_NAMESPACE_BEGIN
       }
 
       channel->set_index(kAdded);
-      update(EV_ADD, channel);
+      AddEvent(channel);
     } else {
       // update existing one with EPOLL_CTL_MOD/DEL
       int fd = channel->fd();
@@ -98,7 +98,7 @@ RD_NAMESPACE_BEGIN
       assert(channels_[fd] == channel);
       assert(index == kAdded);
       if (channel->isNoneEvent()) {
-        update(EV_DELETE, channel);
+        DelEvent(channel);
         channel->set_index(kDeleted);
       }
     }
@@ -118,7 +118,7 @@ RD_NAMESPACE_BEGIN
     assert(n == 1);
 
     if (index == kAdded) {
-      update(EV_DELETE, channel);
+      DelEvent(channel);
     }
     channel->set_index(kNew);
   }
@@ -127,17 +127,35 @@ RD_NAMESPACE_BEGIN
     return Poller::hasChannel(channel);
   }
 
-  void KqueuePoller::update(int operation, Channel *channel) {
-    struct kevent event = {0};;
-    int fd = channel->fd();
-    EV_SET(&event, fd, channel->events(), operation, 0, 0, channel);
-    LOG_TRACE << "kqueue update op = " << operationToString(operation)
-              << " fd = " << fd << " event = { " << channel->eventsToString() << " }";
-    if (kevent(poller_fd_, &event, 1, NULL, 0, NULL) < 0) {
-      if (operation == EV_DELETE) {
-        LOG_SYSERR << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
-      } else {
-        LOG_SYSFATAL << "epoll_ctl op =" << operationToString(operation) << " fd =" << fd;
+  void KqueuePoller::AddEvent(Channel *channel) const {
+    struct kevent ke;
+    if (channel->events() & RD_READABLE) {
+      EV_SET(&ke, channel->fd(), EVFILT_READ, EV_ADD, 0, 0, NULL);
+      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
+        LOG_SYSFATAL << "epoll_ctl op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+      }
+    }
+    if (channel->events() & RD_WRITABLE) {
+      EV_SET(&ke, channel->fd(), EVFILT_WRITE, EV_ADD, 0, 0, NULL);
+      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
+        LOG_SYSFATAL << "epoll_ctl op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+      }
+    }
+  }
+
+  void KqueuePoller::DelEvent(Channel *channel) const{
+    struct kevent ke;
+
+    if (channel->events() & RD_READABLE) {
+      EV_SET(&ke, channel->fd(), EVFILT_READ, EV_DELETE, 0, 0, NULL);
+      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
+        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+      }
+    }
+    if (channel->events() & RD_WRITABLE) {
+      EV_SET(&ke, channel->fd(), EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
+      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
+        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
       }
     }
   }
