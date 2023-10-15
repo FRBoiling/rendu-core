@@ -2,7 +2,7 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_TYPES_H
+#ifndef RENDU_TYPE_CAST_H
 #define RENDU_TYPES_H
 
 #include "define.h"
@@ -38,4 +38,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_TYPES_H
+#endif //RENDU_TYPE_CAST_H

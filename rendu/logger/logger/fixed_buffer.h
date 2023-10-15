@@ -7,7 +7,8 @@
 
 #include "base/non_copyable.h"
 #include "base/string_piece.h"
-#include "base/types.h"
+#include "base/type_cast.h"
+#include "base/memory_ops.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -28,7 +29,7 @@ RD_NAMESPACE_BEGIN
 
     void append(const char * /*restrict*/ buf, size_t len) {
       // FIXME: append partially
-      if (implicit_cast<size_t>(avail()) > len) {
+      if (TypeCast::implicit_cast<size_t>(avail()) > len) {
         memcpy(cur_, buf, len);
         cur_ += len;
       }
@@ -47,7 +48,7 @@ RD_NAMESPACE_BEGIN
 
     void reset() { cur_ = data_; }
 
-    void bzero() { memZero(data_, sizeof data_); }
+    void bzero() { MemoryOps::memZero(data_, sizeof data_); }
 
     // for used by GDB
     const char *debugString();

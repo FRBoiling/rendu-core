@@ -3,7 +3,7 @@
 */
 
 #include "read_small_file.h"
-#include "base/types.h"
+#include "base/type_cast.h"
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
@@ -56,7 +56,7 @@ int ReadSmallFile::readToString(int maxSize,
         if (S_ISREG(statbuf.st_mode))
         {
           *fileSize = statbuf.st_size;
-          content->reserve(static_cast<int>(std::min(implicit_cast<int64_t>(maxSize), *fileSize)));
+          content->reserve(static_cast<int>(std::min(TypeCast::implicit_cast<int64_t>(maxSize), *fileSize)));
         }
         else if (S_ISDIR(statbuf.st_mode))
         {
@@ -77,9 +77,9 @@ int ReadSmallFile::readToString(int maxSize,
       }
     }
 
-    while (content->size() < implicit_cast<size_t>(maxSize))
+    while (content->size() < TypeCast::implicit_cast<size_t>(maxSize))
     {
-      size_t toRead = std::min(implicit_cast<size_t>(maxSize) - content->size(), sizeof(buf_));
+      size_t toRead = std::min(TypeCast::implicit_cast<size_t>(maxSize) - content->size(), sizeof(buf_));
       ssize_t n = ::read(fd_, buf_, toRead);
       if (n > 0)
       {
