@@ -4,15 +4,15 @@
 
 set(target_name logger)
 rendu_add_executable(
-    DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PROJECT
-    ${PROJECT_NAME}
-    NAME
-    ${target_name}
-    LINKOPTS
-    rendu-core-interface
-    DEPS
-    dep::spdlog
-    DEFINES
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        ${target_name}
+        LINKOPTS
+        rendu-core-interface
+        DEPS
+        rendu::logger
+        DEFINES
 )

@@ -98,14 +98,14 @@ union W128_T {
     __m128i si;
 };
 #else
-/** 128-bit data structure */
+/** 128-bit Data structure */
 union W128_T {
     uint32_t u[4];
     uint64_t u64[2];
 };
 #endif
 
-/** 128-bit data type */
+/** 128-bit Data type */
 typedef union W128_T w128_t;
 
 /**

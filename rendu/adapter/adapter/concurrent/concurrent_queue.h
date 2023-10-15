@@ -10,11 +10,8 @@
 
 RD_NAMESPACE_BEGIN
     template<typename T>
-    class ConcurrentQueue : public moodycamel::ConcurrentQueue<T> {
+    class ConcurrentQueue{
     public:
-      ConcurrentQueue() = default;
-
-      ~ConcurrentQueue() = default;
 
       void push(const T &t) {
         moodycamel::ConcurrentQueue<T>::enqueue(t);
@@ -32,12 +29,16 @@ RD_NAMESPACE_BEGIN
         return 0;
       }
 
-      bool TryDequeue(T& i) {
+      bool TryDequeue(T& t) {
 
         return true;
       }
 
-      void Enqueue(T& i) {
+      void Enqueue(T& t) {
+
+      }
+
+      void Enqueue(T&& t) {
 
       }
     };

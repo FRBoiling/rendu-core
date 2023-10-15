@@ -1,0 +1,70 @@
+/*
+* Created by boil on 2023/10/27.
+*/
+
+#ifndef RENDU_ECHO_SERVER_H
+#define RENDU_ECHO_SERVER_H
+
+#include "net/tcp_server.h"
+
+#include "net/event_loop.h"
+#include "thread/thread.h"
+#include "log/log.h"
+#include "net/tcp_connection.h"
+
+RD_NAMESPACE_BEGIN
+
+class EchoServer
+{
+public:
+  EchoServer(EventLoop* loop, const IPEndPoint& listenAddr)
+    : loop_(loop),
+      server_(loop, listenAddr, "EchoServer")
+  {
+    server_.setConnectionCallback(
+      std::bind(&EchoServer::onConnection, this, _1));
+    server_.setMessageCallback(
+      std::bind(&EchoServer::onMessage, this, _1, _2, _3));
+    server_.setThreadNum(10);
+  }
+
+  void start()
+  {
+    server_.start();
+  }
+  // void stop();
+
+private:
+  void onConnection(const TcpConnectionPtr& conn)
+  {
+    LOG_TRACE << conn->peerAddress().ToString() << " -> "
+              << conn->localAddress().ToString() << " is "
+              << (conn->connected() ? "UP" : "DOWN");
+    LOG_INFO << conn->getTcpInfoString();
+
+    conn->send("hello\n");
+  }
+
+  void onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp time)
+  {
+    string msg(buf->retrieveAllAsString());
+    LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at " << time.toString();
+    if (msg == "exit\n")
+    {
+      conn->send("bye\n");
+      conn->shutdown();
+    }
+    if (msg == "quit\n")
+    {
+      loop_->quit();
+    }
+    conn->send(msg);
+  }
+
+  EventLoop* loop_;
+  TcpServer server_;
+};
+
+RD_NAMESPACE_END
+
+#endif //RENDU_ECHO_SERVER_H

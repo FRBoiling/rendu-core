@@ -81,9 +81,9 @@ void write_int(broker* self, connection_handle hdl, T value) {
   using unsigned_type = typename std::make_unsigned<T>::type;
   if constexpr (sizeof(T) > 1) {
     auto cpy = static_cast<T>(htonl(static_cast<unsigned_type>(value)));
-    self->write(hdl, sizeof(T), &cpy);
+    self->Write(hdl, sizeof(T), &cpy);
   } else {
-    self->write(hdl, sizeof(T), &value);
+    self->Write(hdl, sizeof(T), &value);
   }
 }
 
@@ -191,7 +191,7 @@ class config : public actor_system_config {
 
   config() {
     opt_group{custom_options_, "global"}
-        .add(port, "port,p", "set port")
+        .add(port, "GetPort,p", "set GetPort")
         .add(host, "host,H", "set host (ignored in server mode)")
         .add(server_mode, "server-mode,s", "enable server mode");
   }

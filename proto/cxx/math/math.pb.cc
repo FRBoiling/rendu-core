@@ -198,7 +198,7 @@ uint8_t* vec2::_InternalSerialize(
   (void) cached_has_bits;
 
   // float x = 1;
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_x = this->_internal_x();
   uint32_t raw_x;
   memcpy(&raw_x, &tmp_x, sizeof(tmp_x));
@@ -208,7 +208,7 @@ uint8_t* vec2::_InternalSerialize(
   }
 
   // float y = 2;
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_y = this->_internal_y();
   uint32_t raw_y;
   memcpy(&raw_y, &tmp_y, sizeof(tmp_y));
@@ -234,7 +234,7 @@ size_t vec2::ByteSizeLong() const {
   (void) cached_has_bits;
 
   // float x = 1;
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_x = this->_internal_x();
   uint32_t raw_x;
   memcpy(&raw_x, &tmp_x, sizeof(tmp_x));
@@ -243,7 +243,7 @@ size_t vec2::ByteSizeLong() const {
   }
 
   // float y = 2;
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_y = this->_internal_y();
   uint32_t raw_y;
   memcpy(&raw_y, &tmp_y, sizeof(tmp_y));
@@ -269,14 +269,14 @@ void vec2::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_x = from._internal_x();
   uint32_t raw_x;
   memcpy(&raw_x, &tmp_x, sizeof(tmp_x));
   if (raw_x != 0) {
     _this->_internal_set_x(from._internal_x());
   }
-  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same Size.");
   float tmp_y = from._internal_y();
   uint32_t raw_y;
   memcpy(&raw_y, &tmp_y, sizeof(tmp_y));

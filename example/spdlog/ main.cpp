@@ -30,8 +30,19 @@ void replace_default_logger_example();
 #include "spdlog/cfg/env.h"  // support for loading levels from the environment variable
 #include "spdlog/fmt/ostr.h" // support for user defined types
 
+template <typename... Args>
+using format_string = fmt::format_string<Args...>;
+
+template<typename... Args>
+std::string FormatString(format_string<Args...> fmt,Args... args)
+{
+    return fmt::format(fmt, std::forward<Args>(args)...);
+}
+
 int main(int, char *[])
 {
+  auto str = FormatString("{}{}", 1,2);
+
   // Log levels can be loaded from argv/env using "SPDLOG_LEVEL"
   load_levels_example();
 
@@ -104,6 +115,7 @@ int main(int, char *[])
     return 1;
   }
 }
+
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 // or #include "spdlog/sinks/stdout_sinks.h" if no colors needed.

@@ -38,7 +38,7 @@ behavior connection_worker(broker* self, connection_handle hdl) {
   self->configure_read(hdl, receive_policy::at_most(1024));
   return {
       [=](const new_data_msg& msg) {
-        self->write(msg.handle, cstr_size(http_ok), http_ok);
+        self->Write(msg.handle, cstr_size(http_ok), http_ok);
         self->quit();
       },
       [=](const connection_closed_msg&) {
@@ -73,7 +73,7 @@ class config : public actor_system_config {
 
   config() {
     opt_group{custom_options_, "global"}
-        .add(port, "port,p", "set port");
+        .add(port, "GetPort,p", "set GetPort");
   }
 };
 
@@ -84,7 +84,7 @@ void caf_main(actor_system& system, const config& cfg) {
          << endl;
     return;
   }
-  cout << "*** listening on port " << cfg.port << endl;
+  cout << "*** listening on GetPort " << cfg.port << endl;
   cout << "*** to quit the program, simply press <enter>" << endl;
   // wait for any input
   std::string dummy;

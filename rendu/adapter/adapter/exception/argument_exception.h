@@ -6,18 +6,26 @@
 #define RENDU_ARGUMENT_EXCEPTION_H
 
 #include "define.h"
-#include  <exception>
+#include "utils/string_helper.h"
 
 RD_NAMESPACE_BEGIN
 
     class ArgumentException : public std::exception {
     public:
-      explicit ArgumentException(const std::string &msg);
-      ~ArgumentException() override;
-    public:
-      [[nodiscard]] const char *what() const noexcept override;
+      template<typename... Args>
+      ArgumentException(format_string<Args...> format, Args... args)
+          : m_msg(fmt::format(format, args...).c_str()) {
+      }
 
+      ~ArgumentException() {
+      }
 
+      const char *what() const _NOEXCEPT override {
+        return exception::what();
+      }
+
+    private:
+      string m_msg;
     };
 
 RD_NAMESPACE_END

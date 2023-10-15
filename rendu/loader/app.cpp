@@ -8,6 +8,7 @@
 #include "world/logger/logger_system.h"
 #include "world/timer/time_system.h"
 #include "world/fiber/fiber_manager_system.h"
+#include "world/network/outer_net_system.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -17,7 +18,7 @@ RD_NAMESPACE_BEGIN
       World::Instance().AddSingleton<TimeSystem>();
       World::Instance().AddSingleton<FiberManagerSystem>();
 
-
+      World::Instance().AddSingleton<OuterNetSystem>();
       ConsoleArgumentParserSystem::Instance().Show();
     }
 

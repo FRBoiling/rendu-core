@@ -19,7 +19,6 @@
 
 RD_NAMESPACE_BEGIN
 
-
     class Logger {
     public:
       //日志输出位置

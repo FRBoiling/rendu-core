@@ -16,4 +16,5 @@ rendu_add_library(
     dep::spdlog
     dep::date
     dep::concurrent
+    rendu::common
 )

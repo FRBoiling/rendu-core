@@ -27,7 +27,7 @@ public:
 
   /// Block the current thread until the lock is acquired.
   ///
-  /// This will busy-wait until it acquires the lock.
+  /// This will busy-Wait until it acquires the lock.
   ///
   /// This has 'acquire' memory semantics and synchronises
   /// with prior calls to unlock().

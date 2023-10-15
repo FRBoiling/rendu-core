@@ -6,10 +6,9 @@
 
 RD_NAMESPACE_BEGIN
 
-void EventSystem::Awake() {
-  SystemAwake::Awake();
-}
-
+    void EventSystem::Awake() {
+      SystemAwake::Awake();
+    }
 
 
 RD_NAMESPACE_END

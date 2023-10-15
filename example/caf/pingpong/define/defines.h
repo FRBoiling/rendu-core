@@ -45,8 +45,8 @@ void protobuf_io(caf::io::broker* self, caf::io::connection_handle hdl, const ca
   auto write = [=](const org::caf::PingOrPong& p) {
     std::string buf = p.SerializeAsString();
     auto s = htonl(static_cast<uint32_t>(buf.size()));
-    self->write(hdl, sizeof(uint32_t), &s);
-    self->write(hdl, buf.size(), buf.data());
+    self->Write(hdl, sizeof(uint32_t), &s);
+    self->Write(hdl, buf.size(), buf.data());
     self->flush(hdl);
   };
   auto default_callbacks = caf::message_handler{

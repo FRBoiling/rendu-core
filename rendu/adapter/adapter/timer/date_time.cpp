@@ -3,7 +3,6 @@
 */
 
 #include "date_time.h"
-#include "exception/throw_helper.h"
 #include <date/tz.h>
 #include <chrono>
 #include <iomanip>

@@ -11,9 +11,10 @@
 RD_NAMESPACE_BEGIN
 
     class FiberInit {
-
     public:
-      Fiber m_fiber;
+      explicit FiberInit(Fiber &fiber) : m_fiber(&fiber) {}
+    public:
+      Fiber *m_fiber;
     };
 
 RD_NAMESPACE_END

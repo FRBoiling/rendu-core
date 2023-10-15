@@ -5,13 +5,13 @@
 #include "fiber_manager_system.h"
 #include "thread_scheduler.h"
 #include "thread_pool_scheduler.h"
-#include "exception/throw_helper.h"
 #include "task/task.h"
 #include "fmt/core.h"
 #include "task/task_completion_source.h"
 #include "../event/event_system.h"
 #include "fiber/fiber_init.h"
 #include "logger/log.h"
+#include "exception/entity_exception.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -45,31 +45,33 @@ RD_NAMESPACE_BEGIN
                                          std::string &name) {
 
       try {
-        Fiber *fiber = new Fiber(fiberId, zone, sceneType, name);
+        auto *fiber = new Fiber(fiberId, zone, sceneType, name);
 
         if (!m_fibers.TryAdd(fiberId, *fiber)) {
-          ThrowHelper::EntityException(
-              "same fiber already existed, if you remove, please await Remove then Create fiber! {fiberId}");
+          throw EntityException("same fiber already existed, if you remove, please await Remove then Create fiber! {}",
+                                fiberId);
         }
         m_schedulers[(int) schedulerType]->Add(fiberId);
 
         TaskCompletionSource<bool> tcs;
-        fiber->GetThreadSynchronizationContext().Post([sceneType,fiber,tcs]() -> Task<> {
+        fiber->GetThreadSynchronizationContext().Post([sceneType, fiber, tcs]() -> Task<> {
           try {
+            auto fiber_init = new FiberInit(*fiber);
             // 根据Fiber的SceneType分发Init,必须在Fiber线程中执行
-            co_await EventSystem::Instance().Invoke<FiberInit*,void>((long)sceneType,  new FiberInit());
+            co_await EventSystem::Instance().Invoke<FiberInit, void>((long) sceneType, *fiber_init);
             tcs.SetResult(true);
+            co_return;
           }
           catch (std::exception &e) {
-            RD_CRITICAL("init fiber fail: {} {}", (long)sceneType, e.what());
+            RD_CRITICAL("init fiber fail: {} {}", (long) sceneType, e.what());
           }
           co_return;
         });
+
         co_return fiberId;
       }
       catch (std::exception &e) {
-        auto msg = fmt::format("create fiber error: {} {},{} ", fiberId, sceneType, e.what());
-        ThrowHelper::EntityException(msg.c_str());
+        throw EntityException("create fiber error: {} {},{} ", fiberId, sceneType, e.what());
       }
       co_return 0;
     }

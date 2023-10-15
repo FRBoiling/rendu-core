@@ -14,7 +14,7 @@ RD_NAMESPACE_BEGIN
     }
 
     void MainThreadScheduler::Add(int fiberId) {
-
+      m_idQueue.Enqueue(fiberId);
     }
 
     void MainThreadScheduler::Update() {

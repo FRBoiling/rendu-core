@@ -204,7 +204,7 @@ static void period_certification(sfmt_t * sfmt) {
 #define UNUSED_VARIABLE(x) (void)(x)
 /**
  * This function returns the identification string.
- * The string shows the word size, the Mersenne exponent,
+ * The string shows the word Size, the Mersenne exponent,
  * and all parameters of this generator.
  * @param sfmt sfmt internal state
  */
@@ -214,10 +214,10 @@ const char *sfmt_get_idstring(sfmt_t * sfmt) {
 }
 
 /**
- * This function returns the minimum size of array used for \b
+ * This function returns the minimum Size of array used for \b
  * fill_array32() function.
  * @param sfmt sfmt internal state
- * @return minimum size of array used for fill_array32() function.
+ * @return minimum Size of array used for fill_array32() function.
  */
 int sfmt_get_min_array_size32(sfmt_t * sfmt) {
     UNUSED_VARIABLE(sfmt);
@@ -225,10 +225,10 @@ int sfmt_get_min_array_size32(sfmt_t * sfmt) {
 }
 
 /**
- * This function returns the minimum size of array used for \b
+ * This function returns the minimum Size of array used for \b
  * fill_array64() function.
  * @param sfmt sfmt internal state
- * @return minimum size of array used for fill_array64() function.
+ * @return minimum Size of array used for fill_array64() function.
  */
 int sfmt_get_min_array_size64(sfmt_t * sfmt) {
     UNUSED_VARIABLE(sfmt);
@@ -266,7 +266,7 @@ void sfmt_gen_rand_all(sfmt_t * sfmt) {
 /**
  * This function generates pseudorandom 32-bit integers in the
  * specified array[] by one call. The number of pseudorandom integers
- * is specified by the argument size, which must be at least 624 and a
+ * is specified by the argument Size, which must be at least 624 and a
  * multiple of four.  The generation by this function is much faster
  * than the following gen_rand function.
  *
@@ -278,11 +278,11 @@ void sfmt_gen_rand_all(sfmt_t * sfmt) {
  * @param array an array where pseudorandom 32-bit integers are filled
  * by this function.  The pointer to the array must be \b "aligned"
  * (namely, must be a multiple of 16) in the SIMD version, since it
- * refers to the address of a 128-bit integer.  In the standard C
+ * refers to the GetAddress of a 128-bit integer.  In the standard C
  * version, the pointer is arbitrary.
  *
  * @param size the number of 32-bit pseudorandom integers to be
- * generated.  size must be a multiple of 4, and greater than or equal
+ * generated.  Size must be a multiple of 4, and greater than or equal
  * to (MEXP / 128 + 1) * 4.
  *
  * @note \b memalign or \b posix_memalign is available to get aligned
@@ -302,7 +302,7 @@ void sfmt_fill_array32(sfmt_t * sfmt, uint32_t *array, int size) {
 /**
  * This function generates pseudorandom 64-bit integers in the
  * specified array[] by one call. The number of pseudorandom integers
- * is specified by the argument size, which must be at least 312 and a
+ * is specified by the argument Size, which must be at least 312 and a
  * multiple of two.  The generation by this function is much faster
  * than the following gen_rand function.
  *
@@ -314,11 +314,11 @@ void sfmt_fill_array32(sfmt_t * sfmt, uint32_t *array, int size) {
  * @param array an array where pseudorandom 64-bit integers are filled
  * by this function.  The pointer to the array must be "aligned"
  * (namely, must be a multiple of 16) in the SIMD version, since it
- * refers to the address of a 128-bit integer.  In the standard C
+ * refers to the GetAddress of a 128-bit integer.  In the standard C
  * version, the pointer is arbitrary.
  *
  * @param size the number of 64-bit pseudorandom integers to be
- * generated.  size must be a multiple of 2, and greater than or equal
+ * generated.  Size must be a multiple of 2, and greater than or equal
  * to (MEXP / 128 + 1) * 2
  *
  * @note \b memalign or \b posix_memalign is available to get aligned

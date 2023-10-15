@@ -59,7 +59,7 @@ RD_NAMESPACE_BEGIN
 
       return fmap([](auto &&taskVector) {
         std::vector<result_t> results;
-        results.reserve(taskVector.size());
+        results.reserve(taskVector.Size());
         for (auto &task: taskVector) {
           if constexpr (std::is_rvalue_reference_v<decltype(taskVector)>) {
             results.emplace_back(std::move(task).result());

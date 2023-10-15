@@ -130,11 +130,11 @@ RD_NAMESPACE_BEGIN
         public:
 
           explicit when_all_ready_awaitable(TASK_CONTAINER &&tasks) noexcept
-              : m_counter(tasks.size()), m_tasks(std::forward<TASK_CONTAINER>(tasks)) {}
+              : m_counter(tasks.Size()), m_tasks(std::forward<TASK_CONTAINER>(tasks)) {}
 
           when_all_ready_awaitable(when_all_ready_awaitable &&other)
           noexcept(std::is_nothrow_move_constructible_v<TASK_CONTAINER>)
-              : m_counter(other.m_tasks.size()), m_tasks(std::move(other.m_tasks)) {}
+              : m_counter(other.m_tasks.Size()), m_tasks(std::move(other.m_tasks)) {}
 
           when_all_ready_awaitable(const when_all_ready_awaitable &) = delete;
 

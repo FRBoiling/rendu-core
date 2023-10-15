@@ -14,7 +14,6 @@ rendu_add_executable(
         rendu-core-interface
         DEPS
         proto::model
-        dep::entt
         dep::spdlog
         DEFINES
 )

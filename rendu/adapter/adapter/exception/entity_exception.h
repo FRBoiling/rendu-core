@@ -6,15 +6,26 @@
 #define RENDU_ENTITY_EXCEPTION_H
 
 #include "define.h"
+#include "utils/string_helper.h"
 
 RD_NAMESPACE_BEGIN
 
-    class EntityException: public std::exception {
+    class EntityException : public std::exception {
     public:
-      explicit EntityException(const std::string &msg);
-      ~EntityException() override;
-    public:
-      [[nodiscard]] const char *what() const noexcept override;
+      template<typename... Args>
+      EntityException(format_string<Args...> format, Args... args)
+          : m_msg(fmt::format(format, args...).c_str()) {
+      }
+
+      ~EntityException() {
+      }
+
+      const char *what() const _NOEXCEPT override {
+        return exception::what();
+      }
+
+    private:
+      string m_msg;
     };
 
 RD_NAMESPACE_END

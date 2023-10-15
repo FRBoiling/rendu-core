@@ -62,8 +62,8 @@ void unordered_multimap_run() {
     }
     std::cout << std::endl;
 
-    std::cout << "myUnorderedMultiMap.empty() = " << myUnorderedMultiMap.empty() << std::endl;
-    std::cout << "myUnorderedMultiMap.size() = " << myUnorderedMultiMap.size() << std::endl;
+    std::cout << "myUnorderedMultiMap.IsEmpty() = " << myUnorderedMultiMap.empty() << std::endl;
+    std::cout << "myUnorderedMultiMap.Size() = " << myUnorderedMultiMap.size() << std::endl;
     std::cout << "myUnorderedMultiMap.max_size() = " << myUnorderedMultiMap.max_size() << std::endl;
 
     std::unordered_multimap< std::string,  std::string> umm = {

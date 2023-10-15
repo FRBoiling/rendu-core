@@ -16,7 +16,7 @@ class config : public caf::actor_system_config {
 
   config() {
     opt_group{custom_options_, "global"}
-        .add(port, "port,p", "set port")
+        .add(port, "GetPort,p", "set GetPort")
         .add(host, "host,H", "set host (ignored in server mode)")
         .add(server_mode, "server-mode,s", "enable server mode");
   }

@@ -54,7 +54,7 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_google_2fprotobuf_2fempty_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\033google/protobuf/empty.proto\022\017google.pr"
+  "\n\033google/protobuf/IsEmpty.proto\022\017google.pr"
   "otobuf\"\007\n\005EmptyB}\n\023com.google.protobufB\n"
   "EmptyProtoP\001Z.google.golang.org/protobuf"
   "/types/known/emptypb\370\001\001\242\002\003GPB\252\002\036Google.P"
@@ -63,7 +63,7 @@ const char descriptor_table_protodef_google_2fprotobuf_2fempty_2eproto[] PROTOBU
 static ::_pbi::once_flag descriptor_table_google_2fprotobuf_2fempty_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_google_2fprotobuf_2fempty_2eproto = {
     false, false, 190, descriptor_table_protodef_google_2fprotobuf_2fempty_2eproto,
-    "google/protobuf/empty.proto",
+    "google/protobuf/IsEmpty.proto",
     &descriptor_table_google_2fprotobuf_2fempty_2eproto_once, nullptr, 0, 1,
     schemas, file_default_instances, TableStruct_google_2fprotobuf_2fempty_2eproto::offsets,
     file_level_metadata_google_2fprotobuf_2fempty_2eproto, file_level_enum_descriptors_google_2fprotobuf_2fempty_2eproto,

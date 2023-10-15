@@ -27,7 +27,7 @@ namespace rendu {
         SystemType GetSystemType() { return m_Type; }
 
         virtual void Run(Entity &entity) {
-            RD_INFO("{} Run", ToString());
+            RD_INFO("{} Poll", ToString());
         };
 
         virtual std::string ToString() { return typeid(this).name(); }

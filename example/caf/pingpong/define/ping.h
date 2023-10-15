@@ -33,7 +33,7 @@ void run_client(caf::actor_system& system, const config& cfg) {
   auto io_actor = system.middleman().spawn_client(protobuf_io, cfg.host,
                                                   cfg.port, ping_actor);
   if (!io_actor) {
-    std::cout << "cannot connect to " << cfg.host << " at port " << cfg.port
+    std::cout << "cannot connect to " << cfg.host << " at GetPort " << cfg.port
               << ": " << to_string(io_actor.error()) << std::endl;
     return;
   }

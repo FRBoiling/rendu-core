@@ -51,12 +51,12 @@ void game_loop::run() {
         m_hook_frame_begin.publish(m_registry);
 
         for (auto &sys: m_systems) {
-            sys->run(m_registry);
+          sys->run(m_registry);
         }
 
         // 反向迭代
         for (auto & sys : std::ranges::reverse_view(m_systems_last)) {
-            sys->run(m_registry);
+          sys->run(m_registry);
         }
     }
 

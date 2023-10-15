@@ -158,14 +158,14 @@
 //  }
 //};
 //
-//// A sample async function that returns a MyTask
+//// A sample Async function that returns a MyTask
 //MyTask<int> async_add(int a, int b) {
 //  std::cout << "async_add 1:\n";
 //  co_return a + b;
 //  std::cout << "async_add 2:\n";
 //}
 //
-//// A sample async function that throws an exception
+//// A sample Async function that throws an exception
 //MyTask<int> async_throw(int a, int b) {
 //  throw std::runtime_error("Oops");
 //  co_return a + b;

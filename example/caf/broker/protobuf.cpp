@@ -76,8 +76,8 @@ void protobuf_io(broker* self, connection_handle hdl, const actor& buddy) {
   auto write = [=](const org::caf::PingOrPong& p) {
     std::string buf = p.SerializeAsString();
     auto s = htonl(static_cast<uint32_t>(buf.size()));
-    self->write(hdl, sizeof(uint32_t), &s);
-    self->write(hdl, buf.size(), buf.data());
+    self->Write(hdl, sizeof(uint32_t), &s);
+    self->Write(hdl, buf.size(), buf.data());
     self->flush(hdl);
   };
   auto default_callbacks = message_handler{
@@ -160,7 +160,7 @@ class config : public actor_system_config {
 
   config() {
     opt_group{custom_options_, "global"}
-        .add(port, "port,p", "set port")
+        .add(port, "GetPort,p", "set GetPort")
         .add(host, "host,H", "set host (ignored in server mode)")
         .add(server_mode, "server-mode,s", "enable server mode");
   }
@@ -182,7 +182,7 @@ void run_client(actor_system& system, const config& cfg) {
   auto io_actor = system.middleman().spawn_client(protobuf_io, cfg.host,
                                                   cfg.port, ping_actor);
   if (!io_actor) {
-    std::cout << "cannot connect to " << cfg.host << " at port " << cfg.port
+    std::cout << "cannot connect to " << cfg.host << " at GetPort " << cfg.port
               << ": " << to_string(io_actor.error()) << std::endl;
     return;
   }

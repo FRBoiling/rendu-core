@@ -7,10 +7,11 @@
 
 #include "entity/component_system.h"
 #include "singleton.h"
-#include "event.h"
+#include "event_info.h"
 #include "task/task.h"
-#include "fiber/fiber_init.h"
 #include "invoke_handler.h"
+#include "concurrent/dictionary.h"
+#include "exception/exception.h"
 #include <typeinfo>
 #include <any>
 
@@ -27,12 +28,26 @@ RD_NAMESPACE_BEGIN
     public:
       template<typename A, typename T>
       Task<T> Invoke(long type, A args) {
-        co_return;
+        Dictionary<long, std::any> invokeHandlers;
+        if (!allInvokers.TryGetValue(typeid(A), invokeHandlers)) {
+          throw Exception("Invoke error4: {} {}", type, typeid(A).name());
+        }
+
+        std::any invokeHandler;
+        if (!invokeHandlers.TryGetValue(type, invokeHandler)) {
+          throw Exception("Invoke error4: {} {}", type, typeid(A).name());
+        }
+
+        auto aInvokeHandler = std::any_cast<AInvokeHandler<A, T> *>(invokeHandler);
+        if (aInvokeHandler == nullptr) {
+          throw Exception("Invoke error4: {} {}", type, typeid(A).name(), typeid(T).name());
+        }
+        co_return aInvokeHandler->Handle(args);
       }
 
     private:
-      std::unordered_map<std::type_index, std::list<EventInfo>> allEvents;
-      std::unordered_map<std::type_index, std::unordered_map<long, std::any>> allInvokers;
+      Dictionary<std::type_index, std::list<EventInfo>> allEvents;
+      Dictionary<std::type_index, Dictionary<long, std::any>> allInvokers;
     };
 
 

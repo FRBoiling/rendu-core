@@ -13,7 +13,7 @@
 namespace input {
     template<typename T>
     class passthrough_source {
-        static_assert(sizeof(T) == 0, "unsupported passthrough data type");
+        static_assert(sizeof(T) == 0, "unsupported passthrough Data type");
     public:
         using type = std::variant<float>;
 

@@ -4,6 +4,7 @@
 
 #include "thread_synchronization_context.h"
 #include "logger/log.h"
+#include "task/sync_wait.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -17,11 +18,11 @@ RD_NAMESPACE_BEGIN
 
     void ThreadSynchronizationContext::Update() {
       while (true) {
-        if (!m_queue.TryDequeue(m_func)) {
+        if (!m_queue.TryDequeue(m_func) || !m_func) {
           return;
         }
         try {
-//          (m_func)();
+          sync_wait(*m_func);
         }
         catch (std::exception &e) {
           RD_CRITICAL(e.what());
