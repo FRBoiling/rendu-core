@@ -5,7 +5,7 @@
 #ifndef RENDU_MAILBOXES_H
 #define RENDU_MAILBOXES_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 
 RD_NAMESPACE_BEGIN
 

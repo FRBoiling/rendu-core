@@ -7,8 +7,6 @@
 
 #include "string/string_helper.h"
 
-
-
 RD_NAMESPACE_BEGIN
 
 // Demangle a mangled symbol name and return the demangled name.

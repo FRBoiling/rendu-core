@@ -5,8 +5,8 @@
 #ifndef RENDU_COMMON_SYSTEM_H
 #define RENDU_COMMON_SYSTEM_H
 
+#include "common_fwd.h"
 #include "entity_pool.h"
-#include "fwd.h"
 
 COMMON_NAMESPACE_BEGIN
 

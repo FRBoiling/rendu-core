@@ -5,10 +5,10 @@
 #ifndef RENDU_COMMON_LIGHTWEIGHT_MANUAL_RESET_EVENT_H
 #define RENDU_COMMON_LIGHTWEIGHT_MANUAL_RESET_EVENT_H
 
-#include "common/define.h"
+#include "common/common_define.h"
+#include <condition_variable>
 #include <coroutine>
 #include <mutex>
-#include <condition_variable>
 
 COMMON_NAMESPACE_BEGIN
     namespace detail {

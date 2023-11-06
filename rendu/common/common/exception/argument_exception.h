@@ -5,8 +5,8 @@
 #ifndef RENDU_COMMON_ARGUMENT_EXCEPTION_H
 #define RENDU_COMMON_ARGUMENT_EXCEPTION_H
 
+#include "base/string/string_helper.h"
 #include "common/common_define.h"
-#include "utils/string_helper.h"
 
 COMMON_NAMESPACE_BEGIN
 

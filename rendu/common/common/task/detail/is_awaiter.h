@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_IS_AWAITER_H
 #define RENDU_COMMON_IS_AWAITER_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include <coroutine>
 
 COMMON_NAMESPACE_BEGIN

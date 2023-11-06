@@ -5,14 +5,14 @@
 #ifndef RENDU_FIBER_MANAGER_SYSTEM_H
 #define RENDU_FIBER_MANAGER_SYSTEM_H
 
-#include "fiber_fwd.h"
-#include "entity/component_system.h"
-#include "fiber/fiber.h"
-#include "fiber_pool.h"
-#include "utils/singleton.h"
-#include "main_thread_scheduler.h"
+#include "base/string/singleton.h"
 #include "common/scheduler.h"
 #include "concurrent/concurrent_map.h"
+#include "entity/component_system.h"
+#include "fiber/fiber.h"
+#include "fiber_fwd.h"
+#include "fiber_pool.h"
+#include "main_thread_scheduler.h"
 #include "task/task.h"
 
 RD_NAMESPACE_BEGIN

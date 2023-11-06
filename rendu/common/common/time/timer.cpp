@@ -3,7 +3,7 @@
 */
 
 #include "timer.h"
-#include "common/utils/atomic.h"
+#include "base/number/atomic.h"
 
 COMMON_NAMESPACE_BEGIN
 

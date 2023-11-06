@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_SPIN_WAIT_H
 #define RENDU_COMMON_SPIN_WAIT_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include <cstdint>
 
 COMMON_NAMESPACE_BEGIN

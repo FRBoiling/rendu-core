@@ -5,7 +5,11 @@
 #ifndef RENDU_END_POINT_UTILS_H
 #define RENDU_END_POINT_UTILS_H
 
+<<<<<<<< HEAD:dep/rendu_common/common/utils/end_point_utils.h
+#include "common/define.h"
+========
 #include "common_define.h"
+>>>>>>>> f6e2ef7 (✨ feat(框架): 整理项目结构):dep/rendu_net/net/endpoint/end_point_utils.h
 
 namespace {
     namespace local {

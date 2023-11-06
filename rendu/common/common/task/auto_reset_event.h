@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_AUTO_RESET_EVENT_H
 #define RENDU_COMMON_AUTO_RESET_EVENT_H
 
-#include "common/define.h"
-# include <mutex>
-# include <condition_variable>
+#include "common/common_define.h"
+#include <condition_variable>
+#include <mutex>
 
 COMMON_NAMESPACE_BEGIN
 

@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_EXCEPTION_HELPER_H
 #define RENDU_BASE_EXCEPTION_HELPER_H
 
-#include "define.h"
+#include "base_define.h"
 
 #include <exception>
 

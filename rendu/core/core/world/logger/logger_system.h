@@ -5,10 +5,10 @@
 #ifndef RENDU_LOGGER_SYSTEM_H
 #define RENDU_LOGGER_SYSTEM_H
 
-#include "logger.pb.h"
+#include "base/string/singleton.h"
+#include "common/common_define.h"
 #include "entity/component_system.h"
-#include "common/define.h"
-#include "utils/singleton.h"
+#include "logger.pb.h"
 
 namespace rendu {
 

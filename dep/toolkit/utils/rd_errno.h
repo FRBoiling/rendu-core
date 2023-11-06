@@ -3,7 +3,12 @@
 */
 
 #ifndef RENDU_RD_ERRNO_H
+<<<<<<<< HEAD:rendu/network/network/errno/errno.h
+#define RENDU_ERRNO_H
+
+========
 #define RENDU_RD_ERRNO_H
+>>>>>>>> f6e2ef7 (✨ feat(框架): 整理项目结构):dep/toolkit/utils/rd_errno.h
 
 #include <cerrno>
 
@@ -486,7 +491,7 @@
   XX(EREMOTEIO, "remote I/O error")                                           \
 
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

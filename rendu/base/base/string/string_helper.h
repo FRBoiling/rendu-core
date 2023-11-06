@@ -1,25 +1,17 @@
 /*
-* Created by boil on 2023/11/12.
+* Created by boil on 2023/10/15.
 */
 
-#ifndef RENDU_BASE_STRING_H
-#define RENDU_BASE_STRING_H
+#ifndef RENDU_COMMON_STRING_HELPER_H
+#define RENDU_COMMON_STRING_HELPER_H
 
-#include "base/define.h"
-
+#include "base_define.h"
 #include <string>
-#include <string_view>
 
 RD_NAMESPACE_BEGIN
 
-  using STRING= std::string;
-
-  template<typename T>
-  STRING To_String(T value) {
-    return std::to_string(value);
-  }
-
+ALIAS(std::string,STRING);
 
 RD_NAMESPACE_END
 
-#endif //RENDU_BASE_STRING_H
+#endif //RENDU_COMMON_STRING_HELPER_H

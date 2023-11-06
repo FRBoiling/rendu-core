@@ -6,7 +6,7 @@
 #define RENDU_COMMON_MUTEX_LOCK_H
 
 
-#include "common/utils/non_copyable.h"
+#include "base/utils/non_copyable.h"
 #include "thread/current_thread.h"
 
 // Thread safety annotations {

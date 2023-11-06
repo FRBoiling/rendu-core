@@ -5,11 +5,11 @@
 #ifndef RENDU_TIME_SYSTEM_H
 #define RENDU_TIME_SYSTEM_H
 
-#include "common/define.h"
-#include <ctime>
-#include "entity/component_system.h"
-#include "utils/singleton.h"
+#include "base/string/singleton.h"
+#include "common/common_define.h"
 #include "common/time/date_time.h"
+#include "entity/component_system.h"
+#include <ctime>
 
 RD_NAMESPACE_BEGIN
 

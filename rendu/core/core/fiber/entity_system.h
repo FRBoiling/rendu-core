@@ -5,7 +5,7 @@
 #ifndef RENDU_ENTITY_SYSTEM_H
 #define RENDU_ENTITY_SYSTEM_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 
 RD_NAMESPACE_BEGIN
 

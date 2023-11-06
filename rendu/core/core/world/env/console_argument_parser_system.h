@@ -5,10 +5,10 @@
 #ifndef RENDU_CONSOLE_ARGUMENT_PARSER_SYSTEM_H
 #define RENDU_CONSOLE_ARGUMENT_PARSER_SYSTEM_H
 
+#include "base/string/singleton.h"
+#include "entity/component_system.h"
 #include "fwd/core_fwd.h"
 #include "options.pb.h"
-#include "entity/component_system.h"
-#include "utils/singleton.h"
 
 namespace rendu {
 

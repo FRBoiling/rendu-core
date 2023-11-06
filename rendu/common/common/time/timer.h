@@ -5,8 +5,8 @@
 #ifndef RENDU_COMMON_TIMER_H
 #define RENDU_COMMON_TIMER_H
 
-#include "common/utils/non_copyable.h"
-#include "common/utils/atomic.h"
+#include "base/number/atomic.h"
+#include "base/utils/non_copyable.h"
 #include "timestamp.h"
 
 COMMON_NAMESPACE_BEGIN

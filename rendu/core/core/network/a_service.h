@@ -5,7 +5,7 @@
 #ifndef RENDU_A_SERVICE_H
 #define RENDU_A_SERVICE_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include <functional>
 
 #include  "network/ip_end_point.h"

@@ -3,6 +3,7 @@
 */
 
 #include "thread_data.h"
+#include "base.h"
 #include "exception/exception.h"
 
 COMMON_NAMESPACE_BEGIN

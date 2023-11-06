@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_OUT_OF_RANGE_EXCEPTION_H
 #define RENDU_COMMON_OUT_OF_RANGE_EXCEPTION_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 

@@ -6,10 +6,10 @@
 #ifndef RENDU_COMMON_SYNC_WAIT_TASK_H
 #define RENDU_COMMON_SYNC_WAIT_TASK_H
 
-#include "common/define.h"
 #include "awaitable_traits.h"
-#include <coroutine>
+#include "common/common_define.h"
 #include "lightweight_manual_reset_event.h"
+#include <coroutine>
 
 COMMON_NAMESPACE_BEGIN
     namespace detail {

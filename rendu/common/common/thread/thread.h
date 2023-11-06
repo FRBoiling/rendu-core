@@ -5,10 +5,10 @@
 #ifndef RENDU_COMMON_THREAD_HELPER_H
 #define RENDU_COMMON_THREAD_HELPER_H
 
-#include "common/define.h"
-#include <thread>
-#include <map>
+#include "common/common_define.h"
 #include "synchronization_context.h"
+#include <map>
+#include <thread>
 
 COMMON_NAMESPACE_BEGIN
 //    using Thread = std::thread;

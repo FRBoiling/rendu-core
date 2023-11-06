@@ -5,10 +5,10 @@
 #ifndef RENDU_COMMON_WHEN_ALL_TASK_H
 #define RENDU_COMMON_WHEN_ALL_TASK_H
 
-#include "common/define.h"
-#include <tuple>
-#include "when_all_counter.h"
 #include "awaitable_traits.h"
+#include "common/common_define.h"
+#include "when_all_counter.h"
+#include <tuple>
 
 #include "when_all_counter.h"
 #include "any.h"

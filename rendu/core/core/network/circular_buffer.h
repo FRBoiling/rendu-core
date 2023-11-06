@@ -5,9 +5,9 @@
 #ifndef RENDU_CIRCULAR_BUFFER_H
 #define RENDU_CIRCULAR_BUFFER_H
 
-#include "common/define.h"
-#include "queue.h"
+#include "common/common_define.h"
 #include "io/stream.h"
+#include "queue.h"
 #include <vector>
 
 RD_NAMESPACE_BEGIN

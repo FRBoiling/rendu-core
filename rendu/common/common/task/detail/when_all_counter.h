@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_WHEN_ALL_COUNTER_H
 #define RENDU_COMMON_WHEN_ALL_COUNTER_H
 
-#include "common/define.h"
-#include <coroutine>
+#include "common/common_define.h"
 #include <atomic>
+#include <coroutine>
 #include <cstdint>
 
 COMMON_NAMESPACE_BEGIN

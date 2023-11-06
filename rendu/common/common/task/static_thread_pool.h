@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_STATIC_THREAD_POOL_H
 #define RENDU_COMMON_STATIC_THREAD_POOL_H
 
-#include "common/define.h"
-#include <cstdint>
+#include "common/common_define.h"
 #include <coroutine>
+#include <cstdint>
 #include <thread>
 
 COMMON_NAMESPACE_BEGIN

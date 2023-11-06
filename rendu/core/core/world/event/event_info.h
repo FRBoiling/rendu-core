@@ -5,8 +5,8 @@
 #ifndef RENDU_EVENT_INFO_H
 #define RENDU_EVENT_INFO_H
 
-#include "common/define.h"
 #include "../../entity/scene_type.h"
+#include "common/common_define.h"
 
 RD_NAMESPACE_BEGIN
 

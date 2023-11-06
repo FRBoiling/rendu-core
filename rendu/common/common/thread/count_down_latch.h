@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_COUNT_DOWN_LATCH_H
 #define RENDU_COMMON_COUNT_DOWN_LATCH_H
 
-#include "common/utils/non_copyable.h"
+#include "base/utils/non_copyable.h"
 #include "condition.h"
 
 COMMON_NAMESPACE_BEGIN

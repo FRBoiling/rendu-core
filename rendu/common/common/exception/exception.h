@@ -2,10 +2,10 @@
 * Created by boil on 2023/11/13.
 */
 
-#ifndef RENDU_EXCEPTION_H
-#define RENDU_EXCEPTION_H
+#ifndef RENDU_COMMON_EXCEPTION_H
+#define RENDU_COMMON_EXCEPTION_H
 
-#include "define.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 
@@ -32,4 +32,4 @@ COMMON_NAMESPACE_BEGIN
 
 COMMON_NAMESPACE_END
 
-#endif //RENDU_EXCEPTION_H
+#endif //RENDU_COMMON_EXCEPTION_H

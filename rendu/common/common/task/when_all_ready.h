@@ -5,13 +5,13 @@
 #ifndef RENDU_COMMON_WHEN_ALL_READY_H
 #define RENDU_COMMON_WHEN_ALL_READY_H
 
-#include "common/define.h"
-#include "task.h"
-#include "is_awaitable.h"
+#include "common/common_define.h"
 #include "common/task/detail/awaitable_traits.h"
 #include "common/task/detail/unwrap_reference.h"
 #include "common/task/detail/when_all_ready_awaitable.h"
 #include "common/task/detail/when_all_task.h"
+#include "is_awaitable.h"
+#include "task.h"
 
 COMMON_NAMESPACE_BEGIN
     template<

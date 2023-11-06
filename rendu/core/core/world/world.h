@@ -7,11 +7,11 @@
 
 #include "fwd/core_fwd.h"
 
-#include <typeindex>
-#include <unordered_map>
+#include "base/string/singleton.h"
 #include "ecs/entity.h"
 #include "entity/component_system.h"
-#include "utils/singleton.h"
+#include <typeindex>
+#include <unordered_map>
 
 RD_NAMESPACE_BEGIN
 

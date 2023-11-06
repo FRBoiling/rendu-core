@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_LOG_H
 #define RENDU_BASE_LOG_H
 
-#include "common/define.h"
+#include "common/base_define.h"
 #include "logger/logger.h"
 
 RD_NAMESPACE_BEGIN

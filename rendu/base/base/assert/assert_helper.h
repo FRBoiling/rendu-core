@@ -5,7 +5,7 @@
 #ifndef RENDU_ASSERT_HELPER_H
 #define RENDU_ASSERT_HELPER_H
 
-#include "../define.h"
+#include "../base_define.h"
 
 #ifdef _WIN32
 #include <crtdbg.h> // Windows-specific header for _ASSERT

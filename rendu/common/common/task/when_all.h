@@ -6,11 +6,11 @@
 #define RENDU_COMMON_WHEN_ALL_H
 
 
-#include "common/define.h"
-#include "task.h"
-#include "is_awaitable.h"
+#include "common/common_define.h"
 #include "common/task/detail/awaitable_traits.h"
 #include "common/task/detail/unwrap_reference.h"
+#include "is_awaitable.h"
+#include "task.h"
 
 COMMON_NAMESPACE_BEGIN
 //////////

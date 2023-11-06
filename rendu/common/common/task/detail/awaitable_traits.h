@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_AWAITABLE_TRAITS_H
 #define RENDU_COMMON_AWAITABLE_TRAITS_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include "get_awaiter.h"
 
 COMMON_NAMESPACE_BEGIN

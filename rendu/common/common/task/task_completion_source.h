@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TASK_COMPLETION_SOURCE_H
 #define RENDU_COMMON_TASK_COMPLETION_SOURCE_H
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include "task.h"
 
 COMMON_NAMESPACE_BEGIN

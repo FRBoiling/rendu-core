@@ -5,8 +5,8 @@
 #ifndef RENDU_INVOKE_HANDLER_H
 #define RENDU_INVOKE_HANDLER_H
 
+#include "common/common_define.h"
 #include <typeinfo>
-#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

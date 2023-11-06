@@ -6,11 +6,11 @@
 #define RENDU_T_SERVICE_H
 
 #include "a_service.h"
-#include "common/utils/singleton.h"
-#include "concurrent/dictionary.h"
+#include "base/string/singleton.h"
 #include "concurrent/concurrent_queue.h"
-#include "t_channel.h"
+#include "concurrent/dictionary.h"
 #include "net_services.h"
+#include "t_channel.h"
 
 RD_NAMESPACE_BEGIN
 

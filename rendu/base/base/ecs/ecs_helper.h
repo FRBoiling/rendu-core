@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_ENTITY_H
 #define RENDU_BASE_ENTITY_H
 
-#include "define.h"
+#include "base_define.h"
 #include <entt/entt.hpp>
 
 RD_NAMESPACE_BEGIN

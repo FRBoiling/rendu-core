@@ -7,7 +7,7 @@
 
 #ifndef _WIN32
 
-#include "common/define.h"
+#include "common/common_define.h"
 #include <pthread.h>
 
 COMMON_NAMESPACE_BEGIN

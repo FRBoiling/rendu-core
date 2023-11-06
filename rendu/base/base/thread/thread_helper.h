@@ -6,7 +6,7 @@
 #define RENDU_BASE_THREAD_HELPER_H
 
 
-#include "define.h"
+#include "base_define.h"
 #include <thread>
 
 RD_NAMESPACE_BEGIN

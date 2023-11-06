@@ -5,17 +5,17 @@
 #ifndef RENDU_BASE_LOGGER_H
 #define RENDU_BASE_LOGGER_H
 
-#include "base/define.h"
-#include <spdlog/spdlog.h>
-#include <spdlog/fmt/ostr.h> // support for user defined types
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/daily_file_sink.h>
-#include <cstdio>
+#include "base/base_define.h"
 #include <chrono>
-#include <utility>
+#include <cstdio>
+#include <spdlog/fmt/ostr.h>// support for user defined types
 #include <spdlog/pattern_formatter.h>
-#include <spdlog/stopwatch.h>
+#include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/sinks/hourly_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/stopwatch.h>
+#include <utility>
 
 RD_NAMESPACE_BEGIN
 

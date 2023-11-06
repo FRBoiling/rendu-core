@@ -5,7 +5,7 @@
 #ifndef RENDU_TIME_HELPER_H
 #define RENDU_TIME_HELPER_H
 
-#include "define.h"
+#include "base_define.h"
 
 #include <date/tz.h>
 #include <chrono>

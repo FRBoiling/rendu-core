@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_WHEN_ALL_READY_AWAITABLE_H
 #define RENDU_COMMON_WHEN_ALL_READY_AWAITABLE_H
 
-#include "common/define.h"
-#include <tuple>
+#include "common/common_define.h"
 #include "when_all_counter.h"
+#include <tuple>
 
 COMMON_NAMESPACE_BEGIN
 

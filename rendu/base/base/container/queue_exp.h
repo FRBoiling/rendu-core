@@ -1,0 +1,14 @@
+/*
+* Created by boil on 2023/9/29.
+*/
+
+#ifndef RENDU_BASE_QUEUE_H
+#define RENDU_BASE_QUEUE_H
+
+RD_NAMESPACE_BEGIN
+
+
+
+RD_NAMESPACE_END
+
+#endif //RENDU_BASE_QUEUE_H
