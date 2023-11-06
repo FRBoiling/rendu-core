@@ -3,7 +3,7 @@
 */
 
 #include "circular_buffer.h"
-#include "exception/exception.h"
+#include "exception/exception_helper.h"
 #include "utils/array_helper.h"
 #include "io/stream.h"
 

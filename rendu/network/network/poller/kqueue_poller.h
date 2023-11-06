@@ -20,16 +20,15 @@ RD_NAMESPACE_BEGIN
     ~KqueuePoller() override;
 
   public:
-    Timestamp poll(int timeoutMs, ChannelList *activeChannels) override;
+    int Resize(int size) override;
 
-    void updateChannel(Channel *channel) override;
+    void AddEvent(Channel *channel,int mask) const override;
 
-    void removeChannel(Channel *channel) override;
+    void DelEvent(Channel *channel,int mask) const override;
 
-    bool hasChannel(Channel *channel) const override;
+    Timestamp Poll(int timeoutMs, ChannelList *activeChannels) override;
 
-    void AddEvent(Channel *channel) const;
-    void DelEvent(Channel *channel) const;
+
   private:
     static const int kInitEventListSize = 16;
 
@@ -37,8 +36,7 @@ RD_NAMESPACE_BEGIN
 
   private:
     int poller_fd_;
-    typedef std::vector<struct kevent> EventList;
-    EventList events_;
+    struct kevent* events_;
     char *eventsMask_;
   };
 

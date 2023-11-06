@@ -5,7 +5,7 @@
 #ifndef RENDU_TIME_QUEUE_H
 #define RENDU_TIME_QUEUE_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "time/timestamp.h"
 #include "callbacks.h"
 #include "channel.h"

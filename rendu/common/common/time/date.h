@@ -2,12 +2,12 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_DATE_H
-#define RENDU_DATE_H
+#ifndef RENDU_COMMON_DATE_H
+#define RENDU_COMMON_DATE_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 ///
 /// Date in Gregorian calendar.
@@ -64,7 +64,7 @@ RD_NAMESPACE_BEGIN
     ///
     /// Converts to yyyy-mm-dd format.
     ///
-    string toIsoString() const;
+    STRING toIsoString() const;
 
     struct YearMonthDay yearMonthDay() const;
 
@@ -99,6 +99,6 @@ RD_NAMESPACE_BEGIN
     return x.julianDayNumber() == y.julianDayNumber();
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_DATE_H
+#endif //RENDU_COMMON_DATE_H

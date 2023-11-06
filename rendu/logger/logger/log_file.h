@@ -5,7 +5,7 @@
 #ifndef RENDU_LOG_FILE_H
 #define RENDU_LOG_FILE_H
 
-#include "common/base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "common/thread/mutex_lock.h"
 #include "file/append_file.h"
 

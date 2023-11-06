@@ -7,15 +7,15 @@
 #include <sys/time.h>
 #include <cinttypes>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
-  static_assert(sizeof(Timestamp) == sizeof(int64_t),
-                "Timestamp should be same size as int64_t");
+  static_assert(sizeof(Timestamp) == sizeof(INT64),
+                "Timestamp should be same size as INT64");
 
-  string Timestamp::toString() const {
+  STRING Timestamp::toString() const {
     char buf[32] = {0};
-    int64_t seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
-    int64_t microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
+    INT64 seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
+    INT64 microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
     snprintf(buf, sizeof(buf), "%"
     PRId64
     ".%06"
@@ -24,7 +24,7 @@ RD_NAMESPACE_BEGIN
     return buf;
   }
 
-  string Timestamp::toFormattedString(bool showMicroseconds) const {
+  STRING Timestamp::toFormattedString(bool showMicroseconds) const {
     char buf[64] = {0};
     time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
     struct tm tm_time;
@@ -47,8 +47,8 @@ RD_NAMESPACE_BEGIN
   Timestamp Timestamp::now() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    int64_t seconds = tv.tv_sec;
+    INT64 seconds = tv.tv_sec;
     return Timestamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

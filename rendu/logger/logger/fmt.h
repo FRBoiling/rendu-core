@@ -5,7 +5,7 @@
 #ifndef RENDU_FMT_H
 #define RENDU_FMT_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

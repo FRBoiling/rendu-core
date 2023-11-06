@@ -3,162 +3,145 @@
 */
 
 #include "kqueue_poller.h"
-#include "base/type_cast.h"
+#include "common/utils/type_cast.h"
 #include "log.h"
 #include "sockets/sock_ops.h"
 
 RD_NAMESPACE_BEGIN
-  const int kNew = -1;
-  const int kAdded = 1;
-  const int kDeleted = 2;
+
+#define EVENT_MASK_MALLOC_SIZE(sz) (((sz) + 3) / 4)
+#define EVENT_MASK_OFFSET(fd) ((fd) % 4 * 2)
+#define EVENT_MASK_ENCODE(fd, mask) (((mask) & 0x3) << EVENT_MASK_OFFSET(fd))
+
+  int getEventMask(const char *eventsMask, int fd) {
+    return (eventsMask[fd / 4] >> EVENT_MASK_OFFSET(fd)) & 0x3;
+  }
+
+  void addEventMask(char *eventsMask, int fd, int mask) {
+    eventsMask[fd / 4] |= EVENT_MASK_ENCODE(fd, mask);
+  }
+
+  void resetEventMask(char *eventsMask, int fd) {
+    eventsMask[fd / 4] &= ~EVENT_MASK_ENCODE(fd, 0x3);
+  }
 
   KqueuePoller::KqueuePoller(EventLoop *loop)
     : Poller(loop),
-      poller_fd_(kqueue()),
-      events_(16) {
-    if (poller_fd_ < 0) {
-      //TODO:BOIL
-
+      poller_fd_(-1),
+      events_(nullptr),
+      eventsMask_(nullptr) {
+    poller_fd_ = kqueue();
+    if (poller_fd_ == -1) {
+      assert(0);
     }
+    SockOps::SetCloExec(poller_fd_);
+    events_ = (struct kevent *) malloc(sizeof(struct kevent) * 16);
+    eventsMask_ = (char *) malloc(EVENT_MASK_MALLOC_SIZE(16));
+    memset(eventsMask_, 0, EVENT_MASK_MALLOC_SIZE(16));
   }
 
   KqueuePoller::~KqueuePoller() {
     SockOps::Close(poller_fd_);
+    free(events_);
+    free(eventsMask_);
   }
 
-  Timestamp KqueuePoller::poll(int timeoutMs, Poller::ChannelList *activeChannels) {
+  int KqueuePoller::Resize(int size) {
+    events_ = (struct kevent *) malloc(sizeof(struct kevent) * size);
+    eventsMask_ = (char *) realloc(eventsMask_, EVENT_MASK_MALLOC_SIZE(size));
+    memset(eventsMask_, 0, EVENT_MASK_MALLOC_SIZE(size));
+    return 0;
+  }
+
+  void KqueuePoller::AddEvent(Channel *channel, int mask) const {
+    int fd = channel->fd();
+    LOG_TRACE << "AddEvent fd = " << fd << " event = { " << channel->eventsToString() << " }";
+    struct kevent event;
+    if (mask & RD_READABLE) {
+      EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, channel);
+      if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
+        LOG_SYSFATAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+      }
+    }
+    if (mask & RD_WRITABLE) {
+      EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, channel);
+      if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
+        LOG_SYSFATAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+      }
+    }
+  }
+
+  void KqueuePoller::DelEvent(Channel *channel, int mask) const {
+    int fd = channel->fd();
+    LOG_TRACE << "DelEvent fd = " << fd << " event = { " << channel->eventsToString() << " }";
+    struct kevent event;
+    if (mask & RD_READABLE) {
+      EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+      if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
+        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+      }
+    }
+    if (mask & RD_WRITABLE) {
+      EV_SET(&event, fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
+      if (kevent(poller_fd_, &event, 1, NULL, 0, NULL) == -1) {
+        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+      }
+    }
+  }
+
+  Timestamp KqueuePoller::Poll(int timeoutMs, Poller::ChannelList *activeChannels) {
     int retval, numEvents = 0;
 
-    int event_size = static_cast<int32>(events_.size());
     if (timeoutMs > 0) {
       struct timespec timeout;
-      struct timespec ts;
-      ts.tv_sec = timeoutMs / 1000; // 1 second
-      ts.tv_nsec = (timeoutMs % 1000) * 1000000; // 500000 nanoseconds
-      retval = kevent(poller_fd_, NULL, 0, &*events_.begin(), event_size, &timeout);
+      timeout.tv_sec = timeoutMs / 1000; // 1 second
+      timeout.tv_nsec = (timeoutMs % 1000) * 1000000; // 500000 nanoseconds
+      retval = kevent(poller_fd_, NULL, 0, events_, 16, &timeout);
     } else {
-      retval = kevent(poller_fd_, NULL, 0, &*events_.begin(), event_size, NULL);
+      retval = kevent(poller_fd_, NULL, 0, events_, 16, NULL);
     }
     int savedErrno = errno;
     Timestamp now(Timestamp::now());
     if (retval > 0) {
-      for (int i = 0; i < retval; ++i) {
-        struct kevent &e = events_[i];
-        Channel *channel = static_cast<Channel *>(e.udata);
-        int32 mask = 0;
-        if (e.filter == EVFILT_READ) { mask = RD_READABLE; }
-        else if (e.filter == EVFILT_WRITE) { mask = RD_WRITABLE; }
+      /* Normally we execute the read event first and then the write event.
+       * When the barrier is set, we will do it reverse.
+       *
+       * However, under kqueue, read and write events would be separate
+       * events, which would make it impossible to control the order of
+       * reads and writes. So we store the event's mask we've got and merge
+       * the same fd events later. */
+      for (int i = 0; i < retval; i++) {
+        struct kevent &event = events_[i];
+        int fd = (int) event.ident;
+        int mask = 0;
+
+        if (event.filter == EVFILT_READ) mask = RD_READABLE;
+        else if (event.filter == EVFILT_WRITE) mask = RD_WRITABLE;
+        addEventMask(eventsMask_, fd, mask);
+      }
+
+      /* Re-traversal to merge read and write events, and set the fd's mask to
+       * 0 so that events are not added again when the fd is encountered again. */
+      numEvents = 0;
+      for (int i = 0; i < retval; i++) {
+        struct kevent &event = events_[i];
+        int fd = (int) event.ident;
+        int mask = getEventMask(eventsMask_, fd);
         if (mask) {
+          resetEventMask(eventsMask_, fd);
+          Channel *channel = static_cast<Channel *>(event.udata);
           channel->set_revents(mask);
           activeChannels->push_back(channel);
           numEvents++;
         }
-        if (numEvents > 0) {
-          //      LOG_TRACE << numEvents << " events happened";
-          assert(TypeCast::implicit_cast<size_t>(numEvents) <= events_.size());
-          if (TypeCast::implicit_cast<size_t>(numEvents) == events_.size()) {
-            events_.resize(events_.size() * 2);
-          }
-        } else if (numEvents == 0) {
-          LOG_TRACE << "nothing happened";
-        }
       }
-    } else {
-      if (savedErrno != EINTR) {
-        errno = savedErrno;
-        LOG_SYSERR << "KqueuePoller::poll()";
-      }
+    } else if (retval == -1 && savedErrno != EINTR) {
+      errno = savedErrno;
+      LOG_SYSERR << "aeApiPoll: kevent, %s" << strerror(errno);
     }
     return now;
   }
 
-  void KqueuePoller::updateChannel(Channel *channel) {
-    Poller::assertInLoopThread();
-    const int index = channel->index();
-    LOG_TRACE << "fd = " << channel->fd() << " events = " << channel->events() << " index = " << index;
-    if (index == kNew || index == kDeleted) {
-      // a new one, add with EPOLL_CTL_ADD
-      int fd = channel->fd();
-      if (index == kNew) {
-        assert(channels_.find(fd) == channels_.end());
-        channels_[fd] = channel;
-      } else // index == kDeleted
-      {
-        assert(channels_.find(fd) != channels_.end());
-        assert(channels_[fd] == channel);
-      }
-
-      channel->set_index(kAdded);
-      AddEvent(channel);
-    } else {
-      // update existing one with EPOLL_CTL_MOD/DEL
-      int fd = channel->fd();
-      (void) fd;
-      assert(channels_.find(fd) != channels_.end());
-      assert(channels_[fd] == channel);
-      assert(index == kAdded);
-      if (channel->isNoneEvent()) {
-        DelEvent(channel);
-        channel->set_index(kDeleted);
-      }
-    }
-  }
-
-  void KqueuePoller::removeChannel(Channel *channel) {
-    Poller::assertInLoopThread();
-    int fd = channel->fd();
-    LOG_TRACE << "fd = " << fd;
-    assert(channels_.find(fd) != channels_.end());
-    assert(channels_[fd] == channel);
-    assert(channel->isNoneEvent());
-    int index = channel->index();
-    assert(index == kAdded || index == kDeleted);
-    size_t n = channels_.erase(fd);
-    (void) n;
-    assert(n == 1);
-
-    if (index == kAdded) {
-      DelEvent(channel);
-    }
-    channel->set_index(kNew);
-  }
-
-  bool KqueuePoller::hasChannel(Channel *channel) const {
-    return Poller::hasChannel(channel);
-  }
-
-  void KqueuePoller::AddEvent(Channel *channel) const {
-    struct kevent ke;
-    if (channel->events() & RD_READABLE) {
-      EV_SET(&ke, channel->fd(), EVFILT_READ, EV_ADD, 0, 0, NULL);
-      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
-        LOG_SYSFATAL << "epoll_ctl op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
-      }
-    }
-    if (channel->events() & RD_WRITABLE) {
-      EV_SET(&ke, channel->fd(), EVFILT_WRITE, EV_ADD, 0, 0, NULL);
-      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
-        LOG_SYSFATAL << "epoll_ctl op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
-      }
-    }
-  }
-
-  void KqueuePoller::DelEvent(Channel *channel) const{
-    struct kevent ke;
-
-    if (channel->events() & RD_READABLE) {
-      EV_SET(&ke, channel->fd(), EVFILT_READ, EV_DELETE, 0, 0, NULL);
-      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
-        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
-      }
-    }
-    if (channel->events() & RD_WRITABLE) {
-      EV_SET(&ke, channel->fd(), EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
-      if (kevent(poller_fd_, &ke, 1, NULL, 0, NULL) == -1) {
-        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
-      }
-    }
-  }
 
   const char *KqueuePoller::operationToString(int op) {
     switch (op) {

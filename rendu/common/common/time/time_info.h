@@ -2,13 +2,13 @@
 * Created by boil on 2023/9/24.
 */
 
-#ifndef RENDU_TIME_INFO_H
-#define RENDU_TIME_INFO_H
+#ifndef RENDU_COMMON_TIME_INFO_H
+#define RENDU_COMMON_TIME_INFO_H
 
-#include "define.h"
+#include "common/define.h"
 #include "date_time.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 class TimeInfo {
 public:
@@ -16,6 +16,6 @@ public:
   DateTime m_lastTime;
 };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_TIME_INFO_H
+#endif //RENDU_COMMON_TIME_INFO_H

@@ -5,9 +5,9 @@
 #include "thread_data.h"
 #include "exception/exception.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
- ThreadData::ThreadData(ThreadData::ThreadFunc func, const string &name, pid_t *tid,
+ ThreadData::ThreadData(ThreadData::ThreadFunc func, const STRING &name, pid_t *tid,
                                CountDownLatch *latch)
     : func_(std::move(func)),
       name_(name),
@@ -47,4 +47,4 @@ RD_NAMESPACE_BEGIN
   }
 
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

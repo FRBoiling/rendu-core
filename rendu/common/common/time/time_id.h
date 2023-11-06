@@ -2,12 +2,12 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_TIME_ID_H
-#define RENDU_TIME_ID_H
+#ifndef RENDU_COMMON_TIME_ID_H
+#define RENDU_COMMON_TIME_ID_H
 
-#include "base/copyable.h"
+#include "common/utils/copyable.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Timer;
 
@@ -21,7 +21,7 @@ RD_NAMESPACE_BEGIN
         sequence_(0) {
     }
 
-    TimerId(Timer *timer, int64_t seq)
+    TimerId(Timer *timer, INT64 seq)
       : timer_(timer),
         sequence_(seq) {
     }
@@ -32,9 +32,9 @@ RD_NAMESPACE_BEGIN
 
   private:
     Timer *timer_;
-    int64_t sequence_;
+    INT64 sequence_;
   };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_TIME_ID_H
+#endif //RENDU_COMMON_TIME_ID_H

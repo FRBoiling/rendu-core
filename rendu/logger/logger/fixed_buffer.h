@@ -5,10 +5,10 @@
 #ifndef RENDU_FIXED_BUFFER_H
 #define RENDU_FIXED_BUFFER_H
 
-#include "base/non_copyable.h"
-#include "base/string_piece.h"
-#include "base/type_cast.h"
-#include "base/memory_ops.h"
+#include "common/utils/non_copyable.h"
+#include "common/utils/string_piece.h"
+#include "common/utils/type_cast.h"
+#include "common/utils/memory_ops.h"
 
 RD_NAMESPACE_BEGIN
 

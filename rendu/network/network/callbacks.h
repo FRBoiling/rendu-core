@@ -5,7 +5,7 @@
 #ifndef RENDU_CALLBACKS_H
 #define RENDU_CALLBACKS_H
 
-#include "define.h"
+#include "common/define.h"
 #include "common/time/timestamp.h"
 
 RD_NAMESPACE_BEGIN

@@ -16,7 +16,7 @@ RD_NAMESPACE_BEGIN
   namespace detail {
 
     void removeConnection(EventLoop *loop, const TcpConnectionPtr &conn) {
-      loop->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
+      loop->QueueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
     }
 
     void removeConnector(const ConnectorPtr &connector) {
@@ -57,7 +57,7 @@ RD_NAMESPACE_BEGIN
       assert(loop_ == conn->getLoop());
       // FIXME: not 100% safe, if we are in different thread
       CloseCallback cb = std::bind(&detail::removeConnection, loop_, _1);
-      loop_->runInLoop(
+      loop_->RunInLoop(
         std::bind(&TcpConnection::setCloseCallback, conn, cb));
       if (unique) {
         conn->forceClose();
@@ -65,7 +65,7 @@ RD_NAMESPACE_BEGIN
     } else {
       connector_->stop();
       // FIXME: HACK
-      loop_->runAfter(1, std::bind(&detail::removeConnector, connector_));
+      loop_->RunAfter(1, std::bind(&detail::removeConnector, connector_));
     }
   }
 
@@ -133,7 +133,7 @@ RD_NAMESPACE_BEGIN
       connection_.reset();
     }
 
-    loop_->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
+    loop_->QueueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
     if (retry_ && connect_) {
       LOG_INFO << "TcpClient::connect[" << name_ << "] - Reconnecting to "
                << connector_->serverAddress().ToString();

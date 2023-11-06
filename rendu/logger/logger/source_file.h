@@ -5,7 +5,7 @@
 #ifndef RENDU_SOURCE_FILE_H
 #define RENDU_SOURCE_FILE_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

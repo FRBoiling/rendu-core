@@ -8,8 +8,8 @@
 
 #include <map>
 
-#include "base/non_copyable.h"
-#include "base/atomic.h"
+#include "common/utils/non_copyable.h"
+#include "common/utils/atomic.h"
 
 #include "event_loop.h"
 #include "endpoint/ip_end_point.h"

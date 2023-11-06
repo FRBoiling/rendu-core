@@ -4,6 +4,7 @@
 #|--------------------------------
 #| rendu-core examples project
 #|--------------------------------
+set(PROJECT_NAME example_caf)
 rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # Exclude

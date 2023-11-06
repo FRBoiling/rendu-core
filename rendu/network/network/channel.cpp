@@ -16,9 +16,9 @@ RD_NAMESPACE_BEGIN
   const int Channel::kReadEvent = POLLIN | POLLPRI;
   const int Channel::kWriteEvent = POLLOUT;
 
-  Channel::Channel(EventLoop *loop, int fd__)
+  Channel::Channel(EventLoop *loop, int fd)
     : loop_(loop),
-      fd_(fd__),
+      fd_(fd),
       events_(0),
       revents_(0),
       index_(-1),
@@ -27,14 +27,13 @@ RD_NAMESPACE_BEGIN
       eventHandling_(false),
       addedToLoop_(false) {
 
-    LOG_TRACE<<"Channel+";
   }
 
   Channel::~Channel() {
     assert(!eventHandling_);
     assert(!addedToLoop_);
     if (loop_->isInLoopThread()) {
-      assert(!loop_->hasChannel(this));
+      assert(!loop_->HasChannel(this));
     }
   }
 
@@ -45,13 +44,13 @@ RD_NAMESPACE_BEGIN
 
   void Channel::update() {
     addedToLoop_ = true;
-    loop_->updateChannel(this);
+    loop_->UpdateChannel(this);
   }
 
   void Channel::remove() {
     assert(isNoneEvent());
     addedToLoop_ = false;
-    loop_->removeChannel(this);
+    loop_->RemoveChannel(this);
   }
 
   void Channel::handleEvent(Timestamp receiveTime) {
@@ -73,7 +72,7 @@ RD_NAMESPACE_BEGIN
       if (logHup_) {
         LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLHUP";
       }
-      if (closeCallback_) closeCallback_();
+      if (closeCallback_) closeCallback_(receiveTime);
     }
 
     if (revents_ & POLLNVAL) {
@@ -81,14 +80,14 @@ RD_NAMESPACE_BEGIN
     }
 
     if (revents_ & (POLLERR | POLLNVAL)) {
-      if (errorCallback_) errorCallback_();
+      if (errorCallback_) errorCallback_(receiveTime);
     }
-//    if (revents_ & (POLLIN | POLLPRI | POLLRDHUP)) {
+
     if (revents_ & (POLLIN | POLLPRI)) {
       if (readCallback_) readCallback_(receiveTime);
     }
     if (revents_ & POLLOUT) {
-      if (writeCallback_) writeCallback_();
+      if (writeCallback_) writeCallback_(receiveTime);
     }
     eventHandling_ = false;
   }

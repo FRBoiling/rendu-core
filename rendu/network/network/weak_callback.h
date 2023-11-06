@@ -5,7 +5,7 @@
 #ifndef RENDU_WEAK_CALLBACK_H
 #define RENDU_WEAK_CALLBACK_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

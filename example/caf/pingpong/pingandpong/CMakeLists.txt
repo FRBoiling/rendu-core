@@ -17,6 +17,6 @@ rendu_add_executable(
     proto::model
     dep::entt
     dep::caf
-    example::caf_ping_pong_define
+    example_caf::define
     DEFINES
 )

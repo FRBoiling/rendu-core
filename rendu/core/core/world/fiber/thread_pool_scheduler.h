@@ -6,8 +6,8 @@
 #define RENDU_THREAD_POOL_SCHEDULER_H
 
 #include "fiber_fwd.h"
-#include "base/scheduler.h"
-#include "thread/thread.h"
+#include "common/scheduler.h"
+#include "base/thread/thread_helper.h"
 #include "concurrent/concurrent_queue.h"
 
 RD_NAMESPACE_BEGIN

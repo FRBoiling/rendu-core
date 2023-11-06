@@ -2,11 +2,11 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_MUTEX_LOCK_H
-#define RENDU_MUTEX_LOCK_H
+#ifndef RENDU_COMMON_MUTEX_LOCK_H
+#define RENDU_COMMON_MUTEX_LOCK_H
 
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "thread/current_thread.h"
 
 // Thread safety annotations {
@@ -102,7 +102,7 @@ __END_DECLS
 
 #endif // CHECK_PTHREAD_RETURN_VALUE
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 // Use as data member of a class, eg.
 //
 // class Foo
@@ -224,6 +224,6 @@ RD_NAMESPACE_BEGIN
 // A tempory object doesn't hold the lock for long!
 #define MutexLockGuard(x) error "Missing guard object name"
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_MUTEX_LOCK_H
+#endif //RENDU_COMMON_MUTEX_LOCK_H

@@ -5,11 +5,11 @@
 #ifndef RENDU_TCP_CONNECTION_H
 #define RENDU_TCP_CONNECTION_H
 
-#include "base/non_copyable.h"
-#include "base/string_piece.h"
-#include "base/type_cast.h"
+#include "common/utils/non_copyable.h"
+#include "common/utils/string_piece.h"
+#include "common/utils/type_cast.h"
 #include "callbacks.h"
-#include "base/any.h"
+#include "common/utils/any.h"
 #include "buffer.h"
 #include "endpoint/ip_end_point.h"
 

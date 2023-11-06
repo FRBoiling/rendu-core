@@ -1,34 +1,50 @@
 /*
-* Created by boil on 2023/11/2.
+* Created by boil on 2023/9/22.
 */
 
-#ifndef RENDU_DATE_TIME_H
-#define RENDU_DATE_TIME_H
+#ifndef RENDU_COMMON_DATE_TIME_H
+#define RENDU_COMMON_DATE_TIME_H
 
-#include "define.h"
+#include "common/define.h"
 
-RD_NAMESPACE_BEGIN
-// Local time in unspecified timezone.
-// A minute is always 60 seconds, no leap seconds.
-  struct DateTime {
-    DateTime() {}
+COMMON_NAMESPACE_BEGIN
 
-    explicit DateTime(const struct tm &);
+    enum DateTimeKind {
+      Unspecified = 0,
+      Utc = 1,
+      Local = 2,
+    };
 
-    DateTime(int _year, int _month, int _day, int _hour, int _minute, int _second)
-      : year(_year), month(_month), day(_day), hour(_hour), minute(_minute), second(_second) {
-    }
+    class DateTime {
+    public:
+      DateTime();
 
-    // "2011-12-31 12:34:56"
-    string toIsoString() const;
+      DateTime(INT64 timeS, STRING timeZ = "Asia/Shanghai");
 
-    int year = 0;     // [1900, 2500]
-    int month = 0;    // [1, 12]
-    int day = 0;      // [1, 31]
-    int hour = 0;     // [0, 23]
-    int minute = 0;   // [0, 59]
-    int second = 0;   // [0, 59]
-  };
+      DateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, DateTimeKind kind = Local);
 
-RD_NAMESPACE_END
-#endif //RENDU_DATE_TIME_H
+    public:
+      static DateTime GetCurrentDateTime(STRING timeZ = "Asia/Shanghai");
+
+    public:
+      void SetDateTime(DateTime& dateTime);
+
+      INT64 GetTimeStamp() const;
+
+      STRING GetTimeZone();
+
+      STRING ToString(const STRING &timeZone = "") const;
+
+      STRING ToUtc();
+
+    public:
+      STIME m_tm;
+    private:
+      INT64 m_timeStamp;
+      STRING m_timeZone;
+    };
+
+
+COMMON_NAMESPACE_END
+
+#endif //RENDU_COMMON_DATE_TIME_H

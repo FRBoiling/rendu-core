@@ -6,7 +6,7 @@
 #include "logger/log.h"
 #include "event_loop.h"
 #include "sockets/sock_ops.h"
-#include "base/str_error.h"
+#include "common/utils/str_error.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -31,7 +31,7 @@ RD_NAMESPACE_BEGIN
   void Connector::start()
   {
     connect_ = true;
-    loop_->runInLoop(std::bind(&Connector::startInLoop, this)); // FIXME: unsafe
+    loop_->RunInLoop(std::bind(&Connector::startInLoop, this)); // FIXME: unsafe
   }
 
   void Connector::startInLoop()
@@ -51,7 +51,7 @@ RD_NAMESPACE_BEGIN
   void Connector::stop()
   {
     connect_ = false;
-    loop_->queueInLoop(std::bind(&Connector::stopInLoop, this)); // FIXME: unsafe
+    loop_->QueueInLoop(std::bind(&Connector::stopInLoop, this)); // FIXME: unsafe
     // FIXME: cancel timer
   }
 
@@ -138,7 +138,7 @@ RD_NAMESPACE_BEGIN
     channel_->remove();
     int sockfd = channel_->fd();
     // Can't reset channel_ here, because we are inside Channel::handleEvent
-    loop_->queueInLoop(std::bind(&Connector::resetChannel, this)); // FIXME: unsafe
+    loop_->QueueInLoop(std::bind(&Connector::resetChannel, this)); // FIXME: unsafe
     return sockfd;
   }
 
@@ -206,7 +206,7 @@ RD_NAMESPACE_BEGIN
     {
       LOG_INFO << "Connector::retry - Retry connecting to " << serverAddr_.ToString()
                << " in " << retryDelayMs_ << " milliseconds. ";
-      loop_->runAfter(retryDelayMs_/1000.0,
+      loop_->RunAfter(retryDelayMs_/1000.0,
                       std::bind(&Connector::startInLoop, shared_from_this()));
       retryDelayMs_ = std::min(retryDelayMs_ * 2, kMaxRetryDelayMs);
     }

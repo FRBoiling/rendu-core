@@ -4,7 +4,7 @@
 
 #include "date.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
   namespace detail {
 
     char require_32_bit_integer_at_least[sizeof(int) >= sizeof(int32_t) ? 1 : -1];
@@ -49,7 +49,7 @@ RD_NAMESPACE_BEGIN
     t.tm_mday)) {
   }
 
-  string Date::toIsoString() const {
+  STRING Date::toIsoString() const {
     char buf[32];
     YearMonthDay ymd(yearMonthDay());
     snprintf(buf, sizeof buf, "%4d-%02d-%02d", ymd.year, ymd.month, ymd.day);
@@ -60,4 +60,4 @@ RD_NAMESPACE_BEGIN
     return detail::getYearMonthDay(julianDayNumber_);
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

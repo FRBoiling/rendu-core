@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "time/timestamp.h"
 #include "event_loop.h"
 
@@ -24,21 +24,32 @@ RD_NAMESPACE_BEGIN
 
     virtual ~Poller();
 
+  public:
+
+    virtual void AddEvent(Channel *channel,int mask) const = 0;
+
+    virtual void DelEvent(Channel *channel,int mask) const = 0;
+
+    virtual int Resize(int size) = 0;
+
     /// Polls the I/O events.
     /// Must be called in the loop thread.
-    virtual Timestamp poll(int timeoutMs, ChannelList *activeChannels) = 0;
+    virtual Timestamp Poll(int timeoutMs, ChannelList *activeChannels) = 0;
+
 
     /// Changes the interested I/O events.
     /// Must be called in the loop thread.
-    virtual void updateChannel(Channel *channel) = 0;
+    virtual void UpdateChannel(Channel *channel) ;
 
     /// Remove the channel, when it destructs.
     /// Must be called in the loop thread.
-    virtual void removeChannel(Channel *channel) = 0;
+    virtual void RemoveChannel(Channel *channel) ;
 
-    virtual bool hasChannel(Channel *channel) const;
+    virtual bool HasChannel(Channel *channel) const;
 
-    static Poller *newDefaultPoller(EventLoop *loop);
+
+
+    static Poller *NewDefaultPoller(EventLoop *loop);
 
     void assertInLoopThread() const {
       ownerLoop_->assertInLoopThread();
@@ -48,7 +59,7 @@ RD_NAMESPACE_BEGIN
     typedef std::map<int, Channel *> ChannelMap;
     ChannelMap channels_;
 
-  private:
+  protected:
     EventLoop *ownerLoop_;
   };
 

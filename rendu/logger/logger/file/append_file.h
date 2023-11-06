@@ -5,8 +5,8 @@
 #ifndef RENDU_APPEND_FILE_H
 #define RENDU_APPEND_FILE_H
 
-#include "base/non_copyable.h"
-#include "base/string_arg.h"
+#include "common/utils/non_copyable.h"
+#include "common/utils/string_arg.h"
 
 RD_NAMESPACE_BEGIN
 

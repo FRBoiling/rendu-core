@@ -7,10 +7,14 @@
 #include "apple_sock.h"
 #include "logger/log.h"
 #include "errno/errno.h"
+#include <unistd.h>
 
 RD_NAMESPACE_BEGIN
 
   namespace SockOps {
+    int Pipe(int fd[2]){
+      return pipe(fd);
+    }
 
     int SetNoBlocked(int fd, bool noblock) {
       int ul = noblock;
@@ -77,16 +81,16 @@ RD_NAMESPACE_BEGIN
     template<typename FUN>
     void for_each_netAdapter_apple(FUN &&fun) { //type: struct ifaddrs *
       struct ifaddrs *interfaces = nullptr;
-      struct ifaddrs *adapter = nullptr;
+      struct ifaddrs *base = nullptr;
       if (getifaddrs(&interfaces) == 0) {
-        adapter = interfaces;
-        while (adapter) {
-          if (adapter->ifa_addr->sa_family == AF_INET) {
-            if (fun(adapter)) {
+        base = interfaces;
+        while (base) {
+          if (base->ifa_addr->sa_family == AF_INET) {
+            if (fun(base)) {
               break;
             }
           }
-          adapter = adapter->ifa_next;
+          base = base->ifa_next;
         }
         freeifaddrs(interfaces);
       }
@@ -96,9 +100,9 @@ RD_NAMESPACE_BEGIN
 
     string GetLocalIP() {
       string address = "127.0.0.1";
-      for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-        string ip = InetNToa(adapter->ifa_addr);
-        if (strstr(adapter->ifa_name, "docker")) {
+      for_each_netAdapter_apple([&](struct ifaddrs *base) {
+        string ip = InetNToa(base->ifa_addr);
+        if (strstr(base->ifa_name, "docker")) {
           return false;
         }
         return CheckIP(address, ip);
@@ -108,9 +112,9 @@ RD_NAMESPACE_BEGIN
 
     string get_ifr_ip(const char *if_name) {
       string ret;
-      for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-        if (strcmp(adapter->ifa_name, if_name) == 0) {
-          ret = InetNToa(adapter->ifa_addr);
+      for_each_netAdapter_apple([&](struct ifaddrs *base) {
+        if (strcmp(base->ifa_name, if_name) == 0) {
+          ret = InetNToa(base->ifa_addr);
           return true;
         }
         return false;
@@ -120,10 +124,10 @@ RD_NAMESPACE_BEGIN
 
     string get_ifr_name(const char *local_ip) {
       string ret = "en0";
-      for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-        string ip = InetNToa(adapter->ifa_addr);
+      for_each_netAdapter_apple([&](struct ifaddrs *base) {
+        string ip = InetNToa(base->ifa_addr);
         if (ip == local_ip) {
-          ret = adapter->ifa_name;
+          ret = base->ifa_name;
           return true;
         }
         return false;
@@ -133,9 +137,9 @@ RD_NAMESPACE_BEGIN
 
     string get_ifr_mask(const char *if_name) {
       string ret;
-      for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-        if (strcmp(if_name, adapter->ifa_name) == 0) {
-          ret = InetNToa(adapter->ifa_netmask);
+      for_each_netAdapter_apple([&](struct ifaddrs *base) {
+        if (strcmp(if_name, base->ifa_name) == 0) {
+          ret = InetNToa(base->ifa_netmask);
           return true;
         }
         return false;
@@ -145,9 +149,9 @@ RD_NAMESPACE_BEGIN
 
     string get_ifr_brdaddr(const char *if_name) {
       string ret;
-      for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-        if (strcmp(if_name, adapter->ifa_name) == 0) {
-          ret = InetNToa(adapter->ifa_broadaddr);
+      for_each_netAdapter_apple([&](struct ifaddrs *base) {
+        if (strcmp(if_name, base->ifa_name) == 0) {
+          ret = InetNToa(base->ifa_broadaddr);
           return true;
         }
         return false;

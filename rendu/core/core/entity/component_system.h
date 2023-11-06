@@ -6,7 +6,7 @@
 #define RENDU_COMPONENT_SYSTEM_H
 
 #include "ecs/entity_pool.h"
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

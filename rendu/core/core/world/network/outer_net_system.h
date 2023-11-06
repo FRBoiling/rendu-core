@@ -6,7 +6,7 @@
 #define RENDU_OUTER_NET_SYSTEM_H
 
 #include "entity/component_system.h"
-#include "singleton.h"
+#include "common/utils/singleton.h"
 #include "task/task.h"
 #include "network/a_service.h"
 

@@ -7,7 +7,7 @@
 #include "current_thread.h"
 #include "time/timestamp.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   namespace CurrentThread {
     __thread int t_cachedTid = 0;
@@ -16,8 +16,8 @@ RD_NAMESPACE_BEGIN
     __thread const char *t_threadName = "unknown";
     static_assert(std::is_same<int, pid_t>::value, "pid_t should be int");
 
-    string stackTrace(bool demangle) {
-      string stack;
+    STRING stackTrace(bool demangle) {
+      STRING stack;
       const int max_frames = 200;
       void *frame[max_frames];
       int nptrs = ::backtrace(frame, max_frames);
@@ -74,7 +74,7 @@ RD_NAMESPACE_BEGIN
     }
 
 
-    void sleepUsec(int64_t usec)
+    void sleepUsec(INT64 usec)
     {
       struct timespec ts = { 0, 0 };
       ts.tv_sec = static_cast<time_t>(usec / Timestamp::kMicroSecondsPerSecond);
@@ -84,4 +84,4 @@ RD_NAMESPACE_BEGIN
 
   }  // namespace CurrentThread
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

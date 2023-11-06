@@ -5,7 +5,7 @@
 #ifndef RENDU_IP_END_POINT_H
 #define RENDU_IP_END_POINT_H
 
-#include "define.h"
+#include "common/define.h"
 #include "ip_v4_endpoint.h"
 #include "ip_v6_endpoint.h"
 #include "address/ip_address.h"

@@ -11,7 +11,7 @@
 #include "fiber_pool.h"
 #include "utils/singleton.h"
 #include "main_thread_scheduler.h"
-#include "base/scheduler.h"
+#include "common/scheduler.h"
 #include "concurrent/concurrent_map.h"
 #include "task/task.h"
 

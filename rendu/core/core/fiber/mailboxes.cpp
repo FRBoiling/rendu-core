@@ -3,7 +3,7 @@
 */
 
 #include "mailboxes.h"
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 RD_NAMESPACE_END

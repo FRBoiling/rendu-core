@@ -5,7 +5,7 @@
 #ifndef RENDU_APP_H
 #define RENDU_APP_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

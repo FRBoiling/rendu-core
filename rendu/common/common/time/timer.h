@@ -2,14 +2,14 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_TIMER_H
-#define RENDU_TIMER_H
+#ifndef RENDU_COMMON_TIMER_H
+#define RENDU_COMMON_TIMER_H
 
-#include "base/non_copyable.h"
-#include "base/atomic.h"
+#include "common/utils/non_copyable.h"
+#include "common/utils/atomic.h"
 #include "timestamp.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 ///
 /// Internal class for timer event.
 ///
@@ -32,22 +32,22 @@ RD_NAMESPACE_BEGIN
 
     bool repeat() const { return repeat_; }
 
-    int64_t sequence() const { return sequence_; }
+    INT64 sequence() const { return sequence_; }
 
     void restart(Timestamp now);
 
-    static int64_t numCreated() { return s_numCreated_.get(); }
+    static INT64 numCreated() { return s_numCreated_.get(); }
 
   private:
     const TimerCallback callback_;
     Timestamp expiration_;
     const double interval_;
     const bool repeat_;
-    const int64_t sequence_;
+    const INT64 sequence_;
 
     static AtomicInt64 s_numCreated_;
   };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_TIMER_H
+#endif //RENDU_COMMON_TIMER_H

@@ -2,7 +2,7 @@
 * Created by boil on 2023/10/26.
 */
 
-#ifndef RENDU_ERRNO_H
+#ifndef RENDU_RD_ERRNO_H
 #define RENDU_ERRNO_H
 
 
@@ -487,7 +487,7 @@
   XX(EREMOTEIO, "remote I/O error")                                           \
 
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -513,4 +513,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_ERRNO_H
+#endif //RENDU_RD_ERRNO_H

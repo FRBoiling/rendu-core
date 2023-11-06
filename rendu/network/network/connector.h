@@ -5,7 +5,7 @@
 #ifndef RENDU_CONNECTOR_H
 #define RENDU_CONNECTOR_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "endpoint/ip_end_point.h"
 
 RD_NAMESPACE_BEGIN

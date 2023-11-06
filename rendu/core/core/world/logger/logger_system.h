@@ -7,7 +7,7 @@
 
 #include "logger.pb.h"
 #include "entity/component_system.h"
-#include "define.h"
+#include "common/define.h"
 #include "utils/singleton.h"
 
 namespace rendu {

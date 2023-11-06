@@ -12,7 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::adapter
+    rendu::base
     rendu::common
     rendu::core
 )

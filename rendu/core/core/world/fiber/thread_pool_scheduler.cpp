@@ -4,7 +4,7 @@
 
 #include "thread_pool_scheduler.h"
 #include "fiber_manager_system.h"
-#include "thread/thread.h"
+#include "base/thread/thread_helper.h"
 
 RD_NAMESPACE_BEGIN
 

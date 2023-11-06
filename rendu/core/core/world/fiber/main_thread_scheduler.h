@@ -7,7 +7,7 @@
 
 #include "fiber_fwd.h"
 #include "thread/thread_synchronization_context.h"
-#include "base/scheduler.h"
+#include "common/scheduler.h"
 
 RD_NAMESPACE_BEGIN
 

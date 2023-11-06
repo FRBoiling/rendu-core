@@ -2,10 +2,10 @@
 * Created by boil on 2023/11/4.
 */
 
-#ifndef RENDU_SOCK_OPS_H
+#ifndef RENDU_SOCKET_HELPER_H
 #define RENDU_SOCK_OPS_H
 
-#include "define.h"
+#include "common/define.h"
 
 #include "posix_sock.h"
 #include "win_sock.h"
@@ -28,6 +28,7 @@ RD_NAMESPACE_BEGIN
 #define TCP_KEEPALIVE_TIME 120
 
   namespace SockOps {
+    int Pipe(int fd[2]);
 
     int CreateNonblockingOrDie(sa_family_t family);
 
@@ -183,4 +184,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_SOCK_OPS_H
+#endif //RENDU_SOCK_HELPER_H

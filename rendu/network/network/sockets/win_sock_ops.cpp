@@ -641,16 +641,16 @@ int inet_pton(int af, const char *src, void *dst) {
   template<typename FUN>
   void for_each_netAdapter_apple(FUN &&fun) { //type: struct ifaddrs *
     struct ifaddrs *interfaces = nullptr;
-    struct ifaddrs *adapter = nullptr;
+    struct ifaddrs *base = nullptr;
     if (getifaddrs(&interfaces) == 0) {
-      adapter = interfaces;
-      while (adapter) {
-        if (adapter->ifa_addr->sa_family == AF_INET) {
-          if (fun(adapter)) {
+      base = interfaces;
+      while (base) {
+        if (base->ifa_addr->sa_family == AF_INET) {
+          if (fun(base)) {
             break;
           }
         }
-        adapter = adapter->ifa_next;
+        base = base->ifa_next;
       }
       freeifaddrs(interfaces);
     }
@@ -701,9 +701,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   }
   close(sockfd);
   //接下来一个一个的获取IP地址
-  struct ifreq * adapter = (struct ifreq*) buf;
-  for (int i = (ifconf.ifc_len / sizeof(struct ifreq)); i > 0; --i,++adapter) {
-      if(fun(adapter)){
+  struct ifreq * base = (struct ifreq*) buf;
+  for (int i = (ifconf.ifc_len / sizeof(struct ifreq)); i > 0; --i,++base) {
+      if(fun(base)){
           break;
       }
   }
@@ -713,9 +713,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   string GetLocalIP() {
 #if defined(__APPLE__)
     string address = "127.0.0.1";
-    for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-      string ip = InetNToa(adapter->ifa_addr);
-      if (strstr(adapter->ifa_name, "docker")) {
+    for_each_netAdapter_apple([&](struct ifaddrs *base) {
+      string ip = InetNToa(base->ifa_addr);
+      if (strstr(base->ifa_name, "docker")) {
         return false;
       }
       return CheckIP(address, ip);
@@ -723,11 +723,11 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return address;
 #elif defined(_WIN32)
     string address = "127.0.0.1";
-  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO adapter) {
-      IP_ADDR_STRING *ipAddr = &(adapter->IpAddressList);
+  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO base) {
+      IP_ADDR_STRING *ipAddr = &(base->IpAddressList);
       while (ipAddr) {
           string ip = ipAddr->IpAddress.String;
-          if (strstr(adapter->AdapterName, "docker")) {
+          if (strstr(base->AdapterName, "docker")) {
               return false;
           }
           if(check_ip(address,ip)){
@@ -740,9 +740,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   return address;
 #else
   string address = "127.0.0.1";
-  for_each_netAdapter_posix([&](struct ifreq *adapter){
-      string ip = InetNToa(&(adapter->ifr_addr));
-      if (strstr(adapter->ifr_name, "docker")) {
+  for_each_netAdapter_posix([&](struct ifreq *base){
+      string ip = InetNToa(&(base->ifr_addr));
+      if (strstr(base->ifr_name, "docker")) {
           return false;
       }
       return check_ip(address,ip);
@@ -795,9 +795,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   string get_ifr_ip(const char *if_name) {
 #if defined(__APPLE__)
     string ret;
-    for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-      if (strcmp(adapter->ifa_name, if_name) == 0) {
-        ret = InetNToa(adapter->ifa_addr);
+    for_each_netAdapter_apple([&](struct ifaddrs *base) {
+      if (strcmp(base->ifa_name, if_name) == 0) {
+        ret = InetNToa(base->ifa_addr);
         return true;
       }
       return false;
@@ -805,10 +805,10 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return ret;
 #elif defined(_WIN32)
     string ret;
-  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO adapter) {
-      IP_ADDR_STRING *ipAddr = &(adapter->IpAddressList);
+  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO base) {
+      IP_ADDR_STRING *ipAddr = &(base->IpAddressList);
       while (ipAddr){
-          if (strcmp(if_name,adapter->AdapterName) == 0){
+          if (strcmp(if_name,base->AdapterName) == 0){
               //ip匹配到了
               ret.assign(ipAddr->IpAddress.String);
               return true;
@@ -820,9 +820,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   return ret;
 #else
   string ret;
-  for_each_netAdapter_posix([&](struct ifreq *adapter){
-      if(strcmp(adapter->ifr_name,if_name) == 0) {
-          ret = InetNToa(&(adapter->ifr_addr));
+  for_each_netAdapter_posix([&](struct ifreq *base){
+      if(strcmp(base->ifr_name,if_name) == 0) {
+          ret = InetNToa(&(base->ifr_addr));
           return true;
       }
       return false;
@@ -834,10 +834,10 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   string get_ifr_name(const char *local_ip) {
 #if defined(__APPLE__)
     string ret = "en0";
-    for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-      string ip = InetNToa(adapter->ifa_addr);
+    for_each_netAdapter_apple([&](struct ifaddrs *base) {
+      string ip = InetNToa(base->ifa_addr);
       if (ip == local_ip) {
-        ret = adapter->ifa_name;
+        ret = base->ifa_name;
         return true;
       }
       return false;
@@ -845,12 +845,12 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return ret;
 #elif defined(_WIN32)
     string ret = "en0";
-  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO adapter) {
-      IP_ADDR_STRING *ipAddr = &(adapter->IpAddressList);
+  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO base) {
+      IP_ADDR_STRING *ipAddr = &(base->IpAddressList);
       while (ipAddr){
           if (strcmp(local_ip,ipAddr->IpAddress.String) == 0){
               //ip匹配到了
-              ret.assign(adapter->AdapterName);
+              ret.assign(base->AdapterName);
               return true;
           }
           ipAddr = ipAddr->Next;
@@ -860,10 +860,10 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   return ret;
 #else
   string ret = "en0";
-  for_each_netAdapter_posix([&](struct ifreq *adapter){
-      string ip = InetNToa(&(adapter->ifr_addr));
+  for_each_netAdapter_posix([&](struct ifreq *base){
+      string ip = InetNToa(&(base->ifr_addr));
       if(ip == local_ip) {
-          ret = adapter->ifr_name;
+          ret = base->ifr_name;
           return true;
       }
       return false;
@@ -875,9 +875,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   string get_ifr_mask(const char *if_name) {
 #if defined(__APPLE__)
     string ret;
-    for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-      if (strcmp(if_name, adapter->ifa_name) == 0) {
-        ret = InetNToa(adapter->ifa_netmask);
+    for_each_netAdapter_apple([&](struct ifaddrs *base) {
+      if (strcmp(if_name, base->ifa_name) == 0) {
+        ret = InetNToa(base->ifa_netmask);
         return true;
       }
       return false;
@@ -885,10 +885,10 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return ret;
 #elif defined(_WIN32)
     string ret;
-  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO adapter) {
-      if (strcmp(if_name,adapter->AdapterName) == 0){
+  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO base) {
+      if (strcmp(if_name,base->AdapterName) == 0){
           //找到了该网卡
-          IP_ADDR_STRING *ipAddr = &(adapter->IpAddressList);
+          IP_ADDR_STRING *ipAddr = &(base->IpAddressList);
           //获取第一个ip的子网掩码
           ret.assign(ipAddr->IpMask.String);
           return true;
@@ -919,9 +919,9 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
   string get_ifr_brdaddr(const char *if_name) {
 #if defined(__APPLE__)
     string ret;
-    for_each_netAdapter_apple([&](struct ifaddrs *adapter) {
-      if (strcmp(if_name, adapter->ifa_name) == 0) {
-        ret = InetNToa(adapter->ifa_broadaddr);
+    for_each_netAdapter_apple([&](struct ifaddrs *base) {
+      if (strcmp(if_name, base->ifa_name) == 0) {
+        ret = InetNToa(base->ifa_broadaddr);
         return true;
       }
       return false;
@@ -929,10 +929,10 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return ret;
 #elif defined(_WIN32)
     string ret;
-  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO adapter) {
-      if (strcmp(if_name, adapter->AdapterName) == 0) {
+  for_each_netAdapter_win32([&](PIP_ADAPTER_INFO base) {
+      if (strcmp(if_name, base->AdapterName) == 0) {
           //找到该网卡
-          IP_ADDR_STRING *ipAddr = &(adapter->IpAddressList);
+          IP_ADDR_STRING *ipAddr = &(base->IpAddressList);
           in_addr broadcast;
           broadcast.S_un.S_addr = (inet_addr(ipAddr->IpAddress.String) & inet_addr(ipAddr->IpMask.String)) | (~inet_addr(ipAddr->IpMask.String));
           ret = InetNToa(broadcast);

@@ -12,7 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::adapter
+    rendu::base
     proto::model
     dep::entt
     dep::argparse

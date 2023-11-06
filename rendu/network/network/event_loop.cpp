@@ -9,6 +9,7 @@
 #include "logger/log.h"
 #include "thread/mutex_lock.h"
 #include "channel.h"
+#include "sockets/sock_ops.h"
 
 RD_NAMESPACE_BEGIN
   namespace {
@@ -18,13 +19,13 @@ RD_NAMESPACE_BEGIN
 
     int createEventfd() {
       //TODO:BOIL
-      return 0;
 //      int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
 //      if (evtfd < 0) {
 //        LOG_SYSERR << "Failed in eventfd";
 //        abort();
 //      }
 //      return evtfd;
+      return -1;
     }
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -55,10 +56,10 @@ RD_NAMESPACE_BEGIN
       callingPendingFunctors_(false),
       iteration_(0),
       threadId_(CurrentThread::tid()),
-      poller_(Poller::newDefaultPoller(this)),
-//      timerQueue_(new TimerQueue(this)),
-//      wakeupFd_(createEventfd()),
-//      wakeupChannel_(new Channel(this, wakeupFd_)),
+      poller_(Poller::NewDefaultPoller(this)),
+      timerQueue_(new TimerQueue(this)),
+      wakeupPipe_(),
+      wakeupChannel_(new Channel(this, wakeupFd_)),
       currentActiveChannel_(NULL) {
     LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
     if (t_loopInThisThread) {
@@ -67,22 +68,22 @@ RD_NAMESPACE_BEGIN
     } else {
       t_loopInThisThread = this;
     }
-//    wakeupChannel_->setReadCallback(
-//      std::bind(&EventLoop::handleRead, this));
-//    // we are always reading the wakeupfd
-//    wakeupChannel_->enableReading();
+    wakeupChannel_->setReadCallback(
+      std::bind(&EventLoop::handleRead, this));
+    // we are always reading the wakeupfd
+    wakeupChannel_->enableReading();
   }
 
   EventLoop::~EventLoop() {
     LOG_DEBUG << "EventLoop " << this << " of thread " << threadId_
               << " destructs in thread " << CurrentThread::tid();
-//    wakeupChannel_->disableAll();
-//    wakeupChannel_->remove();
-//    SocketOps::Close(wakeupFd_);
+    wakeupChannel_->disableAll();
+    wakeupChannel_->remove();
+    SockOps::Close(wakeupFd_);
     t_loopInThisThread = NULL;
   }
 
-  void EventLoop::loop() {
+  void EventLoop::Loop() {
     assert(!looping_);
     assertInLoopThread();
     looping_ = true;
@@ -91,11 +92,11 @@ RD_NAMESPACE_BEGIN
 
     while (!quit_) {
       activeChannels_.clear();
-      pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
+      pollReturnTime_ = poller_->Poll(kPollTimeMs, &activeChannels_);
       ++iteration_;
-//      if (Logger::logLevel <= LogLevel::TRACE) {
-//        printActiveChannels();
-//      }
+      if (Logger::logLevel() <= LogLevel::TRACE) {
+        printActiveChannels();
+      }
       // TODO sort channel by priority
       eventHandling_ = true;
       for (Channel *channel: activeChannels_) {
@@ -111,87 +112,87 @@ RD_NAMESPACE_BEGIN
     looping_ = false;
   }
 
-  void EventLoop::quit() {
+  void EventLoop::Quit() {
     quit_ = true;
     // There is a chance that loop() just executes while(!quit_) and exits,
     // then EventLoop destructs, then we are accessing an invalid object.
     // Can be fixed using mutex_ in both places.
     if (!isInLoopThread()) {
-      wakeup();
+      Wakeup();
     }
   }
 
-  void EventLoop::runInLoop(Functor cb) {
+  void EventLoop::RunInLoop(Functor cb) {
     if (isInLoopThread()) {
       cb();
     } else {
-      queueInLoop(std::move(cb));
+      QueueInLoop(std::move(cb));
     }
   }
 
-  void EventLoop::queueInLoop(Functor cb) {
+  void EventLoop::QueueInLoop(Functor cb) {
     {
       MutexLockGuard lock(mutex_);
       pendingFunctors_.push_back(std::move(cb));
     }
 
     if (!isInLoopThread() || callingPendingFunctors_) {
-      wakeup();
+      Wakeup();
     }
   }
 
-  size_t EventLoop::queueSize() const {
+  size_t EventLoop::QueueSize() const {
     MutexLockGuard lock(mutex_);
     return pendingFunctors_.size();
   }
 
-  TimerId EventLoop::runAt(Timestamp time, TimerCallback cb) {
+  TimerId EventLoop::RunAt(Timestamp time, TimerCallback cb) {
 //    return timerQueue_->addTimer(std::move(cb), time, 0.0);
     //TODO:BOIL
-    LOG_TRACE << "runAt";
+    LOG_TRACE << "RunAt";
     return TimerId();
   }
 
-  TimerId EventLoop::runAfter(double delay, TimerCallback cb) {
+  TimerId EventLoop::RunAfter(double delay, TimerCallback cb) {
 //    Timestamp time(addTime(Timestamp::now(), delay));
-//    return runAt(time, std::move(cb));
+//    return RunAt(time, std::move(cb));
     //TODO:BOIL
-    LOG_TRACE << "runAfter";
+    LOG_TRACE << "RunAfter";
     return TimerId();
   }
 
-  TimerId EventLoop::runEvery(double interval, TimerCallback cb) {
+  TimerId EventLoop::RunEvery(double interval, TimerCallback cb) {
 //    Timestamp time(addTime(Timestamp::now(), interval));
 //    return timerQueue_->addTimer(std::move(cb), time, interval);
     //TODO:BOIL
-    LOG_TRACE << "runEvery";
+    LOG_TRACE << "RunEvery";
     return TimerId();
   }
 
-  void EventLoop::cancel(TimerId timerId) {
-//    return timerQueue_->cancel(timerId);
+  void EventLoop::Cancel(TimerId timerId) {
+//    return timerQueue_->Cancel(timerId);
   }
 
-  void EventLoop::updateChannel(Channel *channel) {
+  void EventLoop::UpdateChannel(Channel *channel) {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
-    poller_->updateChannel(channel);
+    poller_->UpdateChannel(channel);
   }
 
-  void EventLoop::removeChannel(Channel *channel) {
+  void EventLoop::RemoveChannel(Channel *channel) {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     if (eventHandling_) {
       assert(currentActiveChannel_ == channel ||
              std::find(activeChannels_.begin(), activeChannels_.end(), channel) == activeChannels_.end());
     }
-    poller_->removeChannel(channel);
+    poller_->RemoveChannel(channel);
   }
 
-  bool EventLoop::hasChannel(Channel *channel) {
+  bool EventLoop::HasChannel(Channel *channel) {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
-    return poller_->hasChannel(channel);
+    return poller_->HasChannel(channel);
   }
 
   void EventLoop::abortNotInLoopThread() {
@@ -200,11 +201,11 @@ RD_NAMESPACE_BEGIN
               << ", current thread id = " << CurrentThread::tid();
   }
 
-  void EventLoop::wakeup() {
+  void EventLoop::Wakeup() {
 //    uint64_t one = 1;
 //    ssize_t n = SocketOps::Write(wakeupFd_, &one, sizeof one);
 //    if (n != sizeof one) {
-//      LOG_ERROR << "EventLoop::wakeup() writes " << n << " bytes instead of 8";
+//      LOG_ERROR << "EventLoop::Wakeup() writes " << n << " bytes instead of 8";
 //    }
   }
 

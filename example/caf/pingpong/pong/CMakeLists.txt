@@ -2,7 +2,7 @@
 #  Created by boil on 2022/8/14.
 #**********************************
 
-set(target_name caf_pong)
+set(target_name pong)
 rendu_add_executable(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -17,5 +17,5 @@ rendu_add_executable(
     proto::model
     dep::entt
     dep::caf
-    example::caf_ping_pong_define
+    example_caf::define
 )

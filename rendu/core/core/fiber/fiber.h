@@ -5,7 +5,7 @@
 #ifndef RENDU_FIBER_H
 #define RENDU_FIBER_H
 
-#include "define.h"
+#include "common/define.h"
 #include <queue>
 #include "actor/address.h"
 #include "entity/scene_type.h"

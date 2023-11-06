@@ -6,12 +6,12 @@
 #define RENDU_EVENT_SYSTEM_H
 
 #include "entity/component_system.h"
-#include "singleton.h"
+#include "common/utils/singleton.h"
 #include "event_info.h"
 #include "task/task.h"
 #include "invoke_handler.h"
 #include "concurrent/dictionary.h"
-#include "exception/exception.h"
+#include "exception/exception_helper.h"
 #include <typeinfo>
 #include <any>
 

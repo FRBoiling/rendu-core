@@ -2,27 +2,27 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_POSIX_THREAD_H
-#define RENDU_POSIX_THREAD_H
+#ifndef RENDU_COMMON_POSIX_THREAD_H
+#define RENDU_COMMON_POSIX_THREAD_H
 
 #ifndef _WIN32
 
-#include "define.h"
+#include "common/define.h"
 #include <pthread.h>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 
-  string LimitString(const char *name, size_t max_size);
+  STRING LimitString(const char *name, size_t max_size);
 
-  string GetThreadName();
+  STRING GetThreadName();
 
 
 #ifdef __APPLE__
 
 #include <mach/mach.h>
 
-  int32 gettid(void);
+  INT32 gettid(void);
 
   void mac_setThreadName(const char *name);
 
@@ -39,8 +39,8 @@ RD_NAMESPACE_BEGIN
 
 #endif
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
 #endif
 
-#endif //RENDU_POSIX_THREAD_H
+#endif //RENDU_COMMON_POSIX_THREAD_H

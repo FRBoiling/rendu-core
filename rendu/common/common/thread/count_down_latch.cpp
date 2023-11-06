@@ -4,7 +4,7 @@
 
 #include "count_down_latch.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   CountDownLatch::CountDownLatch(int count)
     : mutex_(),
@@ -32,4 +32,4 @@ RD_NAMESPACE_BEGIN
     return count_;
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

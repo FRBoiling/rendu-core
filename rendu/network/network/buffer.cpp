@@ -4,7 +4,7 @@
 
 #include "buffer.h"
 #include "sockets/sock_ops.h"
-#include "base/type_cast.h"
+#include "common/utils/type_cast.h"
 
 RD_NAMESPACE_BEGIN
 

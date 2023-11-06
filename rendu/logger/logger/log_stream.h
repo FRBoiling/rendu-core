@@ -5,7 +5,7 @@
 #ifndef RENDU_LOG_STREAM_H
 #define RENDU_LOG_STREAM_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "fixed_buffer.h"
 #include "source_file.h"
 #include "fmt.h"

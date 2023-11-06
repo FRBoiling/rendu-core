@@ -10,7 +10,7 @@
 #include "socket.h"
 #include "sockets/sock_ops.h"
 #include "weak_callback.h"
-#include "base/str_error.h"
+#include "common/utils/str_error.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -84,7 +84,7 @@ RD_NAMESPACE_BEGIN
         sendInLoop(message);
       } else {
         void (TcpConnection::*fp)(const StringPiece &message) = &TcpConnection::sendInLoop;
-        loop_->runInLoop(
+        loop_->RunInLoop(
           std::bind(fp,
                     this,     // FIXME
                     message.as_string()));
@@ -101,7 +101,7 @@ RD_NAMESPACE_BEGIN
         buf->retrieveAll();
       } else {
         void (TcpConnection::*fp)(const StringPiece &message) = &TcpConnection::sendInLoop;
-        loop_->runInLoop(
+        loop_->RunInLoop(
           std::bind(fp,
                     this,     // FIXME
                     buf->retrieveAllAsString()));
@@ -129,7 +129,7 @@ RD_NAMESPACE_BEGIN
       if (nwrote >= 0) {
         remaining = len - nwrote;
         if (remaining == 0 && writeCompleteCallback_) {
-          loop_->queueInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
+          loop_->QueueInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
         }
       } else // nwrote < 0
       {
@@ -150,7 +150,7 @@ RD_NAMESPACE_BEGIN
       if (oldLen + remaining >= highWaterMark_
           && oldLen < highWaterMark_
           && highWaterMarkCallback_) {
-        loop_->queueInLoop(std::bind(highWaterMarkCallback_, shared_from_this(), oldLen + remaining));
+        loop_->QueueInLoop(std::bind(highWaterMarkCallback_, shared_from_this(), oldLen + remaining));
       }
       outputBuffer_.append(static_cast<const char *>(data) + nwrote, remaining);
       if (!channel_->isWriting()) {
@@ -164,7 +164,7 @@ RD_NAMESPACE_BEGIN
     if (state_ == kConnected) {
       setState(kDisconnecting);
       // FIXME: shared_from_this()?
-      loop_->runInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
+      loop_->RunInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
     }
   }
 
@@ -204,14 +204,14 @@ RD_NAMESPACE_BEGIN
     // FIXME: use compare and swap
     if (state_ == kConnected || state_ == kDisconnecting) {
       setState(kDisconnecting);
-      loop_->queueInLoop(std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
+      loop_->QueueInLoop(std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
     }
   }
 
   void TcpConnection::forceCloseWithDelay(double seconds) {
     if (state_ == kConnected || state_ == kDisconnecting) {
       setState(kDisconnecting);
-      loop_->runAfter(
+      loop_->RunAfter(
         seconds,
         makeWeakCallback(shared_from_this(),
                          &TcpConnection::forceClose));  // not forceCloseInLoop to avoid race condition
@@ -246,7 +246,7 @@ RD_NAMESPACE_BEGIN
   }
 
   void TcpConnection::startRead() {
-    loop_->runInLoop(std::bind(&TcpConnection::startReadInLoop, this));
+    loop_->RunInLoop(std::bind(&TcpConnection::startReadInLoop, this));
   }
 
   void TcpConnection::startReadInLoop() {
@@ -258,7 +258,7 @@ RD_NAMESPACE_BEGIN
   }
 
   void TcpConnection::stopRead() {
-    loop_->runInLoop(std::bind(&TcpConnection::stopReadInLoop, this));
+    loop_->RunInLoop(std::bind(&TcpConnection::stopReadInLoop, this));
   }
 
   void TcpConnection::stopReadInLoop() {
@@ -316,7 +316,7 @@ RD_NAMESPACE_BEGIN
         if (outputBuffer_.readableBytes() == 0) {
           channel_->disableWriting();
           if (writeCompleteCallback_) {
-            loop_->queueInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
+            loop_->QueueInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
           }
           if (state_ == kDisconnecting) {
             shutdownInLoop();

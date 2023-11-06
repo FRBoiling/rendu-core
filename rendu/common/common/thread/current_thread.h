@@ -2,13 +2,13 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_CURRENT_THREAD_H
-#define RENDU_CURRENT_THREAD_H
+#ifndef RENDU_COMMON_CURRENT_THREAD_H
+#define RENDU_COMMON_CURRENT_THREAD_H
 
 #include "posix_thread.h"
 #include "win_thread.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   namespace CurrentThread {
     // internal
@@ -42,11 +42,11 @@ RD_NAMESPACE_BEGIN
 
     bool isMainThread();
 
-    void sleepUsec(int64_t usec);  // for testing
+    void sleepUsec(INT64 usec);  // for testing
 
-    string stackTrace(bool demangle);
+    STRING stackTrace(bool demangle);
   }  // namespace CurrentThread
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_CURRENT_THREAD_H
+#endif //RENDU_COMMON_CURRENT_THREAD_H

@@ -2,13 +2,13 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_TIMESTAMP_H
-#define RENDU_TIMESTAMP_H
+#ifndef RENDU_COMMON_TIMESTAMP_H
+#define RENDU_COMMON_TIMESTAMP_H
 
-#include "base/copyable.h"
-#include "base/operators.h"
+#include "common/utils/copyable.h"
+#include "common/utils/operators.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Timestamp : public Copyable,
                     public equality_comparable<Timestamp>,
@@ -25,7 +25,7 @@ RD_NAMESPACE_BEGIN
     /// Constucts a Timestamp at specific time
     ///
     /// @param microSecondsSinceEpoch
-    explicit Timestamp(int64_t microSecondsSinceEpochArg)
+    explicit Timestamp(INT64 microSecondsSinceEpochArg)
       : microSecondsSinceEpoch_(microSecondsSinceEpochArg) {
     }
 
@@ -35,14 +35,14 @@ RD_NAMESPACE_BEGIN
 
     // default copy/assignment/dtor are Okay
 
-    string toString() const;
+    STRING toString() const;
 
-    string toFormattedString(bool showMicroseconds = true) const;
+    STRING toFormattedString(bool showMicroseconds = true) const;
 
     bool valid() const { return microSecondsSinceEpoch_ > 0; }
 
     // for internal usage.
-    int64_t microSecondsSinceEpoch() const { return microSecondsSinceEpoch_; }
+    INT64 microSecondsSinceEpoch() const { return microSecondsSinceEpoch_; }
 
     time_t secondsSinceEpoch() const { return static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond); }
 
@@ -60,13 +60,13 @@ RD_NAMESPACE_BEGIN
     }
 
     static Timestamp fromUnixTime(time_t t, int microseconds) {
-      return Timestamp(static_cast<int64_t>(t) * kMicroSecondsPerSecond + microseconds);
+      return Timestamp(static_cast<INT64>(t) * kMicroSecondsPerSecond + microseconds);
     }
 
     static const int kMicroSecondsPerSecond = 1000 * 1000;
 
   private:
-    int64_t microSecondsSinceEpoch_;
+    INT64 microSecondsSinceEpoch_;
   };
 
 
@@ -86,7 +86,7 @@ RD_NAMESPACE_BEGIN
 /// @c double has 52-bit precision, enough for one-microsecond
 /// resolution for next 100 years.
   inline double timeDifference(Timestamp high, Timestamp low) {
-    int64_t diff = high.microSecondsSinceEpoch() - low.microSecondsSinceEpoch();
+    INT64 diff = high.microSecondsSinceEpoch() - low.microSecondsSinceEpoch();
     return static_cast<double>(diff) / Timestamp::kMicroSecondsPerSecond;
   }
 
@@ -96,10 +96,10 @@ RD_NAMESPACE_BEGIN
 /// @return timestamp+seconds as Timestamp
 ///
   inline Timestamp addTime(Timestamp timestamp, double seconds) {
-    int64_t delta = static_cast<int64_t>(seconds * Timestamp::kMicroSecondsPerSecond);
+    INT64 delta = static_cast<INT64>(seconds * Timestamp::kMicroSecondsPerSecond);
     return Timestamp(timestamp.microSecondsSinceEpoch() + delta);
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_TIMESTAMP_H
+#endif //RENDU_COMMON_TIMESTAMP_H

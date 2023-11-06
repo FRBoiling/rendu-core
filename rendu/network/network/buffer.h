@@ -5,8 +5,8 @@
 #ifndef RENDU_BUFFER_H
 #define RENDU_BUFFER_H
 
-#include "base/copyable.h"
-#include "base/string_piece.h"
+#include "common/utils/copyable.h"
+#include "common/utils/string_piece.h"
 
 /// A buffer class modeled after org.jboss.netty.buffer.ChannelBuffer
 ///

@@ -2,13 +2,13 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COUNT_DOWN_LATCH_H
-#define RENDU_COUNT_DOWN_LATCH_H
+#ifndef RENDU_COMMON_COUNT_DOWN_LATCH_H
+#define RENDU_COMMON_COUNT_DOWN_LATCH_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "condition.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class CountDownLatch : NonCopyable {
   public:
@@ -27,6 +27,6 @@ RD_NAMESPACE_BEGIN
     int count_ GUARDED_BY(mutex_);
   };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_COUNT_DOWN_LATCH_H
+#endif //RENDU_COMMON_COUNT_DOWN_LATCH_H

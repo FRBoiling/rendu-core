@@ -5,7 +5,7 @@
 #ifndef RENDU_FIBER_INIT_H
 #define RENDU_FIBER_INIT_H
 
-#include "define.h"
+#include "common/define.h"
 #include "fiber.h"
 
 RD_NAMESPACE_BEGIN

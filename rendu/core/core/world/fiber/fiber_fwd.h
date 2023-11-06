@@ -5,7 +5,7 @@
 #ifndef RENDU_FIBER_FWD_H
 #define RENDU_FIBER_FWD_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
     class FiberManagerSystem;

@@ -5,7 +5,7 @@
 #ifndef RENDU_LOG_LEVEL_H
 #define RENDU_LOG_LEVEL_H
 
-#include "define.h"
+#include "common/define.h"
 
 RD_NAMESPACE_BEGIN
 

@@ -2,12 +2,12 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_CONDITION_H
-#define RENDU_CONDITION_H
+#ifndef RENDU_COMMON_CONDITION_H
+#define RENDU_COMMON_CONDITION_H
 
 #include "mutex_lock.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Condition : NonCopyable {
   public:
@@ -41,6 +41,6 @@ RD_NAMESPACE_BEGIN
     pthread_cond_t pcond_;
   };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_CONDITION_H
+#endif //RENDU_COMMON_CONDITION_H

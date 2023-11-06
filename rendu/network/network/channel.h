@@ -5,7 +5,7 @@
 #ifndef RENDU_CHANNEL_H
 #define RENDU_CHANNEL_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "time/timestamp.h"
 
 RD_NAMESPACE_BEGIN
@@ -16,20 +16,20 @@ RD_NAMESPACE_BEGIN
 /// A selectable I/O channel.
 ///
 /// This class doesn't own the file descriptor.
-/// The file descriptor could be a socket,
-/// an eventfd, a timerfd, or a signalfd
+/// The file descriptor could be a socket,an eventfd, a timerfd, or a signalfd
+///
   class Channel : NonCopyable {
   public:
-    typedef std::function<void()> EventCallback;
-    typedef std::function<void(Timestamp)> ReadEventCallback;
+    typedef std::function<void(Timestamp)> EventCallback;
 
     Channel(EventLoop *loop, int fd);
 
     ~Channel();
 
+  public:
     void handleEvent(Timestamp receiveTime);
 
-    void setReadCallback(ReadEventCallback cb) { readCallback_ = std::move(cb); }
+    void setReadCallback(EventCallback cb) { readCallback_ = std::move(cb); }
 
     void setWriteCallback(EventCallback cb) { writeCallback_ = std::move(cb); }
 
@@ -37,6 +37,7 @@ RD_NAMESPACE_BEGIN
 
     void setErrorCallback(EventCallback cb) { errorCallback_ = std::move(cb); }
 
+  public:
     /// Tie this channel to the owner object managed by shared_ptr,
     /// prevent the owner object being destroyed in handleEvent.
     void tie(const std::shared_ptr<void> &);
@@ -105,10 +106,13 @@ RD_NAMESPACE_BEGIN
     static const int kReadEvent;
     static const int kWriteEvent;
 
-    EventLoop *loop_;
-    const int fd_;
+  private:
+    int fd_;
     int events_;
     int revents_; // it's the received event types of epoll or poll
+
+    EventLoop *loop_;
+
     int index_; // used by Poller.
     bool logHup_;
 
@@ -116,7 +120,7 @@ RD_NAMESPACE_BEGIN
     bool tied_;
     bool eventHandling_;
     bool addedToLoop_;
-    ReadEventCallback readCallback_;
+    EventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback closeCallback_;
     EventCallback errorCallback_;

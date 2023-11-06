@@ -5,7 +5,7 @@
 #ifndef RENDU_EVENT_LOOP_THREAD_H
 #define RENDU_EVENT_LOOP_THREAD_H
 
-#include "base/non_copyable.h"
+#include "common/utils/non_copyable.h"
 #include "thread/thread.h"
 
 RD_NAMESPACE_BEGIN

@@ -3,9 +3,9 @@
 */
 
 #include "timer.h"
-#include "base/atomic.h"
+#include "common/utils/atomic.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   AtomicInt64 Timer::s_numCreated_;
 
@@ -17,4 +17,4 @@ RD_NAMESPACE_BEGIN
     }
   }
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END

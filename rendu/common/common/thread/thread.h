@@ -1,53 +1,68 @@
 /*
-* Created by boil on 2023/11/2.
+* Created by boil on 2023/9/28.
 */
 
-#ifndef RENDU_THREAD_H
-#define RENDU_THREAD_H
+#ifndef RENDU_COMMON_THREAD_HELPER_H
+#define RENDU_COMMON_THREAD_HELPER_H
 
-#include "base/non_copyable.h"
-#include "base/atomic.h"
-#include "count_down_latch.h"
-#include "current_thread.h"
+#include "common/define.h"
+#include <thread>
+#include <map>
+#include "synchronization_context.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
+//    using Thread = std::thread;
+    class Thread : public std::thread {
+    public:
+      typedef std::function<void ()> ThreadFunc;
+      // 使用 std::thread 的构造函数
+      using std::thread::thread;
 
-  class Thread : NonCopyable {
-  public:
-    typedef std::function<void()> ThreadFunc;
+      explicit Thread(std::thread::id &id) : m_thread_id(id), m_current_context(nullptr) {
+      }
 
-    explicit Thread(ThreadFunc, const string &name = string());
+      // 重写析构函数，如果线程可 joinable，则调用 join
+      ~Thread() {
+        if (joinable()) {
+          join();
+        }
+      }
 
-    // FIXME: make it movable in C++11
-    ~Thread();
+    public:
 
-    void start();
+      SynchronizationContext *SetSynchronizationContext(SynchronizationContext *synchronizationContext);
 
-    int join(); // return pthread_join()
+      SynchronizationContext *GetSynchronizationContext();
 
-    bool started() const { return started_; }
+    public:
+      template<typename Func, typename Scheduler,typename Param>
+      static Thread *Create(Func func, Scheduler pScheduler, Param param) {
+        auto pThread = new Thread(func, pScheduler, param);
+        m_threadsMap[pThread->get_id()] = pThread;
+        return pThread;
+      }
 
-    // pthread_t pthreadId() const { return pthreadId_; }
-    pid_t tid() const { return tid_; }
+      static Thread *Create() {
+        auto thread_id = std::this_thread::get_id();
+        auto pThread = new Thread(thread_id);
+        m_threadsMap[pThread->get_id()] = pThread;
+        return pThread;
+      }
 
-    const string &name() const { return name_; }
+      static Thread *GetCurrentThread();
 
-    static int numCreated() { return numCreated_.get(); }
+      static void Sleep(int micro_seconds);
 
-  private:
-    void setDefaultName();
+    private:
+      static std::map<std::thread::id, Thread *> m_threadsMap;
+      SynchronizationContext *m_current_context{};
+      std::thread::id m_thread_id;
+    };
 
-    bool started_;
-    bool joined_;
-    pthread_t pthreadId_;
-    pid_t tid_;
-    ThreadFunc func_;
-    string name_;
-    CountDownLatch latch_;
+    namespace Environment {
+        int GetProcessorCount();
+    }
 
-    static AtomicInt32 numCreated_;
-  };
+COMMON_NAMESPACE_END
 
-RD_NAMESPACE_END
-
-#endif //RENDU_THREAD_H
+#endif //RENDU_COMMON_THREAD_HELPER_H

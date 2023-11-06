@@ -23,7 +23,7 @@ RD_NAMESPACE_BEGIN
     {
       // still a tiny chance to call destructed object, if threadFunc exits just now.
       // but when EventLoopThread destructs, usually programming is exiting anyway.
-      loop_->quit();
+      loop_->Quit();
       thread_.join();
     }
   }
@@ -57,7 +57,7 @@ RD_NAMESPACE_BEGIN
       cond_.notify();
     }
 
-    loop.loop();
+    loop.Loop();
     //assert(exiting_);
     MutexLockGuard lock(mutex_);
     loop_ = NULL;

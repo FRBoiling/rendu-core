@@ -1,10 +1,11 @@
+set(target_name define)
 rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
     ${PROJECT_NAME}
     NAME
-    caf_ping_pong_define
+    ${target_name}
     HDRS
 #    ${caf_openssl_headers}
     SRCS

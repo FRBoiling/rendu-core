@@ -3,7 +3,7 @@
 */
 
 #include "append_file.h"
-#include "base/str_error.h"
+#include "common/utils/str_error.h"
 #include "file.h"
 
 RD_NAMESPACE_BEGIN

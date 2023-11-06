@@ -3,7 +3,7 @@
 */
 
 #include "read_small_file.h"
-#include "base/type_cast.h"
+#include "common/utils/type_cast.h"
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>

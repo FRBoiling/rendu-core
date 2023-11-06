@@ -33,27 +33,26 @@ RD_NAMESPACE_BEGIN
     for (auto &item: connections_) {
       TcpConnectionPtr conn(item.second);
       item.second.reset();
-      conn->getLoop()->runInLoop(
+      conn->getLoop()->RunInLoop(
         std::bind(&TcpConnection::connectDestroyed, conn));
     }
   }
 
-  void TcpServer::setThreadNum(int numThreads) {
+  void TcpServer::SetThreadNum(int numThreads) {
     assert(0 <= numThreads);
     threadPool_->setThreadNum(numThreads);
   }
 
-  void TcpServer::start() {
+  void TcpServer::Start() {
     if (started_.getAndSet(1) == 0) {
       threadPool_->start(threadInitCallback_);
 
       assert(!acceptor_->listening());
-      loop_->runInLoop(
+      loop_->RunInLoop(
         std::bind(&Acceptor::listen, get_pointer(acceptor_)));
     }
   }
 
-  IPEndPoint localAddr();
   void TcpServer::newConnection(int sockfd, const IPEndPoint &peerAddr) {
     loop_->assertInLoopThread();
     EventLoop *ioLoop = threadPool_->getNextLoop();
@@ -79,12 +78,12 @@ RD_NAMESPACE_BEGIN
     conn->setWriteCompleteCallback(writeCompleteCallback_);
     conn->setCloseCallback(
       std::bind(&TcpServer::removeConnection, this, _1)); // FIXME: unsafe
-    ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
+    ioLoop->RunInLoop(std::bind(&TcpConnection::connectEstablished, conn));
   }
 
   void TcpServer::removeConnection(const TcpConnectionPtr &conn) {
     // FIXME: unsafe
-    loop_->runInLoop(std::bind(&TcpServer::removeConnectionInLoop, this, conn));
+    loop_->RunInLoop(std::bind(&TcpServer::removeConnectionInLoop, this, conn));
   }
 
   void TcpServer::removeConnectionInLoop(const TcpConnectionPtr &conn) {
@@ -95,7 +94,7 @@ RD_NAMESPACE_BEGIN
     (void) n;
     assert(n == 1);
     EventLoop *ioLoop = conn->getLoop();
-    ioLoop->queueInLoop(
+    ioLoop->QueueInLoop(
       std::bind(&TcpConnection::connectDestroyed, conn));
   }
 

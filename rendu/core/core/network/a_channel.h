@@ -5,7 +5,7 @@
 #ifndef RENDU_A_CHANNEL_H
 #define RENDU_A_CHANNEL_H
 
-#include "define.h"
+#include "common/define.h"
 #include "network/socket.h"
 
 RD_NAMESPACE_BEGIN

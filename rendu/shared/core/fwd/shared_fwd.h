@@ -5,6 +5,6 @@
 #ifndef RENDU_SHARED_FWD_H
 #define RENDU_SHARED_FWD_H
 
-#include "define.h"
+#include "common/common_define.h"
 
 #endif //RENDU_SHARED_FWD_H

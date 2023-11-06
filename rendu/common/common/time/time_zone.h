@@ -2,13 +2,13 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_TIME_ZONE_H
-#define RENDU_TIME_ZONE_H
+#ifndef RENDU_COMMON_TIME_ZONE_H
+#define RENDU_COMMON_TIME_ZONE_H
 
-#include "base/copyable.h"
+#include "common/utils/copyable.h"
 #include "date_time.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 // TimeZone for 1970~2100
   class TimeZone : public Copyable {
@@ -28,15 +28,15 @@ RD_NAMESPACE_BEGIN
       return static_cast<bool>(data_);
     }
 
-    struct DateTime toLocalTime(int64_t secondsSinceEpoch, int *utcOffset = nullptr) const;
+    struct DateTime toLocalTime(INT64 secondsSinceEpoch, int *utcOffset = nullptr) const;
 
-    int64_t fromLocalTime(const struct DateTime &, bool postTransition = false) const;
+    INT64 fromLocalTime(const struct DateTime &, bool postTransition = false) const;
 
     // gmtime(3)
-    static struct DateTime toUtcTime(int64_t secondsSinceEpoch);
+    static struct DateTime toUtcTime(INT64 secondsSinceEpoch);
 
     // timegm(3)
-    static int64_t fromUtcTime(const struct DateTime &);
+    static INT64 fromUtcTime(const struct DateTime &);
 
     struct Data;
 
@@ -48,6 +48,6 @@ RD_NAMESPACE_BEGIN
     friend class TimeZoneTestPeer;
   };
 
-RD_NAMESPACE_END
+COMMON_NAMESPACE_END
 
-#endif //RENDU_TIME_ZONE_H
+#endif //RENDU_COMMON_TIME_ZONE_H
