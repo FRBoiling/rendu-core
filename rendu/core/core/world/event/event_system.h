@@ -5,7 +5,7 @@
 #ifndef RENDU_EVENT_SYSTEM_H
 #define RENDU_EVENT_SYSTEM_H
 
-#include "base/string/singleton.h"
+#include "base/utils/singleton.h"
 #include "concurrent/dictionary.h"
 #include "entity/component_system.h"
 #include "event_info.h"

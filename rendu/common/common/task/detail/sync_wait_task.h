@@ -7,7 +7,7 @@
 #define RENDU_COMMON_SYNC_WAIT_TASK_H
 
 #include "awaitable_traits.h"
-#include "common/common_define.h"
+#include "common_define.h"
 #include "lightweight_manual_reset_event.h"
 #include <coroutine>
 

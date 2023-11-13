@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 static int _wsaErrorToErrno(int err) {
     switch (err) {

@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_THREAD_HELPER_H
 #define RENDU_COMMON_THREAD_HELPER_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "synchronization_context.h"
 #include <map>
 #include <thread>

@@ -6,7 +6,7 @@
 #include "sockets/sock_ops.h"
 #include "logger/log.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   Socket::~Socket() {
     SockOps::Close(sockfd_);

@@ -53,7 +53,7 @@ typedef long long ssize_t;
 #endif
 
 #include "define.h"
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 /* Emulate the parts of the BSD socket API that we need (override the winsock signatures). */
 int win32_getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res);

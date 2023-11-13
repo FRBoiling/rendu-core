@@ -5,7 +5,7 @@
 #ifndef RENDU_CIRCULAR_BUFFER_H
 #define RENDU_CIRCULAR_BUFFER_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "io/stream.h"
 #include "queue.h"
 #include <vector>

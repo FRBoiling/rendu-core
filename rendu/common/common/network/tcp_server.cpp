@@ -8,7 +8,7 @@
 #include "sockets/sock_ops.h"
 #include "endpoint/ip_end_point.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   TcpServer::TcpServer(EventLoop *loop,
                        const IPEndPoint &listenAddr,

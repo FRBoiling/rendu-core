@@ -9,7 +9,7 @@
 #include "errno/errno.h"
 #include <unistd.h>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   namespace SockOps {
     int Pipe(int fd[2]){

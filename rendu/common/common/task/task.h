@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TASK_H
 #define RENDU_COMMON_TASK_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include <atomic>
 #include <cassert>
 #include <coroutine>

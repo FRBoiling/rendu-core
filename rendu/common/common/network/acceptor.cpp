@@ -7,7 +7,7 @@
 #include "event_loop.h"
 #include "log.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   Acceptor::Acceptor(EventLoop *loop, const IPEndPoint &listenAddr, bool reuseport)
     : loop_(loop),

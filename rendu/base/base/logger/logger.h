@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_LOGGER_H
 #define RENDU_BASE_LOGGER_H
 
-#include "base/base_define.h"
+#include "base_define.h"
 #include <chrono>
 #include <cstdio>
 #include <spdlog/fmt/ostr.h>// support for user defined types

@@ -5,7 +5,7 @@
 #include "ip_v4_address.h"
 #include "endpoint/end_point_utils.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   std::optional<IPv4Address>
   IPv4Address::FromString(std::string_view string) noexcept {

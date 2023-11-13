@@ -6,7 +6,7 @@
 #define RENDU_COMMON_GET_AWAITER_H
 
 #include "any.h"
-#include "common/common_define.h"
+#include "common_define.h"
 #include "is_awaiter.h"
 
 COMMON_NAMESPACE_BEGIN

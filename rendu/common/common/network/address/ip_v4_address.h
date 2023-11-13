@@ -5,13 +5,9 @@
 #ifndef RENDU_COMMON_IP_V4_ADDRESS_H
 #define RENDU_COMMON_IP_V4_ADDRESS_H
 
-<<<<<<<< HEAD:dep/toolkit/net/address/ip_v4_address.h
-#include "define.h"
-========
-#include "common/common_define.h"
->>>>>>>> f6e2ef7 (✨ feat(框架): 整理项目结构):rendu/common/common/network/address/ip_v4_address.h
+#include "common_define.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class IPv4Address {
     using bytes_t = std::uint8_t[4];

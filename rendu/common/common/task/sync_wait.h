@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_SYNC_WAIT_H
 #define RENDU_COMMON_SYNC_WAIT_H
 
-#include "common/common_define.h"
 #include "common/task/detail/awaitable_traits.h"
 #include "common/task/detail/sync_wait_task.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 

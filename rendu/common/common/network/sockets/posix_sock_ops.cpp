@@ -21,7 +21,7 @@
 #include "dns_cache.h"
 #include "errno/errno.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   void Close(const int32 sfd) {
     close(sfd);
@@ -232,7 +232,7 @@ RD_NAMESPACE_BEGIN
 #include "dns_cache.h"
 #include "errno/errno.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   void Close(const int32 sfd) {
     close(sfd);

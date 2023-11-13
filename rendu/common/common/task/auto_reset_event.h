@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_AUTO_RESET_EVENT_H
 #define RENDU_COMMON_AUTO_RESET_EVENT_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include <condition_variable>
 #include <mutex>
 

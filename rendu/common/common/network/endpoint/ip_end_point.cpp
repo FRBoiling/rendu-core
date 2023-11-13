@@ -4,7 +4,7 @@
 
 #include "ip_end_point.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   std::string IPEndPoint::ToString() const {
     return IsIPv4() ? m_ipv4.ToString() : m_ipv6.ToString();

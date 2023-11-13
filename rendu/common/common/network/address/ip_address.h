@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_IP_ADDRESS_H
 #define RENDU_COMMON_IP_ADDRESS_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "endpoint/end_point_utils.h"
 #include "ip_v4_address.h"
 #include "ip_v6_address.h"
@@ -14,7 +14,7 @@
 ========
 >>>>>>>> f6e2ef7 (✨ feat(框架): 整理项目结构):rendu/common/common/network/address/ip_address.h
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class IPAddress {
   public:

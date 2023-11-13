@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_THREAD_SYNCHRONIZATION_CONTEXT_H
 #define RENDU_COMMON_THREAD_SYNCHRONIZATION_CONTEXT_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "container/concurrent/concurrent_queue.h"
 #include "synchronization_context.h"
 #include "task/task.h"

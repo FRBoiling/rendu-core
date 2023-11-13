@@ -10,7 +10,7 @@
 #include "event_loop.h"
 #include "logger/log.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   const int Channel::kNoneEvent = 0;
   const int Channel::kReadEvent = POLLIN | POLLPRI;

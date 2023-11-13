@@ -5,10 +5,10 @@
 #ifndef RENDU_COMMON_CALLBACKS_H
 #define RENDU_COMMON_CALLBACKS_H
 
-#include "common/common_define.h"
 #include "common/time/timestamp.h"
+#include "common_define.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 
   using std::placeholders::_1;

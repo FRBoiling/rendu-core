@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_WHEN_ALL_COUNTER_H
 #define RENDU_COMMON_WHEN_ALL_COUNTER_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include <atomic>
 #include <coroutine>
 #include <cstdint>

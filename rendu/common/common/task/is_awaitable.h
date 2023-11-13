@@ -5,8 +5,8 @@
 #ifndef RENDU_COMMON_IS_AWAITABLE_H
 #define RENDU_COMMON_IS_AWAITABLE_H
 
-#include "common/common_define.h"
 #include "common/task/detail/get_awaiter.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 

@@ -7,7 +7,7 @@
 #include "logger/log.h"
 #include "errno/errno.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 using namespace std;
 

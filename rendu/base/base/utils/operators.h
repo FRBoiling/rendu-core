@@ -2,8 +2,8 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COMMON_OPERATORS_H
-#define RENDU_COMMON_OPERATORS_H
+#ifndef RENDU_BASE_OPERATORS_H
+#define RENDU_BASE_OPERATORS_H
 
 #include "base_define.h"
 
@@ -150,4 +150,4 @@ BOOST_OPERATOR_TEMPLATE1(template_name##1)
 
 
 RD_NAMESPACE_END
-#endif //RENDU_COMMON_OPERATORS_H
+#endif //RENDU_BASE_OPERATORS_H

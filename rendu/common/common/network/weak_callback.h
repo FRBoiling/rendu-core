@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_WEAK_CALLBACK_H
 #define RENDU_COMMON_WEAK_CALLBACK_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 // A barely usable WeakCallback
 

@@ -7,7 +7,7 @@
 
 #include "fwd/core_fwd.h"
 
-#include "base/string/singleton.h"
+#include "base/utils/singleton.h"
 #include "ecs/entity.h"
 #include "entity/component_system.h"
 #include <typeindex>

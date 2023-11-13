@@ -6,11 +6,12 @@
 #define RENDU_COMMON_ENTITY_H
 
 #include "base/ecs/ecs_helper.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 
-    using Entity = ENTITY;
+using Entity = ENTITY;
 
 COMMON_NAMESPACE_END
 
-#endif //RENDU_COMMON_ENTITY_H
+#endif//RENDU_COMMON_ENTITY_H

@@ -2,10 +2,10 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COMMON_STRING_ARG_H
-#define RENDU_COMMON_STRING_ARG_H
+#ifndef RENDU_BASE_STRING_ARG_H
+#define RENDU_BASE_STRING_ARG_H
 
-#include "base_define.h"
+#include "string_helper.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -15,7 +15,7 @@ RD_NAMESPACE_BEGIN
     explicit StringArg(const char *str)
       : str_(str) {}
 
-    explicit StringArg(const string &str)
+    explicit StringArg(const STRING &str)
       : str_(str.c_str()) {}
 
     [[nodiscard]] const char *c_str() const { return str_; }
@@ -26,4 +26,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_COMMON_STRING_ARG_H
+#endif //RENDU_BASE_STRING_ARG_H

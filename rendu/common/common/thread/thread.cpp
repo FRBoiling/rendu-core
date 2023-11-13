@@ -12,7 +12,7 @@
 #include <unistd.h>
 #elif __APPLE__
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "synchronization_context.h"
 #include "thread.h"
 #include <sys/sysctl.h>

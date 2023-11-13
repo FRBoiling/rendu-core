@@ -8,7 +8,7 @@
 #include "sockets/sock_ops.h"
 #include "event_loop.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   namespace detail {
 

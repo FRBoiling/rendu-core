@@ -2,10 +2,10 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COMMON_STRING_PIECE_H
-#define RENDU_COMMON_STRING_PIECE_H
+#ifndef RENDU_BASE_STRING_PIECE_H
+#define RENDU_BASE_STRING_PIECE_H
 
-#include "base_define.h"
+#include "string_helper.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -16,7 +16,7 @@ RD_NAMESPACE_BEGIN
 
   public:
     // We provide non-explicit singleton constructors so users can pass
-    // in a "const char*" or a "string" wherever a "StringPiece" is
+    // in a "const char*" or a "STRING" wherever a "StringPiece" is
     // expected.
     StringPiece()
       : ptr_(NULL), length_(0) {}
@@ -28,7 +28,7 @@ RD_NAMESPACE_BEGIN
       : ptr_(reinterpret_cast<const char *>(str)),
         length_(static_cast<int>(strlen(ptr_))) {}
 
-    StringPiece(const string &str)
+    StringPiece(const STRING &str)
       : ptr_(str.data()), length_(static_cast<int>(str.size())) {}
 
     StringPiece(const char *offset, int len)
@@ -37,7 +37,7 @@ RD_NAMESPACE_BEGIN
     // data() may return a pointer to a buffer with embedded NULs, and the
     // returned buffer may or may not be null terminated.  Therefore it is
     // typically a mistake to pass data() to a routine that expects a NUL
-    // terminated string.  Use "as_string().c_str()" if you really need to do
+    // terminated STRING.  Use "as_string().c_str()" if you really need to do
     // this.  Or better yet, change your routine so it does not rely on NUL
     // termination.
     const char *data() const { return ptr_; }
@@ -113,11 +113,11 @@ RD_NAMESPACE_BEGIN
       return r;
     }
 
-    string as_string() const {
-      return string(data(), size());
+    STRING as_string() const {
+      return STRING(data(), size());
     }
 
-    void CopyToString(string *target) const {
+    void CopyToString(STRING *target) const {
       target->assign(ptr_, length_);
     }
 
@@ -129,4 +129,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_COMMON_STRING_PIECE_H
+#endif //RENDU_BASE_STRING_PIECE_H

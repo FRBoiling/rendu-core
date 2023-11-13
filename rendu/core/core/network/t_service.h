@@ -6,7 +6,7 @@
 #define RENDU_T_SERVICE_H
 
 #include "a_service.h"
-#include "base/string/singleton.h"
+#include "base/utils/singleton.h"
 #include "concurrent/concurrent_queue.h"
 #include "concurrent/dictionary.h"
 #include "net_services.h"

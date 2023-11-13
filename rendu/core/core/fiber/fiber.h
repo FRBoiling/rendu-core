@@ -6,7 +6,7 @@
 #define RENDU_FIBER_H
 
 #include "actor/address.h"
-#include "common/common_define.h"
+#include "common_define.h"
 #include "entity/scene.h"
 #include "entity/scene_type.h"
 #include "entity_system.h"

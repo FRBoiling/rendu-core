@@ -4,7 +4,7 @@
 //
 //#include "epoll_poller.h"
 //
-//RD_NAMESPACE_BEGIN
+//COMMON_NAMESPACE_BEGIN
 //
 //  EpollPoller::EpollPoller(EventLoop *loop)
 //    : Poller(loop),

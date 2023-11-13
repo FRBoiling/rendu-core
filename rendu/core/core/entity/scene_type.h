@@ -5,7 +5,7 @@
 #ifndef RENDU_SCENE_TYPE_H
 #define RENDU_SCENE_TYPE_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 RD_NAMESPACE_BEGIN
 
 enum SceneType: long

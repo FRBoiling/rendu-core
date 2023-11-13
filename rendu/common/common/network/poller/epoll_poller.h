@@ -7,7 +7,7 @@
 //
 //#include "poller.h"
 //
-//RD_NAMESPACE_BEGIN
+//COMMON_NAMESPACE_BEGIN
 //
 //  class EpollPoller : public Poller {
 //  public:

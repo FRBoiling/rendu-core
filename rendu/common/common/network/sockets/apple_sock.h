@@ -25,7 +25,7 @@
 #include <sys/filio.h>
 #include <sys/event.h>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 #define SOCKET int32
 

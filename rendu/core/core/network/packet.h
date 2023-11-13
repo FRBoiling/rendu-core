@@ -5,7 +5,7 @@
 #ifndef RENDU_PACKET_H
 #define RENDU_PACKET_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "serialize/memory_buffer.h"
 
 RD_NAMESPACE_BEGIN

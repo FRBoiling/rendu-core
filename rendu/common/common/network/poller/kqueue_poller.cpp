@@ -7,7 +7,7 @@
 #include "log.h"
 #include "sockets/sock_ops.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 #define EVENT_MASK_MALLOC_SIZE(sz) (((sz) + 3) / 4)
 #define EVENT_MASK_OFFSET(fd) ((fd) % 4 * 2)

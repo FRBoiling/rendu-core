@@ -7,7 +7,7 @@
 
 #include "address/ip_v4_address.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class IPv4EndPoint {
   public:

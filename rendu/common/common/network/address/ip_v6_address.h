@@ -5,9 +5,9 @@
 #ifndef RENDU_COMMON_IP_V6_ADDRESS_H
 #define RENDU_COMMON_IP_V6_ADDRESS_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class IPv6Address {
     using bytes_t = std::uint8_t[16];

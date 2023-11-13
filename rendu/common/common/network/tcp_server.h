@@ -15,7 +15,7 @@
 #include "event_loop_thread_pool.h"
 #include "acceptor.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 class TcpServer : NonCopyable
 {

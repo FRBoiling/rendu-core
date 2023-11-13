@@ -5,9 +5,9 @@
 #ifndef RENDU_TIME_SYSTEM_H
 #define RENDU_TIME_SYSTEM_H
 
-#include "base/string/singleton.h"
-#include "common/common_define.h"
+#include "base/utils/singleton.h"
 #include "common/time/date_time.h"
+#include "common_define.h"
 #include "entity/component_system.h"
 #include <ctime>
 

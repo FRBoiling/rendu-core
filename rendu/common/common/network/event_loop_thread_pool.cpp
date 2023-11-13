@@ -9,7 +9,7 @@
 
 #include "base/utils/type_cast.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const string &nameArg)
     : baseLoop_(baseLoop),

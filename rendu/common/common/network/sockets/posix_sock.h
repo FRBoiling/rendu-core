@@ -23,7 +23,7 @@
 //
 //#include "define.h"
 //
-//RD_NAMESPACE_BEGIN
+//COMMON_NAMESPACE_BEGIN
 //
 //#define SOCKET int32
 //

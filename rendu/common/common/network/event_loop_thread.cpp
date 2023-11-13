@@ -5,7 +5,7 @@
 #include "event_loop_thread.h"
 #include "event_loop.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   EventLoopThread::EventLoopThread(const ThreadInitCallback &cb,
                                    const string &name)

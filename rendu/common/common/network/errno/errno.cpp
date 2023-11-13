@@ -13,7 +13,7 @@
 #include <cerrno>
 #endif // defined(_WIN32)
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   static const char *rd__unknown_err_code(int err) {
     static char buf[32];

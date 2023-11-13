@@ -2,8 +2,8 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COMMON_TYPE_CAST_H
-#define RENDU_COMMON_TYPE_CAST_H
+#ifndef RENDU_BASE_TYPE_CAST_H
+#define RENDU_BASE_TYPE_CAST_H
 
 #include "base_define.h"
 
@@ -39,4 +39,4 @@ RD_NAMESPACE_BEGIN
   
 RD_NAMESPACE_END
 
-#endif //RENDU_COMMON_TYPE_CAST_H
+#endif //RENDU_BASE_TYPE_CAST_H

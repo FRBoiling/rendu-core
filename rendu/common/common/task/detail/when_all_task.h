@@ -6,7 +6,7 @@
 #define RENDU_COMMON_WHEN_ALL_TASK_H
 
 #include "awaitable_traits.h"
-#include "common/common_define.h"
+#include "common_define.h"
 #include "when_all_counter.h"
 #include <tuple>
 

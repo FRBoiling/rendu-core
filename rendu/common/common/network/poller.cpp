@@ -7,7 +7,7 @@
 #include "poller/kqueue_poller.h"
 #include "logger/log.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   const int kNew = -1;
   const int kAdded = 1;

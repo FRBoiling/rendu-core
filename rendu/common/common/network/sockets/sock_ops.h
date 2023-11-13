@@ -5,13 +5,13 @@
 #ifndef RENDU_COMMON_SOCKET_HELPER_H
 #define RENDU_COMMON_SOCK_OPS_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 
 #include "posix_sock.h"
 #include "win_sock.h"
 #include "apple_sock.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
 #define RD_NONE 0       /* No events registered. */
 #define RD_READABLE 1   /* Fire when descriptor is readable. */

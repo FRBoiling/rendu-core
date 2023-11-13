@@ -6,8 +6,8 @@
 #define RENDU_NET_SERVICES_H
 
 
-#include "base/string/singleton.h"
-#include "common/common_define.h"
+#include "base/utils/singleton.h"
+#include "common_define.h"
 
 
 RD_NAMESPACE_BEGIN

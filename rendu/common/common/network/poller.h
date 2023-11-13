@@ -12,7 +12,7 @@
 #include "event_loop.h"
 #include "time/timestamp.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Channel;
 

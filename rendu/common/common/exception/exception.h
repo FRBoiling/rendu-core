@@ -9,11 +9,11 @@
 
 COMMON_NAMESPACE_BEGIN
 
-    class Exception : public std::exception {
+    class CException : public EXCEPTION {
     public:
-      Exception(STRING what);
+      CException(STRING what);
 
-      ~Exception() noexcept override = default;
+      ~CException() noexcept override = default;
 
       // default copy-ctor and operator= are okay.
 

@@ -5,10 +5,8 @@
 #ifndef RENDU_BASE_BASE_CONTAINER_CONTAINER_HELPER_H_
 #define RENDU_BASE_BASE_CONTAINER_CONTAINER_HELPER_H_
 
-#include <vector>
-#include <map>
-#include <list>
-
-
+#include "exp/queue.h"
+#include "exp/list.h"
+#include "exp/dictionary.h"
 
 #endif//RENDU_BASE_BASE_CONTAINER_CONTAINER_HELPER_H_

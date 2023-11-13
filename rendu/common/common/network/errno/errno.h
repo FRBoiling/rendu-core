@@ -492,9 +492,9 @@
   XX(EREMOTEIO, "remote I/O error")                                           \
 
 
-#include "common/common_define.h"
+#include "common_define.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   typedef enum {
 #define XX(code, _) RD_ ## code = RD__ ## code,

@@ -5,7 +5,7 @@
 #include "ip_v4_endpoint.h"
 #include "endpoint/end_point_utils.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   string IPv4EndPoint::ToString() const {
     auto s = m_address.ToString();

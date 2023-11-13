@@ -5,7 +5,7 @@
 #ifndef RENDU_FIBER_MANAGER_SYSTEM_H
 #define RENDU_FIBER_MANAGER_SYSTEM_H
 
-#include "base/string/singleton.h"
+#include "base/utils/singleton.h"
 #include "common/scheduler.h"
 #include "concurrent/concurrent_map.h"
 #include "entity/component_system.h"

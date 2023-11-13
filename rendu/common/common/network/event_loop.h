@@ -16,7 +16,7 @@
 #include "time/timestamp.h"
 #include "time_queue.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Channel;
 

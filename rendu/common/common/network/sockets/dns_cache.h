@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <mutex>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class DnsItem {
   public:

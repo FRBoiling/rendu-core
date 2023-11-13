@@ -8,7 +8,7 @@
 #include "logger/log.h"
 #include "sockets/sock_ops.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   const int Connector::kMaxRetryDelayMs;
 

@@ -6,7 +6,7 @@
 #define RENDU_COMMON_IP_END_POINT_H
 
 #include "address/ip_address.h"
-#include "common/common_define.h"
+#include "common_define.h"
 #include "ip_v4_endpoint.h"
 #include "ip_v6_endpoint.h"
 <<<<<<<< HEAD:dep/toolkit/net/endpoint/ip_end_point.h
@@ -14,7 +14,7 @@
 ========
 >>>>>>>> f6e2ef7 (✨ feat(框架): 整理项目结构):rendu/common/common/network/endpoint/ip_end_point.h
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class IPEndPoint {
   public:

@@ -19,7 +19,7 @@
 /// 0      <=      readerIndex   <=   writerIndex    <=     size
 /// @endcode
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Buffer : public Copyable {
   public:

@@ -6,7 +6,7 @@
 #define RENDU_ACTOR_ID_H
 
 #include "address.h"
-#include "common/common_define.h"
+#include "common_define.h"
 
 RD_NAMESPACE_BEGIN
 

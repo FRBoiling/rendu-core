@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TIME_INFO_H
 #define RENDU_COMMON_TIME_INFO_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "date_time.h"
 
 COMMON_NAMESPACE_BEGIN

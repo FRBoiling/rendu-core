@@ -8,7 +8,7 @@
 #include "base/utils/non_copyable.h"
 #include "thread/thread.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class EventLoop;
 

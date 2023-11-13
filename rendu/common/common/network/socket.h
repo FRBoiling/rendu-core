@@ -7,7 +7,7 @@
 
 #include "endpoint/ip_end_point.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Socket {
   public:

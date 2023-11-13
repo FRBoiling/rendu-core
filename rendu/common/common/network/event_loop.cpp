@@ -11,7 +11,7 @@
 #include "channel.h"
 #include "sockets/sock_ops.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
   namespace {
     __thread EventLoop *t_loopInThisThread = 0;
 

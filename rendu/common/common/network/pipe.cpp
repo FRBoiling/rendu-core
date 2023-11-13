@@ -6,7 +6,7 @@
 #include "sockets/sock_ops.h"
 #include "errno/errno.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   Pipe::Pipe() {
     ReOpen();

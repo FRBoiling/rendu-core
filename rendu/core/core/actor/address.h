@@ -5,7 +5,7 @@
 #ifndef RENDU_ADDRESS_H
 #define RENDU_ADDRESS_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 
 RD_NAMESPACE_BEGIN
 

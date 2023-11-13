@@ -7,7 +7,7 @@
 
 #include "base/utils/non_copyable.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class EventLoop;
 

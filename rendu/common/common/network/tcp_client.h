@@ -15,7 +15,7 @@
 #include "endpoint/ip_end_point.h"
 #include "event_loop_thread_pool.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class Connector;
 

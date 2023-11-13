@@ -5,7 +5,7 @@
 #ifndef RENDU_SCENE_H
 #define RENDU_SCENE_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include "scene_type.h"
 
 RD_NAMESPACE_BEGIN

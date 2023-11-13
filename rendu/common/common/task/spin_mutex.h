@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_SPIN_MUTEX_H
 #define RENDU_COMMON_SPIN_MUTEX_H
 
-#include "common/common_define.h"
+#include "common_define.h"
 #include <condition_variable>
 #include <mutex>
 

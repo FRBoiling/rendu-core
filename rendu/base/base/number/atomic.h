@@ -2,8 +2,8 @@
 * Created by boil on 2023/11/2.
 */
 
-#ifndef RENDU_COMMON_ATOMIC_H
-#define RENDU_COMMON_ATOMIC_H
+#ifndef RENDU_BASE_ATOMIC_H
+#define RENDU_BASE_ATOMIC_H
 
 #include "base/utils/non_copyable.h"
 
@@ -78,4 +78,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_COMMON_ATOMIC_H
+#endif //RENDU_BASE_ATOMIC_H

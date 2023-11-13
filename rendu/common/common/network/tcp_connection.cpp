@@ -12,7 +12,7 @@
 #include "sockets/sock_ops.h"
 #include "weak_callback.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   void defaultConnectionCallback(const TcpConnectionPtr& conn)
   {

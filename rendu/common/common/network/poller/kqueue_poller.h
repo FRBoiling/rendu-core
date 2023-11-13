@@ -10,7 +10,7 @@
 #include <sys/event.h>
 #include <sys/time.h>
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class KqueuePoller : public Poller {
 

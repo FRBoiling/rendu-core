@@ -5,8 +5,8 @@
 #ifndef RENDU_LOGGER_SYSTEM_H
 #define RENDU_LOGGER_SYSTEM_H
 
-#include "base/string/singleton.h"
-#include "common/common_define.h"
+#include "base/utils/singleton.h"
+#include "common_define.h"
 #include "entity/component_system.h"
 #include "logger.pb.h"
 

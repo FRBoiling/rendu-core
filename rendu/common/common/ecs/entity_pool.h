@@ -7,16 +7,17 @@
 
 #include "entity.h"
 
-namespace rendu {
+COMMON_NAMESPACE_BEGIN
 
-    class EntityPool: public entt::registry {
-    public:
-      template<typename Component>
-      auto GetEntities(){
-        entt::registry registry;
-        return registry.view<Component>();
-      }
-    };
-}
+class EntityPool : public ENTITY_POOL {
+public:
+  template<typename Component>
+  auto GetEntities() {
+    entt::registry registry;
+    return registry.view<Component>();
+  }
+};
 
-#endif //RENDU_COMMON_ENTITY_POOL_H
+COMMON_NAMESPACE_END
+
+#endif//RENDU_COMMON_ENTITY_POOL_H

@@ -6,7 +6,7 @@
 #include "base/utils/type_cast.h"
 #include "sockets/sock_ops.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   const char Buffer::kCRLF[] = "\r\n";
 

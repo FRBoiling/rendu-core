@@ -7,7 +7,7 @@
 
 COMMON_NAMESPACE_BEGIN
 
-    Exception::Exception(STRING msg)
+    CException::CException(STRING msg)
       : message_(std::move(msg)),
         stack_(CurrentThread::stackTrace(/*demangle=*/false)) {
     }

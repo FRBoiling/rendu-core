@@ -5,7 +5,7 @@
 #ifndef RENDU_OUTER_NET_SYSTEM_H
 #define RENDU_OUTER_NET_SYSTEM_H
 
-#include "base/string/singleton.h"
+#include "base/utils/singleton.h"
 #include "entity/component_system.h"
 #include "network/a_service.h"
 #include "task/task.h"

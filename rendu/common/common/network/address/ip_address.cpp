@@ -4,7 +4,7 @@
 
 #include "ip_address.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   string IPAddress::ToString() const {
     return IsIpv4() ? m_ipv4.ToString() : m_ipv6.ToString();

@@ -6,9 +6,9 @@
 #define RENDU_COMMON_WHEN_ALL_H
 
 
-#include "common/common_define.h"
 #include "common/task/detail/awaitable_traits.h"
 #include "common/task/detail/unwrap_reference.h"
+#include "common_define.h"
 #include "is_awaitable.h"
 #include "task.h"
 

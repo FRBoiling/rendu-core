@@ -8,7 +8,7 @@
 #include "socket.h"
 #include "channel.h"
 
-RD_NAMESPACE_BEGIN
+COMMON_NAMESPACE_BEGIN
 
   class EventLoop;
 

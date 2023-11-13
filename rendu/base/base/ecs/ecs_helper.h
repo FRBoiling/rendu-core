@@ -10,9 +10,10 @@
 
 RD_NAMESPACE_BEGIN
 
-  ALIAS(entt::entity, ENTITY);
+ALIAS(entt::entity, ENTITY);
+ALIAS(entt::registry, ENTITY_POOL);
 
 RD_NAMESPACE_END
 
 
-#endif //RENDU_BASE_ENTITY_H
+#endif//RENDU_BASE_ENTITY_H
