@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_STRING_ARG_H
 #define RENDU_BASE_STRING_ARG_H
 
-#include "string_helper.h"
+#include "string_define.h"
 
 RD_NAMESPACE_BEGIN
 

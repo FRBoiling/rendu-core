@@ -4,16 +4,18 @@
 #ifndef RENDU_LOG_EXAMPLE_H
 #define RENDU_LOG_EXAMPLE_H
 
-#include "log/log.h"
+#include "log.h"
 
+using namespace rendu;
 using namespace rendu::log;
 
 int log_example() {
   //初始化日志模块
-  Logger::Instance().Add(std::make_shared<ConsoleChannel>());
-  Logger::Instance().SetWriter(std::make_shared<AsyncLogWriter>());
-  Logger::Instance().SetLevel(LogLevel::LTrace);
-
+  auto logger = new AsyncLogger();
+  logger->Add(std::make_shared<ConsoleChannel>());
+  logger->SetWriter(std::make_shared<AsyncLogWriter>());
+  logger->SetLevel(LogLevel::LTrace);
+  LOG_SET_LOGGER(logger);
   LOG_TRACE <<"LOG_TRACE";
   LOG_DEBUG <<"LOG_DEBUG";
   LOG_WARN <<"LOG_WARN";

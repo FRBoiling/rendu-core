@@ -12,7 +12,7 @@
 //    close();
 //  }
 //
-//  void FileChannel::Write(const Logger &logger, const std::shared_ptr<LogContext> &ctx) {
+//  void FileChannel::Write(const ALogger &logger, const std::shared_ptr<LogContext> &ctx) {
 //    if (_level > ctx->_level) {
 //      return;
 //    }
@@ -122,7 +122,7 @@
 //    }
 //  }
 //
-//  void FileChannel::Write(const Logger &logger, const LogContextPtr &ctx) {
+//  void FileChannel::Write(const ALogger &logger, const LogContextPtr &ctx) {
 //    //GMT UNIX时间戳
 //    time_t second = ctx->_tv.tv_sec;
 //    //这条日志所在第几天

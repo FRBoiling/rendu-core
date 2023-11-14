@@ -3,7 +3,6 @@
 */
 
 #include "thread_synchronization_context.h"
-#include "logger/log.h"
 #include "task/sync_wait.h"
 
 COMMON_NAMESPACE_BEGIN
@@ -25,7 +24,7 @@ COMMON_NAMESPACE_BEGIN
           sync_wait(*m_func);
         }
         catch (std::exception &e) {
-          RD_CRITICAL(e.what());
+          LOG_CRITICAL<< e.what();
         }
       }
     }

@@ -11,19 +11,19 @@
 #ifndef SQL_SQLCONNECTION_H_
 #define SQL_SQLCONNECTION_H_
 
-#include <cstdio>
+#include "base/log/a_logger.h"
+#include "util.h"
 #include <cstdarg>
+#include <cstdio>
 #include <cstring>
+#include <deque>
+#include <iostream>
+#include <list>
+#include <mysql.h>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <list>
-#include <deque>
-#include <sstream>
-#include <iostream>
-#include <stdexcept>
-#include "logger.h"
-#include "util.h"
-#include <mysql.h>
 
 #if defined(_WIN32)
 #pragma  comment (lib,"libmysql") 

@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_DATE_H
 #define RENDU_COMMON_DATE_H
 
-#include "base/utils/non_copyable.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 

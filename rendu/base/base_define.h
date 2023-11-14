@@ -31,11 +31,9 @@
 #    endif
 #endif
 
-#define RD_NAMESPACE_BEGIN  \
-namespace rendu {
+#define RD_NAMESPACE_BEGIN  namespace rendu {
 
-#define RD_NAMESPACE_END \
-} /*namespace rendu*/
+#define RD_NAMESPACE_END } /*namespace rendu*/
 
 #define ALIAS(type, name) typedef type name // 定义一个宏，用来为type类型取别名为name
 

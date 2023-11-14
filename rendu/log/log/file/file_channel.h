@@ -2,10 +2,10 @@
 * Created by boil on 2023/10/26.
 */
 
-#ifndef RENDU_FILE_CHANNEL_H
-#define RENDU_FILE_CHANNEL_H
+#ifndef RENDU_LOG_FILE_CHANNEL_H
+#define RENDU_LOG_FILE_CHANNEL_H
 
-#include "../a_log_channel.h"
+#include "log_define.h"
 #include <fstream>
 #include <set>
 
@@ -29,8 +29,7 @@ LOG_NAMESPACE_BEGIN
      * @param logger
      * @param stream
      */
-    void Write(const Logger &logger, const LogContext::Ptr &ctx) override;
-
+    void Write(const LogContext::Ptr &ctx, ALogger &logger) override;
     /**
      * 设置日志最大保存天数
      * @param max_day 天数
@@ -94,4 +93,4 @@ LOG_NAMESPACE_BEGIN
 
 LOG_NAMESPACE_END
 
-#endif //RENDU_FILE_CHANNEL_H
+#endif //RENDU_LOG_FILE_CHANNEL_H

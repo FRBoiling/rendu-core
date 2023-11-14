@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_DECIMAL_H
 #define RENDU_BASE_DECIMAL_H
 
-#include "base_define.h"
+#include "number_define.h"
 //#include <decimal>
 
 RD_NAMESPACE_BEGIN

@@ -4,7 +4,6 @@
 
 #include "posix_thread.h"
 
-
 COMMON_NAMESPACE_BEGIN
 
     thread_local STRING thread_name;
@@ -27,7 +26,7 @@ COMMON_NAMESPACE_BEGIN
         ret.resize(strlen(ret.data()));
         return ret;
       }
-      return To_String((UINT64)tid);
+      return std::to_string((UINT64)tid);
     }
 
 #if defined(__MACH__) || defined(__APPLE__)

@@ -7,7 +7,7 @@
 
 #include "base/utils/demangle.h"
 
-COMMON_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 // 可以保存任意的对象
 class Any {
@@ -92,6 +92,6 @@ private:
   std::shared_ptr<void> _data;
 };
 
-COMMON_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif //RENDU_BASE_ANY_H

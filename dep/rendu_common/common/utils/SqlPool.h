@@ -11,16 +11,16 @@
 #ifndef SQL_SQLPOOL_H_
 #define SQL_SQLPOOL_H_
 
-#include <deque>
-#include <mutex>
-#include <memory>
-#include <sstream>
-#include <functional>
-#include "logger.h"
 #include "Poller/Timer.h"
+#include "ResourcePool.h"
 #include "SqlConnection.h"
 #include "Thread/WorkThreadPool.h"
-#include "ResourcePool.h"
+#include "base/log/a_logger.h"
+#include <deque>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <sstream>
 
 namespace toolkit {
 

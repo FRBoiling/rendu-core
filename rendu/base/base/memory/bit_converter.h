@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_BIT_CONVERTER_H
 #define RENDU_BASE_BIT_CONVERTER_H
 
-#include "base_define.h"
+#include "memory_define.h"
 #include "number/def_helper.h"
 #include "number/int_helper.h"
 

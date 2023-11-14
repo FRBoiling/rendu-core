@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TIMER_H
 #define RENDU_COMMON_TIMER_H
 
-#include "base/number/atomic.h"
+#include "base/atomic/atomic.h"
 #include "base/utils/non_copyable.h"
 #include "timestamp.h"
 

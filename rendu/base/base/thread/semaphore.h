@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_SEMAPHORE_H_
 #define RENDU_BASE_SEMAPHORE_H_
 
-#include "base_define.h"
+#include "thread_define.h"
 #include <mutex>
 #include <condition_variable>
 

@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TIMESTAMP_H
 #define RENDU_COMMON_TIMESTAMP_H
 
-#include "base/utils/copyable.h"
+#include "common_define.h"
 #include "base/utils/operators.h"
 
 COMMON_NAMESPACE_BEGIN

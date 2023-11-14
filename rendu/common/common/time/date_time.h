@@ -38,7 +38,7 @@ COMMON_NAMESPACE_BEGIN
       STRING ToUtc();
 
     public:
-      STIME m_tm;
+      STime m_tm;
     private:
       INT64 m_timeStamp;
       STRING m_timeZone;

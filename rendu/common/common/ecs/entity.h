@@ -5,8 +5,9 @@
 #ifndef RENDU_COMMON_ENTITY_H
 #define RENDU_COMMON_ENTITY_H
 
-#include "base/ecs/ecs_helper.h"
 #include "common_define.h"
+
+#include "base/ecs/ecs_helper.h"
 
 COMMON_NAMESPACE_BEGIN
 

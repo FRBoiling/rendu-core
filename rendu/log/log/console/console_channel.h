@@ -2,10 +2,10 @@
 * Created by boil on 2023/10/26.
 */
 
-#ifndef RENDU_CONSOLE_CHANNEL_H
-#define RENDU_CONSOLE_CHANNEL_H
+#ifndef RENDU_LOG_CONSOLE_CHANNEL_H
+#define RENDU_LOG_CONSOLE_CHANNEL_H
 
-#include "a_log_channel.h"
+#include "log_define.h"
 
 LOG_NAMESPACE_BEGIN
 
@@ -21,10 +21,10 @@ LOG_NAMESPACE_BEGIN
   public:
     void SetEnableColor(bool enable_color);
 
-    void Write(const Logger &logger, const LogContext::Ptr &logContext) override;
+    void Write(const LogContext::Ptr &ctx, ALogger &logger) override;
 
   protected:
-    void Format(const Logger &logger, std::ostream &ost, const LogContext::Ptr &ctx) override;
+    void Format(const ALogger &logger, std::ostream &ost, const LogContext::Ptr &ctx) override;
 
 
   private:
@@ -33,4 +33,4 @@ LOG_NAMESPACE_BEGIN
 
 LOG_NAMESPACE_END
 
-#endif //RENDU_CONSOLE_CHANNEL_H
+#endif //RENDU_LOG_CONSOLE_CHANNEL_H

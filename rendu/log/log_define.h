@@ -8,11 +8,11 @@
 #include "base.h"
 
 #define LOG_NAMESPACE_BEGIN \
-  namespace rendu {            \
+  namespace rendu {         \
     namespace log {
 
 #define LOG_NAMESPACE_END \
-    } /*namespace log*/   \
+  } /*namespace log*/     \
   } /*namespace rendu*/
 
 #endif//RENDU_LOG_DEFINE_H_

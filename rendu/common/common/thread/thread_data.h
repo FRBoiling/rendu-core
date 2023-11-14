@@ -6,7 +6,7 @@
 #define RENDU_COMMON_THREAD_DATA_H
 
 
-#include "base/number/atomic.h"
+#include "base/atomic/atomic.h"
 #include "count_down_latch.h"
 #include "current_thread.h"
 #include "thread.h"

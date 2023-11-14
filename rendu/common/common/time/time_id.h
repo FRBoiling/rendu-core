@@ -5,7 +5,7 @@
 #ifndef RENDU_COMMON_TIME_ID_H
 #define RENDU_COMMON_TIME_ID_H
 
-#include "base/utils/copyable.h"
+#include "common_define.h"
 
 COMMON_NAMESPACE_BEGIN
 

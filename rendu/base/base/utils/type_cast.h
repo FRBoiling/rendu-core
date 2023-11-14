@@ -8,6 +8,7 @@
 #include "base_define.h"
 
 RD_NAMESPACE_BEGIN
+
   namespace TypeCast {
     inline void memZero(void *p, size_t n) {
       memset(p, 0, n);

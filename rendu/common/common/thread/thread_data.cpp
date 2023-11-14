@@ -27,7 +27,7 @@ COMMON_NAMESPACE_BEGIN
       func_();
       CurrentThread::t_threadName = "finished";
     }
-    catch (const Exception &ex) {
+    catch (const CException &ex) {
       CurrentThread::t_threadName = "crashed";
       fprintf(stderr, "exception caught in Thread %s\n", name_.c_str());
       fprintf(stderr, "reason: %s\n", ex.what());

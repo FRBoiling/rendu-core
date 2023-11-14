@@ -5,20 +5,12 @@
 #ifndef RENDU_BASE_THREAD_HELPER_H
 #define RENDU_BASE_THREAD_HELPER_H
 
-
-#include "base_define.h"
-
-#include <thread>
-#include <unistd.h>
-
-#include "mutex.h"
+#include "thread_define.h"
+#include "mutex_lock.h"
 #include "semaphore.h"
-
 #include "string/string_helper.h"
 
 RD_NAMESPACE_BEGIN
-
-  ALIAS(std::thread, THREAD);
 
   extern thread_local THREAD thread_name;
 

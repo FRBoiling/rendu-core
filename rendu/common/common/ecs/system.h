@@ -10,50 +10,52 @@
 
 COMMON_NAMESPACE_BEGIN
 
-    enum class SystemType {
-        Default,
-        Init,
-        LateInit,
-        Update,
-        LateUpdate,
-    };
+enum class SystemType {
+  Default,
+  Init,
+  LateInit,
+  Update,
+  LateUpdate,
+};
 
-    class BaseSystem {
-    public:
-        BaseSystem() : m_Type(SystemType::Default) {};
-        ~BaseSystem() = default;
+class BaseSystem {
+public:
+  BaseSystem() : m_Type(SystemType::Default){};
+  ~BaseSystem() = default;
 
-    public:
-        SystemType GetSystemType() { return m_Type; }
+public:
+  SystemType GetSystemType() { return m_Type; }
 
-        virtual void Run(Entity &entity) {
-            RD_INFO("{} Poll", ToString());
-        };
+  virtual void Run(Entity &entity) {
+    LOG_INFO << ToString() << " Poll";
+  };
 
-        virtual STRING ToString() { return typeid(this).name(); }
+  virtual STRING ToString() { return typeid(this).name(); }
 
-    protected:
-        SystemType m_Type;
-    };
+protected:
+  SystemType m_Type;
+};
 
-    class BaseInitSystem : public BaseSystem {
-    public:
-        BaseInitSystem() {
-            m_Type = SystemType::Init;
-        };
-    public:
-        STRING ToString() override { return typeid(this).name(); }
-    };
+class BaseInitSystem : public BaseSystem {
+public:
+  BaseInitSystem() {
+    m_Type = SystemType::Init;
+  };
 
-    class BaseUpdateSystem : public BaseSystem {
-    public:
-        BaseUpdateSystem() {
-            m_Type = SystemType::Update;
-        };
-    public:
-        STRING ToString() override { return typeid(this).name(); }
-    };
+public:
+  STRING ToString() override { return typeid(this).name(); }
+};
+
+class BaseUpdateSystem : public BaseSystem {
+public:
+  BaseUpdateSystem() {
+    m_Type = SystemType::Update;
+  };
+
+public:
+  STRING ToString() override { return typeid(this).name(); }
+};
 
 COMMON_NAMESPACE_END
 
-#endif //RENDU_COMMON_COMPONENT_SYSTEM_H
+#endif//RENDU_COMMON_COMPONENT_SYSTEM_H

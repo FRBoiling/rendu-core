@@ -3,3 +3,11 @@
 */
 
 #include "memory_helper.h"
+
+RD_NAMESPACE_BEGIN
+
+void MemZero(void *p, SIZE n) {
+  memset(p, 0, n);
+}
+
+RD_NAMESPACE_END
