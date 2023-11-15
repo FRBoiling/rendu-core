@@ -7,7 +7,7 @@
 
 #include "base/utils/singleton.h"
 #include "common/time/date_time.h"
-#include "common_define.h"
+#include "core_define.h"
 #include "entity/component_system.h"
 #include <ctime>
 

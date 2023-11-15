@@ -9,7 +9,7 @@
 #include "a_service.h"
 #include "base/memory/bit_converter.h"
 #include "circular_buffer.h"
-#include "common_define.h"
+#include "core_define.h"
 #include "exception/out_of_range_exception.h"
 #include "packet.h"
 #include "serialize/memory_buffer.h"

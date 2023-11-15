@@ -5,7 +5,7 @@
 #ifndef RENDU_ERROR_CODE_H
 #define RENDU_ERROR_CODE_H
 
-#include "common_define.h"
+#include "core_define.h"
 
 RD_NAMESPACE_BEGIN
 

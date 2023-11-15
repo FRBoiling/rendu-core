@@ -5,7 +5,7 @@
 #ifndef RENDU_INVOKE_HANDLER_H
 #define RENDU_INVOKE_HANDLER_H
 
-#include "common_define.h"
+#include "core_define.h"
 #include <typeinfo>
 
 RD_NAMESPACE_BEGIN
