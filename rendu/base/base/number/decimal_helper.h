@@ -10,9 +10,9 @@
 
 RD_NAMESPACE_BEGIN
 
-  ALIAS(float, FLOAT);
-
-  ALIAS(double, DOUBLE);
+//  ALIAS(float, FLOAT);
+//
+//  ALIAS(double, DOUBLE);
 
 //  ALIAS(std::decimal, DECIMAL);
 

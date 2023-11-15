@@ -80,7 +80,7 @@ public:
     return *this;
   }
 
-  STRING type_name() const {
+  std::string type_name() const {
     if (!_type) {
       return "";
     }

@@ -7,7 +7,7 @@
 
 #include <coroutine>
 
-#define await co_await
-#define async
+//#define await co_await
+//#define async
 
 #endif//RENDU_BASE_COROUTINE_H

@@ -8,7 +8,7 @@
 
 LOG_NAMESPACE_BEGIN
 
-ConsoleChannel::ConsoleChannel(const STRING &name, LogLevel::Level level, bool enable_color) : ALogChannel(name, level),
+ConsoleChannel::ConsoleChannel(const std::string &name, LogLevel::Level level, bool enable_color) : ALogChannel(name, level),
                                                                                                enable_color_(enable_color) {}
 
 void ConsoleChannel::SetEnableColor(bool enable_color) {

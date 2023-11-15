@@ -33,7 +33,7 @@ RD_NAMESPACE_BEGIN
 //  - Android x86 is not supported because STLs don't define __cxa_demangle
 //
 
-    STRING demangle(const char *mangled);
+    std::string demangle(const char *mangled);
 
 RD_NAMESPACE_END
 

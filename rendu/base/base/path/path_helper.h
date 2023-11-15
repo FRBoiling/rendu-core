@@ -9,9 +9,9 @@
 
 RD_NAMESPACE_BEGIN
 
- STRING GetExePath(bool isExe = true);
- STRING GetExeDir(bool isExe = true);
- STRING GetExeName(bool isExe = true);
+ std::string GetExePath(bool isExe = true);
+ std::string GetExeDir(bool isExe = true);
+ std::string GetExeName(bool isExe = true);
 
 RD_NAMESPACE_END
 

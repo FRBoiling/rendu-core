@@ -26,13 +26,13 @@
 
 RD_NAMESPACE_BEGIN
 
-  STRING demangle(const char *mangled) {
+  std::string demangle(const char *mangled) {
     int status = 0;
     char *demangled = nullptr;
 #if HAS_CXA_DEMANGLE
     demangled = abi::__cxa_demangle(mangled, nullptr, nullptr, &status);
 #endif
-    STRING out;
+    std::string out;
     if (status == 0 && demangled) { // Demangling succeeeded.
       out.append(demangled);
       free(demangled);

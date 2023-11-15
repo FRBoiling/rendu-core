@@ -16,7 +16,7 @@ RD_NAMESPACE_BEGIN
 class ALogger : public std::enable_shared_from_this<ALogger>, public NonCopyable {
 
 public:
-  explicit ALogger(const STRING &loggerName);
+  explicit ALogger(const std::string &loggerName);
 
   ~ALogger();
 
@@ -26,7 +26,7 @@ public:
      * @param name log通道名
      * @return 线程通道
      */
-  std::shared_ptr<ALogChannel> Get(const STRING &name);
+  std::shared_ptr<ALogChannel> Get(const std::string &name);
 
   /**
      * 添加日志通道，非线程安全的
@@ -37,7 +37,7 @@ public:
      * 删除日志通道，非线程安全的
      * @param name log通道名
      */
-  void Remove(const STRING &name);
+  void Remove(const std::string &name);
 
 
   /**
@@ -56,7 +56,7 @@ public:
      * 获取logger名
      * @return logger名
      */
-  const STRING &GetName() const;
+  const std::string &GetName() const;
 
   /**
      * 写日志
@@ -65,9 +65,9 @@ public:
   virtual void Write(const LogContext::Ptr& ctx);
 
 protected:
-  STRING _logger_name;
+  std::string _logger_name;
   std::shared_ptr<ALogWriter> _writer;
-  std::map<STRING, std::shared_ptr<ALogChannel>> _channels;
+  std::map<std::string, std::shared_ptr<ALogChannel>> _channels;
 };
 
 RD_NAMESPACE_END

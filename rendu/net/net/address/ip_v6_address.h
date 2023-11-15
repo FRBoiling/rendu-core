@@ -2,12 +2,12 @@
 * Created by boil on 2023/10/16.
 */
 
-#ifndef RENDU_COMMON_IP_V6_ADDRESS_H
-#define RENDU_COMMON_IP_V6_ADDRESS_H
+#ifndef RENDU_IP_V6_ADDRESS_H
+#define RENDU_IP_V6_ADDRESS_H
 
-#include "common_define.h"
+#include "net_define.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPv6Address {
     using bytes_t = std::uint8_t[16];
@@ -228,6 +228,6 @@ public:
     return !(*this < other);
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_IP_V6_ADDRESS_H
+#endif //RENDU_IP_V6_ADDRESS_H

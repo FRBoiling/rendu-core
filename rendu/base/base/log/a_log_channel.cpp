@@ -10,16 +10,16 @@
 
 RD_NAMESPACE_BEGIN
 
-  ALogChannel::ALogChannel(const STRING &name, LogLevel::Level level) : _name(name), _level(level),
+  ALogChannel::ALogChannel(const std::string &name, LogLevel::Level level) : _name(name), _level(level),
                                                                         _enable_detail(true) {}
 
   ALogChannel::~ALogChannel() {}
 
-  const STRING &ALogChannel::Name() const { return _name; }
+  const std::string &ALogChannel::Name() const { return _name; }
 
   void ALogChannel::SetLevel(LogLevel::Level level) { _level = level; }
 
-  STRING ALogChannel::PrintTime(const timeval &tv) {
+  std::string ALogChannel::PrintTime(const timeval &tv) {
     auto tm = GetLocalTime(tv.tv_sec);
     char buf[128];
     snprintf(buf, sizeof(buf), "%d-%02d-%02d %02d:%02d:%02d.%03d",

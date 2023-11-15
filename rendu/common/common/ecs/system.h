@@ -30,7 +30,7 @@ public:
     LOG_INFO << ToString() << " Poll";
   };
 
-  virtual STRING ToString() { return typeid(this).name(); }
+  virtual std::string ToString() { return typeid(this).name(); }
 
 protected:
   SystemType m_Type;
@@ -43,7 +43,7 @@ public:
   };
 
 public:
-  STRING ToString() override { return typeid(this).name(); }
+  std::string ToString() override { return typeid(this).name(); }
 };
 
 class BaseUpdateSystem : public BaseSystem {
@@ -53,7 +53,7 @@ public:
   };
 
 public:
-  STRING ToString() override { return typeid(this).name(); }
+  std::string ToString() override { return typeid(this).name(); }
 };
 
 COMMON_NAMESPACE_END

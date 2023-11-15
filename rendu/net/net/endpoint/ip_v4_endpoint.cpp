@@ -4,9 +4,9 @@
 
 #include "ip_v4_endpoint.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
-  STRING IPv4EndPoint::ToString() const {
+  std::string IPv4EndPoint::ToString() const {
     auto s = m_address.ToString();
     s.push_back(':');
     s.append(std::to_string(m_port));
@@ -24,7 +24,7 @@ COMMON_NAMESPACE_BEGIN
       return std::nullopt;
     }
 
-    auto port = ParseInt(host.substr(colonPos + 1));
+    auto port = Digit::StringToPort(host.substr(colonPos + 1));
     if (!port) {
       return std::nullopt;
     }
@@ -43,4 +43,4 @@ COMMON_NAMESPACE_BEGIN
   }
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

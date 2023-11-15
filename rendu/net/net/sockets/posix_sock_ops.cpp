@@ -21,7 +21,7 @@
 #include "dns_cache.h"
 #include "errno/errno.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   void Close(const int32 sfd) {
     close(sfd);
@@ -232,7 +232,7 @@ COMMON_NAMESPACE_BEGIN
 #include "dns_cache.h"
 #include "errno/errno.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   void Close(const int32 sfd) {
     close(sfd);
@@ -1311,6 +1311,6 @@ void for_each_netAdapter_posix(FUN &&fun){ //type: struct ifreq *
     return ret;
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
 #endif //!defined(_WIN32) && !defined(__APPLE__)  //posix

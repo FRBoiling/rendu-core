@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
 static int _wsaErrorToErrno(int err) {
     switch (err) {
@@ -252,7 +252,7 @@ int win32_redisKeepAlive(SOCKET sockfd, int interval_ms) {
     return res == 0 ? 0 : _wsaErrorToErrno(res);
 }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
 #endif
 

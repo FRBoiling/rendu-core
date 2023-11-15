@@ -57,9 +57,9 @@ void SetThreadName(const char *name) {
 #endif
 }
 
-STRING GetThreadName() {
+std::string GetThreadName() {
 #if ((defined(__linux) || defined(__linux__)) && !defined(ANDROID)) || (defined(__MACH__) || defined(__APPLE__)) || (defined(ANDROID) && __ANDROID_API__ >= 26) || defined(__MINGW32__)
-  STRING ret;
+  std::string ret;
   ret.resize(32);
   auto tid = pthread_self();
   pthread_getname_np(tid, (char *) ret.data(), ret.size());
@@ -130,8 +130,8 @@ bool SetThreadAffinity(int i) {
   return false;
 }
 
-STRING LimitString(const char *name, size_t max_size) {
-  STRING str = name;
+std::string LimitString(const char *name, size_t max_size) {
+  std::string str = name;
   if (str.size() + 1 > max_size) {
     auto erased = str.size() + 1 - max_size + 3;
     str.replace(5, erased, "...");

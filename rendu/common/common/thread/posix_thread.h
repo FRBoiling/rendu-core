@@ -13,16 +13,16 @@
 COMMON_NAMESPACE_BEGIN
 
 
-  STRING LimitString(const char *name, size_t max_size);
+  std::string LimitString(const char *name, size_t max_size);
 
-  STRING GetThreadName();
+  std::string GetThreadName();
 
 
 #ifdef __APPLE__
 
 #include <mach/mach.h>
 
-  INT32 gettid(void);
+  std::int32_t gettid(void);
 
   void mac_setThreadName(const char *name);
 

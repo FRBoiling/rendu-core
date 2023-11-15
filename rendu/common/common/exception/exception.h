@@ -11,7 +11,7 @@ COMMON_NAMESPACE_BEGIN
 
     class CException : public EXCEPTION {
     public:
-      CException(STRING what);
+      CException(std::string what);
 
       ~CException() noexcept override = default;
 
@@ -26,8 +26,8 @@ COMMON_NAMESPACE_BEGIN
       }
 
     private:
-      STRING message_;
-      STRING stack_;
+      std::string message_;
+      std::string stack_;
     };
 
 COMMON_NAMESPACE_END

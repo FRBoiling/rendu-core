@@ -8,7 +8,7 @@
 
 COMMON_NAMESPACE_BEGIN
 
- ThreadData::ThreadData(ThreadData::ThreadFunc func, const STRING &name, pid_t *tid,
+ ThreadData::ThreadData(ThreadData::ThreadFunc func, const std::string &name, pid_t *tid,
                                CountDownLatch *latch)
     : func_(std::move(func)),
       name_(name),

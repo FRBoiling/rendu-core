@@ -2,15 +2,15 @@
 * Created by boil on 2023/10/16.
 */
 
-#ifndef RENDU_COMMON_IP_ADDRESS_H
-#define RENDU_COMMON_IP_ADDRESS_H
+#ifndef RENDU_IP_ADDRESS_H
+#define RENDU_IP_ADDRESS_H
 
-#include "common_define.h"
+#include "net/net_define.h"
 
 #include "ip_v4_address.h"
 #include "ip_v6_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPAddress {
   public:
@@ -123,6 +123,6 @@ COMMON_NAMESPACE_BEGIN
   }
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_IP_ADDRESS_H
+#endif //RENDU_IP_ADDRESS_H

@@ -3,8 +3,8 @@
 */
 #if defined (__APPLE__)
 
-#ifndef RENDU_COMMON_APPLE_SOCK_H
-#define RENDU_COMMON_APPLE_SOCK_H
+#ifndef RENDU_APPLE_SOCK_H
+#define RENDU_APPLE_SOCK_H
 
 /* For POSIX systems we use the standard BSD socket API. */
 
@@ -25,12 +25,14 @@
 #include <sys/filio.h>
 #include <sys/event.h>
 
-COMMON_NAMESPACE_BEGIN
+#include "net_define.h"
 
-#define SOCKET INT32
+NET_NAMESPACE_BEGIN
 
-COMMON_NAMESPACE_END
+#define SOCKET std::int32_t
+
+NET_NAMESPACE_END
 
 #endif
 
-#endif //RENDU_COMMON_APPLE_SOCK_H
+#endif //RENDU_APPLE_SOCK_H

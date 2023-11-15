@@ -13,9 +13,9 @@ RD_NAMESPACE_BEGIN
 
   class BitConverter {
   public:
-    static INT32 ToInt32(const BYTE *data, INT32 start_index);
+    static std::int32_t ToInt32(const std::byte *data, std::int32_t start_index);
 
-    static UINT16 ToUInt16(const BYTE *data, INT32 start_index);
+    static std::uint16_t ToUInt16(const std::byte *data, std::int32_t start_index);
   };
 
 RD_NAMESPACE_END

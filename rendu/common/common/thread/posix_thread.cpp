@@ -6,10 +6,10 @@
 
 COMMON_NAMESPACE_BEGIN
 
-    thread_local STRING thread_name;
+    thread_local std::string thread_name;
 
-    STRING LimitString(const char *name, size_t max_size) {
-      STRING str = name;
+    std::string LimitString(const char *name, size_t max_size) {
+      std::string str = name;
       if (str.size() + 1 > max_size) {
         auto erased = str.size() + 1 - max_size + 3;
         str.replace(5, erased, "...");
@@ -17,8 +17,8 @@ COMMON_NAMESPACE_BEGIN
       return str;
     }
 
-    STRING GetThreadName() {
-      STRING ret;
+    std::string GetThreadName() {
+      std::string ret;
       ret.resize(32);
       auto tid = pthread_self();
       pthread_getname_np(tid, (char *) ret.data(), ret.size());
@@ -26,14 +26,14 @@ COMMON_NAMESPACE_BEGIN
         ret.resize(strlen(ret.data()));
         return ret;
       }
-      return std::to_string((UINT64)tid);
+      return std::to_string((std::uint64_t)tid);
     }
 
 #if defined(__MACH__) || defined(__APPLE__)
 
-    INT32 gettid(void) {
+    std::int32_t gettid(void) {
 //    mach_port_t
-      return (INT32) mach_thread_self();
+      return (std::int32_t) mach_thread_self();
     }
 
     void mac_setThreadName(const char *name) {

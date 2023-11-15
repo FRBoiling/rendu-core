@@ -6,19 +6,19 @@
 #define RENDU_BASE_THREAD_HELPER_H
 
 #include "thread_define.h"
-#include "mutex_lock.h"
+//#include "mutex_lock.h"
 #include "semaphore.h"
 #include "string/string_helper.h"
 
 RD_NAMESPACE_BEGIN
 
-  extern thread_local THREAD thread_name;
+  extern thread_local std::thread thread_name;
 
   void SetThreadName(const char *name);
 
-  STRING GetThreadName();
+  std::string GetThreadName();
 
-  STRING LimitString(const char *name, size_t max_size);
+  std::string LimitString(const char *name, size_t max_size);
 
   bool SetThreadAffinity(int i);
 
@@ -38,8 +38,8 @@ RD_NAMESPACE_BEGIN
   }
 
   const char *strcasestr(const char *big, const char *little){
-    STRING big_str = big;
-    STRING little_str = little;
+    std::string big_str = big;
+    std::string little_str = little;
     strToLower(big_str);
     strToLower(little_str);
     auto pos = strstr(big_str.data(), little_str.data());

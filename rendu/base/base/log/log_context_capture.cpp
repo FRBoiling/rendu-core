@@ -9,7 +9,7 @@
 
 RD_NAMESPACE_BEGIN
 
-  static STRING s_module_name = GetExeName(false);
+  static std::string s_module_name = GetExeName(false);
 
   LogContextCapture::LogContextCapture(ALogger* logger, LogLevel::Level level, const char *file, const char *function, int line, const char *flag) :
     _logger_ctx(new LogContext(level, file, function, line, s_module_name.c_str(), flag)), _logger(logger) {

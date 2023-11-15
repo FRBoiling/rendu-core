@@ -4,7 +4,7 @@
 
 #include "ip_v6_endpoint.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   std::string IPv6EndPoint::ToString() const {
     std::string result;
@@ -36,7 +36,7 @@ COMMON_NAMESPACE_BEGIN
       return std::nullopt;
     }
 
-    auto port = ParseInt(host.substr(closeBracketPos + 2));
+    auto port = Digit::StringToPort(host.substr(closeBracketPos + 2));
     if (!port) {
       return std::nullopt;
     }
@@ -66,4 +66,4 @@ COMMON_NAMESPACE_BEGIN
     return IPv6EndPoint{*address, port};
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

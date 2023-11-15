@@ -18,13 +18,13 @@ uint64_t GetCurrentMicrosecondOrigin() {
 }
 
 
-STRING GetTimeStr(const char *fmt, time_t time) {
+std::string GetTimeStr(const char *fmt, time_t time) {
   if (!time) {
     time = ::time(nullptr);
   }
   auto tm = GetLocalTime(time);
   size_t size = strlen(fmt) + 64;
-  STRING ret;
+  std::string ret;
   ret.resize(size);
   size = std::strftime(&ret[0], size, fmt, &tm);
   if (size > 0) {

@@ -9,13 +9,13 @@
 
 COMMON_NAMESPACE_BEGIN
 
-  static_assert(sizeof(Timestamp) == sizeof(INT64),
-                "Timestamp should be same size as INT64");
+  static_assert(sizeof(Timestamp) == sizeof(std::int64_t),
+                "Timestamp should be same size as std::int64_t");
 
-  STRING Timestamp::toString() const {
+  std::string Timestamp::toString() const {
     char buf[32] = {0};
-    INT64 seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
-    INT64 microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
+    std::int64_t seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
+    std::int64_t microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
     snprintf(buf, sizeof(buf), "%"
     PRId64
     ".%06"
@@ -24,7 +24,7 @@ COMMON_NAMESPACE_BEGIN
     return buf;
   }
 
-  STRING Timestamp::toFormattedString(bool showMicroseconds) const {
+  std::string Timestamp::toFormattedString(bool showMicroseconds) const {
     char buf[64] = {0};
     time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
     struct tm tm_time;
@@ -47,7 +47,7 @@ COMMON_NAMESPACE_BEGIN
   Timestamp Timestamp::now() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    INT64 seconds = tv.tv_sec;
+    std::int64_t seconds = tv.tv_sec;
     return Timestamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
   }
 

@@ -4,9 +4,9 @@
 
 #include "ip_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
-  STRING IPAddress::ToString() const {
+  std::string IPAddress::ToString() const {
     return IsIpv4() ? m_ipv4.ToString() : m_ipv6.ToString();
   }
 
@@ -21,4 +21,4 @@ COMMON_NAMESPACE_BEGIN
     return std::nullopt;
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

@@ -16,7 +16,7 @@ RD_NAMESPACE_BEGIN
 
   public:
     // We provide non-explicit singleton constructors so users can pass
-    // in a "const char*" or a "STRING" wherever a "StringPiece" is
+    // in a "const char*" or a "std::string" wherever a "StringPiece" is
     // expected.
     StringPiece()
       : ptr_(NULL), length_(0) {}
@@ -28,7 +28,7 @@ RD_NAMESPACE_BEGIN
       : ptr_(reinterpret_cast<const char *>(str)),
         length_(static_cast<int>(strlen(ptr_))) {}
 
-    StringPiece(const STRING &str)
+    StringPiece(const std::string &str)
       : ptr_(str.data()), length_(static_cast<int>(str.size())) {}
 
     StringPiece(const char *offset, int len)
@@ -37,7 +37,7 @@ RD_NAMESPACE_BEGIN
     // data() may return a pointer to a buffer with embedded NULs, and the
     // returned buffer may or may not be null terminated.  Therefore it is
     // typically a mistake to pass data() to a routine that expects a NUL
-    // terminated STRING.  Use "as_string().c_str()" if you really need to do
+    // terminated std::string.  Use "as_string().c_str()" if you really need to do
     // this.  Or better yet, change your routine so it does not rely on NUL
     // termination.
     const char *data() const { return ptr_; }
@@ -113,11 +113,11 @@ RD_NAMESPACE_BEGIN
       return r;
     }
 
-    STRING as_string() const {
-      return STRING(data(), size());
+    std::string as_string() const {
+      return std::string(data(), size());
     }
 
-    void CopyToString(STRING *target) const {
+    void CopyToString(std::string *target) const {
       target->assign(ptr_, length_);
     }
 

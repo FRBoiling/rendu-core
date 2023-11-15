@@ -64,7 +64,7 @@ COMMON_NAMESPACE_BEGIN
     ///
     /// Converts to yyyy-mm-dd format.
     ///
-    STRING toIsoString() const;
+    std::string toIsoString() const;
 
     struct YearMonthDay yearMonthDay() const;
 

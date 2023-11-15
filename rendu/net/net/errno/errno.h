@@ -2,10 +2,10 @@
 * Created by boil on 2023/10/26.
 */
 
-#ifndef RENDU_COMMON_RD_ERRNO_H
-#define RENDU_COMMON_RD_ERRNO_H
+#ifndef RENDU_RD_ERRNO_H
+#define RENDU_RD_ERRNO_H
 
-#include <cerrno>
+#include "../../../../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cerrno"
 
 #define RD__EOF     (-4095)
 #define RD__UNKNOWN (-4094)
@@ -486,9 +486,9 @@
   XX(EREMOTEIO, "remote I/O error")                                           \
 
 
-#include "common_define.h"
+#include "net_define.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   typedef enum {
 #define XX(code, _) RD_ ## code = RD__ ## code,
@@ -510,6 +510,6 @@ COMMON_NAMESPACE_BEGIN
   const char *GetErrorMsg(bool netErr = true);
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_RD_ERRNO_H
+#endif //RENDU_RD_ERRNO_H

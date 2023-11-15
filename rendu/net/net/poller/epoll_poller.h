@@ -2,12 +2,12 @@
 //* Created by boil on 2023/11/3.
 //*/
 //
-//#ifndef RENDU_COMMON_EPOLL_POLLER_H
-//#define RENDU_COMMON_EPOLL_POLLER_H
+//#ifndef RENDU_NET_EPOLL_POLLER_H
+//#define RENDU_NET_EPOLL_POLLER_H
 //
 //#include "poller.h"
 //
-//COMMON_NAMESPACE_BEGIN
+//NET_NAMESPACE_BEGIN
 //
 //  class EpollPoller : public Poller {
 //  public:
@@ -35,6 +35,6 @@
 //    EventList events_;
 //  };
 //
-//COMMON_NAMESPACE_END
+//NET_NAMESPACE_END
 //
-//#endif //RENDU_COMMON_EPOLL_POLLER_H
+//#endif //RENDU_NET_EPOLL_POLLER_H

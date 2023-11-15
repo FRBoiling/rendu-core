@@ -2,15 +2,15 @@
 * Created by boil on 2023/11/3.
 */
 
-#ifndef RENDU_COMMON_KQUEUE_POLLER_H
-#define RENDU_COMMON_KQUEUE_POLLER_H
+#ifndef RENDU_NET_KQUEUE_POLLER_H
+#define RENDU_NET_KQUEUE_POLLER_H
 
-#include "poller.h"
-#include <sys/types.h>
+#include "net/tcp/poller.h"
 #include <sys/event.h>
 #include <sys/time.h>
+#include <sys/types.h>
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class KqueuePoller : public Poller {
 
@@ -40,6 +40,6 @@ COMMON_NAMESPACE_BEGIN
     char *eventsMask_;
   };
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_KQUEUE_POLLER_H
+#endif //RENDU_NET_KQUEUE_POLLER_H

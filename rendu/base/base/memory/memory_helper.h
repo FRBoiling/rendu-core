@@ -12,7 +12,7 @@
 
 RD_NAMESPACE_BEGIN
 
-extern void MemZero(void *p, SIZE n);
+extern void MemZero(void *p, std::size_t n);
 
 RD_NAMESPACE_END
 

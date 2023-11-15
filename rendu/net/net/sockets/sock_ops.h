@@ -2,16 +2,16 @@
 * Created by boil on 2023/11/4.
 */
 
-#ifndef RENDU_COMMON_SOCK_OPS_H
-#define RENDU_COMMON_SOCK_OPS_H
+#ifndef RENDU_SOCK_OPS_H
+#define RENDU_SOCK_OPS_H
 
-#include "common_define.h"
+#include "net/net_define.h"
 
 #include "posix_sock.h"
 #include "win_sock.h"
 #include "apple_sock.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
 #define RD_NONE 0       /* No events registered. */
 #define RD_READABLE 1   /* Fire when descriptor is readable. */
@@ -32,7 +32,7 @@ COMMON_NAMESPACE_BEGIN
 
     int CreateNonblockingOrDie(sa_family_t family);
 
-    void Close(INT32 sfd);
+    void Close(std::int32_t sfd);
 
     void ShutdownWrite(SOCKET sockfd);
 
@@ -109,13 +109,13 @@ COMMON_NAMESPACE_BEGIN
 
 
 
-    STRING InetNTop(int af, const void *addr);
+    std::string InetNTop(int af, const void *addr);
 
-    STRING InetNToa(const struct in_addr &addr);
+    std::string InetNToa(const struct in_addr &addr);
 
-    STRING InetNToa(const struct in6_addr &addr);
+    std::string InetNToa(const struct in6_addr &addr);
 
-    STRING InetNToa(const struct sockaddr *addr);
+    std::string InetNToa(const struct sockaddr *addr);
 
     uint16_t InetPort(const struct sockaddr *addr);
 
@@ -132,17 +132,17 @@ COMMON_NAMESPACE_BEGIN
 
     bool GetSockPeerAddr(int fd, struct sockaddr_storage &addr);
 
-    STRING GetLocalIP(int fd);
+    std::string GetLocalIP(int fd);
 
-    STRING GetPeerIP(int fd);
+    std::string GetPeerIP(int fd);
 
     uint16_t GetLocalPort(int fd);
 
     uint16_t GetPeerPort(int fd);
 
-    bool CheckIP(STRING &address, const STRING &ip);
+    bool CheckIP(std::string &address, const std::string &ip);
 
-    STRING GetLocalIP();
+    std::string GetLocalIP();
 
 
     int BindUdpSock(const uint16_t port, const char *local_ip, bool enable_reuse);
@@ -150,13 +150,13 @@ COMMON_NAMESPACE_BEGIN
     int DissolveUdpSock(int fd);
 
 
-    STRING get_ifr_ip(const char *if_name);
+    std::string get_ifr_ip(const char *if_name);
 
-    STRING get_ifr_name(const char *local_ip);
+    std::string get_ifr_name(const char *local_ip);
 
-    STRING get_ifr_mask(const char *if_name);
+    std::string get_ifr_mask(const char *if_name);
 
-    STRING get_ifr_brdaddr(const char *if_name);
+    std::string get_ifr_brdaddr(const char *if_name);
 
     bool in_same_lan(const char *myIp, const char *dstIp);
 
@@ -178,10 +178,10 @@ COMMON_NAMESPACE_BEGIN
 //     * 获取网卡列表
 //     * @return vector<map<ip:name> >
 //     */
-//    std::vector<std::map<STRING, STRING>> getInterfaceList();
+//    std::vector<std::map<std::string, std::string>> getInterfaceList();
 
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_SOCK_OPS_H
+#endif //RENDU_SOCK_OPS_H

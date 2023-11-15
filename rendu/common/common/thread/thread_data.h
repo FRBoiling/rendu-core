@@ -16,12 +16,12 @@ COMMON_NAMESPACE_BEGIN
   struct ThreadData {
     typedef Thread::ThreadFunc ThreadFunc;
     ThreadFunc func_;
-    STRING name_;
+    std::string name_;
     pid_t *tid_;
     CountDownLatch *latch_;
 
     ThreadData(ThreadFunc func,
-               const STRING &name,
+               const std::string &name,
                pid_t *tid,
                CountDownLatch *latch);
 

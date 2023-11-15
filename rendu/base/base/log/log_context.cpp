@@ -35,7 +35,7 @@ RD_NAMESPACE_BEGIN
     _thread_name = GetThreadName();
   }
 
-  const STRING &LogContext::str() {
+  const std::string &LogContext::str() {
     if (_got_content) {
       return _content;
     }

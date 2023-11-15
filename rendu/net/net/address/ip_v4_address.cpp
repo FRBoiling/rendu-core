@@ -4,13 +4,13 @@
 
 #include "ip_v4_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   std::optional<IPv4Address>
   IPv4Address::FromString(std::string_view string) noexcept {
     if (string.empty()) return std::nullopt;
 
-    if (!IsDigit(string[0])) {
+    if (!Digit::IsDigit(string[0])) {
       return std::nullopt;
     }
 
@@ -19,7 +19,7 @@ COMMON_NAMESPACE_BEGIN
     std::uint8_t partValues[4];
 
     if (string[0] == '0' && length > 1) {
-      if (IsDigit(string[1])) {
+      if (Digit::IsDigit(string[1])) {
         // Octal format (not supported)
         return std::nullopt;
       } else if (string[1] == 'x') {
@@ -37,11 +37,11 @@ COMMON_NAMESPACE_BEGIN
       constexpr std::uint32_t maxValue = 0xFFFFFFFFu / 10;
       constexpr std::uint32_t maxDigit = 0xFFFFFFFFu % 10;
 
-      std::uint32_t partValue = ToDigitValue(string[pos]);
+      std::uint32_t partValue = Digit::ToDigitValue(string[pos]);
       ++pos;
 
-      while (pos < length && IsDigit(string[pos])) {
-        const auto digitValue = ToDigitValue(string[pos]);
+      while (pos < length && Digit::IsDigit(string[pos])) {
+        const auto digitValue = Digit::ToDigitValue(string[pos]);
         ++pos;
 
         // Check if this digit would overflow the 32-bit integer
@@ -64,7 +64,7 @@ COMMON_NAMESPACE_BEGIN
     }
 
     for (int part = 1; part < 4; ++part) {
-      if ((pos + 1) >= length || string[pos] != '.' || !IsDigit(string[pos + 1])) {
+      if ((pos + 1) >= length || string[pos] != '.' || !Digit::IsDigit(string[pos + 1])) {
         return std::nullopt;
       }
 
@@ -75,18 +75,18 @@ COMMON_NAMESPACE_BEGIN
       const bool isPartOctal =
         (pos + 1) < length &&
         string[pos] == '0' &&
-        IsDigit(string[pos + 1]);
+          Digit::IsDigit(string[pos + 1]);
       if (isPartOctal) {
         return std::nullopt;
       }
 
-      std::uint32_t partValue = ToDigitValue(string[pos]);
+      std::uint32_t partValue = Digit::ToDigitValue(string[pos]);
       ++pos;
-      if (pos < length && IsDigit(string[pos])) {
-        partValue = (partValue * 10) + ToDigitValue(string[pos]);
+      if (pos < length && Digit::IsDigit(string[pos])) {
+        partValue = (partValue * 10) + Digit::ToDigitValue(string[pos]);
         ++pos;
-        if (pos < length && IsDigit(string[pos])) {
-          partValue = (partValue * 10) + ToDigitValue(string[pos]);
+        if (pos < length && Digit::IsDigit(string[pos])) {
+          partValue = (partValue * 10) + Digit::ToDigitValue(string[pos]);
           if (partValue > 255) {
             return std::nullopt;
           }
@@ -133,4 +133,4 @@ COMMON_NAMESPACE_BEGIN
   }
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

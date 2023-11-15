@@ -2,12 +2,12 @@
 * Created by boil on 2023/10/16.
 */
 
-#ifndef RENDU_COMMON_IP_V6_ENDPOINT_H
-#define RENDU_COMMON_IP_V6_ENDPOINT_H
+#ifndef RENDU_IP_V6_ENDPOINT_H
+#define RENDU_IP_V6_ENDPOINT_H
 
 #include "../address/ip_v6_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPv6EndPoint {
   public:
@@ -22,19 +22,19 @@ COMMON_NAMESPACE_BEGIN
   public:
     [[nodiscard]] const IPv6Address &GetAddress() const noexcept { return m_address; }
 
-    [[nodiscard]] UINT16 GetPort() const noexcept { return m_port; }
+    [[nodiscard]] std::uint16_t GetPort() const noexcept { return m_port; }
 
   public:
     static std::optional<IPv6EndPoint> FromString(std::string_view host) noexcept;
 
     static std::optional<IPv6EndPoint> FromIpPort(std::string_view ip, uint16_t port) noexcept;
 
-    STRING ToString() const;
+    std::string ToString() const;
 
   private:
 
     IPv6Address m_address;
-    UINT16 m_port;
+    std::uint16_t m_port;
 
   };
 
@@ -64,6 +64,6 @@ COMMON_NAMESPACE_BEGIN
     return !(a < b);
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_IP_V6_ENDPOINT_H
+#endif //RENDU_IP_V6_ENDPOINT_H

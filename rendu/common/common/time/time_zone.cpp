@@ -10,11 +10,11 @@ COMMON_NAMESPACE_BEGIN
 
   struct TimeZone::Data {
     struct Transition {
-      INT64 utctime;
-      INT64 localtime;  // Shifted Epoch
+      std::int64_t utctime;
+      std::int64_t localtime;  // Shifted Epoch
       int localtimeIdx;
 
-      Transition(INT64 t, INT64 l, int localIdx)
+      Transition(std::int64_t t, std::int64_t l, int localIdx)
         : utctime(t), localtime(l), localtimeIdx(localIdx) {}
     };
 
@@ -31,12 +31,12 @@ COMMON_NAMESPACE_BEGIN
       localtimes.push_back(LocalTime(utcOffset, isDst, desigIdx));
     }
 
-    void addTransition(INT64 utcTime, int localtimeIdx) {
+    void addTransition(std::int64_t utcTime, int localtimeIdx) {
       LocalTime lt = localtimes.at(localtimeIdx);
       transitions.push_back(Transition(utcTime, utcTime + lt.utcOffset, localtimeIdx));
     }
 
-    const LocalTime *findLocalTime(INT64 utcTime) const;
+    const LocalTime *findLocalTime(std::int64_t utcTime) const;
 
     const LocalTime *findLocalTime(const struct DateTime &local, bool postTransition) const;
 
@@ -54,11 +54,11 @@ COMMON_NAMESPACE_BEGIN
 
     std::vector<Transition> transitions;
     std::vector<LocalTime> localtimes;
-    STRING abbreviation;
-    STRING tzstring;
+    std::string abbreviation;
+    std::string tzstring;
   };
 
-  const TimeZone::Data::LocalTime* TimeZone::Data::findLocalTime(INT64 utcTime) const
+  const TimeZone::Data::LocalTime* TimeZone::Data::findLocalTime(std::int64_t utcTime) const
   {
     const LocalTime* local = NULL;
 
@@ -101,7 +101,7 @@ COMMON_NAMESPACE_BEGIN
   const TimeZone::Data::LocalTime* TimeZone::Data::findLocalTime(
     const struct DateTime& lt, bool postTransition) const
   {
-    const INT64 localtime = fromUtcTime(lt);
+    const std::int64_t localtime = fromUtcTime(lt);
 
     if (transitions.empty() || localtime < transitions.front().localtime)
     {
@@ -121,7 +121,7 @@ COMMON_NAMESPACE_BEGIN
     }
 
     Transition prior_trans = *(transI - 1);
-    INT64 prior_second = transI->utctime - 1 + localtimes[prior_trans.localtimeIdx].utcOffset;
+    std::int64_t prior_second = transI->utctime - 1 + localtimes[prior_trans.localtimeIdx].utcOffset;
 
     // row UTC time             isdst  offset  Local time (PRC)     Prior second local time
     //  1  1989-09-16 17:00:00Z   0      8.0   1989-09-17 01:00:00
@@ -188,17 +188,17 @@ COMMON_NAMESPACE_BEGIN
 
       bool valid() const { return fp_; }
 
-      STRING readBytes(int n) {
+      std::string readBytes(int n) {
         char buf[n];
         ssize_t nr = ::fread(buf, 1, n, fp_);
         if (nr != n)
           throw std::logic_error("no enough data");
-        return STRING(buf, n);
+        return std::string(buf, n);
       }
 
-      STRING readToEnd() {
+      std::string readToEnd() {
         char buf[4096];
-        STRING result;
+        std::string result;
         ssize_t nr = 0;
         while ((nr = ::fread(buf, 1, sizeof buf, fp_)) > 0) {
           result.append(buf, nr);
@@ -206,11 +206,11 @@ COMMON_NAMESPACE_BEGIN
         return result;
       }
 
-      INT64 readInt64() {
-        INT64 x = 0;
-        ssize_t nr = ::fread(&x, 1, sizeof(INT64), fp_);
-        if (nr != sizeof(INT64))
-          throw std::logic_error("bad INT64 data");
+      std::int64_t readInt64() {
+        std::int64_t x = 0;
+        ssize_t nr = ::fread(&x, 1, sizeof(std::int64_t), fp_);
+        if (nr != sizeof(std::int64_t))
+          throw std::logic_error("bad std::int64_t data");
         return x;
       }
 
@@ -240,7 +240,7 @@ COMMON_NAMESPACE_BEGIN
 
 // RFC 8536: https://www.rfc-editor.org/rfc/rfc8536.html
     bool readDataBlock(File &f, struct TimeZone::Data *data, bool v1) {
-      const int time_size = v1 ? sizeof(int32_t) : sizeof(INT64);
+      const int time_size = v1 ? sizeof(int32_t) : sizeof(std::int64_t);
       const int32_t isutccnt = f.readInt32();
       const int32_t isstdcnt = f.readInt32();
       const int32_t leapcnt = f.readInt32();
@@ -255,7 +255,7 @@ COMMON_NAMESPACE_BEGIN
       if (isstdcnt != 0 && isstdcnt != typecnt)
         return false;
 
-      std::vector<INT64> trans;
+      std::vector<std::int64_t> trans;
       trans.reserve(timecnt);
       for (int i = 0; i < timecnt; ++i) {
         if (v1) {
@@ -303,10 +303,10 @@ COMMON_NAMESPACE_BEGIN
       File f(zonefile);
       if (f.valid()) {
         try {
-          STRING head = f.readBytes(4);
+          std::string head = f.readBytes(4);
           if (head != "TZif")
             throw std::logic_error("bad head");
-          STRING version = f.readBytes(1);
+          std::string version = f.readBytes(1);
           f.readBytes(15);
 
           const int32_t isgmtcnt = f.readInt32();
@@ -346,7 +346,7 @@ COMMON_NAMESPACE_BEGIN
       dt->m_tm.tm_sec = minutes / 60;
     }
 
-    DateTime BreakTime(INT64 t) {
+    DateTime BreakTime(std::int64_t t) {
       struct DateTime dt;
       int seconds = static_cast<int>(t % kSecondsPerDay);
       int days = static_cast<int>(t / kSecondsPerDay);
@@ -391,7 +391,7 @@ COMMON_NAMESPACE_BEGIN
     data_->abbreviation = name;
   }
 
-  struct DateTime TimeZone::toLocalTime(INT64 seconds, int *utcOffset) const {
+  struct DateTime TimeZone::toLocalTime(std::int64_t seconds, int *utcOffset) const {
     struct DateTime localTime;
     assert(data_ != NULL);
 
@@ -407,10 +407,10 @@ COMMON_NAMESPACE_BEGIN
     return localTime;
   }
 
-  INT64 TimeZone::fromLocalTime(const struct DateTime &localtime, bool postTransition) const {
+  std::int64_t TimeZone::fromLocalTime(const struct DateTime &localtime, bool postTransition) const {
     assert(data_ != NULL);
     const Data::LocalTime *local = data_->findLocalTime(localtime, postTransition);
-    const INT64 localSeconds = fromUtcTime(localtime);
+    const std::int64_t localSeconds = fromUtcTime(localtime);
     if (local) {
       return localSeconds - local->utcOffset;
     }
@@ -418,14 +418,14 @@ COMMON_NAMESPACE_BEGIN
     return localSeconds;
   }
 
-  DateTime TimeZone::toUtcTime(INT64 secondsSinceEpoch) {
+  DateTime TimeZone::toUtcTime(std::int64_t secondsSinceEpoch) {
     return detail::BreakTime(secondsSinceEpoch);
   }
 
-  INT64 TimeZone::fromUtcTime(const DateTime &dt) {
+  std::int64_t TimeZone::fromUtcTime(const DateTime &dt) {
     Date date(dt.m_tm.tm_year, dt.m_tm.tm_mon, dt.m_tm.tm_mday);
     int secondsInDay = dt.m_tm.tm_hour * 3600 + dt.m_tm.tm_min* 60 + dt.m_tm.tm_sec;
-    INT64 days = date.julianDayNumber() - Date::kJulianDayOf1970_01_01;
+    std::int64_t days = date.julianDayNumber() - Date::kJulianDayOf1970_01_01;
     return days * kSecondsPerDay + secondsInDay;
   }
 

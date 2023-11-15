@@ -2,10 +2,12 @@
 * Created by boil on 2023/11/13.
 */
 
-#ifndef RENDU_LOG_DEFINE_H_
-#define RENDU_LOG_DEFINE_H_
+#ifndef RENDU_NET_DEFINE_H_
+#define RENDU_NET_DEFINE_H_
 
 #include "common.h"
+
+using namespace rendu::common;
 
 #define NET_NAMESPACE_BEGIN \
   namespace rendu {            \
@@ -15,4 +17,4 @@
     } /*namespace net*/   \
   } /*namespace rendu*/
 
-#endif//RENDU_LOG_DEFINE_H_
+#endif//RENDU_NET_DEFINE_H_

@@ -16,8 +16,8 @@ COMMON_NAMESPACE_BEGIN
     __thread const char *t_threadName = "unknown";
     static_assert(std::is_same<int, pid_t>::value, "pid_t should be int");
 
-    STRING stackTrace(bool demangle) {
-      STRING stack;
+    std::string stackTrace(bool demangle) {
+      std::string stack;
       const int max_frames = 200;
       void *frame[max_frames];
       int nptrs = ::backtrace(frame, max_frames);
@@ -74,7 +74,7 @@ COMMON_NAMESPACE_BEGIN
     }
 
 
-    void sleepUsec(INT64 usec)
+    void sleepUsec(std::int64_t usec)
     {
       struct timespec ts = { 0, 0 };
       ts.tv_sec = static_cast<time_t>(usec / Timestamp::kMicroSecondsPerSecond);

@@ -3,31 +3,30 @@
 */
 
 #include "sock_ops.h"
-#include "logger/log.h"
-#include "dns_cache.h"
+#include "address/dns_cache.h"
 #include "errno/errno.h"
 #include <unistd.h>
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
   namespace SockOps {
 
     int CreateNonblockingOrDie(sa_family_t family) {
       int sockfd = socket(family, SOCK_STREAM, IPPROTO_TCP);
       if (sockfd < 0) {
-        LOG_SYSFATAL << "sockets::createNonblockingOrDie";
+        LOG_CRITICAL << "sockets::createNonblockingOrDie";
       }
       SetNoBlocked(sockfd);
       SetCloExec(sockfd);
       return sockfd;
     }
 
-    void Close(const int32 sfd) {
+    void Close(const std::int32_t sfd) {
       close(sfd);
     }
 
     void ShutdownWrite(SOCKET sockfd) {
       if (shutdown(sockfd, SHUT_WR) < 0) {
-        LOG_SYSERR << "SocketOps::shutdownWrite";
+        LOG_CRITICAL << "SocketOps::shutdownWrite";
       }
     }
 
@@ -179,7 +178,7 @@ COMMON_NAMESPACE_BEGIN
         }
         return sockfd;
       }
-      throw std::invalid_argument(string("Not ip address: ") + remote_host);
+      throw std::invalid_argument(std::string("Not ip address: ") + remote_host);
     }
 
     int Connect(const char *host, uint16_t port, bool async, const char *local_ip, uint16_t local_port) {
@@ -332,7 +331,7 @@ COMMON_NAMESPACE_BEGIN
         reinterpret_cast<struct sockaddr_in6 &>(storage).sin6_port = htons(port);
         return storage;
       }
-      throw std::invalid_argument(string("Not ip GetAddress: ") + host);
+      throw std::invalid_argument(std::string("Not ip GetAddress: ") + host);
     }
 
 
@@ -417,8 +416,8 @@ COMMON_NAMESPACE_BEGIN
     }
 
 
-    string InetNTop(int af, const void *addr) {
-      string ret;
+    std::string InetNTop(int af, const void *addr) {
+      std::string ret;
       ret.resize(128);
       if (!inet_ntop(af, const_cast<void *>(addr), (char *) ret.data(), ret.size())) {
         ret.clear();
@@ -428,7 +427,7 @@ COMMON_NAMESPACE_BEGIN
       return ret;
     }
 
-    string InetNToa(const struct in_addr &addr) {
+    std::string InetNToa(const struct in_addr &addr) {
       return InetNTop(AF_INET, &addr);
     }
 
@@ -511,7 +510,7 @@ COMMON_NAMESPACE_BEGIN
       return true;
     }
 
-    string GetLocalIP(int fd) {
+    std::string GetLocalIP(int fd) {
       struct sockaddr_storage addr;
       socklen_t addr_len = sizeof(addr);
       if (-1 == getsockname(fd, (struct sockaddr *) &addr, &addr_len)) {
@@ -520,7 +519,7 @@ COMMON_NAMESPACE_BEGIN
       return InetNToa((struct sockaddr *) &addr);
     }
 
-    string GetPeerIP(int fd) {
+    std::string GetPeerIP(int fd) {
       struct sockaddr_storage addr;
       socklen_t addr_len = sizeof(addr);
       if (-1 == getpeername(fd, (struct sockaddr *) &addr, &addr_len)) {
@@ -548,7 +547,7 @@ COMMON_NAMESPACE_BEGIN
     }
 
 
-    bool CheckIP(string &address, const string &ip) {
+    bool CheckIP(std::string &address, const std::string &ip) {
       if (ip != "127.0.0.1" && ip != "0.0.0.0") {
         /*获取一个有效IP*/
         address = ip;
@@ -617,7 +616,7 @@ COMMON_NAMESPACE_BEGIN
 #define ip_addr_netcmp(addr1, addr2, mask) (((addr1) & (mask)) == ((addr2) & (mask)))
 
     bool in_same_lan(const char *myIp, const char *dstIp) {
-      string mask = get_ifr_mask(get_ifr_name(myIp).data());
+      std::string mask = get_ifr_mask(get_ifr_name(myIp).data());
       return ip_addr_netcmp(inet_addr(myIp), inet_addr(dstIp), inet_addr(mask.data()));
     }
 
@@ -744,4 +743,4 @@ COMMON_NAMESPACE_BEGIN
 
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

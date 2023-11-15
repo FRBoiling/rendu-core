@@ -42,9 +42,9 @@ COMMON_NAMESPACE_BEGIN
 
     bool isMainThread();
 
-    void sleepUsec(INT64 usec);  // for testing
+    void sleepUsec(std::int64_t usec);  // for testing
 
-    STRING stackTrace(bool demangle);
+    std::string stackTrace(bool demangle);
   }  // namespace CurrentThread
 
 COMMON_NAMESPACE_END

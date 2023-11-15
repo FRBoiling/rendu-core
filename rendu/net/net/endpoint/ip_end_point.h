@@ -2,17 +2,17 @@
 * Created by boil on 2023/10/15.
 */
 
-#ifndef RENDU_COMMON_IP_END_POINT_H
-#define RENDU_COMMON_IP_END_POINT_H
+#ifndef RENDU_IP_END_POINT_H
+#define RENDU_IP_END_POINT_H
 
-#include "common_define.h"
+#include "net/net_define.h"
 
 #include "ip_v4_endpoint.h"
 #include "ip_v6_endpoint.h"
 
 #include "../address/ip_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPEndPoint {
   public:
@@ -137,5 +137,5 @@ COMMON_NAMESPACE_BEGIN
   inline bool IPEndPoint::operator>=(const IPEndPoint &rhs) const noexcept {
     return !(*this < rhs);
   }
-COMMON_NAMESPACE_END
-#endif //RENDU_COMMON_IP_END_POINT_H
+NET_NAMESPACE_END
+#endif //RENDU_IP_END_POINT_H

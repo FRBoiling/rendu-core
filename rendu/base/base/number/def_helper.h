@@ -10,11 +10,6 @@
 
 RD_NAMESPACE_BEGIN
 
-  ALIAS(std::byte, BYTE);
-
-  ALIAS(std::size_t, SIZE);
-
-  ALIAS(char, CHAR);
 
 RD_NAMESPACE_END
 

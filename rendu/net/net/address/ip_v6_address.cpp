@@ -2,10 +2,10 @@
 * Created by boil on 2023/10/16.
 */
 
+#include "net/net_define.h"
 #include "ip_v6_address.h"
-#include "endpoint/end_point_utils.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   std::optional<IPv6Address>
   IPv6Address::FromString(std::string_view string) noexcept {
@@ -34,7 +34,7 @@ COMMON_NAMESPACE_BEGIN
     while (pos < length && partCount < 8) {
       std::uint8_t digits[4];
       int digitCount = 0;
-      auto digit = local::try_parse_hex_digit(string[pos]);
+      auto digit = Digit::TryParseHexDigit(string[pos]);
       if (!digit) {
         return std::nullopt;
       }
@@ -43,7 +43,7 @@ COMMON_NAMESPACE_BEGIN
         digits[digitCount] = *digit;
         ++digitCount;
         ++pos;
-      } while (digitCount < 4 && pos < length && (digit = local::try_parse_hex_digit(string[pos])));
+      } while (digitCount < 4 && pos < length && (digit = Digit::TryParseHexDigit(string[pos])));
 
       // If we're not at the end of the string then there must either be a ':' or a '.' next
       // followed by the next part.
@@ -108,19 +108,19 @@ COMMON_NAMESPACE_BEGIN
 
             ++pos;
 
-            if (pos == length || !local::is_digit(string[pos])) {
+            if (pos == length || !Digit::IsDigit(string[pos])) {
               // Expected a number after a dot.
               return std::nullopt;
             }
 
             const bool hasLeadingZero = string[pos] == '0';
 
-            decimalParts[decimalPart] = local::digit_value(string[pos]);
+            decimalParts[decimalPart] = Digit::ToDigitValue(string[pos]);
             ++pos;
             digitCount = 1;
-            while (digitCount < 3 && pos < length && local::is_digit(string[pos])) {
+            while (digitCount < 3 && pos < length && Digit::IsDigit(string[pos])) {
               decimalParts[decimalPart] *= 10;
-              decimalParts[decimalPart] += local::digit_value(string[pos]);
+              decimalParts[decimalPart] += Digit::ToDigitValue(string[pos]);
               ++pos;
               ++digitCount;
             }
@@ -225,13 +225,13 @@ COMMON_NAMESPACE_BEGIN
       if (highByte > 0 || lowByte > 15) {
         if (highByte > 0) {
           if (highByte > 15) {
-            *c++ = local::hex_char(highByte >> 4);
+            *c++ = Digit::HexToChar(highByte >> 4);
           }
-          *c++ = local::hex_char(highByte & 0xF);
+          *c++ = Digit::HexToChar(highByte & 0xF);
         }
-        *c++ = local::hex_char(lowByte >> 4);
+        *c++ = Digit::HexToChar(lowByte >> 4);
       }
-      *c++ = local::hex_char(lowByte & 0xF);
+      *c++ = Digit::HexToChar(lowByte & 0xF);
     };
 
     if (longestZeroRunLength >= 2) {
@@ -267,4 +267,4 @@ COMMON_NAMESPACE_BEGIN
   }
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

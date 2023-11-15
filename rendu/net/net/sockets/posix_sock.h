@@ -3,8 +3,8 @@
 //*/
 //#if !defined(_WIN32) && !defined(__APPLE__)
 //
-//#ifndef RENDU_COMMON_POSIX_SOCK_H
-//#define RENDU_COMMON_POSIX_SOCK_H
+//#ifndef RENDU_POSIX_SOCK_H
+//#define RENDU_POSIX_SOCK_H
 //
 //
 ///* For POSIX systems we use the standard BSD socket API. */
@@ -23,12 +23,12 @@
 //
 //#include "define.h"
 //
-//COMMON_NAMESPACE_BEGIN
+//NET_NAMESPACE_BEGIN
 //
 //#define SOCKET int32
 //
-//COMMON_NAMESPACE_END
+//NET_NAMESPACE_END
 //
 //#endif
 //
-//#endif //RENDU_COMMON_POSIX_SOCK_H
+//#endif //RENDU_POSIX_SOCK_H

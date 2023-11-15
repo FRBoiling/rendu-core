@@ -17,11 +17,11 @@ COMMON_NAMESPACE_BEGIN
   class TimerId : public Copyable {
   public:
     TimerId()
-      : timer_(NULL),
+      : timer_(nullptr),
         sequence_(0) {
     }
 
-    TimerId(Timer *timer, INT64 seq)
+    TimerId(Timer *timer, std::int64_t seq)
       : timer_(timer),
         sequence_(seq) {
     }
@@ -32,7 +32,7 @@ COMMON_NAMESPACE_BEGIN
 
   private:
     Timer *timer_;
-    INT64 sequence_;
+    std::int64_t sequence_;
   };
 
 COMMON_NAMESPACE_END

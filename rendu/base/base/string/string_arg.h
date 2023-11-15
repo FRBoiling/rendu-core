@@ -15,7 +15,7 @@ RD_NAMESPACE_BEGIN
     explicit StringArg(const char *str)
       : str_(str) {}
 
-    explicit StringArg(const STRING &str)
+    explicit StringArg(const std::string &str)
       : str_(str.c_str()) {}
 
     [[nodiscard]] const char *c_str() const { return str_; }

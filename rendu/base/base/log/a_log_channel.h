@@ -17,7 +17,7 @@ public:
   using Ptr = std::shared_ptr<ALogChannel>;
 
 public:
-  ALogChannel(const STRING &name = "default", LogLevel::Level level = LogLevel::LInvalid);
+  ALogChannel(const std::string &name = "default", LogLevel::Level level = LogLevel::LInvalid);
 
   virtual ~ALogChannel();
 
@@ -25,11 +25,11 @@ public:
   virtual void Write(const LogContext::Ptr &ctx, ALogger &logger) ;
 
 public:
-  const STRING &Name() const;
+  const std::string &Name() const;
 
   void SetLevel(LogLevel::Level level);
 
-  static STRING PrintTime(const timeval &tv);
+  static std::string PrintTime(const timeval &tv);
 
 protected:
   /**
@@ -41,7 +41,7 @@ protected:
   virtual void Format(const ALogger &logger, std::ostream &ost, const LogContext::Ptr& ctx);
 
 protected:
-  STRING _name;
+  std::string _name;
   LogLevel::Level _level;
   bool _enable_detail;
 };

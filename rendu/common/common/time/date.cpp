@@ -49,7 +49,7 @@ COMMON_NAMESPACE_BEGIN
     t.tm_mday)) {
   }
 
-  STRING Date::toIsoString() const {
+  std::string Date::toIsoString() const {
     char buf[32];
     YearMonthDay ymd(yearMonthDay());
     snprintf(buf, sizeof buf, "%4d-%02d-%02d", ymd.year, ymd.month, ymd.day);

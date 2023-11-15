@@ -12,7 +12,7 @@
 RD_NAMESPACE_BEGIN
 
 template<typename T>
-void Copy(const T *src, INT32 src_index, T *dest, INT32 dest_index, INT32 length) {
+void Copy(const T *src, std::int32_t src_index, T *dest, std::int32_t dest_index, std::int32_t length) {
   // 检查索引和长度是否合法，如果不合法，抛出异常
   if (src_index + length > sizeof(src) || dest_index + length > sizeof(dest)) {
     throw std::out_of_range("Array index out of range");

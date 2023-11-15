@@ -28,15 +28,15 @@ COMMON_NAMESPACE_BEGIN
       return static_cast<bool>(data_);
     }
 
-    struct DateTime toLocalTime(INT64 secondsSinceEpoch, int *utcOffset = nullptr) const;
+    struct DateTime toLocalTime(std::int64_t secondsSinceEpoch, int *utcOffset = nullptr) const;
 
-    INT64 fromLocalTime(const struct DateTime &, bool postTransition = false) const;
+    std::int64_t fromLocalTime(const struct DateTime &, bool postTransition = false) const;
 
     // gmtime(3)
-    static struct DateTime toUtcTime(INT64 secondsSinceEpoch);
+    static struct DateTime toUtcTime(std::int64_t secondsSinceEpoch);
 
     // timegm(3)
-    static INT64 fromUtcTime(const struct DateTime &);
+    static std::int64_t fromUtcTime(const struct DateTime &);
 
     struct Data;
 

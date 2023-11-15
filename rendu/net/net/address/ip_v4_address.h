@@ -2,12 +2,12 @@
 * Created by boil on 2023/10/16.
 */
 
-#ifndef RENDU_COMMON_IP_V4_ADDRESS_H
-#define RENDU_COMMON_IP_V4_ADDRESS_H
+#ifndef RENDU_IP_V4_ADDRESS_H
+#define RENDU_IP_V4_ADDRESS_H
 
-#include "common_define.h"
+#include "net_define.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPv4Address {
     using bytes_t = std::uint8_t[4];
@@ -17,7 +17,7 @@ COMMON_NAMESPACE_BEGIN
     constexpr IPv4Address()
       : m_bytes{0, 0, 0, 0} {}
 
-    explicit constexpr IPv4Address(std::uint32_t integer)
+    explicit constexpr IPv4Address(uint32_t integer)
       : m_bytes{
       static_cast<std::uint8_t>(integer >> 24),
       static_cast<std::uint8_t>(integer >> 16),
@@ -57,12 +57,12 @@ COMMON_NAMESPACE_BEGIN
 
     [[nodiscard]] constexpr const bytes_t &GetBytes() const { return m_bytes; }
 
-    [[nodiscard]] constexpr std::uint32_t to_integer() const {
+    [[nodiscard]] constexpr uint32_t to_integer() const {
       return
-        std::uint32_t(m_bytes[0]) << 24 |
-        std::uint32_t(m_bytes[1]) << 16 |
-        std::uint32_t(m_bytes[2]) << 8 |
-        std::uint32_t(m_bytes[3]);
+        uint32_t(m_bytes[0]) << 24 |
+        uint32_t(m_bytes[1]) << 16 |
+        uint32_t(m_bytes[2]) << 8 |
+        uint32_t(m_bytes[3]);
     }
 
     static constexpr IPv4Address loopback() {
@@ -93,7 +93,7 @@ COMMON_NAMESPACE_BEGIN
 
 
   private:
-    alignas(std::uint32_t) std::uint8_t m_bytes[4];
+    alignas(uint32_t) std::uint8_t m_bytes[4];
   };
 
   constexpr bool IPv4Address::operator==(IPv4Address other) const {
@@ -124,6 +124,6 @@ COMMON_NAMESPACE_BEGIN
     return !(*this < other);
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_IP_V4_ADDRESS_H
+#endif //RENDU_IP_V4_ADDRESS_H

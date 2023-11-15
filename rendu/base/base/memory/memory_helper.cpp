@@ -6,7 +6,7 @@
 
 RD_NAMESPACE_BEGIN
 
-void MemZero(void *p, SIZE n) {
+void MemZero(void *p, std::size_t n) {
   memset(p, 0, n);
 }
 

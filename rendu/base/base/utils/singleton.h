@@ -17,7 +17,7 @@ RD_NAMESPACE_BEGIN
       static char test(decltype(&C::no_destroy));
 
       template<typename C>
-      static INT32 test(...);
+      static std::int32_t test(...);
 
       const static bool value = sizeof(test<T>(0)) == 1;
     };

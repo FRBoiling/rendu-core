@@ -10,11 +10,11 @@
 
 RD_NAMESPACE_BEGIN
 
-  const STRING &ALogger::GetName() const {
+  const std::string &ALogger::GetName() const {
     return _logger_name;
   }
 
-  ALogger::ALogger(const STRING &loggerName) {
+  ALogger::ALogger(const std::string &loggerName) {
     _logger_name = loggerName;
   }
 
@@ -32,7 +32,7 @@ RD_NAMESPACE_BEGIN
     _channels.erase(name);
   }
 
-  std::shared_ptr<ALogChannel> ALogger::Get(const STRING &name) {
+  std::shared_ptr<ALogChannel> ALogger::Get(const std::string &name) {
     auto it = _channels.find(name);
     if (it == _channels.end()) {
       return nullptr;

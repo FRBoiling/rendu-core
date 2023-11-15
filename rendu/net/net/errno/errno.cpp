@@ -13,7 +13,7 @@
 #include <cerrno>
 #endif // defined(_WIN32)
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   static const char *rd__unknown_err_code(int err) {
     static char buf[32];
@@ -176,4 +176,4 @@ COMMON_NAMESPACE_BEGIN
     return StrError(GetError(netErr));
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

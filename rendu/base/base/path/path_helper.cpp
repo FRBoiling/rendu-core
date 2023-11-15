@@ -44,7 +44,7 @@ int uv_exepath(char *buffer, int *size) {
 
 RD_NAMESPACE_BEGIN
 
-STRING GetExePath(bool isExe/*= true*/) {
+std::string GetExePath(bool isExe/*= true*/) {
   char buffer[PATH_MAX * 2 + 1] = {0};
   int n = -1;
 #if defined(_WIN32)
@@ -58,7 +58,7 @@ STRING GetExePath(bool isExe/*= true*/) {
   n = readlink("/proc/self/exe", buffer, sizeof(buffer));
 #endif
 
-  STRING filePath;
+  std::string filePath;
   if (n <= 0) {
     filePath = "./";
   } else {
@@ -77,12 +77,12 @@ STRING GetExePath(bool isExe/*= true*/) {
   return filePath;
 }
 
-STRING GetExeDir(bool isExe/*= true*/) {
+std::string GetExeDir(bool isExe/*= true*/) {
   auto path = GetExePath(isExe);
   return path.substr(0, path.rfind('/') + 1);
 }
 
-STRING GetExeName(bool isExe/*= true*/) {
+std::string GetExeName(bool isExe/*= true*/) {
   auto path = GetExePath(isExe);
   return path.substr(path.rfind('/') + 1);
 }

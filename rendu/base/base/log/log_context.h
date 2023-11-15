@@ -37,7 +37,7 @@ RD_NAMESPACE_BEGIN
     ~LogContext() = default;
 
   public:
-    const STRING &str();
+    const std::string &str();
 
   public:
     LogLevel::Level GetLogLevel() { return _level; }
@@ -46,28 +46,28 @@ RD_NAMESPACE_BEGIN
 
     struct timeval& GetTimeval() { return _tv; }
 
-    STRING GetFlag() { return _flag; }
-    STRING GetFile() { return _file; }
-    STRING GetFunction() { return _function; }
-    STRING GetThreadName() { return _thread_name; }
-    STRING GetModuleName() { return _module_name; }
-    INT32 GetLine() { return _line; }
-    INT32 GetRepeat() { return _repeat; }
+    std::string GetFlag() { return _flag; }
+    std::string GetFile() { return _file; }
+    std::string GetFunction() { return _function; }
+    std::string GetThreadName() { return _thread_name; }
+    std::string GetModuleName() { return _module_name; }
+    std::int32_t GetLine() { return _line; }
+    std::int32_t GetRepeat() { return _repeat; }
 
   private:
     LogLevel::Level _level;
-    INT32 _line;
-    INT32 _repeat;
-    STRING _file;
-    STRING _function;
-    STRING _thread_name;
-    STRING _module_name;
-    STRING _flag;
+    std::int32_t _line;
+    std::int32_t _repeat;
+    std::string _file;
+    std::string _function;
+    std::string _thread_name;
+    std::string _module_name;
+    std::string _flag;
     struct timeval _tv;
 
   private:
     bool _got_content = false;
-    STRING _content;
+    std::string _content;
   };
 
 RD_NAMESPACE_END

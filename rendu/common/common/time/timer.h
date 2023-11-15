@@ -32,18 +32,18 @@ COMMON_NAMESPACE_BEGIN
 
     bool repeat() const { return repeat_; }
 
-    INT64 sequence() const { return sequence_; }
+    std::int64_t sequence() const { return sequence_; }
 
     void restart(Timestamp now);
 
-    static INT64 numCreated() { return s_numCreated_.get(); }
+    static std::int64_t numCreated() { return s_numCreated_.get(); }
 
   private:
     const TimerCallback callback_;
     Timestamp expiration_;
     const double interval_;
     const bool repeat_;
-    const INT64 sequence_;
+    const std::int64_t sequence_;
 
     static AtomicInt64 s_numCreated_;
   };

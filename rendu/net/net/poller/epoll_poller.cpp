@@ -4,7 +4,7 @@
 //
 //#include "epoll_poller.h"
 //
-//COMMON_NAMESPACE_BEGIN
+//NET_NAMESPACE_BEGIN
 //
 //  EpollPoller::EpollPoller(EventLoop *loop)
 //    : Poller(loop),
@@ -142,4 +142,4 @@
 //    }
 //  }
 //
-//COMMON_NAMESPACE_END
+//NET_NAMESPACE_END

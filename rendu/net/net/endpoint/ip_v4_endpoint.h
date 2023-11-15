@@ -2,12 +2,12 @@
 * Created by boil on 2023/10/16.
 */
 
-#ifndef RENDU_COMMON_IP_V4_ENDPOINT_H
-#define RENDU_COMMON_IP_V4_ENDPOINT_H
+#ifndef RENDU_IP_V4_ENDPOINT_H
+#define RENDU_IP_V4_ENDPOINT_H
 
 #include "../address/ip_v4_address.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
   class IPv4EndPoint {
   public:
@@ -16,7 +16,7 @@ COMMON_NAMESPACE_BEGIN
     IPv4EndPoint() noexcept
       : m_address(), m_port(0) {}
 
-    explicit IPv4EndPoint(IPv4Address address, UINT16 port = 0) noexcept
+    explicit IPv4EndPoint(IPv4Address address, std::uint16_t port = 0) noexcept
       : m_address(address), m_port(port) {}
 
   public:
@@ -29,13 +29,13 @@ COMMON_NAMESPACE_BEGIN
 
     [[nodiscard]] const IPv4Address &GetAddress() const noexcept { return m_address; }
 
-    [[nodiscard]] UINT16 GetPort() const noexcept { return m_port; }
+    [[nodiscard]] std::uint16_t GetPort() const noexcept { return m_port; }
 
 
 
   private:
     IPv4Address m_address;
-    UINT16 m_port;
+    std::uint16_t m_port;
   };
 
   inline bool operator==(const IPv4EndPoint &a, const IPv4EndPoint &b) {
@@ -64,6 +64,6 @@ COMMON_NAMESPACE_BEGIN
     return !(a < b);
   }
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
-#endif //RENDU_COMMON_IP_V4_ENDPOINT_H
+#endif //RENDU_IP_V4_ENDPOINT_H

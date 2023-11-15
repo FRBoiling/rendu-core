@@ -3,8 +3,8 @@
 */
 #ifdef _WIN32
 
-#ifndef RENDU_COMMON_WIN_SOCK_H
-#define RENDU_COMMON_WIN_SOCK_H
+#ifndef RENDU_WIN_SOCK_H
+#define RENDU_WIN_SOCK_H
 
 /*
  * Some minor differences between sockets on various platforms.
@@ -47,7 +47,7 @@ typedef long long ssize_t;
 #endif
 
 #include "define.h"
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
 /* Emulate the parts of the BSD socket API that we need (override the winsock signatures). */
 int win32_getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res);
@@ -81,8 +81,8 @@ int win32_poll(struct pollfd *fds, nfds_t nfds, int timeout);
 #define send(sockfd, buf, len, flags) win32_send(sockfd, buf, len, flags)
 #define poll(fds, nfds, timeout) win32_poll(fds, nfds, timeout)
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END
 
 #endif /* _WIN32 */
 
-#endif //RENDU_COMMON_WIN_SOCK_H
+#endif //RENDU_WIN_SOCK_H

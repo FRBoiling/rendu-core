@@ -4,10 +4,9 @@
 
 #include "kqueue_poller.h"
 #include "base/utils/type_cast.h"
-#include "log.h"
 #include "sockets/sock_ops.h"
 
-COMMON_NAMESPACE_BEGIN
+NET_NAMESPACE_BEGIN
 
 #define EVENT_MASK_MALLOC_SIZE(sz) (((sz) + 3) / 4)
 #define EVENT_MASK_OFFSET(fd) ((fd) % 4 * 2)
@@ -60,13 +59,13 @@ COMMON_NAMESPACE_BEGIN
     if (mask & RD_READABLE) {
       EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, channel);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_SYSFATAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+        LOG_CRITICAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
       }
     }
     if (mask & RD_WRITABLE) {
       EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, channel);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_SYSFATAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+        LOG_CRITICAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
       }
     }
   }
@@ -78,13 +77,13 @@ COMMON_NAMESPACE_BEGIN
     if (mask & RD_READABLE) {
       EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+        LOG_CRITICAL << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
       }
     }
     if (mask & RD_WRITABLE) {
       EV_SET(&event, fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
       if (kevent(poller_fd_, &event, 1, NULL, 0, NULL) == -1) {
-        LOG_SYSERR << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+        LOG_CRITICAL << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
       }
     }
   }
@@ -137,7 +136,7 @@ COMMON_NAMESPACE_BEGIN
       }
     } else if (retval == -1 && savedErrno != EINTR) {
       errno = savedErrno;
-      LOG_SYSERR << "aeApiPoll: kevent, %s" << strerror(errno);
+      LOG_CRITICAL << "aeApiPoll: kevent, %s" << strerror(errno);
     }
     return now;
   }
@@ -156,4 +155,4 @@ COMMON_NAMESPACE_BEGIN
   }
 
 
-COMMON_NAMESPACE_END
+NET_NAMESPACE_END

@@ -6,7 +6,7 @@
 
 COMMON_NAMESPACE_BEGIN
 
-    void Stream::Write(BYTE *buffer, int offset, int count) {
+    void Stream::Write(std::byte *buffer, int offset, int count) {
 
     }
 

@@ -1,25 +1,29 @@
 /*
-* Created by boil on 2023/10/15.
-*/
+  * Created by boil on 2023/10/15.
+  */
 
 #ifndef RENDU_BASE_STRING_HELPER_H
 #define RENDU_BASE_STRING_HELPER_H
 
 
-#include "string_define.h"
 #include "number/int_helper.h"
+#include "string_define.h"
 
 RD_NAMESPACE_BEGIN
 
-bool IsDigit(char c);
+namespace Digit {
 
-UINT8 ToDigitValue(char c);
+  bool IsDigit(char c);
 
-std::optional<UINT8> TryParseHexDigit(char c);
+  std::uint8_t ToDigitValue(char c);
 
-char HexChar(UINT8 value);
+  std::optional<std::uint8_t> TryParseHexDigit(char c);
 
-std::optional<std::uint16_t> ParseInt(std::string_view string);
+  char HexToChar(std::uint8_t value);
+
+  std::optional<std::uint16_t> StringToPort(std::string_view string);
+
+}// namespace Digit
 
 RD_NAMESPACE_END
 
@@ -27,4 +31,4 @@ RD_NAMESPACE_END
 #include "string_arg.h"
 #include "string_piece.h"
 
-#endif //RENDU_BASE_STRING_HELPER_H
+#endif//RENDU_BASE_STRING_HELPER_H
