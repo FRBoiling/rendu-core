@@ -10,7 +10,6 @@
 #include "thread_group.h"
 #include "logger/logger.h"
 #include "thread_helper.h"
-#include "logger/logger.h"
 
 RD_NAMESPACE_BEGIN
 

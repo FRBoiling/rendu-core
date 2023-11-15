@@ -6,9 +6,9 @@
 #define RENDU_OUTER_NET_SYSTEM_H
 
 #include "base/utils/singleton.h"
+#include "common/thread/task/task.h"
 #include "entity/component_system.h"
 #include "network/a_service.h"
-#include "task/task.h"
 
 RD_NAMESPACE_BEGIN
 

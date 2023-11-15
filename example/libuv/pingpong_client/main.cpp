@@ -85,7 +85,7 @@ public:
     {
       threadPool_.setThreadNum(threadCount);
     }
-    threadPool_.start();
+    threadPool_.Start();
 
     for (int i = 0; i < blockSize; ++i)
     {

@@ -3,10 +3,11 @@
 */
 
 #include "app.h"
-#include "logger/log.h"
+#include "log.h"
 #include <exception>
 
 using namespace rendu;
+using namespace rendu::log;
 
 int main(int argc, char **argv) {
   App::Start(argc, argv);

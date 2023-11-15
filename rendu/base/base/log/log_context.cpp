@@ -26,13 +26,18 @@ RD_NAMESPACE_BEGIN
       return pos ? pos + 1 : func;
 #endif
   }
+  LogContext::LogContext() : _level(LogLevel::Level::LInvalid), _line(0), _repeat(true), _file(""), _function(""), _module_name(""),
+                             _flag("") {
+    gettimeofday(&_tv, nullptr);
+    _thread_name = GetCurrThreadName();
+  }
 
   LogContext::LogContext(LogLevel::Level level, const char *file, const char *function, int line, const char *module_name,
                          const char *flag)
     : _level(level), _line(line), _file(GetFileName(file)), _function(GetFunctionName(function)),
       _module_name(module_name), _flag(flag) {
     gettimeofday(&_tv, nullptr);
-    _thread_name = GetThreadName();
+    _thread_name = GetCurrThreadName();
   }
 
   const std::string &LogContext::str() {
@@ -45,4 +50,5 @@ RD_NAMESPACE_BEGIN
   }
 
 
-RD_NAMESPACE_END
+
+  RD_NAMESPACE_END

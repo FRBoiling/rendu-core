@@ -6,6 +6,7 @@
 #define RENDU_CORE_DEFINE_H
 
 #include "common.h"
+#include "log.h"
 
 #define CORE_NAMESPACE_BEGIN \
   namespace rendu {            \

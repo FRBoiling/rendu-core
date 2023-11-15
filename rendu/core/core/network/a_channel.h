@@ -6,7 +6,6 @@
 #define RENDU_A_CHANNEL_H
 
 #include "core_define.h"
-#include "network/socket.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -22,7 +21,7 @@ RD_NAMESPACE_BEGIN
       virtual ~AChannel() = default;
 
     public:
-      [[nodiscard]] int64 GetId() const {
+      [[nodiscard]] int64_t GetId() const {
         return m_id;
       }
 
@@ -34,9 +33,9 @@ RD_NAMESPACE_BEGIN
         return m_id == 0;
       }
     protected:
-      int64 m_id;
+      int64_t m_id;
       ChannelType m_type;
-      int32 m_error;
+      int32_t m_error;
     };
 
 RD_NAMESPACE_END

@@ -5,7 +5,6 @@
 #ifndef RENDU_RD_ERRNO_H
 #define RENDU_RD_ERRNO_H
 
-#include "../../../../../../../../Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/c++/v1/cerrno"
 
 #define RD__EOF     (-4095)
 #define RD__UNKNOWN (-4094)

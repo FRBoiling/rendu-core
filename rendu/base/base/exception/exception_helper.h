@@ -11,7 +11,6 @@
 
 RD_NAMESPACE_BEGIN
 
-  ALIAS(std::exception, EXCEPTION);
 
 RD_NAMESPACE_END
 

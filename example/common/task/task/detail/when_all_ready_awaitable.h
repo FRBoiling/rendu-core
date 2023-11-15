@@ -116,7 +116,7 @@ RD_NAMESPACE_BEGIN
           template<std::size_t... INDICES>
           void start_tasks(std::integer_sequence<std::size_t, INDICES...>) noexcept {
             (void) std::initializer_list<int>{
-                (std::get<INDICES>(m_tasks).start(m_counter), 0)...
+                (std::get<INDICES>(m_tasks).Start(m_counter), 0)...
             };
           }
 
@@ -209,7 +209,7 @@ RD_NAMESPACE_BEGIN
 
           bool try_await(std::coroutine_handle<> awaitingCoroutine) noexcept {
             for (auto &&task: m_tasks) {
-              task.start(m_counter);
+              task.Start(m_counter);
             }
 
             return m_counter.try_await(awaitingCoroutine);

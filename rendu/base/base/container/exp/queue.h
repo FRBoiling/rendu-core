@@ -11,7 +11,7 @@
 RD_NAMESPACE_BEGIN
 
 template<typename Element>
-class CQueue : public std::queue<Element> {
+class Queue : public std::queue<Element> {
 
 public:
   int Count() {

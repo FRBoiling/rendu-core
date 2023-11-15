@@ -7,7 +7,7 @@
 
 RD_NAMESPACE_BEGIN
 
-void SetThreadName(const char *name) {
+void SetCurrThreadName(const char *name) {
   assert(name);
 #if defined(__linux) || defined(__linux__) || defined(__MINGW32__)
   pthread_setname_np(pthread_self(), limitString(name, 16).data());
@@ -57,7 +57,7 @@ void SetThreadName(const char *name) {
 #endif
 }
 
-std::string GetThreadName() {
+std::string GetCurrThreadName() {
 #if ((defined(__linux) || defined(__linux__)) && !defined(ANDROID)) || (defined(__MACH__) || defined(__APPLE__)) || (defined(ANDROID) && __ANDROID_API__ >= 26) || defined(__MINGW32__)
   std::string ret;
   ret.resize(32);

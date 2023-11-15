@@ -12,7 +12,6 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
+    rendu::net
     proto::model
-    rendu::common
-    dep::entt
 )

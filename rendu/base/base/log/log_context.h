@@ -22,10 +22,7 @@ RD_NAMESPACE_BEGIN
     //_file,_function改成STRING保存，目的是有些情况下，指针可能会失效
     //比如说动态库中打印了一条日志，然后动态库卸载了，那么指向静态数据区的指针就会失效
 
-    LogContext() : _level(LogLevel::Level::LInvalid), _line(0), _repeat(true), _file(""), _function(""), _module_name(""),
-                   _flag("") {
-
-    }
+    LogContext();
 
     LogContext(LogLevel::Level level,
                const char *file,
@@ -63,7 +60,7 @@ RD_NAMESPACE_BEGIN
     std::string _thread_name;
     std::string _module_name;
     std::string _flag;
-    struct timeval _tv;
+    struct timeval _tv{};
 
   private:
     bool _got_content = false;

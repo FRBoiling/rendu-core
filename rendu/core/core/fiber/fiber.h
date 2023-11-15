@@ -6,13 +6,12 @@
 #define RENDU_FIBER_H
 
 #include "actor/address.h"
+#include "common/thread/task/task.h"
 #include "core_define.h"
 #include "entity/scene.h"
 #include "entity/scene_type.h"
 #include "entity_system.h"
 #include "mailboxes.h"
-#include "queue.h"
-#include "task/task.h"
 #include "thread/thread_synchronization_context.h"
 #include <queue>
 

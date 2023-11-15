@@ -6,6 +6,7 @@
 #define RENDU_BASE_THREAD_HELPER_H
 
 #include "thread_define.h"
+
 //#include "mutex_lock.h"
 #include "semaphore.h"
 #include "string/string_helper.h"
@@ -14,9 +15,9 @@ RD_NAMESPACE_BEGIN
 
   extern thread_local std::thread thread_name;
 
-  void SetThreadName(const char *name);
+  void SetCurrThreadName(const char *name);
 
-  std::string GetThreadName();
+  std::string GetCurrThreadName();
 
   std::string LimitString(const char *name, size_t max_size);
 
@@ -83,9 +84,12 @@ RD_NAMESPACE_BEGIN
 #ifdef _WIN32
 #define GetPid() GetCurrentProcessId()
 #else
-#define GetPid() getpid()
+#define GetPid() getpid()  //std::this_thread::get_id()
 #endif
 
 RD_NAMESPACE_END
+
+#include "task/task.h"
+
 
 #endif //RENDU_BASE_THREAD_HELPER_H

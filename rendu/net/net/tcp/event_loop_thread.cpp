@@ -29,8 +29,8 @@ NET_NAMESPACE_BEGIN
   }
 
   EventLoop *EventLoopThread::startLoop() {
-    assert(!thread_.started());
-    thread_.start();
+    assert(!thread_.Started());
+    thread_.Start();
 
     EventLoop *loop = NULL;
     {

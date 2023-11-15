@@ -8,9 +8,7 @@
 #include "core_define.h"
 #include <functional>
 
-#include  "network/ip_end_point.h"
 #include "serialize/memory_buffer.h"
-#include "queue.h"
 #include "exception/exception_helper.h"
 #include <tuple>
 
@@ -24,9 +22,9 @@ RD_NAMESPACE_BEGIN
     class AService {
 
     protected:
-      using AcceptCallback = std::function<void(int64, IPEndPoint *)>;
-      using ReadCallback = std::function<void(int64, MemoryBuffer *)>;
-      using ErrorCallback = std::function<void(int64, int32)>;
+      using AcceptCallback = std::function<void(int64_t, IPEndPoint *)>;
+      using ReadCallback = std::function<void(int64_t, MemoryBuffer *)>;
+      using ErrorCallback = std::function<void(int64_t, int32_t)>;
 
     public:
       int m_id;
@@ -52,17 +50,17 @@ RD_NAMESPACE_BEGIN
 
       virtual void Update() = 0;
 
-      virtual void Remove(int64 id, int error) = 0;
+      virtual void Remove(int64_t id, int error) = 0;
 
       virtual bool IsDisposed() = 0;
 
-      virtual void Create(int64 id, std::string address) = 0;
+      virtual void Create(int64_t id, std::string address) = 0;
 
-      virtual void Send(int64 channelId, MemoryBuffer *memoryBuffer) = 0;
+      virtual void Send(int64_t channelId, MemoryBuffer *memoryBuffer) = 0;
 
-      [[maybe_unused]] virtual std::tuple<uint32_t, uint32_t> GetChannelConn(int64 channelId);
+      [[maybe_unused]] virtual std::tuple<uint32_t, uint32_t> GetChannelConn(int64_t channelId);
 
-      virtual void ChangeAddress(int64 channelId, IPEndPoint ipEndPoint);
+      virtual void ChangeAddress(int64_t channelId, IPEndPoint ipEndPoint);
 
 
     };
