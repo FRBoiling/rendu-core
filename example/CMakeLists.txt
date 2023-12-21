@@ -5,7 +5,7 @@
 #| rendu-core examples project
 #|--------------------------------
 if (RD_BUILD_EXAMPLES)
-  set(PROJECT_NAME example_zltoolkit)
+  set(PROJECT_NAME example)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude

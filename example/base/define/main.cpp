@@ -1,9 +1,11 @@
 
-#include "my_header.h"
+#include <iostream>
+#include <format>
 
-int main() {
-  // 使用函数模板变量tostr来调用std::to_string函数
-  std::string s = tostr(123);
-  std::cout << s << std::endl; // 输出123
+int main()
+{
+  std::string format_str = std::format("There are {} fools in the world",10);
+  std::cout << format_str << std::endl;
+
   return 0;
 }

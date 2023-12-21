@@ -1,33 +1,20 @@
 /*
-* Created by boil on 2023/11/24.
+* Created by boil on 2023/12/21.
 */
 
-#ifndef RENDU_SPD_CHANNEL_H
-#define RENDU_SPD_CHANNEL_H
+#ifndef RENDU_SPDLOG_CONSOLE_CHANNEL_H
+#define RENDU_SPDLOG_CONSOLE_CHANNEL_H
 
-#include "log_define.h"
+#include "spdlog_channel.h"
 
 LOG_NAMESPACE_BEGIN
 
-class SpdlogConsoleChannel : public ALogChannel {
-
+class SpdLogConsoleChannel : public SpdlogChannel {
 public:
-  SpdlogConsoleChannel(const std::string &name = "SpdlogConsoleChannel", LogLevel::Level level = LogLevel::LInvalid, bool enable_color = true);
+  explicit SpdLogConsoleChannel();
 
-  ~SpdlogConsoleChannel() override = default;
-
-public:
-  void Write(const LogContext::Ptr &ctx, ALogger &logger) override;
-
-protected:
-  void Format(const ALogger &logger, std::ostream &ost, const LogContext::Ptr &ctx) override;
-
-private:
-  std::string console_pattern_{"[%m-%d %H:%M:%S.%e][%n][%^%L%$] [%s:%#] %v"};
-
-  bool enable_color_;
 };
 
 LOG_NAMESPACE_END
 
-#endif//RENDU_SPD_CHANNEL_H
+#endif//RENDU_SPDLOG_CONSOLE_CHANNEL_H

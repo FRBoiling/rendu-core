@@ -5,7 +5,7 @@
 #ifndef RENDU_LOG_DEFINE_H_
 #define RENDU_LOG_DEFINE_H_
 
-#include "base.h"
+#include "common.h"
 
 #define LOG_NAMESPACE_BEGIN \
   namespace rendu {         \

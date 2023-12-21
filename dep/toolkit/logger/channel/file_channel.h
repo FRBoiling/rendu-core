@@ -2,7 +2,7 @@
 * Created by boil on 2023/10/26.
 */
 
-#ifndef RENDU_FILE_CHANNEL_H
+#ifndef RENDU_SPDLOG_FILE_CHANNEL_H
 #define RENDU_FILE_CHANNEL_H
 
 #include "a_log_channel.h"
@@ -95,4 +95,4 @@ RD_NAMESPACE_BEGIN
 
 RD_NAMESPACE_END
 
-#endif //RENDU_FILE_CHANNEL_H
+#endif//RENDU_SPDLOG_FILE_CHANNEL_H

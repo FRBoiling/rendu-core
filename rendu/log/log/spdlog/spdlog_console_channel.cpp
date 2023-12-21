@@ -1,5 +1,5 @@
 /*
-* Created by boil on 2023/11/24.
+* Created by boil on 2023/12/21.
 */
 
 #include "spdlog_console_channel.h"
@@ -7,17 +7,9 @@
 LOG_NAMESPACE_BEGIN
 
 
-SpdlogConsoleChannel::SpdlogConsoleChannel(const std::string &name, LogLevel::Level level, bool enable_color) : ALogChannel(name, level),
-                                                                                                                enable_color_(enable_color) {}
-
-void SpdlogConsoleChannel::Write(const LogContext::Ptr &ctx, ALogger &logger) {
-
-
-
+SpdLogConsoleChannel::SpdLogConsoleChannel() : SpdlogChannel(CONSOLE_MSG_PATTERN) {
+  sink_ptr_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+  sink_ptr_->set_pattern(msg_pattern_);
 }
-
-void SpdlogConsoleChannel::Format(const ALogger &logger, std::ostream &ost, const LogContext::Ptr &ctx) {
-}
-
 
 LOG_NAMESPACE_END

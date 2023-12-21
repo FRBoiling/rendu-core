@@ -18,6 +18,5 @@
 #include "base/utils/copyable.h"
 #include "base/utils/non_copyable.h"
 #include "base/utils/singleton.h"
-#include "base/log/log_helper.h"
 
 #endif //RENDU_BASE_H

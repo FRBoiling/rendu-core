@@ -27,7 +27,6 @@ public:
   SystemType GetSystemType() { return m_Type; }
 
   virtual void Run(Entity &entity) {
-    LOG_INFO << ToString() << " Poll";
   };
 
   virtual std::string ToString() { return typeid(this).name(); }

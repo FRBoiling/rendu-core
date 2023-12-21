@@ -61,11 +61,9 @@ int main() {
 //
   auto t = Dequeue(queue_test);
 
-
   vector_example();
   set_example();
   map_example();
   unordered_map_example();
   std::cout << "Hello container" << std::endl;
-
 }

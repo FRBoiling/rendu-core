@@ -1,16 +1,19 @@
 /*
-* Created by boil on 2023/11/24.
+* Created by boil on 2023/12/21.
 */
 
-#ifndef RENDU_SPD_FILE_CHANNEL_H
-#define RENDU_SPD_FILE_CHANNEL_H
+#ifndef RENDU_SPDLOG_FILE_CHANNEL_H
+#define RENDU_SPDLOG_FILE_CHANNEL_H
 
-#include "log_define.h"
+#include "spdlog_channel.h"
 
 LOG_NAMESPACE_BEGIN
-class SpdlogFileChannel : public ALogChannel {
+
+class SpdLogFileChannel : public SpdlogChannel {
+public:
+  explicit SpdLogFileChannel(Logger *logger);
 };
+
 LOG_NAMESPACE_END
 
-
-#endif//RENDU_SPD_FILE_CHANNEL_H
+#endif//RENDU_SPDLOG_FILE_CHANNEL_H
