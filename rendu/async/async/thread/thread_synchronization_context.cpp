@@ -5,6 +5,7 @@
 #include "thread_synchronization_context.h"
 
 ASYNC_NAMESPACE_BEGIN
+using namespace common;
 
     ThreadSynchronizationContext::ThreadSynchronizationContext() {
 
@@ -23,7 +24,7 @@ ASYNC_NAMESPACE_BEGIN
 
         }
         catch (std::exception &e) {
-          LOG_CRITICAL<< e.what();
+         RD_CRITICAL(e.what());
         }
       }
     }

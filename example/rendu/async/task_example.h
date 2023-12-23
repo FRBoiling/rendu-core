@@ -15,59 +15,63 @@ using namespace rendu::log;
 
 Task<void> DoSomethingVoidAsync() {
   //  LOG_INFO << "start";
-  PrintI("start");
+  RD_INFO("start");
   //  using namespace std::chrono_literals;
   //  // 模拟一个耗时 3 秒的异步操作
   //  co_await SleepAwait(3s);
   //  std::this_thread::sleep_for(3s);
   // await Task.Delay(3000);
   //  LOG_INFO << "end";
-  PrintI("end");
+  RD_INFO("end");
   co_return;
 }
 
 Task<int> DoSomethingAsync(int v) {
-  PrintI("start");
+  RD_INFO("start");
   //  LOG_INFO << "start";
   int value = v;
   value++;
   co_await DoSomethingVoidAsync();
-  PrintI("end");
+  RD_INFO("end");
   //  LOG_INFO << "end";
   co_return value;// 返回一个结果
 }
 
 Task<void> Run(int i) {
   int value = i;
-  PrintI("start");
+  RD_INFO("start");
   //  LOG_INFO << "start";
   //  auto task = DoSomethingAsync(value);
   auto task1 = AsyncTask::Run(DoSomethingAsync, 1);// 调用异步方法，返回一个 Task
   auto task2 = AsyncTask::Run(DoSomethingAsync, 1);// 调用异步方法，返回一个 Task
-  PrintI("middle");
+  RD_INFO("middle");
   //  LOG_INFO << "middle";
   auto result = 0;
   //  auto result = co_await task;
-  PrintI("end ,result: %d", result);
+  RD_INFO("end ,result: {}", result);
   //  LOG_INFO << "end ,result:" << result;
   while (true) {
     using namespace std::chrono_literals;
     //    LOG_INFO << "loop ..";
-    PrintI("loop ..");
+    RD_INFO("loop ..");
     std::this_thread::sleep_for(3s);
   }
 }
 
 
 int task_main() {
-  auto logger = new AsyncLogger();
-  logger->Add(std::make_shared<ConsoleChannel>());
-  logger->SetWriter(std::make_shared<AsyncLogWriter>());
-  logger->SetLevel(LogLevel::LTrace);
-  LOG_SET_LOGGER(logger);
-  LOG_INFO << "start";
+//  RD_LOGGER_CLEAN();
+//  RD_LOGGER_ADD_CHANNEL(new ConsoleChannel());
+//  RD_LOGGER_INIT("async_example",LogLevel::LL_DEBUG);
+
+  RD_LOGGER_CLEAN();
+  RD_LOGGER_SET(new SpdLogger());
+  RD_LOGGER_ADD_CHANNEL(new SpdLogConsoleChannel());
+  RD_LOGGER_INIT("spd_log",LogLevel::LL_INFO);
+
+  RD_INFO("start")
   Run(0);
-  LOG_INFO << "end";
+  RD_INFO("end")
   return 0;
 }
 
