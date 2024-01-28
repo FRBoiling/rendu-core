@@ -1,7 +1,7 @@
 #**********************************
 #  Created by boil on 2022/9/10.
 #**********************************
-set(target_name core)
+set(target_name base)
 rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -12,8 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::log
-    rendu::async
-    rendu::net
-    proto::model
+    dep::entt
+    dep::spdlog
+    dep::date
 )

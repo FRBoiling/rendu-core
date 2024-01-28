@@ -1,10 +1,11 @@
 #**********************************
-#  Created by boil on 2022/9/10.
+#  Created by boil on 2022/8/14.
 #**********************************
-set(target_name core)
-rendu_add_library(
+
+set(target_name log)
+rendu_add_executable(
     DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    .
     PROJECT
     ${PROJECT_NAME}
     NAME
@@ -13,7 +14,5 @@ rendu_add_library(
     rendu-core-interface
     DEPS
     rendu::log
-    rendu::async
-    rendu::net
-    proto::model
+    DEFINES
 )
