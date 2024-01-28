@@ -15,5 +15,6 @@
     } /*namespace common*/   \
   } /*namespace rendu*/
 
+using namespace rendu;
 
 #endif//RENDU_COMMON_DEFINE_H_

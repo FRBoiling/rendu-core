@@ -4,17 +4,16 @@
 
 #include "circular_buffer.h"
 #include "exception/exception_helper.h"
-#include "utils/array_helper.h"
 #include "io/stream.h"
 
 RD_NAMESPACE_BEGIN
 
-    int32 CircularBuffer::Read(byte *buffer, int32 offset, int32 count) {
+    INT32 CircularBuffer::Read(BYTE *buffer, INT32 offset, INT32 count) {
       if (sizeof(buffer) < offset + count) {
         throw Exception("bufferList length < count, buffer length: {} {} {}", sizeof(buffer), offset, count);
       }
 
-      int64 length = GetLength();
+      INT64 length = GetLength();
       if (length < count) {
         count = (int) length;
       }

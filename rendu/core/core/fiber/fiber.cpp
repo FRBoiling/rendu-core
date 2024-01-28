@@ -3,12 +3,8 @@
 */
 
 #include "fiber.h"
-
-#include <utility>
+#include "async.h"
 #include "entity/scene.h"
-#include "thread/thread_synchronization_context.h"
-#include "exception/entity_exception.h"
-#include "logger/log.h"
 
 RD_NAMESPACE_BEGIN
 

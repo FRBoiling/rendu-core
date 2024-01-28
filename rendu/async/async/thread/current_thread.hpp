@@ -1,0 +1,8 @@
+/*
+* Created by boil on 2024/1/28.
+*/
+
+#ifndef RENDU_CURRENT_THREAD_HPP
+#define RENDU_CURRENT_THREAD_HPP
+
+#endif//RENDU_CURRENT_THREAD_HPP

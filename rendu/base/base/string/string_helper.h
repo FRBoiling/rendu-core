@@ -5,12 +5,13 @@
 #ifndef RENDU_BASE_STRING_HELPER_H
 #define RENDU_BASE_STRING_HELPER_H
 
-
-#include "number/int_helper.h"
+#include "number/number_helper.h"
 #include "string_define.h"
 #include "string_format.h"
 
 RD_NAMESPACE_BEGIN
+
+ALIAS(std::string, STRING);
 
 namespace Digit {
 

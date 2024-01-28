@@ -15,4 +15,6 @@
   } /*namespace log*/     \
   } /*namespace rendu*/
 
+using namespace rendu::common;
+
 #endif//RENDU_LOG_DEFINE_H_

@@ -6,8 +6,6 @@
 #define RENDU_EVENT_SYSTEM_H
 
 #include "base/utils/singleton.h"
-#include "common/thread/task/task.h"
-#include "concurrent/dictionary.h"
 #include "entity/component_system.h"
 #include "event_info.h"
 #include "exception/exception_helper.h"

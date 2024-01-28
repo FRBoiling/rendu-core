@@ -14,7 +14,7 @@ RD_NAMESPACE_BEGIN
 
     class NetServices : public Singleton<NetServices> {
     public:
-      int64 CreateAcceptChannelId();
+      INT64 CreateAcceptChannelId();
     };
 
 RD_NAMESPACE_END

@@ -6,8 +6,8 @@
 #define RENDU_BASE_EXCEPTION_HELPER_H
 
 #include "base_define.h"
-
-#include <exception>
+#include "exception.h"
+#include "out_of_range_exception.h"
 
 RD_NAMESPACE_BEGIN
 

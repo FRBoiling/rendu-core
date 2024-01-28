@@ -6,18 +6,20 @@
 #define RENDU_BASE_BIT_CONVERTER_H
 
 #include "memory_define.h"
-#include "number/def_helper.h"
-#include "number/int_helper.h"
+#include "number/number_helper.h"
+#include <cstddef>
 
 RD_NAMESPACE_BEGIN
 
-  class BitConverter {
-  public:
-    static std::int32_t ToInt32(const std::byte *data, std::int32_t start_index);
+ALIAS(std::byte, BYTE);
 
-    static std::uint16_t ToUInt16(const std::byte *data, std::int32_t start_index);
-  };
+class BitConverter {
+public:
+  static INT32 ToInt32(const BYTE *data, INT32 start_index);
+
+  static UINT16 ToUInt16(const BYTE *data, INT32 start_index);
+};
 
 RD_NAMESPACE_END
 
-#endif //RENDU_BASE_BIT_CONVERTER_H
+#endif//RENDU_BASE_BIT_CONVERTER_H

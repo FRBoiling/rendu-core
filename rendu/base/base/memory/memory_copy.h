@@ -6,7 +6,7 @@
 #define RENDU_BASE_MEMORY_COPY_H
 
 #include "memory_define.h"
-#include "number/int_helper.h"
+#include "number/number_helper.h"
 #include <algorithm>
 
 RD_NAMESPACE_BEGIN

@@ -10,4 +10,6 @@
 #include "exp/dictionary.h"
 #include "exp/map.h"
 
+#include "concurrent/concurrent_queue.h"
+
 #endif//RENDU_BASE_CONTAINER_CONTAINER_HELPER_H_

@@ -15,6 +15,5 @@ rendu_add_library(
     rendu::base
     proto::model
     dep::entt
-    dep::argparse
     dep::magic_enum
 )

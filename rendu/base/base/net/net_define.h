@@ -8,7 +8,7 @@
 #include "base_define.h"
 #include "number/number_helper.h"
 #include "string/string_helper.h"
+#include "memory/memory_helper.h"
 #include "assert/assert_helper.h"
-#include "log/log_helper.h"
 
 #endif//RENDU_BASE_NET_DEFINE_H

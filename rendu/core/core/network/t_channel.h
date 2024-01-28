@@ -8,8 +8,6 @@
 #include "a_channel.h"
 #include "circular_buffer.h"
 #include "packet_parser.h"
-#include "network/socket_async_event_args.h"
-#include "logger/log.h"
 #include "error_code.h"
 
 RD_NAMESPACE_BEGIN
@@ -20,9 +18,9 @@ RD_NAMESPACE_BEGIN
     public:
       TChannel();
 
-      TChannel(int64 id, IPEndPoint *ipEndPoint, TService *service);
+      TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service);
 
-      TChannel(int64 id, Socket *socket, TService *service);
+      TChannel(INT64 id, Socket *socket, TService *service);
 
       ~TChannel() override;
 

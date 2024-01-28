@@ -20,8 +20,8 @@ RD_NAMESPACE_BEGIN
       static const int ActorIdLength = 16;
       static const int MessageIndex = 18;
 
-      uint16 Opcode;
-      int64 ActorId;
+      UINT16 Opcode;
+      INT64 ActorId;
       MemoryStream MemoryStream;
     };
 

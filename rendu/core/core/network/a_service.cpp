@@ -38,11 +38,11 @@ RD_NAMESPACE_BEGIN
       m_pool.Enqueue(memoryBuffer);
     }
 
-    std::tuple<uint32_t, uint32_t> AService::GetChannelConn(int64 channelId) {
+    std::tuple<uint32_t, uint32_t> AService::GetChannelConn(INT64 channelId) {
       throw Exception("default conn throw Exception! {}", channelId);
     }
 
-    void AService::ChangeAddress(int64 channelId, IPEndPoint ipEndPoint) {
+    void AService::ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) {
     }
 
 RD_NAMESPACE_END

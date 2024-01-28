@@ -1,40 +1,82 @@
 /*
-* Created by boil on 2023/9/29.
+* Created by boil on 2024/1/28.
 */
 
 #ifndef RENDU_ASYNC_THREAD_SYNCHRONIZATION_CONTEXT_H
 #define RENDU_ASYNC_THREAD_SYNCHRONIZATION_CONTEXT_H
 
 #include "async_define.h"
-#include "container/concurrent/concurrent_queue.h"
-#include "synchronization_context.h"
-#include "task/task.h"
-#include <functional>
-
+#include <future>
 ASYNC_NAMESPACE_BEGIN
 
-    class ThreadSynchronizationContext : public SynchronizationContext {
+class ThreadSynchronizationContext {
+public:
+  ThreadSynchronizationContext() : stop_requested(false), async_operations(0), th(&ThreadSynchronizationContext::Update, this) {}
 
-    public:
-      ThreadSynchronizationContext();
+  ~ThreadSynchronizationContext() {
+    {
+      std::unique_lock<std::mutex> locker(mtx);
+      stop_requested = true;
+      cv.notify_all();
+    }
+    th.join();
+  }
 
-      ~ThreadSynchronizationContext();
+  template<typename Task>
+  void Post(Task task) {
+    std::unique_lock<std::mutex> locker(mtx);
+    tasks.push(std::move(task));
+    cv.notify_all();
+  }
 
-    public:
+  template<typename Callable>
+  auto Send(Callable &&callable) {
+    if (std::this_thread::get_id() == th.get_id()) {
+      return callable();
+    } else {
+      std::future<decltype(callable())> result;
+      std::packaged_task<decltype(callable())()> task(std::forward<Callable>(callable));
+      result = task.get_future();
+      Post(std::move(task));
+      return result.get();
+    }
+  }
 
-      template<typename Func>
-      void Post(Func func) {
-        auto handler = func();
-        m_queue.Enqueue(&handler);
-      }
+  void OperationStarted() {
+    std::unique_lock<std::mutex> locker(mtx);
+    async_operations++;
+  }
 
-      void Update();
-      // 线程同步队列,发送接收socket回调都放到该队列,由poll线程统一执行
-    private:
-      ConcurrentQueue<Task<> *> m_queue;
-      Task<> *m_func;
-    };
+  void OperationCompleted() {
+    std::unique_lock<std::mutex> locker(mtx);
+    async_operations--;
+    if (async_operations == 0) {
+      cv.notify_all();
+    }
+  }
+
+  void Update() {
+    std::unique_lock<std::mutex> locker(mtx);
+    cv.wait(locker, [&]() {
+      return !tasks.empty() || (async_operations == 0 && stop_requested);
+    });
+    if (async_operations == 0 && stop_requested) {
+      return;
+    }
+    std::packaged_task<void()> task = std::move(tasks.front());
+    tasks.pop();
+    locker.unlock();
+    task();
+  }
+
+  std::queue<std::packaged_task<void()>> tasks;
+  std::mutex mtx;
+  std::condition_variable cv;
+  std::thread th;
+  bool stop_requested;
+  int async_operations;
+};
 
 ASYNC_NAMESPACE_END
 
-#endif //RENDU_ASYNC_THREAD_SYNCHRONIZATION_CONTEXT_H
+#endif//RENDU_ASYNC_THREAD_SYNCHRONIZATION_CONTEXT_H

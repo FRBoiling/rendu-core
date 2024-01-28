@@ -13,7 +13,6 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::async
     rendu::log
     DEFINES
 )

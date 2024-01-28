@@ -6,7 +6,9 @@
 #define RENDU_BASE_SINGLETON_H
 
 #include "non_copyable.h"
-#include "number/int_helper.h"
+#include "number/number_helper.h"
+#include <pthread.h>
+#include <stdlib.h>
 
 RD_NAMESPACE_BEGIN
 

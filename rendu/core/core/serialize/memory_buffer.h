@@ -5,7 +5,7 @@
 #ifndef RENDU_MEMORY_BUFFER_H
 #define RENDU_MEMORY_BUFFER_H
 
-#include "io/memory_stream.h"
+#include "core_define.h"
 
 RD_NAMESPACE_BEGIN
     enum class SeekOrigin {
@@ -33,15 +33,15 @@ RD_NAMESPACE_BEGIN
 
       }
 
-      int GetLength() {
+      INT32 GetLength() {
         return 0;
       }
 
-      byte *GetBuffer() {
+      BYTE *GetBuffer() {
         return nullptr;
       }
 
-      int GetPosition() {
+      INT32 GetPosition() {
         return 0;
       }
     };

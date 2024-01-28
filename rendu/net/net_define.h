@@ -6,8 +6,8 @@
 #define RENDU_NET_DEFINE_H_
 
 #include "common.h"
+#include "log.h"
 
-using namespace rendu::common;
 
 #define NET_NAMESPACE_BEGIN \
   namespace rendu {            \
@@ -16,5 +16,8 @@ using namespace rendu::common;
 #define NET_NAMESPACE_END \
     } /*namespace net*/   \
   } /*namespace rendu*/
+
+using namespace rendu::common;
+using namespace rendu::log;
 
 #endif//RENDU_NET_DEFINE_H_

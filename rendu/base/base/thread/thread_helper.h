@@ -92,7 +92,5 @@ int asprintf(char **strp, const char *fmt, ...) {
 
 RD_NAMESPACE_END
 
-#include "task/task.h"
-
 
 #endif//RENDU_BASE_THREAD_HELPER_H

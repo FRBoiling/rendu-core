@@ -5,11 +5,11 @@
 #ifndef RENDU_PACKET_PARSER_H
 #define RENDU_PACKET_PARSER_H
 
+#include "core_define.h"
 
 #include "a_service.h"
 #include "base/memory/bit_converter.h"
 #include "circular_buffer.h"
-#include "core_define.h"
 #include "exception/out_of_range_exception.h"
 #include "packet.h"
 #include "serialize/memory_buffer.h"
@@ -27,11 +27,11 @@ RD_NAMESPACE_BEGIN
       CircularBuffer *m_buffer;
       AService *m_service;
 
-      int m_packetSize;
+      INT64 m_packetSize;
       ParserState m_state;
-      byte m_cache[8]{};
-      const int InnerPacketSizeLength = 4;
-      const int OuterPacketSizeLength = 2;
+      BYTE m_cache[8]{};
+      const INT8 InnerPacketSizeLength = 4;
+      const INT8 OuterPacketSizeLength = 2;
       MemoryBuffer *m_memoryBuffer;
 
     public:
@@ -53,7 +53,7 @@ RD_NAMESPACE_BEGIN
                 m_buffer->Read(m_cache, 0, InnerPacketSizeLength);
 
                 m_packetSize = BitConverter::ToInt32(m_cache, 0);
-                if (m_packetSize > std::numeric_limits<uint16>::max() * 16 || m_packetSize < Packet::MinPacketSize) {
+                if (m_packetSize > std::numeric_limits<UINT16>::max() * 16 || m_packetSize < Packet::MinPacketSize) {
                   throw Exception("recv packet Size error, 可能是外网探测端口: {}", m_packetSize);
                 }
               } else {

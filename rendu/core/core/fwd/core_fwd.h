@@ -5,7 +5,6 @@
 #ifndef RENDU_CORE_FWD_H
 #define RENDU_CORE_FWD_H
 
-#include "logger/log.h"
 
 RD_NAMESPACE_BEGIN
 

@@ -7,7 +7,7 @@
 
 #include "common_define.h"
 #include "common/time/time.h"
-#include "common/time/time_id.h"
 #include "common/log/logger_wrapper.h"
+#include "common/io/memory_stream.h"
 
 #endif //RENDU_COMMON_H

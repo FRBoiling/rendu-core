@@ -7,8 +7,6 @@
 
 #include "a_service.h"
 #include "base/utils/singleton.h"
-#include "concurrent/concurrent_queue.h"
-#include "concurrent/dictionary.h"
 #include "net_services.h"
 #include "t_channel.h"
 
@@ -22,10 +20,10 @@ RD_NAMESPACE_BEGIN
 
     struct TArgs {
     public:
-      TArgs(TcpOp op, int64 channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
+      TArgs(TcpOp op, INT64 channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
       }
 
-      TArgs(int64 channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
+      TArgs(INT64 channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
                                                              SocketAsyncEventArgs(pArgs) {
       }
 
@@ -34,7 +32,7 @@ RD_NAMESPACE_BEGIN
 
     public:
       TcpOp Op;
-      int64 ChannelId;
+      INT64 ChannelId;
       SocketAsyncEventArgs *SocketAsyncEventArgs;
     };
 
@@ -48,11 +46,11 @@ RD_NAMESPACE_BEGIN
       ~TService();
 
     public:
-      void Create(int64 id, string address) override;
+      void Create(INT64 id, string address) override;
 
-      void Send(int64 channelId, MemoryBuffer *memoryBuffer) override;
+      void Send(INT64 channelId, MemoryBuffer *memoryBuffer) override;
 
-      void Remove(int64 id, int error) override;
+      void Remove(INT64 id, int error) override;
 
       void Update() override;
 
@@ -65,19 +63,19 @@ RD_NAMESPACE_BEGIN
 
       bool IsDisposed() override;
 
-      std::tuple<uint32_t, uint32_t> GetChannelConn(int64 channelId) override;
+      std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId) override;
 
-      void ChangeAddress(int64 channelId, IPEndPoint ipEndPoint) override;
+      void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) override;
 
     private:
-      TChannel *Get(int64 id);
+      TChannel *Get(INT64 id);
 
       void AcceptAsync();
 
     public:
       ConcurrentQueue<TArgs *> m_queue;
     private:
-      Dictionary<int64, TChannel *> m_idChannels;
+      Dictionary<INT64, TChannel *> m_idChannels;
 
       SocketAsyncEventArgs *m_innArgs{};
 

@@ -5,7 +5,7 @@
 #ifndef RENDU_TASK_DEFINE_H
 #define RENDU_TASK_DEFINE_H
 
-#include "debug_log.h"
+#include "log.h"
 #include <functional>
 #include <mutex>
 #include <list>

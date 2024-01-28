@@ -7,7 +7,6 @@
 
 #include "core_define.h"
 #include "io/stream.h"
-#include "queue.h"
 #include <vector>
 
 RD_NAMESPACE_BEGIN
@@ -20,35 +19,35 @@ RD_NAMESPACE_BEGIN
 
 public:
       void SetFirstIndex(int index);
-      [[nodiscard]] int32 GetFirstIndex() const;
+      [[nodiscard]] INT32 GetFirstIndex() const;
 
       void SetLastIndex(int index);
-      [[nodiscard]] int64 GetLastIndex() const;
+      [[nodiscard]] INT64 GetLastIndex() const;
 
-      int64 GetLength();
+      INT64 GetLength();
 
-      byte *GetFirst();
+      BYTE *GetFirst();
 
-      byte *GetLast();
+      BYTE *GetLast();
 
-      int32 Read(byte *buffer, int32 offset, int32 count);
+      INT32 Read(BYTE *buffer, INT32 offset, INT32 count);
 
       void Read(Stream *stream, int count);
 
-      void Write(byte *buffer, int32 offset, int32 count);
+      void Write(BYTE *buffer, INT32 offset, INT32 count);
 
       void RemoveFirst();
 
       void AddLast();
     public:
-      const int16 ChunkSize = 8192;
+      const INT16 ChunkSize = 8192;
     private:
-      int32 m_first_index;
-      int64 m_last_index;
+      INT32 m_first_index;
+      INT64 m_last_index;
 
-      Queue<byte *> m_bufferQueue;
-      Queue<byte *> m_bufferCache;
-      byte *m_lastBuffer;
+      Queue<BYTE *> m_bufferQueue;
+      Queue<BYTE *> m_bufferCache;
+      BYTE *m_lastBuffer;
 
       std::size_t m_size;       //大小
       std::size_t m_capacity;   //容积
