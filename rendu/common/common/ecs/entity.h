@@ -2,13 +2,17 @@
 * Created by boil on 2023/5/2.
 */
 
-#ifndef RENDU_ENTITY_H
-#define RENDU_ENTITY_H
+#ifndef RENDU_COMMON_ENTITY_H
+#define RENDU_COMMON_ENTITY_H
 
-#include <entt/entt.hpp>
+#include "common_define.h"
 
-namespace rendu{
-    using Entity = entt::entity;
-}
+#include "base/ecs/ecs_helper.h"
 
-#endif //RENDU_ENTITY_H
+COMMON_NAMESPACE_BEGIN
+
+using Entity = ENTITY;
+
+COMMON_NAMESPACE_END
+
+#endif//RENDU_COMMON_ENTITY_H

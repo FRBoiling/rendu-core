@@ -8,4 +8,5 @@ target_link_libraries(spdlog
     spdlog::spdlog
     spdlog::spdlog_header_only
     )
+
 add_library(dep::spdlog ALIAS spdlog)

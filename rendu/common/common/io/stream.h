@@ -1,0 +1,21 @@
+/*
+* Created by boil on 2023/10/17.
+*/
+
+#ifndef RENDU_COMMON_STREAM_H
+#define RENDU_COMMON_STREAM_H
+
+#include "common_define.h"
+
+COMMON_NAMESPACE_BEGIN
+
+    class Stream {
+
+    public:
+      void Write(std::byte *buffer, int offset, int count);
+
+    };
+
+COMMON_NAMESPACE_END
+
+#endif //RENDU_COMMON_STREAM_H

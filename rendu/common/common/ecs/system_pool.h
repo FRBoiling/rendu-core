@@ -2,28 +2,24 @@
 * Created by boil on 2023/5/2.
 */
 
-#ifndef RENDU_SYSTEM_POOL_H
-#define RENDU_SYSTEM_POOL_H
+#ifndef RENDU_COMMON_SYSTEM_POOL_H
+#define RENDU_COMMON_SYSTEM_POOL_H
 
 #include "system.h"
 
-namespace rendu {
+COMMON_NAMESPACE_BEGIN
 
     using system_type = SystemType;
-    using system_key = std::string;
-    using system_map = std::unordered_map<system_key, std::shared_ptr<System>>;
+    using Systems = std::vector<std::shared_ptr<BaseSystem>>;
 
     class SystemPool {
     private:
-        std::map<system_type,system_map> m_systems;
+        std::map<system_type,Systems> m_systems;
     public:
-        void AddSystem(std::shared_ptr<System> &system);
-
-        void RemoveSystem(std::shared_ptr<System> &system);
-
-        system_map& GetSystems(system_type systemType);
-
+        void AddSystem(std::shared_ptr<BaseSystem> &system);
+        Systems& GetSystems(system_type systemType);
     };
 
-}
-#endif //RENDU_SYSTEM_POOL_H
+COMMON_NAMESPACE_END
+
+#endif //RENDU_COMMON_SYSTEM_POOL_H

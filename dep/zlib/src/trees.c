@@ -927,11 +927,11 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
 
         /* Construct the literal and distance trees */
         build_tree(s, (tree_desc *)(&(s->l_desc)));
-        Tracev((stderr, "\nlit data: dyn %ld, stat %ld", s->opt_len,
+        Tracev((stderr, "\nlit Data: dyn %ld, stat %ld", s->opt_len,
                 s->static_len));
 
         build_tree(s, (tree_desc *)(&(s->d_desc)));
-        Tracev((stderr, "\ndist data: dyn %ld, stat %ld", s->opt_len,
+        Tracev((stderr, "\ndist Data: dyn %ld, stat %ld", s->opt_len,
                 s->static_len));
         /* At this point, opt_len and static_len are the total bit lengths of
          * the compressed block data, excluding the tree representations.
@@ -991,7 +991,7 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
         s->compressed_len += 3 + s->opt_len;
 #endif
     }
-    Assert (s->compressed_len == s->bits_sent, "bad compressed size");
+    Assert (s->compressed_len == s->bits_sent, "bad compressed Size");
     /* The above check is made mod 2^32, for files larger than 512 MB
      * and uLong implemented on 32 bits.
      */

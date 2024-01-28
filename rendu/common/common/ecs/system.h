@@ -2,21 +2,59 @@
 * Created by boil on 2023/3/19.
 */
 
-#ifndef RENDU_SYSTEM_H
-#define RENDU_SYSTEM_H
+#ifndef RENDU_COMMON_SYSTEM_H
+#define RENDU_COMMON_SYSTEM_H
 
-#include "system_type.h"
+#include "common_fwd.h"
 #include "entity_pool.h"
 
-namespace rendu {
+COMMON_NAMESPACE_BEGIN
 
-    class System {
-    public:
-        System *GetClassType() { return this; }
-        virtual SystemType GetSystemType() = 0;
-        virtual void Run(EntityPool &registry) = 0;
-    };
+enum class SystemType {
+  Default,
+  Init,
+  LateInit,
+  Update,
+  LateUpdate,
+};
 
-}
+class BaseSystem {
+public:
+  BaseSystem() : m_Type(SystemType::Default){};
+  ~BaseSystem() = default;
 
-#endif //RENDU_SYSTEM_H
+public:
+  SystemType GetSystemType() { return m_Type; }
+
+  virtual void Run(Entity &entity) {
+  };
+
+  virtual std::string ToString() { return typeid(this).name(); }
+
+protected:
+  SystemType m_Type;
+};
+
+class BaseInitSystem : public BaseSystem {
+public:
+  BaseInitSystem() {
+    m_Type = SystemType::Init;
+  };
+
+public:
+  std::string ToString() override { return typeid(this).name(); }
+};
+
+class BaseUpdateSystem : public BaseSystem {
+public:
+  BaseUpdateSystem() {
+    m_Type = SystemType::Update;
+  };
+
+public:
+  std::string ToString() override { return typeid(this).name(); }
+};
+
+COMMON_NAMESPACE_END
+
+#endif//RENDU_COMMON_COMPONENT_SYSTEM_H

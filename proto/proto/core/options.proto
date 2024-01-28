@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package rendu.proto.core;
+
+enum DevelopModeType{
+  Official = 0;
+  Develop = 1;
+  Pressure = 2;
+}
+
+enum AppType
+{
+  Server = 0;
+  Watcher = 1; // 每台物理机一个守护进程，用来启动该物理机上的所有进程
+  GameTool = 2;
+  ExcelExporter = 3;
+  Proto2CS = 4;
+  BenchmarkClient = 5;
+  BenchmarkServer = 6;
+
+  Demo = 10;
+  LockStep = 11;
+}
+
+message Options {
+  AppType appType = 1;
+  string startConfig = 2;
+  int32 process = 3;
+  DevelopModeType develop = 4;
+  int32 logLevel = 5;
+  int32 console = 6;
+}

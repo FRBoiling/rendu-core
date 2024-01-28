@@ -15,12 +15,12 @@
  *  is a multiple of 2^MEXP-1.
  * #define SFMT_MEXP 19937 */
 /** sfmt generator has an internal state array of 128-bit integers,
- * and N is its size. */
+ * and N is its Size. */
 #define SFMT_N (SFMT_MEXP / 128 + 1)
-/** N32 is the size of internal state array when regarded as an array
+/** N32 is the Size of internal state array when regarded as an array
  * of 32-bit integers.*/
 #define SFMT_N32 (SFMT_N * 4)
-/** N64 is the size of internal state array when regarded as an array
+/** N64 is the Size of internal state array when regarded as an array
  * of 64-bit integers.*/
 #define SFMT_N64 (SFMT_N * 2)
 

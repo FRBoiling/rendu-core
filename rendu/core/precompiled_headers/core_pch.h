@@ -1,8 +1,8 @@
 /*
-* Created by boil on 2023/2/16.
+* Created by boil on 2023/5/5.
 */
 
-#ifndef RENDU_CORE_PRECOMPILED_HEADERS_CORE_PCH_H_
-#define RENDU_CORE_PRECOMPILED_HEADERS_CORE_PCH_H_
+#ifndef RENDU_CORE_PCH_H
+#define RENDU_CORE_PCH_H
 
-#endif //RENDU_CORE_PRECOMPILED_HEADERS_CORE_PCH_H_
+#endif //RENDU_CORE_PCH_H

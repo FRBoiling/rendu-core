@@ -3,15 +3,14 @@
 #**********************************
 set(target_name common)
 rendu_add_library(
-        DIR
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        PROJECT
-        ${PROJECT_NAME}
-        NAME
-        ${target_name}
-        LINKOPTS
-        rendu-core-interface
-        DEPS
-        dep::spdlog
-        dep::entt
+    DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PROJECT
+    ${PROJECT_NAME}
+    NAME
+    ${target_name}
+    LINKOPTS
+    rendu-core-interface
+    DEPS
+    rendu::base
 )

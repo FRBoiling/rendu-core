@@ -4,30 +4,15 @@
 
 #include "system_pool.h"
 
-using namespace rendu;
+COMMON_NAMESPACE_BEGIN
 
-
-void SystemPool::AddSystem(std::shared_ptr<System> &system) {
-    auto system_type = system->GetSystemType();
-    auto system_key = typeid(system->GetClassType()).name();
-    m_systems[system_type][system_key] = system;
-}
-
-void SystemPool::RemoveSystem(std::shared_ptr<System> &system) {
-    auto system_type = system->GetSystemType();
-    auto system_key = typeid(system->GetClassType()).name();
-    auto systems_itr = m_systems.find(system_type);
-    if (systems_itr == m_systems.end()){
-        return;
+    void SystemPool::AddSystem(std::shared_ptr<BaseSystem> &system) {
+      auto system_type = system->GetSystemType();
+      m_systems[system_type].push_back(system);
     }
-    auto &systems = systems_itr->second;
-    auto system_itr = systems.find(system_key);
-    if (system_itr == systems.end()){
-        return;
-    }
-    systems.erase(system_key);
-}
 
-system_map &SystemPool::GetSystems(system_type systemType) {
-    return m_systems[systemType];
-}
+    Systems &SystemPool::GetSystems(system_type systemType) {
+      return m_systems[systemType];
+    }
+
+COMMON_NAMESPACE_END

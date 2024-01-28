@@ -141,7 +141,7 @@ inline static void gen_rand_array(sfmt_t * sfmt, w128_t *array, int size) {
  * specified array.
  *
  * @param array an 128-bit array to be swaped.
- * @param size size of 128-bit array.
+ * @param size Size of 128-bit array.
  */
 inline static void swap(w128_t *array, int size) {
     int i;

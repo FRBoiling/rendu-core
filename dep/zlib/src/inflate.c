@@ -138,7 +138,7 @@ z_streamp strm;
     state->lencode = state->distcode = state->next = state->codes;
     state->sane = 1;
     state->back = -1;
-    Tracev((stderr, "inflate: reset\n"));
+    Tracev((stderr, "inflate: Reset\n"));
     return Z_OK;
 }
 
@@ -694,7 +694,7 @@ int flush;
             if (state->wbits == 0)
                 state->wbits = len;
             if (len > 15 || len > state->wbits) {
-                strm->msg = (char *)"invalid window size";
+                strm->msg = (char *)"invalid window Size";
                 state->mode = BAD;
                 break;
             }
@@ -1233,7 +1233,7 @@ int flush;
                      state->flags ? hold :
 #endif
                      ZSWAP32(hold)) != state->check) {
-                    strm->msg = (char *)"incorrect data check";
+                    strm->msg = (char *)"incorrect Data check";
                     state->mode = BAD;
                     break;
                 }

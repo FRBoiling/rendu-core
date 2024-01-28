@@ -38,7 +38,7 @@ inline static void lshift128(w128_t *out,  w128_t const *in, int shift);
  * The 128-bit integer given in in is shifted by (shift * 8) bits.
  * This function simulates the LITTLE ENDIAN SIMD.
  * @param out the output of this function
- * @param in the 128-bit data to be shifted
+ * @param in the 128-bit Data to be shifted
  * @param shift the shift value
  */
 #ifdef ONLY64
@@ -78,7 +78,7 @@ inline static void rshift128(w128_t *out, w128_t const *in, int shift)
  * The 128-bit integer given in in is shifted by (shift * 8) bits.
  * This function simulates the LITTLE ENDIAN SIMD.
  * @param out the output of this function
- * @param in the 128-bit data to be shifted
+ * @param in the 128-bit Data to be shifted
  * @param shift the shift value
  */
 #ifdef ONLY64
