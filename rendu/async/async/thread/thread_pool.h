@@ -6,6 +6,8 @@
 #define RENDU_ASYNC_THREAD_POOL_H
 
 #include "async_define.h"
+#include "thread.h"
+
 #include <atomic>
 #include <functional>
 #include <future>
@@ -15,56 +17,65 @@
 
 ASYNC_NAMESPACE_BEGIN
 
-class ThreadPool {
-private:
-  std::vector<std::thread> workers;
-  std::queue<std::function<void()>> tasks;
-  std::mutex queue_mtx;
-  std::condition_variable condition;
-  std::atomic_bool stop;
+class ThreadPool : NonCopyable
+{
+ public:
+  typedef std::function<void ()> Task;
 
-public:
-  explicit ThreadPool(size_t threads) : stop(false) {
-    for (size_t i = 0; i < threads; ++i)
-      workers.emplace_back(
-          [this] {
-            for (;;) {
-              std::function<void()> task;
-              {
-                std::unique_lock<std::mutex> lock(this->queue_mtx);
-                this->condition.wait(lock, [this] { return this->stop.load() || !this->tasks.empty(); });
-                if (this->stop.load() && this->tasks.empty())
-                  return;
-                task = std::move(this->tasks.front());
-                this->tasks.pop();
-              }
-              task();
-            }
-          });
-  }
+  explicit ThreadPool(const STRING& nameArg = STRING("ThreadPool"));
+  ~ThreadPool();
+
+  // Must be called before start().
+  void setMaxQueueSize(int maxSize) { maxQueueSize_ = maxSize; }
+  void setThreadInitCallback(const Task& cb)
+  { threadInitCallback_ = cb; }
+
+  void start(int numThreads);
+  void stop();
+
+  const STRING& name() const
+  { return name_; }
+
+  size_t queueSize() const;
 
   template<class _Fp, class... _Args,
-           typename TResult = typename std::invoke_result_t<typename std::decay<_Fp>::type, typename std::decay<_Args>::type...>>
-  auto Enqueue(_Fp &&f, _Args &&...args) -> std::future<TResult> {
+      typename TResult = typename std::invoke_result_t<typename std::decay<_Fp>::type, typename std::decay<_Args>::type...>>
+  auto Run(_Fp &&f, _Args &&...args) -> std::future<TResult> {
     auto task = std::make_shared<std::packaged_task<TResult()>>(
         std::bind(std::forward<_Fp>(f), std::forward<_Args>(args)...));
     std::future<TResult> res = task->get_future();
     {
-      std::unique_lock<std::mutex> lock(queue_mtx);
-      if (stop)
-        throw std::runtime_error("enqueue on stopped ThreadPool");
-      tasks.emplace([task]() { (*task)(); });
+      if (threads_.empty()) {
+         (*task)();
+      } else {
+        MutexLockGuard lock(mutex_);
+        while (isFull() && running_) {
+          notFull_.wait();
+        }
+        if (!running_) return res;
+        assert(!isFull());
+
+        queue_.push_back([task]() { (*task)(); });
+        notEmpty_.notify();
+      }
     }
-    condition.notify_one();
     return res;
   }
 
-  ~ThreadPool() {
-    stop.store(true);
-    condition.notify_all();
-    for (std::thread &worker: workers)
-      worker.join();
-  }
+ private:
+  bool isFull() const REQUIRES(mutex_);
+  void runInThread();
+  Task take();
+
+  mutable MutexLock mutex_;
+  Condition notEmpty_ GUARDED_BY(mutex_);
+  Condition notFull_ GUARDED_BY(mutex_);
+  STRING name_;
+  Task threadInitCallback_;
+  std::vector<std::unique_ptr<Thread>> threads_;
+  std::deque<Task> queue_ GUARDED_BY(mutex_);
+  size_t maxQueueSize_;
+  bool running_;
 };
 
 extern ThreadPool global_thread_pool;

@@ -5,10 +5,10 @@
 #ifndef RENDU_DNS_CACHE_H
 #define RENDU_DNS_CACHE_H
 
+#include "net_define.h"
+
 #include <mutex>
 #include <unordered_map>
-
-#include "net_define.h"
 #include "sockets/sock_ops.h"
 
 NET_NAMESPACE_BEGIN

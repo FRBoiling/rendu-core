@@ -6,9 +6,6 @@
 #define RENDU_NET_EVENT_LOOP_THREAD_H
 
 #include "net_define.h"
-#include "thread/thread.h"
-#include "thread/mutex_lock.h"
-#include "thread/condition.h"
 
 NET_NAMESPACE_BEGIN
 

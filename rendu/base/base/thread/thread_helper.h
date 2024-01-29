@@ -8,7 +8,6 @@
 #include "thread_define.h"
 
 //#include "mutex_lock.h"
-#include "semaphore.h"
 #include "string/string_helper.h"
 
 RD_NAMESPACE_BEGIN

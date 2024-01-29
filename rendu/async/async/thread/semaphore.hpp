@@ -1,11 +1,19 @@
-/*
-* Created by boil on 2023/10/30.
+﻿/*
+* Created by boil on 2023/10/25.
 */
-#include "semaphore.h"
 
-RD_NAMESPACE_BEGIN
+#ifndef RENDU_ASYNC_SEMAPHORE_H_
+#define RENDU_ASYNC_SEMAPHORE_H_
 
-  Semaphore::Semaphore(size_t initial) {
+#include "async_define.h"
+#include <mutex>
+#include <condition_variable>
+
+ASYNC_NAMESPACE_BEGIN
+
+class Semaphore {
+ public:
+  explicit Semaphore(size_t initial = 0) {
 #if defined(HAVE_SEM)
     sem_init(&_sem, 0, initial);
 #else
@@ -13,17 +21,17 @@ RD_NAMESPACE_BEGIN
 #endif
   }
 
-  Semaphore::~Semaphore() {
+  ~Semaphore() {
 #if defined(HAVE_SEM)
     sem_destroy(&_sem);
 #endif
   }
 
-  void Semaphore::Post(size_t n) {
+  void Post(size_t n = 1) {
 #if defined(HAVE_SEM)
     while (n--) {
-          sem_post(&_sem);
-      }
+        sem_post(&_sem);
+    }
 #else
     std::unique_lock<std::recursive_mutex> lock(_mutex);
     _count += n;
@@ -35,7 +43,7 @@ RD_NAMESPACE_BEGIN
 #endif
   }
 
-  void Semaphore::Wait() {
+  void Wait() {
 #if defined(HAVE_SEM)
     sem_wait(&_sem);
 #else
@@ -47,7 +55,16 @@ RD_NAMESPACE_BEGIN
 #endif
   }
 
-RD_NAMESPACE_END
+ private:
+#if defined(HAVE_SEM)
+  sem_t _sem;
+#else
+  size_t _count;
+  std::recursive_mutex _mutex;
+  std::condition_variable_any _condition;
+#endif
+};
 
+ASYNC_NAMESPACE_END
 
-
+#endif /* RENDU_ASYNC_SEMAPHORE_H_ */

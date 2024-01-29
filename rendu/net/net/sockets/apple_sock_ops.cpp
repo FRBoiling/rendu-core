@@ -3,7 +3,8 @@
 */
 #if defined(__APPLE__)
 
-#include "../errno/errno.h"
+#include "net_define.h"
+#include "errno/errno.h"
 #include "apple_sock.h"
 #include "sock_ops.h"
 #include <unistd.h>
@@ -19,7 +20,7 @@ namespace SockOps {
     int ul = noblock;
     int ret = ioctl(fd, FIONBIO, &ul);//设置为非阻塞模式
     if (ret == -1) {
-      LOG_TRACE << "ioctl FIONBIO failed";
+      RD_TRACE("ioctl FIONBIO failed") ;
     }
     return ret;
   }
@@ -27,7 +28,7 @@ namespace SockOps {
   int SetCloExec(int fd, bool on) {
     int flags = fcntl(fd, F_GETFD);
     if (flags == -1) {
-      LOG_TRACE << "fcntl F_GETFD failed";
+      RD_TRACE("fcntl F_GETFD failed");
       return -1;
     }
     if (on) {
@@ -38,7 +39,7 @@ namespace SockOps {
     }
     int ret = fcntl(fd, F_SETFD, flags);
     if (ret == -1) {
-      LOG_TRACE << "fcntl F_SETFD failed";
+      RD_TRACE("fcntl F_SETFD failed");
       return -1;
     }
     return ret;
@@ -49,7 +50,7 @@ namespace SockOps {
     int opt = on ? 1 : 0;
     int ret = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt, static_cast<socklen_t>(sizeof(opt)));
     if (ret == -1) {
-      LOG_TRACE << "setsockopt SO_KEEPALIVE failed";
+      RD_TRACE("setsockopt SO_KEEPALIVE failed");
     }
 #if !defined(SOL_TCP) && defined(IPPROTO_TCP)
 #define SOL_TCP IPPROTO_TCP
@@ -61,15 +62,15 @@ namespace SockOps {
     if (on && interval > 0 && ret != -1) {
       ret = setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, (char *) &idle, static_cast<socklen_t>(sizeof(idle)));
       if (ret == -1) {
-        LOG_TRACE << "setsockopt TCP_KEEPIDLE failed";
+        RD_TRACE("setsockopt TCP_KEEPIDLE failed");
       }
       ret = setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, (char *) &interval, static_cast<socklen_t>(sizeof(interval)));
       if (ret == -1) {
-        LOG_TRACE << "setsockopt TCP_KEEPINTVL failed";
+        RD_TRACE("setsockopt TCP_KEEPINTVL failed");
       }
       ret = setsockopt(fd, SOL_TCP, TCP_KEEPCNT, (char *) &times, static_cast<socklen_t>(sizeof(times)));
       if (ret == -1) {
-        LOG_TRACE << "setsockopt TCP_KEEPCNT failed";
+        RD_TRACE("setsockopt TCP_KEEPCNT failed");
       }
     }
     return ret;

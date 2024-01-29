@@ -7,7 +7,7 @@
 
 #include "common.h"
 #include "log.h"
-
+#include "async.h"
 
 #define NET_NAMESPACE_BEGIN \
   namespace rendu {            \
@@ -19,5 +19,6 @@
 
 using namespace rendu::common;
 using namespace rendu::log;
+using namespace rendu::async;
 
 #endif//RENDU_NET_DEFINE_H_

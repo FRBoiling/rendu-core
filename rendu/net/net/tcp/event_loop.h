@@ -7,8 +7,7 @@
 
 #include "callbacks.h"
 #include "pipe.h"
-#include "thread/current_thread.h"
-#include "thread/mutex_lock.h"
+#include "thread/mutex_lock.hpp"
 #include "time/time_id.h"
 #include "time/timestamp.h"
 #include "time_queue.h"

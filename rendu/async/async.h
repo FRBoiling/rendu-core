@@ -6,6 +6,6 @@
 #define RENDU_ASYNC_H
 
 #include "task/task.hpp"
-#include "thread/thread.hpp"
+#include "thread/thread.h"
 
 #endif //RENDU_ASYNC_H

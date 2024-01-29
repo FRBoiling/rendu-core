@@ -273,7 +273,7 @@ public:
            typename TResult = typename std::invoke_result_t<typename std::decay<_Fp>::type, typename std::decay<_Args>::type...>>
   static auto Run(_Fp &&__f, _Args &&...__args) {
     auto obj = std::make_shared<TResult>();
-    global_thread_pool.Enqueue([obj, &__f, &__args...]() {
+    global_thread_pool.Run([obj, &__f, &__args...]() {
       *obj = __f(__args...);
     });
     return obj;

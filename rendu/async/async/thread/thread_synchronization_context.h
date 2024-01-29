@@ -7,6 +7,7 @@
 
 #include "async_define.h"
 #include <future>
+
 ASYNC_NAMESPACE_BEGIN
 
 class ThreadSynchronizationContext {

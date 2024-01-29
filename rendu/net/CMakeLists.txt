@@ -13,4 +13,5 @@ rendu_add_library(
     rendu-core-interface
     DEPS
     rendu::async
+    rendu::log
 )
