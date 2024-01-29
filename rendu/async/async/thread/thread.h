@@ -21,15 +21,15 @@ class Thread : NonCopyable {
   // FIXME: make it movable in C++11
   ~Thread();
 
-  void start();
-  int join(); // return pthread_join()
+  void Start();
+  int Join(); // return pthread_join()
 
-  bool started() const { return started_; }
+  bool Started() const { return started_; }
   // pthread_t pthreadId() const { return pthreadId_; }
-  pid_t tid() const { return tid_; }
-  const STRING &name() const { return name_; }
+  pid_t GetTid() const { return tid_; }
+  const STRING &GetName() const { return name_; }
 
-  static int numCreated() { return numCreated_; }
+  static int GetNumCreated() { return numCreated_; }
 
  private:
   void setDefaultName();

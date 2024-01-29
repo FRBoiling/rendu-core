@@ -211,9 +211,9 @@ int Connect(const char *host, uint16_t port, bool async, const char *local_ip, u
     //异步连接成功
     return sockfd;
   }
-RD_WARN("Connect socket to {} {} failed: {} ", host, port, GetErrorMsg(true);
-close(sockfd);
-return -1;
+  RD_WARN("Connect socket to {} {} failed: {} ",host,port,GetErrorMsg(true));
+  close(sockfd);
+  return -1;
 }
 
 bool IsSelfConnect(int sockfd) {
@@ -275,7 +275,7 @@ int SetIpv6Only(int fd, bool flag) {
   int opt = flag;
   int ret = setsockopt(fd, IPPROTO_IPV6, IPV6_V6ONLY, (char *) &opt, sizeof opt);
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IPV6_V6ONLY failed";
+    RD_TRACE("setsockopt IPV6_V6ONLY failed");
   }
   return ret;
 }
@@ -325,7 +325,7 @@ int SetNoDelay(int fd, bool on) {
   int opt = on ? 1 : 0;
   int ret = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *) &opt, static_cast<socklen_t>(sizeof(opt)));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt TCP_NODELAY failed";
+    RD_TRACE("setsockopt TCP_NODELAY failed");
   }
   return ret;
 }
@@ -335,7 +335,7 @@ int SetNoSigpipe(int fd) {
   int Set = 1;
   auto ret = setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, (char *) &Set, sizeof(int));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_NOSIGPIPE failed";
+    RD_TRACE("setsockopt SO_NOSIGPIPE failed");
   }
   return ret;
 #else
@@ -351,7 +351,7 @@ int SetCloseWait(int fd, int second) {
   m_sLinger.l_linger = second; //设置等待时间为x秒
   int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, (char *) &m_sLinger, sizeof(linger));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_LINGER failed";
+    RD_TRACE("setsockopt SO_LINGER failed");
   }
   return ret;
 }
@@ -360,14 +360,14 @@ int SetReuseable(int fd, bool on, bool reuse_port) {
   int opt = on ? 1 : 0;
   int ret = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, static_cast<socklen_t>(sizeof(opt)));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_REUSEADDR failed";
+    RD_TRACE("setsockopt SO_REUSEADDR failed");
     return ret;
   }
 #if defined(SO_REUSEPORT)
   if (reuse_port) {
     ret = setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, (char *) &opt, static_cast<socklen_t>(sizeof(opt)));
     if (ret == -1) {
-      LOG_TRACE << "setsockopt SO_REUSEPORT failed";
+      RD_TRACE("setsockopt SO_REUSEPORT failed");
     }
   }
 #endif
@@ -378,7 +378,7 @@ int SetBroadcast(int fd, bool on) {
   int opt = on ? 1 : 0;
   int ret = setsockopt(fd, SOL_SOCKET, SO_BROADCAST, (char *) &opt, static_cast<socklen_t>(sizeof(opt)));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_BROADCAST failed";
+    RD_TRACE("setsockopt SO_BROADCAST failed");
   }
   return ret;
 }
@@ -386,7 +386,7 @@ int SetBroadcast(int fd, bool on) {
 int SetRecvBuf(int fd, int size) {
   int ret = setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (char *) &size, sizeof(size));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_RCVBUF failed";
+    RD_TRACE("setsockopt SO_RCVBUF failed");
   }
   return ret;
 }
@@ -394,7 +394,7 @@ int SetRecvBuf(int fd, int size) {
 int SetSendBuf(int fd, int size) {
   int ret = setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (char *) &size, sizeof(size));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt SO_SNDBUF failed";
+    RD_TRACE("setsockopt SO_SNDBUF failed");
   }
   return ret;
 }
@@ -549,7 +549,7 @@ int BindUdpSock(const uint16_t port, const char *local_ip, bool enable_reuse) {
   int fd = -1;
   int family = SupportIPv6() ? (IsIPv4(local_ip) ? AF_INET : AF_INET6) : AF_INET;
   if ((fd = (int) socket(family, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
-    LOG_WARN << "Create socket failed: " << GetErrorMsg(true);
+    RD_WARN("Create socket failed: {}", GetErrorMsg(true));
     return -1;
   }
   if (enable_reuse) {
@@ -578,7 +578,7 @@ int DissolveUdpSock(int fd) {
   addr.ss_family = AF_UNSPEC;
   if (-1 == ::connect(fd, (struct sockaddr *) &addr, addr_len) && GetError() != RD_EAFNOSUPPORT) {
     // mac/ios时返回EAFNOSUPPORT错误
-    LOG_WARN << "Connect socket AF_UNSPEC failed: " << GetErrorMsg(true);
+    RD_WARN("Connect socket AF_UNSPEC failed: {}", GetErrorMsg(true));
     return -1;
   }
   return 0;
@@ -607,7 +607,7 @@ int SetMultiTTL(int fd, uint8_t ttl) {
 #if defined(IP_MULTICAST_TTL)
   ret = setsockopt(fd, IPPROTO_IP, IP_MULTICAST_TTL, (char *) &ttl, sizeof(ttl));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_MULTICAST_TTL failed";
+    RD_TRACE("setsockopt IP_MULTICAST_TTL failed");
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -621,7 +621,7 @@ int SetMultiIF(int fd, const char *local_ip) {
   addr.s_addr = inet_addr(local_ip);
   ret = setsockopt(fd, IPPROTO_IP, IP_MULTICAST_IF, (char *) &addr, sizeof(addr));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_MULTICAST_IF failed";
+    RD_TRACE("setsockopt IP_MULTICAST_IF failed");
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -634,7 +634,7 @@ int SetMultiLOOP(int fd, bool accept) {
   uint8_t loop = accept;
   ret = setsockopt(fd, IPPROTO_IP, IP_MULTICAST_LOOP, (char *) &loop, sizeof(loop));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_MULTICAST_LOOP failed";
+    RD_TRACE("setsockopt IP_MULTICAST_LOOP failed");
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -649,7 +649,7 @@ int joinMultiAddr(int fd, const char *addr, const char *local_ip) {
   imr.imr_interface.s_addr = inet_addr(local_ip);
   ret = setsockopt(fd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *) &imr, sizeof(struct ip_mreq));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_ADD_MEMBERSHIP failed: " << GetErrorMsg(true);
+    RD_TRACE("setsockopt IP_ADD_MEMBERSHIP failed: {}",GetErrorMsg(true));
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -664,7 +664,7 @@ int leaveMultiAddr(int fd, const char *addr, const char *local_ip) {
   imr.imr_interface.s_addr = inet_addr(local_ip);
   ret = setsockopt(fd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (char *) &imr, sizeof(struct ip_mreq));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_DROP_MEMBERSHIP failed: " << GetErrorMsg(true);
+    RD_TRACE("setsockopt IP_DROP_MEMBERSHIP failed: {}",GetErrorMsg(true));
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -687,7 +687,7 @@ int joinMultiAddrFilter(int fd, const char *addr, const char *src_ip, const char
 
   ret = setsockopt(fd, IPPROTO_IP, IP_ADD_SOURCE_MEMBERSHIP, (char *) &imr, sizeof(struct ip_mreq_source));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_ADD_SOURCE_MEMBERSHIP failed: " << GetErrorMsg(true);
+    RD_TRACE("setsockopt IP_ADD_SOURCE_MEMBERSHIP failed: {}",GetErrorMsg(true));
   }
 #endif
   clearMulticastAllSocketOption(fd);
@@ -705,12 +705,11 @@ int leaveMultiAddrFilter(int fd, const char *addr, const char *src_ip, const cha
 
   ret = setsockopt(fd, IPPROTO_IP, IP_DROP_SOURCE_MEMBERSHIP, (char *) &imr, sizeof(struct ip_mreq_source));
   if (ret == -1) {
-    LOG_TRACE << "setsockopt IP_DROP_SOURCE_MEMBERSHIP failed: " << GetErrorMsg(true);
+    RD_TRACE("setsockopt IP_DROP_SOURCE_MEMBERSHIP failed: {}",GetErrorMsg(true));
   }
 #endif
   clearMulticastAllSocketOption(fd);
   return ret;
 }
-
-
+}
 NET_NAMESPACE_END

@@ -54,36 +54,36 @@ NET_NAMESPACE_BEGIN
 
   void KqueuePoller::AddEvent(Channel *channel, int mask) const {
     int fd = channel->fd();
-    LOG_TRACE << "AddEvent fd = " << fd << " event = { " << channel->eventsToString() << " }";
+    RD_TRACE("AddEvent fd = {} event = [{}]",fd,channel->eventsToString());
     struct kevent event;
     if (mask & RD_READABLE) {
       EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, channel);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_CRITICAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+        RD_ERROR("kevent op = {} fd = {}",operationToString(EV_ADD),channel->fd());
       }
     }
     if (mask & RD_WRITABLE) {
       EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, channel);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_CRITICAL << "kevent op =" << operationToString(EV_ADD) << " fd =" << channel->fd();
+        RD_ERROR("kevent op = {} fd = {}",operationToString(EV_ADD),channel->fd());
       }
     }
   }
 
   void KqueuePoller::DelEvent(Channel *channel, int mask) const {
     int fd = channel->fd();
-    LOG_TRACE << "DelEvent fd = " << fd << " event = { " << channel->eventsToString() << " }";
+    RD_TRACE("DelEvent fd = {} event = [{}]",fd,channel->eventsToString());
     struct kevent event;
     if (mask & RD_READABLE) {
       EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
       if (kevent(poller_fd_, &event, 1, nullptr, 0, nullptr) == -1) {
-        LOG_CRITICAL << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+        RD_ERROR("kevent op = {} fd = {}",operationToString(EV_DELETE),channel->fd());
       }
     }
     if (mask & RD_WRITABLE) {
       EV_SET(&event, fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
       if (kevent(poller_fd_, &event, 1, NULL, 0, NULL) == -1) {
-        LOG_CRITICAL << "epoll_ctl op =" << operationToString(EV_DELETE) << " fd =" << channel->fd();
+        RD_ERROR("kevent op = {} fd = {}",operationToString(EV_DELETE),channel->fd());
       }
     }
   }
@@ -136,7 +136,7 @@ NET_NAMESPACE_BEGIN
       }
     } else if (retval == -1 && savedErrno != EINTR) {
       errno = savedErrno;
-      LOG_CRITICAL << "aeApiPoll: kevent, %s" << strerror(errno);
+      RD_ERROR("aeApiPoll : kevent, {}",strerror(errno));
     }
     return now;
   }

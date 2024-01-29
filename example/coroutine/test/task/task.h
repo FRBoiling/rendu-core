@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "log.h"
+#include "log.hpp"
 
 template<typename T>
 class Task;

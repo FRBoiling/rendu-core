@@ -5,7 +5,7 @@
 #ifndef RENDU_BASE_ATOMIC_H
 #define RENDU_BASE_ATOMIC_H
 
-#include "../../../common/common_define.h"
+#include "../../../common/common/common_define.h"
 
 RD_NAMESPACE_BEGIN
 

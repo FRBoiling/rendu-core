@@ -23,7 +23,7 @@
 #include <new>
 
 #include "base/utils/convert.h"
-#include "log.h"
+#include "log.hpp"
 
 namespace cppcoro {
   template<typename T>

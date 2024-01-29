@@ -3,7 +3,7 @@
 */
 
 #include "fiber.h"
-#include "async.h"
+#include "async.hpp"
 #include "entity/scene.h"
 
 RD_NAMESPACE_BEGIN

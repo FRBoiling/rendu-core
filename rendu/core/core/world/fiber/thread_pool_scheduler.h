@@ -5,10 +5,10 @@
 #ifndef RENDU_THREAD_POOL_SCHEDULER_H
 #define RENDU_THREAD_POOL_SCHEDULER_H
 
-#include "fiber_fwd.h"
+#include "async/thread/thread_helper.h"
 #include "common/scheduler.h"
-#include "base/thread/thread_helper.h"
 #include "concurrent/concurrent_queue.h"
+#include "fiber_fwd.h"
 
 RD_NAMESPACE_BEGIN
 

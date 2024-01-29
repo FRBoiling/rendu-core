@@ -31,7 +31,7 @@ void ThreadPool::start(INT32 numThreads) {
     char id[32];
     snprintf(id, sizeof id, "%d", i + 1);
     threads_.emplace_back(new Thread(std::bind(&ThreadPool::runInThread, this), name_ + id));
-    threads_[i]->start();
+    threads_[i]->Start();
   }
   if (numThreads == 0 && threadInitCallback_) {
     threadInitCallback_();
@@ -46,7 +46,7 @@ void ThreadPool::stop() {
     notFull_.notifyAll();
   }
   for (auto &thr : threads_) {
-    thr->join();
+    thr->Join();
   }
 }
 

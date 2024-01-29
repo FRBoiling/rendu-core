@@ -3,7 +3,7 @@
 */
 
 #include "time_queue.h"
-#include "time/timer.h"
+#include "../../../time/time/timer.h"
 #include "sockets/sock_ops.h"
 #include "event_loop.h"
 
@@ -39,9 +39,9 @@ NET_NAMESPACE_BEGIN
     void readTimerfd(int timerfd, Timestamp now) {
       uint64_t howmany;
       ssize_t n = SockOps::Read(timerfd, &howmany, sizeof howmany);
-      LOG_TRACE << "TimerQueue::handleRead() " << howmany << " at " << now.toString();
+      RD_TRACE("TimerQueue::handleRead() {} at {}",howmany, now.toString());
       if (n != sizeof howmany) {
-        LOG_ERROR << "TimerQueue::handleRead() reads " << n << " bytes instead of 8";
+        RD_ERROR("TimerQueue::handleRead() reads {} bytes instead of 8",n);
       }
     }
 
@@ -55,7 +55,7 @@ NET_NAMESPACE_BEGIN
 //      int ret = ::timerfd_settime(timerfd, 0, &newValue, &oldValue);
       int ret = 0;
       if (ret) {
-        LOG_CRITICAL << "timerfd_settime()";
+        RD_ERROR("timerfd_settime()");
       }
     }
 
@@ -83,7 +83,7 @@ NET_NAMESPACE_BEGIN
     }
   }
 
-  TimerId TimerQueue::addTimer(TimerCallback cb,
+  TimerId TimerQueue::AddTimer(TimerCallback cb,
                                Timestamp when,
                                double interval) {
     Timer *timer = new Timer(std::move(cb), when, interval);
@@ -92,7 +92,7 @@ NET_NAMESPACE_BEGIN
     return TimerId(timer, timer->sequence());
   }
 
-  void TimerQueue::cancel(TimerId timerId) {
+  void TimerQueue::Cancel(TimerId timerId) {
     loop_->RunInLoop(
       std::bind(&TimerQueue::cancelInLoop, this, timerId));
   }

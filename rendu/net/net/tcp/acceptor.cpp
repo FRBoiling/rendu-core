@@ -49,7 +49,7 @@ NET_NAMESPACE_BEGIN
         SockOps::Close(connfd);
       }
     } else {
-      LOG_ERROR << "in Acceptor::handleRead";
+      RD_ERROR("in Acceptor::handleRead");
       // Read the section named "The special problem of
       // accept()ing when you can't" in libev's doc.
       // By Marc Lehmann, author of libev.

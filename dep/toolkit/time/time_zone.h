@@ -19,7 +19,7 @@ RD_NAMESPACE_BEGIN
     static TimeZone UTC();
 
     static TimeZone China();  // Fixed at GMT+8, no DST
-    static TimeZone loadZoneFile(const char *zonefile);
+    static TimeZone LoadZoneFile(const char *zonefile);
 
     // default copy ctor/assignment/dtor are Okay.
 

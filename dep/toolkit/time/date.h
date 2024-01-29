@@ -16,8 +16,8 @@ RD_NAMESPACE_BEGIN
 /// It's recommended to pass it by value, since it's passed in register on x64.
 ///
   class Date : public NonCopyable
-    // public boost::less_than_comparable<Date>,
-    // public boost::equality_comparable<Date>
+    // public boost::LessThanComparable<Date>,
+    // public boost::EqualityComparable<Date>
   {
   public:
 

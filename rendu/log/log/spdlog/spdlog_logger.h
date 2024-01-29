@@ -6,7 +6,7 @@
 #define RENDU_BASE_LOGGER_H
 
 #include "spdlog_channel.h"
-
+#include "logger.h"
 
 LOG_NAMESPACE_BEGIN
 

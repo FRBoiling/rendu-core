@@ -6,10 +6,10 @@
 #define RENDU_LOG_FILE_CHANNEL_H
 
 #include "log_define.h"
+#include "a_logger_channel.h"
 
 LOG_NAMESPACE_BEGIN
 
-using namespace common;
 class FileChannel : public ALoggerChannel {
 public:
   explicit FileChannel(Logger *logger);

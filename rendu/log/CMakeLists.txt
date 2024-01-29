@@ -4,7 +4,7 @@
 set(target_name log)
 rendu_add_library(
     DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    .
     PROJECT
     ${PROJECT_NAME}
     NAME
@@ -12,6 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::common
+    rendu::base
+#    rendu::time
     dep::spdlog
 )

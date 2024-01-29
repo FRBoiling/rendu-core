@@ -4,10 +4,10 @@
 
 #include "console_channel.h"
 #include "console_color.h"
+#include "logger.h"
 
 LOG_NAMESPACE_BEGIN
 
-using namespace common;
 ConsoleChannel::ConsoleChannel() : ALoggerChannel() {
 }
 void ConsoleChannel::WriteMsg(LogLevel level, LogMsgSource &source, std::string &content) {

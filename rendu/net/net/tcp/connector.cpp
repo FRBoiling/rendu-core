@@ -80,11 +80,13 @@ void Connector::connect() {
     case EALREADY:
     case EBADF:
     case EFAULT:
-    case ENOTSOCK:LOG_CRITICAL << "connect error in Connector::startInLoop " << savedErrno;
+    case ENOTSOCK:
+      RD_CRITICAL("connect error in Connector::startInLoop {}",savedErrno);
       SockOps::Close(sockfd);
       break;
 
-    default:LOG_CRITICAL << "Unexpected error in Connector::startInLoop " << savedErrno;
+    default:
+      RD_CRITICAL("Unexpected error in Connector::startInLoop {}",savedErrno);
       SockOps::Close(sockfd);
       // connectErrorCallback_();
       break;
@@ -127,17 +129,16 @@ void Connector::resetChannel() {
 }
 
 void Connector::handleWrite() {
-  LOG_TRACE << "Connector::handleWrite " << state_;
+  RD_TRACE("Connector::handleWrite {}",state_);
 
   if (state_ == kConnecting) {
     int sockfd = removeAndResetChannel();
     int err = SockOps::GetSockError(sockfd);
     if (err) {
-      LOG_WARN << "Connector::handleWrite - SO_ERROR = "
-               << err << " " << strerror_tl(err);
+      RD_WARN("Connector::handleWrite - SO_ERROR =  {} {}",err,strerror_tl(err));
       retry(sockfd);
     } else if (SockOps::IsSelfConnect(sockfd)) {
-      LOG_WARN << "Connector::handleWrite - Self connect";
+      RD_WARN("Connector::handleWrite -  Self connect");
       retry(sockfd);
     } else {
       setState(kConnected);

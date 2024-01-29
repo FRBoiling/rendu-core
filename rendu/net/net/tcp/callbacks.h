@@ -5,7 +5,7 @@
 #ifndef RENDU_NET_CALLBACKS_H
 #define RENDU_NET_CALLBACKS_H
 
-#include "common/time/timestamp.h"
+#include "../../../time/time/timestamp.h"
 #include "net_define.h"
 
 NET_NAMESPACE_BEGIN

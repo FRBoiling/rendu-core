@@ -28,7 +28,7 @@ RD_NAMESPACE_BEGIN
 
 
   template<class T, class U, class B = operators_detail::empty_base<T> >
-  struct equality_comparable2 : B {
+  struct EqualityComparable2 : B {
     friend constexpr bool operator==(const U &y, const T &x) { return x == y; }
 
     friend constexpr bool operator!=(const U &y, const T &x) { return !static_cast<bool>(x == y); }
@@ -37,12 +37,12 @@ RD_NAMESPACE_BEGIN
   };
 
   template<class T, class B = operators_detail::empty_base<T> >
-  struct equality_comparable1 : B {
+  struct EqualityComparable1 : B {
     friend constexpr bool operator!=(const T &x, const T &y) { return !static_cast<bool>(x == y); }
   };
 
   template<class T, class U, class B = operators_detail::empty_base<T> >
-  struct less_than_comparable2 : B {
+  struct LessThanComparable2 : B {
     friend constexpr bool operator<=(const T &x, const U &y) { return !static_cast<bool>(x > y); }
 
     friend constexpr bool operator>=(const T &x, const U &y) { return !static_cast<bool>(x < y); }
@@ -57,7 +57,7 @@ RD_NAMESPACE_BEGIN
   };
 
   template<class T, class B = operators_detail::empty_base<T> >
-  struct less_than_comparable1 : B {
+  struct LessThanComparable1 : B {
     friend constexpr bool operator>(const T &x, const T &y) { return y < x; }
 
     friend constexpr bool operator<=(const T &x, const T &y) { return !static_cast<bool>(y < x); }
@@ -139,8 +139,8 @@ BOOST_OPERATOR_TEMPLATE2(template_name##2)                                      
 BOOST_OPERATOR_TEMPLATE1(template_name##1)
 
 
-  BOOST_OPERATOR_TEMPLATE(less_than_comparable)
-  BOOST_OPERATOR_TEMPLATE(equality_comparable)
+  BOOST_OPERATOR_TEMPLATE(LessThanComparable)
+  BOOST_OPERATOR_TEMPLATE(EqualityComparable)
 
 #undef BOOST_OPERATOR_TEMPLATE
 #undef BOOST_OPERATOR_TEMPLATE4

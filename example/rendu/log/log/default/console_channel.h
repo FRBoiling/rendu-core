@@ -6,6 +6,7 @@
 #define RENDU_LOG_CONSOLE_CHANNEL_H
 
 #include "log_define.h"
+#include "a_logger_channel.h"
 
 LOG_NAMESPACE_BEGIN
 

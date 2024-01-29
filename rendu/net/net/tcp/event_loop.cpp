@@ -11,6 +11,7 @@
 #include "thread/mutex_lock.hpp"
 #include "channel.h"
 #include "sockets/sock_ops.h"
+#include "time.h"
 
 NET_NAMESPACE_BEGIN
 
@@ -111,7 +112,7 @@ void EventLoop::Loop() {
     eventHandling_ = false;
     doPendingFunctors();
   }
-  RD_TRACE("EventLoop {} stop looping",1);
+  RD_TRACE("EventLoop {} stop looping", 1);
   looping_ = false;
 }
 
@@ -150,18 +151,12 @@ size_t EventLoop::QueueSize() const {
 }
 
 TimerId EventLoop::RunAt(Timestamp time, TimerCallback cb) {
-//    return timerQueue_->addTimer(std::move(cb), time, 0.0);
-  //TODO:BOIL
-  RD_TRACE("RunAt");
-  return TimerId();
+  return timerQueue_->AddTimer(std::move(cb), time, 0.0);
 }
 
 TimerId EventLoop::RunAfter(double delay, TimerCallback cb) {
-//    Timestamp time(addTime(Timestamp::now(), delay));
-//    return RunAt(time, std::move(cb));
-  //TODO:BOIL
-  RD_TRACE("RunAfter");
-  return TimerId();
+  Timestamp time(addTime(Timestamp::now(), delay));
+  return RunAt(time, std::move(cb));
 }
 
 TimerId EventLoop::RunEvery(double interval, TimerCallback cb) {
@@ -199,9 +194,9 @@ bool EventLoop::HasChannel(Channel *channel) {
 }
 
 void EventLoop::abortNotInLoopThread() {
-  LOG_CRITICAL << "EventLoop::abortNotInLoopThread - EventLoop " << this
-               << " was created in threadId_ = " << threadId_
-               << ", current thread id = " << CurrentThread::tid();
+  RD_CRITICAL("EventLoop::abortNotInLoopThread - EventLoop {} was created in threadId_ = {}, current thread id = {}",
+              Convert::ToString(this), threadId_, CurrentThread::tid());
+
 }
 
 void EventLoop::Wakeup() {
@@ -237,7 +232,7 @@ void EventLoop::doPendingFunctors() {
 
 void EventLoop::printActiveChannels() const {
   for (const Channel *channel : activeChannels_) {
-    LOG_TRACE << "{" << channel->reventsToString() << "} ";
+    RD_TRACE("[{}]", channel->reventsToString());
   }
 }
 

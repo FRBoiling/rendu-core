@@ -1,5 +1,5 @@
-#include "log.h"
 #include "base/utils/convert.h"
+#include "log.hpp"
 
 using namespace rendu;
 using namespace rendu::log;

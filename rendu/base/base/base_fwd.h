@@ -6,6 +6,5 @@
 #define RENDU_BASE_FWD_H
 
 #include "base_define.h"
-#include "logger/log.h"
 
 #endif //RENDU_BASE_FWD_H

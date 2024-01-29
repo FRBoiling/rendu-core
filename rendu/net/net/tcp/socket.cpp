@@ -49,7 +49,7 @@ NET_NAMESPACE_BEGIN
     auto sock_address = SockOps::MakeSockAddr(ip.c_str(), port);
     int ret = SockOps::BindSock(sockfd_, port, ip.c_str(), sock_address.ss_family);
     if (ret < 0) {
-      LOG_CRITICAL << "SocketOps::bindAddress fail";
+      RD_CRITICAL("SocketOps::bindAddress fail");
     }
   }
 
@@ -91,7 +91,7 @@ NET_NAMESPACE_BEGIN
     int ret = ::setsockopt(sockfd_, SOL_SOCKET, SO_REUSEPORT,
                            &optval, static_cast<socklen_t>(sizeof optval));
     if (ret < 0 && on) {
-      LOG_CRITICAL << "SO_REUSEPORT failed.";
+      RD_CRITICAL("SO_REUSEPORT fail");
     }
 #else
     if (on)

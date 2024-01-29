@@ -5,7 +5,7 @@
 #ifndef RENDU_NET_TIME_QUEUE_H
 #define RENDU_NET_TIME_QUEUE_H
 
-#include "base/utils/non_copyable.h"
+#include "net_define.h"
 #include "callbacks.h"
 #include "channel.h"
 #include <set>
@@ -13,10 +13,6 @@
 NET_NAMESPACE_BEGIN
 
   class EventLoop;
-
-  class Timer;
-
-  class TimerId;
 
 ///
 /// A best efforts timer queue.
@@ -33,11 +29,11 @@ NET_NAMESPACE_BEGIN
     /// repeats if @c interval > 0.0.
     ///
     /// Must be thread safe. Usually be called from other threads.
-    TimerId addTimer(TimerCallback cb,
+    TimerId AddTimer(TimerCallback cb,
                      Timestamp when,
                      double interval);
 
-    void cancel(TimerId timerId);
+    void Cancel(TimerId timerId);
 
   private:
 

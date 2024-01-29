@@ -5,7 +5,7 @@
 #ifndef RENDU_RDTask_EXAMPLE_H
 #define RENDU_RDTask_EXAMPLE_H
 
-#include "log.h"
+#include "log.hpp"
 #include "task/task.h"
 
 using namespace rendu;

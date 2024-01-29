@@ -24,7 +24,7 @@ NET_NAMESPACE_BEGIN
       // still a tiny chance to call destructed object, if threadFunc exits just now.
       // but when EventLoopThread destructs, usually programming is exiting anyway.
       loop_->Quit();
-      thread_.join();
+      thread_.Join();
     }
   }
 

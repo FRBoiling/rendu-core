@@ -5,8 +5,8 @@
 #ifndef RENDU_RDTask_EXAMPLE_H
 #define RENDU_RDTask_EXAMPLE_H
 
-#include "async.h"
-#include "log.h"
+#include "async.hpp"
+#include "log.hpp"
 
 using namespace rendu;
 using namespace rendu::log;

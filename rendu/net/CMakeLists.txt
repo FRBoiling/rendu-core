@@ -12,6 +12,7 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::async
     rendu::log
+    rendu::async
+    rendu::time
 )

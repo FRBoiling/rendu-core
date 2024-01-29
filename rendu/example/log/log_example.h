@@ -4,9 +4,8 @@
 #ifndef RENDU_LOG_EXAMPLE_H
 #define RENDU_LOG_EXAMPLE_H
 
-#include "log.h"
+#include "log.hpp"
 
-using namespace rendu::common;
 using namespace rendu::log;
 
 int log_example() {

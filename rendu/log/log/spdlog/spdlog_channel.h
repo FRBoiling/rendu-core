@@ -6,6 +6,7 @@
 #define RENDU_SPDLOG_CHANNEL_H
 
 #include "log_define.h"
+#include "a_logger_channel.h"
 
 #include <spdlog/fmt/ostr.h>// support for user defined types
 #include <spdlog/pattern_formatter.h>

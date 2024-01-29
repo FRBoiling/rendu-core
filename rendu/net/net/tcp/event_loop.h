@@ -8,8 +8,8 @@
 #include "callbacks.h"
 #include "pipe.h"
 #include "thread/mutex_lock.hpp"
-#include "time/time_id.h"
-#include "time/timestamp.h"
+#include "../../../time/time/time_id.h"
+#include "../../../time/time/timestamp.h"
 #include "time_queue.h"
 
 NET_NAMESPACE_BEGIN

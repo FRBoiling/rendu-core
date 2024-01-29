@@ -1,7 +1,7 @@
 
 
+#include "log.hpp"
 #include "task_example.h"
-#include "log.h"
 
 int main() {
 

@@ -6,7 +6,7 @@
 #define RENDU_NET_CHANNEL_H
 
 #include "net_define.h"
-#include "time/timestamp.h"
+#include "../../../time/time/timestamp.h"
 
 NET_NAMESPACE_BEGIN
 

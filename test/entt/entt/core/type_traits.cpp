@@ -119,19 +119,19 @@ TEST(IsTransparent, Functionalities) {
 }
 
 TEST(IsEqualityComparable, Functionalities) {
-  EXPECT_TRUE(entt::is_equality_comparable_v<int>);
-  EXPECT_TRUE(entt::is_equality_comparable_v<const int>);
-  EXPECT_TRUE(entt::is_equality_comparable_v<std::vector<int>>);
-  EXPECT_TRUE(entt::is_equality_comparable_v<std::vector<std::vector<int>>>);
-  EXPECT_TRUE(entt::is_equality_comparable_v<std::vector<not_comparable>::iterator>);
-  EXPECT_TRUE(entt::is_equality_comparable_v<nlohmann_json_like>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<int>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<const int>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<std::vector<int>>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<std::vector<std::vector<int>>>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<std::vector<not_comparable>::iterator>);
+  EXPECT_TRUE(entt::is_EqualityComparable_v<nlohmann_json_like>);
 
-  EXPECT_TRUE(!entt::is_equality_comparable_v<int[3u]>);
-  EXPECT_TRUE(!entt::is_equality_comparable_v<not_comparable>);
-  EXPECT_TRUE(!entt::is_equality_comparable_v<const not_comparable>);
-  EXPECT_TRUE(!entt::is_equality_comparable_v<std::vector<not_comparable>>);
-  EXPECT_TRUE(!entt::is_equality_comparable_v<std::vector<std::vector<not_comparable>>>);
-  EXPECT_TRUE(!entt::is_equality_comparable_v<void>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<int[3u]>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<not_comparable>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<const not_comparable>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<std::vector<not_comparable>>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<std::vector<std::vector<not_comparable>>>);
+  EXPECT_TRUE(!entt::is_EqualityComparable_v<void>);
 }
 
 TEST(Tag, Functionalities) {

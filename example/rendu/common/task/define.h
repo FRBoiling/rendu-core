@@ -8,6 +8,6 @@
 #define RD_NAMESPACE_BEGIN  namespace rendu {
 #define RD_NAMESPACE_END } // namespace rendu
 
-#include "log.h"
+#include "log.hpp"
 
 #endif //RENDU_BASE_DEFINE_H

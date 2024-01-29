@@ -3,7 +3,7 @@
 */
 
 #include "thread.h"
-
+#include "thread_helper.h"
 
 ASYNC_NAMESPACE_BEGIN
 
@@ -89,7 +89,7 @@ void CurrentThread::cacheTid() {
 }
 
 bool CurrentThread::isMainThread() {
-  return tid() == ::getpid();
+  return tid() == GetPid();
 }
 
 void CurrentThread::sleepUsec(int64_t usec) {
@@ -127,11 +127,11 @@ void Thread::setDefaultName() {
   }
 }
 
-void Thread::start() {
+void Thread::Start() {
   assert(!started_);
   started_ = true;
   // FIXME: move(func_)
-  ThreadData *data = new ThreadData(func_, name_, &tid_, &latch_);
+  auto data = new ThreadData(func_, name_, &tid_, &latch_);
   if (pthread_create(&pthreadId_, NULL, &startThread, data)) {
     started_ = false;
     delete data; // or no delete?
@@ -142,7 +142,7 @@ void Thread::start() {
   }
 }
 
-int Thread::join() {
+int Thread::Join() {
   assert(started_);
   assert(!joined_);
   joined_ = true;

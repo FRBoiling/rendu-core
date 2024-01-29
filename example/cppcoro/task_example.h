@@ -5,10 +5,10 @@
 #ifndef RENDU_TASK_EXAMPLE_H
 #define RENDU_TASK_EXAMPLE_H
 
-#include "log.h"
-#include "cppcoro/task.hpp"
 #include "async_task.h"
 #include "cppcoro/static_thread_pool.hpp"
+#include "cppcoro/task.hpp"
+#include "log.hpp"
 
 using namespace cppcoro;
 using namespace rendu::log;

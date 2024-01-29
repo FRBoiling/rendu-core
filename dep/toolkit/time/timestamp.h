@@ -11,8 +11,8 @@
 RD_NAMESPACE_BEGIN
 
   class Timestamp : public Copyable,
-                    public equality_comparable<Timestamp>,
-                    public less_than_comparable<Timestamp> {
+                    public EqualityComparable<Timestamp>,
+                    public LessThanComparable<Timestamp> {
   public:
     ///
     /// Constucts an invalid Timestamp.

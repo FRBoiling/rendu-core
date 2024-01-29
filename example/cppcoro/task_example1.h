@@ -8,7 +8,7 @@
 #include "cppcoro/static_thread_pool.hpp"
 #include "cppcoro/sync_wait.hpp"
 #include "cppcoro/task.hpp"
-#include "log.h"
+#include "log.hpp"
 
 using namespace cppcoro;
 using namespace rendu::log;

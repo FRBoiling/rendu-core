@@ -3,7 +3,7 @@
 #include <thread>
 #include <functional>
 
-#include "log.h"
+#include "log.hpp"
 using namespace rendu::log;
 
 // AsyncTask 类，表示一个异步任务
