@@ -4,10 +4,13 @@
 
 #include "net_services.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    int64 NetServices::CreateAcceptChannelId() {
-      return 0;
-    }
+INT64 NetServices::CreateAcceptChannelId() {
+  return 0;
+}
+INT64 NetServices::CreateConnectChannelId() {
+  return 1;
+}
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

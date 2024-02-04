@@ -13,7 +13,7 @@
 #include <any>
 #include <typeinfo>
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class EventSystem
         : public Singleton<EventSystem>,
@@ -49,6 +49,6 @@ RD_NAMESPACE_BEGIN
     };
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_EVENT_SYSTEM_H

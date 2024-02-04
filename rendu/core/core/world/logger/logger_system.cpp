@@ -7,7 +7,7 @@
 #include "options.pb.h"
 #include "logger/log.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     void LoggerSystem::Awake() {
       auto entity = World::Instance().GetEntity();
@@ -23,4 +23,4 @@ RD_NAMESPACE_BEGIN
       RD_LOGGER_INIT(m_setting->path(), m_setting->perheader(), "", (Logger::LogLevel) m_setting->level());
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

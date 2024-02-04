@@ -6,12 +6,11 @@
 #define RENDU_MAIN_THREAD_SCHEDULER_H
 
 #include "fiber_fwd.h"
-#include "thread/thread_synchronization_context.h"
-#include "common/scheduler.h"
+#include "i_scheduler.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    class MainThreadScheduler: public Scheduler{
+    class MainThreadScheduler: public IScheduler{
     public:
       explicit MainThreadScheduler(FiberManagerSystem* fiberSystem);
 
@@ -30,6 +29,6 @@ RD_NAMESPACE_BEGIN
 
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_MAIN_THREAD_SCHEDULER_H

@@ -1,0 +1,18 @@
+/*
+* Created by boil on 2024/2/5.
+*/
+
+#ifndef RENDU_RUNTIME_RUNTIME_EVENT_ARGS_H_
+#define RENDU_RUNTIME_RUNTIME_EVENT_ARGS_H_
+
+#include "runtime_define.h"
+
+RUNTIME_NAMESPACE_BEGIN
+
+class EventArgs {
+};
+
+RUNTIME_NAMESPACE_END
+
+
+#endif//RENDU_RUNTIME_RUNTIME_EVENT_ARGS_H_

@@ -8,53 +8,54 @@
 #include "core_define.h"
 #include <vector>
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    class CircularBuffer {
-    public:
-      explicit CircularBuffer(std::size_t capacity)
-          : m_first_index(0), m_last_index(0), m_size(0), m_capacity(capacity), m_head(0),
-            m_tail(0) {}
+class CircularBuffer : public Stream {
+public:
+  explicit CircularBuffer(std::size_t capacity)
+      : m_first_index(0), m_last_index(0), m_size(0), m_capacity(capacity), m_head(0),
+        m_tail(0) {}
 
 public:
-      void SetFirstIndex(int index);
-      [[nodiscard]] INT32 GetFirstIndex() const;
+  void SetFirstIndex(int index);
+  [[nodiscard]] INT32 GetFirstIndex() const;
 
-      void SetLastIndex(int index);
-      [[nodiscard]] INT64 GetLastIndex() const;
+  void SetLastIndex(int index);
+  [[nodiscard]] INT64 GetLastIndex() const;
 
-      INT64 GetLength();
+  INT64 GetLength();
 
-      BYTE *GetFirst();
+  BYTE *GetFirst();
 
-      BYTE *GetLast();
+  BYTE *GetLast();
 
-      INT32 Read(BYTE *buffer, INT32 offset, INT32 count);
+  INT32 Read(BYTE *buffer, INT32 offset, INT32 count);
 
-      void Read(Stream *stream, int count);
+  void Read(Stream *stream, int count);
 
-      void Write(BYTE *buffer, INT32 offset, INT32 count);
+  void Write(BYTE *buffer, INT32 offset, INT32 count);
 
-      void RemoveFirst();
+  void RemoveFirst();
 
-      void AddLast();
-    public:
-      const INT16 ChunkSize = 8192;
-    private:
-      INT32 m_first_index;
-      INT64 m_last_index;
+  void AddLast();
 
-      Queue<BYTE *> m_bufferQueue;
-      Queue<BYTE *> m_bufferCache;
-      BYTE *m_lastBuffer;
+public:
+  const INT16 ChunkSize = 8192;
 
-      std::size_t m_size;       //大小
-      std::size_t m_capacity;   //容积
-      std::size_t m_head;       //头
-      std::size_t m_tail;       //尾
+private:
+  INT32 m_first_index;
+  INT64 m_last_index;
 
-    };
+  Queue<BYTE *> m_bufferQueue;
+  Queue<BYTE *> m_bufferCache;
+  BYTE *m_lastBuffer;
 
-RD_NAMESPACE_END
+  std::size_t m_size;    //大小
+  std::size_t m_capacity;//容积
+  std::size_t m_head;    //头
+  std::size_t m_tail;    //尾
+};
 
-#endif //RENDU_CIRCULAR_BUFFER_H
+CORE_NAMESPACE_END
+
+#endif//RENDU_CIRCULAR_BUFFER_H

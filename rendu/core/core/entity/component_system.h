@@ -6,7 +6,6 @@
 #define RENDU_COMPONENT_SYSTEM_H
 
 #include "core_define.h"
-#include "ecs/entity_pool.h"
 
 RD_NAMESPACE_BEGIN
 
@@ -15,12 +14,6 @@ RD_NAMESPACE_BEGIN
     public:
       ComponentSystem() = default;
       virtual ~ComponentSystem() = default;
-    public:
-      void Init(EntityPool &pool)  {
-         m_entityPool = &pool;
-      };
-    protected:
-      EntityPool *m_entityPool{};
     };
 
     class SystemAwake {

@@ -5,19 +5,27 @@
 #ifndef RENDU_ACTOR_ID_H
 #define RENDU_ACTOR_ID_H
 
+#include "actor_address.h"
 #include "core_define.h"
-#include "address.h"
 
 RD_NAMESPACE_BEGIN
 
-    class ActorId {
+class ActorId {
 
-    public:
-      Address Address;
-      long InstanceId;
+public:
+  ActorAddress GetActorAddress() const{
+    return m_address;
+  }
 
-    };
+  UINT64 GetInstanceId() const{
+    return m_instance_id;
+  }
+
+private:
+  ActorAddress m_address;
+  UINT64 m_instance_id;
+};
 
 RD_NAMESPACE_END
 
-#endif //RENDU_ACTOR_ID_H
+#endif//RENDU_ACTOR_ID_H

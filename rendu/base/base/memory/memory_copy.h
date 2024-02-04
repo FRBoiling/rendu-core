@@ -11,25 +11,29 @@
 
 RD_NAMESPACE_BEGIN
 
-template<typename T>
-void Copy(const T *src, std::int32_t src_index, T *dest, std::int32_t dest_index, std::int32_t length) {
-  // 检查索引和长度是否合法，如果不合法，抛出异常
-  if (src_index + length > sizeof(src) || dest_index + length > sizeof(dest)) {
-    throw std::out_of_range("Array index out of range");
-  }
-  // 使用 std::copy 算法复制数组的一部分
-  std::memcpy(dest + dest_index, src + src_index, sizeof(T) * length);
-}
+namespace Array {
 
-template<typename T>
-void Copy(const T *src, T *dest) {
-  if (sizeof(src) < sizeof(dest)) {
-    // 长度是否合法，如果不合法，抛出异常
-    // 目标内存过小 TODO：BOIL
-    return;
+  template<typename T>
+  void Copy(const T *src, std::int32_t src_index, T *dest, std::int32_t dest_index, std::int32_t length) {
+    // 检查索引和长度是否合法，如果不合法，抛出异常
+    if (src_index + length > sizeof(src) || dest_index + length > sizeof(dest)) {
+      throw std::out_of_range("Array index out of range");
+    }
+    // 使用 std::copy 算法复制数组的一部分
+    std::memcpy(dest + dest_index, src + src_index, sizeof(T) * length);
   }
-  std::memcpy(dest, src, sizeof(T));
-}
+
+  template<typename T>
+  void Copy(const T *src, T *dest) {
+    if (sizeof(src) < sizeof(dest)) {
+      // 长度是否合法，如果不合法，抛出异常
+      // 目标内存过小 TODO：BOIL
+      return;
+    }
+    std::memcpy(dest, src, sizeof(T));
+  }
+
+}// namespace Array
 
 RD_NAMESPACE_END
 

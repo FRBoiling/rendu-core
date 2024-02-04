@@ -12,68 +12,40 @@
 
 RD_NAMESPACE_BEGIN
 
-  namespace detail {
-    template<typename T>
-    struct has_no_destroy {
-      template<typename C>
-      static char test(decltype(&C::no_destroy));
+class ASingleton : public NonCopyable {
+public:
+  virtual ~ASingleton() { isDisposed = true; }
 
-      template<typename C>
-      static std::int32_t test(...);
+  virtual void Register() = 0;// 纯虚函数
 
-      const static bool value = sizeof(test<T>(0)) == 1;
-    };
-  }  // namespace detail
+protected:
+  ASingleton() : isDisposed(false) {}
 
-  template<typename T>
-  class Singleton : NonCopyable {
-  public:
-    Singleton() = delete;
+  bool isDisposed;
+};
 
-    ~Singleton() = delete;
+template<class T>
+class Singleton : public ASingleton {
+public:
+  static T &GetInstance() {
+    return instance;
+  }
 
-    static T &instance() {
-      pthread_once(&ponce_, &Singleton::init);
-      assert(value_ != NULL);
-      return *value_;
-    }
+  Singleton(const Singleton &) = delete;
+  Singleton &operator=(const Singleton) = delete;
 
-  private:
-    static void init() {
-      value_ = new T();
-      if (!detail::has_no_destroy<T>::value) {
-        ::atexit(destroy);
-      }
-    }
+  virtual ~Singleton() = default;
 
-    static void destroy() {
-      typedef char T_must_be_complete_type[sizeof(T) == 0 ? -1 : 1];
-      T_must_be_complete_type dummy;
-      (void) dummy;
+protected:
+  static T instance;
 
-      delete value_;
-      value_ = NULL;
-    }
+  Singleton() = default;// 默认构造函数，用于创建实例
 
-  private:
-    static pthread_once_t ponce_;
-    static T *value_;
-  };
+  void Register() override {
+  }
+};
 
-  template<typename T>
-  pthread_once_t Singleton<T>::ponce_ = PTHREAD_ONCE_INIT;
-
-  template<typename T>
-  T *Singleton<T>::value_ = NULL;
-
-
-#define INSTANCE_IMP(class_name, ...) \
-class_name &class_name::Instance() { \
-    static std::shared_ptr<class_name> s_instance(new class_name(__VA_ARGS__)); \
-    static class_name &s_instance_ref = *s_instance; \
-    return s_instance_ref; \
-}
 
 RD_NAMESPACE_END
 
-#endif //RENDU_BASE_SINGLETON_H
+#endif//RENDU_BASE_SINGLETON_H

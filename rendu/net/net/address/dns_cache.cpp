@@ -3,9 +3,7 @@
 */
 
 #include "dns_cache.h"
-
-#include "../errno/errno.h"
-#include "../sockets/sock_ops.h"
+#include "errno.h"
 
 NET_NAMESPACE_BEGIN
 
@@ -39,7 +37,7 @@ std::shared_ptr<struct addrinfo> DnsCache::getCacheDomainIP(const char *host, in
     //没有记录
     return nullptr;
   }
-  if (it->second.create_time + expireSec < time(nullptr)) {
+  if (it->second.create_time + expireSec < DateTime::Now()) {
     //已过期
     _dns_cache.erase(it);
     return nullptr;
@@ -51,7 +49,7 @@ void DnsCache::SetCacheDomainIP(const char *host, std::shared_ptr<struct addrinf
   lock_guard<mutex> lck(_mtx);
   DnsItem item;
   item.addr_info = std::move(addr);
-  item.create_time = time(nullptr);
+  item.create_time = DateTime::Now();
   _dns_cache[host] = std::move(item);
 }
 
@@ -64,7 +62,7 @@ std::shared_ptr<struct addrinfo> DnsCache::getSystemDomainIP(const char *host) {
   } while (ret == -1 && GetError(true) == EINTR);
 
   if (!answer) {
-    RD_WARN ("getaddrinfo failed: {}", host);
+    RD_WARN("getaddrinfo failed: {}", host);
     return nullptr;
   }
   return std::shared_ptr<struct addrinfo>(answer, freeaddrinfo);

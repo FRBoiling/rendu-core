@@ -4,7 +4,7 @@
 
 #include "a_service.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     MemoryBuffer *AService::Fetch(int size) {
       if (size > MaxMemoryBufferSize) {
@@ -45,4 +45,4 @@ RD_NAMESPACE_BEGIN
     void AService::ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) {
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

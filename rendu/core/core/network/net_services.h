@@ -10,13 +10,14 @@
 #include "core_define.h"
 
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    class NetServices : public Singleton<NetServices> {
-    public:
-      INT64 CreateAcceptChannelId();
-    };
+class NetServices : public Singleton<NetServices> {
+public:
+  INT64 CreateAcceptChannelId();
+  INT64 CreateConnectChannelId();
+};
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
-#endif //RENDU_NET_SERVICES_H
+#endif//RENDU_NET_SERVICES_H

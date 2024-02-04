@@ -3,10 +3,9 @@
 */
 
 #include "thread_pool_scheduler.h"
-#include "async/thread/thread_helper.h"
 #include "fiber_manager_system.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     ThreadPoolScheduler::ThreadPoolScheduler(FiberManagerSystem *fiberManagerSystem)
         : m_fiberManagerSystem(fiberManagerSystem),
@@ -29,7 +28,7 @@ RD_NAMESPACE_BEGIN
         }
         int id = 0;
         if (!m_idQueue.TryDequeue(id)) {
-          Thread::Sleep(1000);
+          Thread::Sleep(1s);
           continue;
         }
 
@@ -43,20 +42,20 @@ RD_NAMESPACE_BEGIN
         }
 
         Fiber::Instance = fiber;
-        SynchronizationContext::SetSynchronizationContext(&fiber->GetThreadSynchronizationContext());
+        SynchronizationContext::SetSynchronizationContext(fiber->GetThreadSynchronizationContext());
         fiber->Update();
         fiber->LateUpdate();
         SynchronizationContext::SetSynchronizationContext(nullptr);
         Fiber::Instance = nullptr;
         m_idQueue.Enqueue(id);
 
-        Thread::Sleep(1000);
+        Thread::Sleep(1s);
       }
     }
 
     void ThreadPoolScheduler::Dispose() {
       std::for_each(m_threads->begin(), m_threads->end(), [](Thread *thread) {
-        thread->join();
+        thread->Join();
         delete thread;
       });
       m_threads->clear();
@@ -64,7 +63,7 @@ RD_NAMESPACE_BEGIN
     }
 
     void ThreadPoolScheduler::Run() {
-      int threadCount = Environment::GetProcessorCount();
+      int threadCount = Thread::GetProcessorCount();
       m_threads = new std::vector<Thread *>(threadCount);
       for (int i = 0; i < threadCount; ++i) {
         Thread *thread = Thread::Create(&ThreadPoolScheduler::Loop, this, 0);
@@ -73,4 +72,4 @@ RD_NAMESPACE_BEGIN
     }
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

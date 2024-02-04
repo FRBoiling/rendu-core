@@ -9,7 +9,7 @@
 
 RD_NAMESPACE_BEGIN
 
-    class Address {
+    class ActorAddress {
     public :
       int Process;
       int Fiber;

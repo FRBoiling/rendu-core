@@ -10,13 +10,14 @@
 #include <mutex>
 #include <unordered_map>
 #include "sockets/sock_ops.h"
+#include "errno/errno.h"
 
 NET_NAMESPACE_BEGIN
 
   class DnsItem {
-  public:
+public:
     std::shared_ptr<struct addrinfo> addr_info;
-    time_t create_time;
+    DateTime create_time{DateTime::MinValue};
   };
 
   class DnsCache {

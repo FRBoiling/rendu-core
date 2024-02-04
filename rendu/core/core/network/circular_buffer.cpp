@@ -6,7 +6,7 @@
 #include "exception/exception_helper.h"
 #include "io/stream.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     INT32 CircularBuffer::Read(BYTE *buffer, INT32 offset, INT32 count) {
       if (sizeof(buffer) < offset + count) {
@@ -61,15 +61,15 @@ RD_NAMESPACE_BEGIN
       m_bufferCache.Enqueue(m_bufferQueue.Dequeue());
     }
 
-    int64 CircularBuffer::GetLength() {
+    INT64 CircularBuffer::GetLength() {
       return 0;
     }
 
-    byte *CircularBuffer::GetFirst() {
+    BYTE *CircularBuffer::GetFirst() {
       return nullptr;
     }
 
-    byte *CircularBuffer::GetLast() {
+    BYTE *CircularBuffer::GetLast() {
       if (m_bufferQueue.Count() == 0) {
         AddLast();
       }
@@ -77,19 +77,19 @@ RD_NAMESPACE_BEGIN
     }
 
     void CircularBuffer::AddLast() {
-      byte *buffer;
+      BYTE *buffer;
       if (m_bufferCache.Count() > 0) {
         buffer = m_bufferCache.Dequeue();
       } else {
-        buffer = new byte[ChunkSize];
+        buffer = new BYTE[ChunkSize];
       }
       m_bufferQueue.Enqueue(buffer);
       m_lastBuffer = buffer;
     }
 
 
-    void CircularBuffer::Write(byte *buffer, int32 offset, int32 count) {
-      int32 alreadyCopyCount = 0;
+    void CircularBuffer::Write(BYTE *buffer, INT32 offset, INT32 count) {
+      INT32 alreadyCopyCount = 0;
       while (alreadyCopyCount < count) {
         if (m_last_index == ChunkSize) {
           AddLast();
@@ -109,11 +109,11 @@ RD_NAMESPACE_BEGIN
       }
     }
 
-    int64 CircularBuffer::GetLastIndex() const {
+    INT64 CircularBuffer::GetLastIndex() const {
       return m_last_index;
     }
 
-    int32 CircularBuffer::GetFirstIndex() const {
+    INT32 CircularBuffer::GetFirstIndex() const {
       return m_first_index;
     }
 
@@ -125,4 +125,4 @@ RD_NAMESPACE_BEGIN
       m_first_index = index;
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

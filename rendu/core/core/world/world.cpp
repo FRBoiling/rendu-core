@@ -4,8 +4,17 @@
 
 #include "world.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
+
+World::World() {
+}
+World::~World() {
+}
+
+World &World::Instance() {
+  static World object;
+  return object;
+}
 
 
-
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

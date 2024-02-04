@@ -21,7 +21,7 @@ RD_NAMESPACE_BEGIN
       return false;
     }
 
-    ThreadSynchronizationContext &Fiber::GetThreadSynchronizationContext() {
+    ThreadSynchronizationContext *Fiber::GetThreadSynchronizationContext() {
       return m_threadSynchronizationContext;
     }
 
@@ -38,7 +38,7 @@ RD_NAMESPACE_BEGIN
       try {
         m_entitySystem.LateUpdate();
         FrameFinishUpdate();
-        m_threadSynchronizationContext.Update();
+        m_threadSynchronizationContext->Update();
       }
       catch (std::exception &e) {
         RD_CRITICAL("{}", e.what());

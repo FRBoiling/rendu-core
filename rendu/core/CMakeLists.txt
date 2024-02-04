@@ -15,5 +15,6 @@ rendu_add_library(
     rendu::log
     rendu::task
     rendu::net
+    rendu::io
     proto::model
 )

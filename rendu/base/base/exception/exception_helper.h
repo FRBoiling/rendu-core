@@ -8,6 +8,7 @@
 #include "base_define.h"
 #include "exception.h"
 #include "out_of_range_exception.h"
+#include "argument_out_of_range_exception.h"
 
 RD_NAMESPACE_BEGIN
 

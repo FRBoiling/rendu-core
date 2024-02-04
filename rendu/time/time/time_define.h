@@ -18,6 +18,7 @@
 
 
 using namespace rendu;
+using namespace std::chrono_literals;
 
 TIME_NAMESPACE_BEGIN
 
@@ -112,4 +113,5 @@ const STRING TicksField = "ticks";      // Do not rename (binary serialization)
 const STRING DateDataField = "dateData";// Do not rename (binary serialization)
 
 TIME_NAMESPACE_END
+
 #endif//RENDU_TIME_DEFINE_H

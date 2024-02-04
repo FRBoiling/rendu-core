@@ -7,74 +7,69 @@
 
 #include "a_channel.h"
 #include "circular_buffer.h"
-#include "packet_parser.h"
 #include "error_code.h"
+#include "packet_parser.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    class TService;
+class TService;
 
-    class TChannel : public AChannel {
-    public:
-      TChannel();
+class TChannel : public AChannel {
+public:
+  TChannel();
 
-      TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service);
+  TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service);
 
-      TChannel(INT64 id, Socket *socket, TService *service);
+  TChannel(INT64 id, Socket *socket, TService *service);
+  ~TChannel();
 
-      ~TChannel() override;
+public:
+  IPEndPoint *GetRemoteAddress();
+  void OnComplete(void *sender, SocketAsyncEventArgs *args);
+  bool IsDisposed();
+public:
+  void ConnectAsync();
 
-    public:
-      IPEndPoint *GetRemoteAddress();
-    private:
-      void OnComplete(void *sender, SocketAsyncEventArgs *args);
+  void OnConnectComplete(SocketAsyncEventArgs *e);
 
-    public:
+  void OnDisconnectComplete(SocketAsyncEventArgs *e);
 
-      void ConnectAsync();
+  void StartRecv();
 
-      void OnConnectComplete(SocketAsyncEventArgs *e);
+  void OnRecvComplete(SocketAsyncEventArgs *e);
 
-      void OnDisconnectComplete(SocketAsyncEventArgs *e);
+  void HandleRecv(SocketAsyncEventArgs *e);
 
-      void StartRecv();
+  void StartSend();
 
-      void OnRecvComplete(SocketAsyncEventArgs *e);
+  void Send(MemoryBuffer *stream);
 
-      void HandleRecv(SocketAsyncEventArgs *e);
+  void OnSendComplete(SocketAsyncEventArgs *eventArgs);
 
-      void StartSend();
+  void HandleSend(SocketAsyncEventArgs *eventArgs);
 
-      void Send(MemoryBuffer *stream);
+private:
+  void OnRead(MemoryBuffer *memoryStream);
+  void OnError(int error);
 
-      void OnSendComplete(SocketAsyncEventArgs *eventArgs);
+private:
+  TService *m_service;
+  Socket *m_socket;
+  SocketAsyncEventArgs *m_innArgs;
+  SocketAsyncEventArgs *m_outArgs;
 
-      void HandleSend(SocketAsyncEventArgs *eventArgs);
+  CircularBuffer *m_recvBuffer;
+  CircularBuffer *m_sendBuffer;
 
-    private:
-      void OnRead(MemoryBuffer *memoryStream);
-      void OnError(int error);
+  bool m_isSending;
 
-    private:
-      TService *m_service;
-      Socket *m_socket;
-      SocketAsyncEventArgs *m_innArgs;
-      SocketAsyncEventArgs *m_outArgs;
+  bool m_isConnected;
 
-      CircularBuffer *m_recvBuffer;
-      CircularBuffer *m_sendBuffer;
+  PacketParser *m_parser;
 
-      bool m_isSending;
+  BYTE *m_sendCache;
+};
 
-      bool m_isConnected;
+CORE_NAMESPACE_END
 
-      PacketParser *m_parser;
-
-      IPEndPoint *m_remoteAddress;
-
-      byte *m_sendCache;
-    };
-
-RD_NAMESPACE_END
-
-#endif //RENDU_T_CHANNEL_H
+#endif//RENDU_T_CHANNEL_H

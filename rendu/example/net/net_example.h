@@ -4,7 +4,7 @@
 #ifndef RENDU_LOG_EXAMPLE_H
 #define RENDU_LOG_EXAMPLE_H
 
-#include "net.h"
+#include "net.hpp"
 
 using namespace rendu;
 using namespace rendu::net;

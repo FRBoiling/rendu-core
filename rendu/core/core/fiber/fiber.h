@@ -5,12 +5,13 @@
 #ifndef RENDU_FIBER_H
 #define RENDU_FIBER_H
 
-#include "actor/address.h"
 #include "core_define.h"
 #include "entity/scene.h"
 #include "entity/scene_type.h"
 #include "entity_system.h"
 #include "mailboxes.h"
+#include "actor/actor_address.h"
+
 #include <queue>
 
 RD_NAMESPACE_BEGIN
@@ -26,7 +27,7 @@ RD_NAMESPACE_BEGIN
     public:
       bool IsDisposed();
 
-      ThreadSynchronizationContext &GetThreadSynchronizationContext();
+      ThreadSynchronizationContext *GetThreadSynchronizationContext();
 
       void Update();
 
@@ -42,13 +43,13 @@ RD_NAMESPACE_BEGIN
       int m_zone{};
       std::string m_name{};
       Scene *m_root{};
-      Address m_address{};
+      ActorAddress m_address{};
 
       bool m_isDisposed{};
 
       EntitySystem m_entitySystem{};
       Mailboxes m_mailboxes{};
-      ThreadSynchronizationContext m_threadSynchronizationContext{};
+      ThreadSynchronizationContext* m_threadSynchronizationContext{};
 
       Queue<Task<void>*> m_frameFinishTasks{};
     private:

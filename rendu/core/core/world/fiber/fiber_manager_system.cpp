@@ -13,7 +13,7 @@
 #include "thread_pool_scheduler.h"
 #include "thread_scheduler.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     void FiberManagerSystem::Awake() {
       m_mainThreadScheduler = new MainThreadScheduler(this);
@@ -77,6 +77,6 @@ RD_NAMESPACE_BEGIN
     }
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 

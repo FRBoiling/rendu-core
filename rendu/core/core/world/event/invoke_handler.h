@@ -8,7 +8,7 @@
 #include "core_define.h"
 #include <typeinfo>
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     template<typename A, typename T>
     class AInvokeHandler {
@@ -18,6 +18,6 @@ RD_NAMESPACE_BEGIN
       virtual T Handle(A args){}
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_INVOKE_HANDLER_H

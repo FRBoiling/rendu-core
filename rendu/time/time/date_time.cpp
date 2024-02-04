@@ -11,9 +11,9 @@
 
 TIME_NAMESPACE_BEGIN
 
-DateTime MinValue{0};
-DateTime MaxValue{MaxTicks, DateTime::Kind::Unspecified};
-DateTime UnixEpoch{UnixEpochTicks, DateTime::Kind::Utc};
+DateTime DateTime::MinValue{0};
+DateTime DateTime::MaxValue{MaxTicks, DateTime::Kind::Unspecified};
+DateTime DateTime::UnixEpoch{UnixEpochTicks, DateTime::Kind::Utc};
 
 void DateTime::ToKind(time::DateTime::Kind kind) {
   using namespace std::chrono;

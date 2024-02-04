@@ -12,67 +12,66 @@
 
 #include "serialize/memory_buffer.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    enum ServiceType {
-      Outer,
-      Inner,
-    };
+enum ServiceType {
+  Outer,
+  Inner,
+};
 
-    class AService {
+class AService {
 
-    protected:
-      using AcceptCallback = std::function<void(int64_t, IPEndPoint *)>;
-      using ReadCallback = std::function<void(int64_t, MemoryBuffer *)>;
-      using ErrorCallback = std::function<void(int64_t, int32_t)>;
+protected:
+  using AcceptCallback = std::function<void(INT64, IPEndPoint *)>;
+  using ReadCallback = std::function<void(INT64, MemoryBuffer *)>;
+  using ErrorCallback = std::function<void(INT64, int32_t)>;
 
-    public:
-      int m_id;
-      ServiceType m_serviceType;
-      Queue<MemoryBuffer *> m_pool;
-      const int MaxMemoryBufferSize = 1024;
-    public:
-      AcceptCallback OnAcceptCallback;
-      ReadCallback OnReadCallback;
-      ErrorCallback OnErrorCallback;
+public:
+  int m_id;
+  ServiceType m_serviceType;
+  Queue<MemoryBuffer *> m_pool;
+  const int MaxMemoryBufferSize = 1024;
 
-    public:
-      MemoryBuffer *Fetch(int size = 0);
+public:
+  AcceptCallback OnAcceptCallback;
+  ReadCallback OnReadCallback;
+  ErrorCallback OnErrorCallback;
 
-      void Recycle(MemoryBuffer *&memoryBuffer);
+public:
+  MemoryBuffer *Fetch(int size = 0);
 
-    public:
-      [[nodiscard]] ServiceType GetServiceType() const;
-      void SetServiceType(ServiceType type);
+  void Recycle(MemoryBuffer *&memoryBuffer);
 
-    public:
-      virtual void Dispose() {};
+public:
+  [[nodiscard]] ServiceType GetServiceType() const;
+  void SetServiceType(ServiceType type);
 
-      virtual void Update() = 0;
+public:
+  virtual void Dispose(){};
 
-      virtual void Remove(int64_t id, int error) = 0;
+  virtual void Update() = 0;
 
-      virtual bool IsDisposed() = 0;
+  virtual void Remove(INT64 id, int error) = 0;
 
-      virtual void Create(int64_t id, std::string address) = 0;
+  virtual bool IsDisposed() = 0;
 
-      virtual void Send(int64_t channelId, MemoryBuffer *memoryBuffer) = 0;
+  virtual void Create(INT64 id, IPEndPoint *ip_end_point) = 0;
 
-      [[maybe_unused]] virtual std::tuple<uint32_t, uint32_t> GetChannelConn(int64_t channelId);
+  virtual void Send(INT64 channelId, MemoryBuffer *memoryBuffer) = 0;
 
-      virtual void ChangeAddress(int64_t channelId, IPEndPoint ipEndPoint);
+  [[maybe_unused]] virtual std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId);
 
+  virtual void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint);
+};
 
-    };
+inline ServiceType AService::GetServiceType() const {
+  return m_serviceType;
+}
 
-    inline ServiceType AService::GetServiceType() const {
-      return m_serviceType;
-    }
+inline void AService::SetServiceType(ServiceType type) {
+  m_serviceType = type;
+}
 
-    inline void AService::SetServiceType(ServiceType type) {
-      m_serviceType = type;
-    }
+CORE_NAMESPACE_END
 
-RD_NAMESPACE_END
-
-#endif //RENDU_A_SERVICE_H
+#endif//RENDU_A_SERVICE_H

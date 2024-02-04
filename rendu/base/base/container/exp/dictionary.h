@@ -30,8 +30,8 @@ public:
     this->clear();
   }
 
-  void Remove(long i) {
-    this->erase(this->begin() + i);
+  void Remove(TKey key) {
+    this->erase(key);
   }
 
   size_t Count(){

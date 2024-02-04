@@ -6,38 +6,46 @@
 #define RENDU_A_CHANNEL_H
 
 #include "core_define.h"
+#include "packet.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    enum class ChannelType {
-      Connect,
-      Accept,
-    };
+enum class ChannelType {
+  Connect,
+  Accept,
+};
 
-    class AChannel {
-    public:
-      AChannel() : m_id(0), m_type(ChannelType::Connect), m_error() {};
 
-      virtual ~AChannel() = default;
+class AChannel {
+public:
+  AChannel();
+  AChannel(ChannelType channel_type,IPEndPoint remote_address,INT64 id);
+  virtual ~AChannel();;
+protected:
+  ChannelType m_channel_type;
+  IPEndPoint m_remote_address;
+  INT64 m_id;
+  INT32 m_error;
+public:
+  INT64 GetId(){
+      return m_id;
+  }
 
-    public:
-      [[nodiscard]] int64_t GetId() const {
-        return m_id;
-      }
+  IPEndPoint GetRemoteAddress() {
+    return m_remote_address;
+  }
 
-      inline void SetError(int error) {
-        m_error = error;
-      }
+  void SetRemoteAddress(IPEndPoint value) {
+    m_remote_address = value;
+  }
 
-      [[nodiscard]] inline bool IsDisposed() const {
-        return m_id == 0;
-      }
-    protected:
-      int64_t m_id;
-      ChannelType m_type;
-      int32_t m_error;
-    };
+  INT32 SetError(INT32 error){
+    m_error = error;
+    return m_error;
+  }
 
-RD_NAMESPACE_END
+};
 
-#endif //RENDU_A_CHANNEL_H
+CORE_NAMESPACE_END
+
+#endif//RENDU_A_CHANNEL_H

@@ -10,79 +10,79 @@
 #include "net_services.h"
 #include "t_channel.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    enum class TcpOp {
-      StartSend,
-      StartRecv,
-      Connect,
-    };
+enum class TcpOp {
+  StartSend,
+  StartRecv,
+  Connect,
+};
 
-    struct TArgs {
-    public:
-      TArgs(TcpOp op, INT64 channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
-      }
+struct TArgs {
+public:
+  TArgs(TcpOp op, INT64 channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
+  }
 
-      TArgs(INT64 channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
-                                                             SocketAsyncEventArgs(pArgs) {
-      }
+  TArgs(INT64 channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
+                                                         SocketAsyncEventArgs(pArgs) {
+  }
 
-      TArgs(SocketAsyncEventArgs *pArgs) : SocketAsyncEventArgs(pArgs) {
-      }
+  TArgs(SocketAsyncEventArgs *pArgs) : SocketAsyncEventArgs(pArgs) {
+  }
 
-    public:
-      TcpOp Op;
-      INT64 ChannelId;
-      SocketAsyncEventArgs *SocketAsyncEventArgs;
-    };
+public:
+  TcpOp Op;
+  INT64 ChannelId;
+  SocketAsyncEventArgs *SocketAsyncEventArgs;
+};
 
-    class TService : public AService {
+class TService : public AService {
 
-    public:
-      TService(AddressFamily addressFamily, ServiceType serviceType);
+public:
+  TService(AddressFamily addressFamily, ServiceType serviceType);
 
-      TService(IPEndPoint &ipEndPoint, ServiceType serviceType);
+  TService(IPEndPoint &ipEndPoint, ServiceType serviceType);
 
-      ~TService();
+  ~TService();
 
-    public:
-      void Create(INT64 id, string address) override;
+public:
+  void Create(INT64 id, IPEndPoint *ip_end_point) override;
 
-      void Send(INT64 channelId, MemoryBuffer *memoryBuffer) override;
+  void Send(INT64 channelId, MemoryBuffer *memoryBuffer) override;
 
-      void Remove(INT64 id, int error) override;
+  void Remove(INT64 id, int error) override;
 
-      void Update() override;
+  void Update() override;
 
-    public:
-      void OnComplete(void *sender, SocketAsyncEventArgs *eventArgs);
+public:
+  void OnComplete(void *sender, SocketAsyncEventArgs *eventArgs);
 
-      void OnAcceptComplete(SocketError socketError, Socket *acceptSocket);
+  void OnAcceptComplete(SocketError socketError, Socket *acceptSocket);
 
-      void Dispose() override;
+  void Dispose() override;
 
-      bool IsDisposed() override;
+  bool IsDisposed() override;
 
-      std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId) override;
+  std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId) override;
 
-      void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) override;
+  void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) override;
 
-    private:
-      TChannel *Get(INT64 id);
+private:
+  TChannel *Get(INT64 id);
 
-      void AcceptAsync();
+  void AcceptAsync();
 
-    public:
-      ConcurrentQueue<TArgs *> m_queue;
-    private:
-      Dictionary<INT64, TChannel *> m_idChannels;
+public:
+  ConcurrentQueue<TArgs *> m_queue;
 
-      SocketAsyncEventArgs *m_innArgs{};
+private:
+  CDictionary<INT64, TChannel *> m_idChannels;
 
-      Socket *m_acceptor{};
+  SocketAsyncEventArgs *m_innArgs{};
 
-    };
+  Socket *m_acceptor{};
+};
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
-#endif //RENDU_T_SERVICE_H
+#endif//RENDU_T_SERVICE_H

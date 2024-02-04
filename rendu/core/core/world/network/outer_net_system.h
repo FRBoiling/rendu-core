@@ -10,7 +10,7 @@
 #include "entity/component_system.h"
 #include "network/a_service.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class OuterNetSystem : public Singleton<OuterNetSystem>,
                            public ComponentSystem<void>,
@@ -23,6 +23,6 @@ RD_NAMESPACE_BEGIN
       AService* m_service{};
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_OUTER_NET_SYSTEM_H

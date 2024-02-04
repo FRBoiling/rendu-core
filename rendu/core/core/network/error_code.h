@@ -7,7 +7,7 @@
 
 #include "core_define.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class ErrorCore {
     public:
@@ -91,7 +91,7 @@ RD_NAMESPACE_BEGIN
       }
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 
 #endif //RENDU_ERROR_CODE_H

@@ -5,7 +5,7 @@
 #include "outer_net_system.h"
 #include "network/t_service.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
     void OuterNetSystem::Awake() {
       auto ipEndPoint = IPEndPoint::from_string("127.0.0.1:11111");
       m_service = new TService(ipEndPoint.value(), ServiceType::Inner);
@@ -13,6 +13,6 @@ RD_NAMESPACE_BEGIN
     }
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 

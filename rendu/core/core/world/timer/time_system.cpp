@@ -6,7 +6,7 @@
 #include "async/thread/thread_helper.h"
 #include "world/world.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     void TimeSystem::Awake() {
       auto entity = World::Instance().GetEntity();
@@ -24,6 +24,6 @@ RD_NAMESPACE_BEGIN
       }
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 

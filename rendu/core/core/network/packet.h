@@ -8,7 +8,7 @@
 #include "core_define.h"
 #include "serialize/memory_buffer.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     struct Packet {
     public:
@@ -25,6 +25,6 @@ RD_NAMESPACE_BEGIN
       MemoryStream MemoryStream;
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_PACKET_H

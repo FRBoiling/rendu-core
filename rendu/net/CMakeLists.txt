@@ -14,5 +14,5 @@ rendu_add_library(
     DEPS
     rendu::log
     rendu::task
-    rendu::time
+    rendu::runtime
 )

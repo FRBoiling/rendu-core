@@ -14,11 +14,9 @@ RD_NAMESPACE_BEGIN
 class Exception : public std::exception {
  public:
   template<typename... Args>
-  Exception(Args &&...args) {
-  }
-  template<typename... Args>
   Exception(string_view_t fmt, Args &&...args) {
   }
+
   ~Exception() noexcept override = default;
 
   // default copy-ctor and operator= are okay.

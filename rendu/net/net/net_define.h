@@ -6,7 +6,7 @@
 #define RENDU_NET_DEFINE_H_
 
 #include "log/log.hpp"
-#include "time/time.hpp"
+#include "runtime/runtime.hpp"
 #include "task/task.hpp"
 
 #define NET_NAMESPACE_BEGIN \
@@ -18,7 +18,7 @@
   } /*namespace rendu*/
 
 using namespace rendu::log;
-using namespace rendu::time;
 using namespace rendu::task;
+using namespace rendu::runtime;
 
 #endif//RENDU_NET_DEFINE_H_

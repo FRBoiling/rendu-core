@@ -5,9 +5,10 @@
 #ifndef RENDU_CORE_DEFINE_H
 #define RENDU_CORE_DEFINE_H
 
-#include "log.hpp"
-#include "net.h"
-#include "task.hpp"
+#include "log/log.hpp"
+#include "net/net.hpp"
+#include "task/task.hpp"
+#include "io/io.hpp"
 
 #define CORE_NAMESPACE_BEGIN \
   namespace rendu {            \
@@ -19,6 +20,7 @@
 
 using namespace rendu::log;
 using namespace rendu::task;
+using namespace rendu::io;
 using namespace rendu::net;
 
 #endif//RENDU_CORE_DEFINE_H

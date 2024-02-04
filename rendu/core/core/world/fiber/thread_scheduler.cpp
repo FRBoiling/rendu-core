@@ -3,14 +3,12 @@
 */
 
 #include "thread_scheduler.h"
-#include "async/thread/thread_helper.h"
 #include "fiber_manager_system.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     ThreadScheduler::ThreadScheduler(FiberManagerSystem *fiberManagerSystem)
-        : m_fiberManagerSystem(fiberManagerSystem),
-        m_threads(new ConcurrentMap<int, Thread *>()) {
+        : m_fiberManagerSystem(fiberManagerSystem){
     }
 
 
@@ -18,36 +16,34 @@ RD_NAMESPACE_BEGIN
       Dispose();
     }
 
-    void ThreadScheduler::Add(int fiberId) {
-      Thread *thread = Thread::Create(&ThreadScheduler::Loop, this, fiberId);
-      m_threads->TryAdd(fiberId, thread);
+    void ThreadScheduler::Add(int fiber_id) {
+      Thread *thread = Thread::Create(&ThreadScheduler::Loop, this,fiber_id);
+      m_threads.TryAdd(fiber_id, thread);
     }
 
-    void ThreadScheduler::Loop(int fiberId) {
-      Fiber *fiber = m_fiberManagerSystem->Get(fiberId);
+    void ThreadScheduler::Loop(int fiber_id) {
+      Fiber *fiber = m_fiberManagerSystem->Get(fiber_id);
       Fiber::Instance = fiber;
-      SynchronizationContext::SetSynchronizationContext(&fiber->GetThreadSynchronizationContext());
+      SynchronizationContext::SetSynchronizationContext(fiber->GetThreadSynchronizationContext());
 
       while (true) {
         if (m_fiberManagerSystem->IsDisposed()) {
           return;
         }
-        fiber = m_fiberManagerSystem->Get(fiberId);
+        fiber = m_fiberManagerSystem->Get(fiber_id);
         if (fiber == nullptr) {
-          Thread *thread = nullptr;
-          m_threads->Remove(fiberId, thread);
+          m_threads.Remove(fiber_id);
           return;
         }
 
         if (fiber->IsDisposed()) {
-          Thread *thread = nullptr;
-          m_threads->Remove(fiberId, thread);
+          m_threads.Remove(fiber_id);
           return;
         }
 
         fiber->Update();
         fiber->LateUpdate();
-        Thread::Sleep(1000);
+        Thread::Sleep(1s);
       }
 
     }
@@ -62,4 +58,4 @@ RD_NAMESPACE_BEGIN
     }
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

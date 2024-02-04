@@ -9,8 +9,8 @@
 
 #include "ip_v4_endpoint.h"
 #include "ip_v6_endpoint.h"
-
-#include "../address/ip_address.h"
+#include "address/address_family.h"
+#include "address/ip_address.h"
 
 NET_NAMESPACE_BEGIN
 
@@ -44,6 +44,7 @@ NET_NAMESPACE_BEGIN
 
     [[nodiscard]] std::uint16_t GetPort() const noexcept;
 
+    static AddressFamily GetAddressFamily() ;
 
     bool operator==(const IPEndPoint &rhs) const noexcept;
 
@@ -137,5 +138,10 @@ NET_NAMESPACE_BEGIN
   inline bool IPEndPoint::operator>=(const IPEndPoint &rhs) const noexcept {
     return !(*this < rhs);
   }
-NET_NAMESPACE_END
+
+
+  AddressFamily IPEndPoint::GetAddressFamily() {
+    return AddressFamily::Max;
+  }
+  NET_NAMESPACE_END
 #endif //RENDU_IP_END_POINT_H
