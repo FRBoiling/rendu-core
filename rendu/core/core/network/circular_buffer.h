@@ -6,7 +6,6 @@
 #define RENDU_CIRCULAR_BUFFER_H
 
 #include "core_define.h"
-#include "io/stream.h"
 #include <vector>
 
 RD_NAMESPACE_BEGIN

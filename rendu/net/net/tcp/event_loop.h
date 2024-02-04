@@ -8,8 +8,6 @@
 #include "callbacks.h"
 #include "pipe.h"
 #include "thread/mutex_lock.hpp"
-#include "../../../time/time/time_id.h"
-#include "../../../time/time/timestamp.h"
 #include "time_queue.h"
 
 NET_NAMESPACE_BEGIN
@@ -45,7 +43,7 @@ NET_NAMESPACE_BEGIN
     ///
     /// Time when poll returns, usually means data arrival.
     ///
-    Timestamp PollReturnTime() const { return pollReturnTime_; }
+    DateTime PollReturnTime() const { return pollReturnTime_; }
 
     int64_t Iteration() const { return iteration_; }
 

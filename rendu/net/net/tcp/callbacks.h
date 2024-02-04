@@ -5,7 +5,6 @@
 #ifndef RENDU_NET_CALLBACKS_H
 #define RENDU_NET_CALLBACKS_H
 
-#include "../../../time/time/timestamp.h"
 #include "net_define.h"
 
 NET_NAMESPACE_BEGIN
@@ -57,13 +56,13 @@ NET_NAMESPACE_BEGIN
 // the data has been read to (buf, len)
   typedef std::function<void(const TcpConnectionPtr &,
                              Buffer *,
-                             Timestamp)> MessageCallback;
+                             DateTime)> MessageCallback;
 
   void defaultConnectionCallback(const TcpConnectionPtr &conn);
 
   void defaultMessageCallback(const TcpConnectionPtr &conn,
                               Buffer *buffer,
-                              Timestamp receiveTime);
+                              DateTime receiveTime);
 
 NET_NAMESPACE_END
 

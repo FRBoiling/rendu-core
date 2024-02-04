@@ -6,7 +6,6 @@
 #define RENDU_NET_CHANNEL_H
 
 #include "net_define.h"
-#include "../../../time/time/timestamp.h"
 
 NET_NAMESPACE_BEGIN
 
@@ -20,14 +19,14 @@ NET_NAMESPACE_BEGIN
 ///
   class Channel : NonCopyable {
   public:
-    typedef std::function<void(Timestamp)> EventCallback;
+    typedef std::function<void(DateTime)> EventCallback;
 
     Channel(EventLoop *loop, int fd);
 
     ~Channel();
 
   public:
-    void handleEvent(Timestamp receiveTime);
+    void handleEvent(DateTime receiveTime);
 
     void setReadCallback(EventCallback cb) { readCallback_ = std::move(cb); }
 
@@ -100,7 +99,7 @@ NET_NAMESPACE_BEGIN
 
     void update();
 
-    void handleEventWithGuard(Timestamp receiveTime);
+    void handleEventWithGuard(DateTime receiveTime);
 
     static const int kNoneEvent;
     static const int kReadEvent;

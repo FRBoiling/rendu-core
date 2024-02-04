@@ -5,7 +5,6 @@
 #ifndef RENDU_CORE_DEFINE_H
 #define RENDU_CORE_DEFINE_H
 
-#include "common.h"
 #include "log.hpp"
 #include "net.h"
 #include "task.hpp"
@@ -18,7 +17,6 @@
     } /*namespace common*/   \
   } /*namespace core*/
 
-using namespace rendu;
 using namespace rendu::log;
 using namespace rendu::task;
 using namespace rendu::net;
