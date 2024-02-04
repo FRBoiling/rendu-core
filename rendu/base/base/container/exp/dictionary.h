@@ -14,22 +14,30 @@ template<typename TKey, typename TValue>
 class CDictionary : std::unordered_map<TKey, TValue> {
 public:
   bool TryGetValue(TKey key, TValue &value) {
+    if (this->find(key) != this->end()) {
+      value = this->find(key)->second;
+      return true;
+    }
     return false;
   }
 
   void Add(TKey key, TValue value) {
+    this->insert(std::make_pair(key, value));
   }
 
   void Clear() {
     //TODO:BOIL 注意指针变量的clear
-  }
-
-  void Clean() {
-    //TODO:BOIL 注意指针变量的clear
+    this->clear();
   }
 
   void Remove(long i) {
+    this->erase(this->begin() + i);
   }
+
+  size_t Count(){
+    return this->size();
+  }
+
 };
 
 RD_NAMESPACE_END

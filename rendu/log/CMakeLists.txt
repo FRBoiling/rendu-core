@@ -13,6 +13,7 @@ rendu_add_library(
     rendu-core-interface
     DEPS
     rendu::base
-#    rendu::time
+    rendu::time
+    rendu::thread
     dep::spdlog
 )

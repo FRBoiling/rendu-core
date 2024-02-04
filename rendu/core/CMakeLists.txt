@@ -13,7 +13,7 @@ rendu_add_library(
     rendu-core-interface
     DEPS
     rendu::log
-    rendu::async
+    rendu::task
     rendu::net
     proto::model
 )

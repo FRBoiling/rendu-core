@@ -16,10 +16,10 @@ int log_example() {
   RD_WARN("{} {} {}", "RD_WARN", 3, 33);
   RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
   RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
-//
+
   RD_LOGGER_CLEAN();
-  RD_LOGGER_ADD_CHANNEL(new ConsoleChannel());
-  RD_LOGGER_INIT("color_log",LogLevel::LL_DEBUG);
+  RD_LOGGER_SET(new Logger());
+  RD_LOGGER_INIT("color_log",LogLevel::LL_TRACE);
   RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
   RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
   RD_INFO("{} {} {}", "RD_INFO", 2, 22);
@@ -29,8 +29,7 @@ int log_example() {
 
   RD_LOGGER_CLEAN();
   RD_LOGGER_SET(new SpdLogger());
-  RD_LOGGER_ADD_CHANNEL(new SpdLogConsoleChannel());
-  RD_LOGGER_INIT("spd_log",LogLevel::LL_INFO);
+  RD_LOGGER_INIT("spd_log",LogLevel::LL_TRACE);
   RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
   RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
   RD_INFO("{} {} {}", "RD_INFO", 2, 22);

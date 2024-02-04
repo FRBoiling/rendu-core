@@ -12,6 +12,8 @@
 
 #include "base/container/container_helper.h"
 
+#include "base/log/log_helper.h"
+
 #include "base/coroutine/coroutine_helper.h"
 #include "base/path/path_helper.h"
 

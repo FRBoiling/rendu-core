@@ -11,7 +11,7 @@ LOG_NAMESPACE_BEGIN
 
 class SpdLogFileChannel : public SpdlogChannel {
 public:
-  explicit SpdLogFileChannel(Logger *logger);
+  explicit SpdLogFileChannel();
 };
 
 LOG_NAMESPACE_END

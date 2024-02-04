@@ -6,7 +6,7 @@
 #define RENDU_LOG_DEFINE_H_
 
 #include "base/base.hpp"
-//#include "time/time.hpp"
+#include "time/time.hpp"
 
 #define LOG_NAMESPACE_BEGIN \
   namespace rendu {         \
@@ -17,6 +17,6 @@
   } /*namespace rendu*/
 
 using namespace rendu;
-//using namespace rendu::time;
+using namespace rendu::time;
 
 #endif//RENDU_LOG_DEFINE_H_

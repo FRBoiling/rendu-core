@@ -6,7 +6,6 @@
 #define RENDU_LOG_CONSOLE_CHANNEL_H
 
 #include "log_define.h"
-#include "a_logger_channel.h"
 
 LOG_NAMESPACE_BEGIN
 
@@ -14,12 +13,7 @@ class ConsoleChannel : public ALoggerChannel {
 public:
   explicit ConsoleChannel();
   virtual ~ConsoleChannel() = default;
-
-public:
-  void WriteMsg(LogLevel level, LogMsgSource &prefix, std::string &content) override;
-
-protected:
-
+  void WriteMsg(const LogLevel level, const LogMsgSource &prefix, const std::string &content) override;
 };
 
 LOG_NAMESPACE_END

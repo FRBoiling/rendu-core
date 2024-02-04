@@ -18,6 +18,6 @@
   } /*namespace rendu*/
 
 using namespace rendu::log;
-using namespace rendu::async;
+using namespace rendu::task;
 
 #endif//RENDU_NET_DEFINE_H_

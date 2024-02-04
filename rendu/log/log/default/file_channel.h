@@ -5,14 +5,14 @@
 #ifndef RENDU_LOG_FILE_CHANNEL_H
 #define RENDU_LOG_FILE_CHANNEL_H
 
+#include "base/log/a_logger_channel.h"
 #include "log_define.h"
-#include "a_logger_channel.h"
 
 LOG_NAMESPACE_BEGIN
 
 class FileChannel : public ALoggerChannel {
 public:
-  explicit FileChannel(Logger *logger);
+  explicit FileChannel();
 
 private:
 };

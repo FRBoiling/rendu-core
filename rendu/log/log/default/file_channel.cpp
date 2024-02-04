@@ -6,6 +6,7 @@
 
 LOG_NAMESPACE_BEGIN
 
-
+FileChannel::FileChannel() {
+}
 
 LOG_NAMESPACE_END
