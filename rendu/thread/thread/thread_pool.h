@@ -5,77 +5,91 @@
 #ifndef RENDU_THREAD_THREAD_POOL_H
 #define RENDU_THREAD_THREAD_POOL_H
 
-#include "thread_define.h"
+#include "condition.hpp"
+#include "mutex_lock.hpp"
 #include "thread.h"
-
-#include <atomic>
-#include <functional>
-#include <future>
-#include <queue>
-#include <thread>
-#include <vector>
+#include "thread_define.h"
 
 THREAD_NAMESPACE_BEGIN
 
-class ThreadPool : NonCopyable
-{
- public:
-  typedef std::function<void ()> Task;
-
-  explicit ThreadPool(const STRING& nameArg = STRING("ThreadPool"));
-  ~ThreadPool();
-
-  // Must be called before start().
-  void setMaxQueueSize(int maxSize) { maxQueueSize_ = maxSize; }
-  void setThreadInitCallback(const Task& cb)
-  { threadInitCallback_ = cb; }
-
-  void start(int numThreads);
-  void stop();
-
-  const STRING& name() const
-  { return name_; }
-
-  size_t queueSize() const;
-
-  template<class _Fp, class... _Args,
-      typename TResult = typename std::invoke_result_t<typename std::decay<_Fp>::type, typename std::decay<_Args>::type...>>
-  auto Run(_Fp &&f, _Args &&...args) -> std::future<TResult> {
-    auto task = std::make_shared<std::packaged_task<TResult()>>(
-        std::bind(std::forward<_Fp>(f), std::forward<_Args>(args)...));
-    std::future<TResult> res = task->get_future();
-    {
-      if (threads_.empty()) {
-         (*task)();
-      } else {
-        MutexLockGuard lock(mutex_);
-        while (isFull() && running_) {
-          notFull_.wait();
-        }
-        if (!running_) return res;
-        assert(!isFull());
-
-        queue_.push_back([task]() { (*task)(); });
-        notEmpty_.notify();
-      }
+class ThreadPool: public NonCopyable {
+public:
+  ThreadPool(size_t numThreads) : stop(false), workerLoad(numThreads, 0) {
+    if(numThreads < 1) {
+      throw std::invalid_argument("Number of threads should be >= 1");
     }
-    return res;
+    workerThreads.resize(numThreads);
+    tasks.resize(numThreads);
+    for (size_t i = 0; i < numThreads; ++i) {
+      workerThreads[i] = std::make_shared<Thread>(std::bind(&ThreadPool::workerLoop, this, i));
+    }
   }
 
- private:
-  bool isFull() const REQUIRES(mutex_);
-  void runInThread();
-  Task take();
+  ~ThreadPool() {
+    stop = true;
 
-  mutable MutexLock mutex_;
-  Condition notEmpty_ GUARDED_BY(mutex_);
-  Condition notFull_ GUARDED_BY(mutex_);
-  STRING name_;
-  Task threadInitCallback_;
-  std::vector<std::unique_ptr<Thread>> threads_;
-  std::deque<Task> queue_ GUARDED_BY(mutex_);
-  size_t maxQueueSize_;
-  bool running_;
+    for (auto& thread : workerThreads) {
+      thread->Join();
+    }
+  }
+
+  template<class F, class... Args>
+  void Run(F&& f, Args&&... args) {
+    std::function<void()> task = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+    size_t leastLoadedWorker = 0;
+    // Find the worker that is doing the least work
+    for(size_t i = 0; i < workerLoad.size(); ++i) {
+      if(workerLoad[i] < workerLoad[leastLoadedWorker]) {
+        leastLoadedWorker = i;
+      }
+    }
+    // Give the job to the "least busy" worker
+    {
+      std::lock_guard<std::mutex> lock(queueMutex);
+      tasks[leastLoadedWorker].push_back(task);
+      ++workerLoad[leastLoadedWorker];
+    }
+    condition.notify_all();
+  }
+
+private:
+  void workerLoop(int workerId) {
+    while(!stop) {
+      std::function<void()> task;
+      {
+        std::unique_lock<std::mutex> lock(queueMutex);
+        condition.wait(lock, [this, workerId] { return this->stop || !this->tasks[workerId].empty(); });
+        if(this->stop && this->tasks.empty()) {
+          return;
+        }
+        task = tasks[workerId].front();
+        tasks[workerId].pop_front();
+      }
+      try {
+        task(); // This could throw
+        --workerLoad[workerId];
+      } catch(const std::exception& e) {
+        std::cerr << "Task threw an exception: " << e.what() << std::endl;
+        if(!stop) {
+          // Re-throw exceptions when not stopping
+          throw;
+        }
+      } catch(...) {
+        std::cerr << "Task threw an unknown exception." << std::endl;
+        if(!stop) {
+          // Re-throw exceptions when not stopping
+          throw;
+        }
+      }
+    }
+  }
+
+  std::vector<std::shared_ptr<Thread>> workerThreads;
+  std::vector<size_t> workerLoad;
+  std::vector<std::deque<std::function<void()>>> tasks;
+  std::mutex queueMutex;
+  std::condition_variable condition;
+  bool stop;
 };
 
 extern ThreadPool global_thread_pool;

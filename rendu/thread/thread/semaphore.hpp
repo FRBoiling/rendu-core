@@ -6,63 +6,32 @@
 #define RENDU_THREAD_SEMAPHORE_H_
 
 #include "thread_define.h"
-#include <mutex>
-#include <condition_variable>
+#include "mutex_lock.hpp"
+#include "condition.hpp"
 
 THREAD_NAMESPACE_BEGIN
 
 class Semaphore {
- public:
-  explicit Semaphore(size_t initial = 0) {
-#if defined(HAVE_SEM)
-    sem_init(&_sem, 0, initial);
-#else
-    _count = 0;
-#endif
+public:
+  explicit Semaphore(int initial_count = 0)
+      : count_(initial_count) {}
+
+  void Acquire() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    condition_.wait(lock, [this](){ return count_ > 0; });
+    --count_;
   }
 
-  ~Semaphore() {
-#if defined(HAVE_SEM)
-    sem_destroy(&_sem);
-#endif
+  void Release() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    ++count_;
+    condition_.notify_one();
   }
 
-  void Post(size_t n = 1) {
-#if defined(HAVE_SEM)
-    while (n--) {
-        sem_post(&_sem);
-    }
-#else
-    std::unique_lock<std::recursive_mutex> lock(_mutex);
-    _count += n;
-    if (n == 1) {
-      _condition.notify_one();
-    } else {
-      _condition.notify_all();
-    }
-#endif
-  }
-
-  void Wait() {
-#if defined(HAVE_SEM)
-    sem_wait(&_sem);
-#else
-    std::unique_lock<std::recursive_mutex> lock(_mutex);
-    while (_count == 0) {
-      _condition.wait(lock);
-    }
-    --_count;
-#endif
-  }
-
- private:
-#if defined(HAVE_SEM)
-  sem_t _sem;
-#else
-  size_t _count;
-  std::recursive_mutex _mutex;
-  std::condition_variable_any _condition;
-#endif
+private:
+  int count_;
+  std::mutex mutex_;
+  std::condition_variable condition_;
 };
 
 THREAD_NAMESPACE_END

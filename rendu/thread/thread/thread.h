@@ -5,61 +5,69 @@
 #ifndef RENDU_THREAD_THREAD_HPP
 #define RENDU_THREAD_THREAD_HPP
 
-#include "count_down_latch.h"
 #include "thread_define.h"
+#include <thread>
 #include <functional>
-#include <memory>
-#include <pthread.h>
+#include <chrono>
 
 THREAD_NAMESPACE_BEGIN
+
 class SynchronizationContext;
 
-class Thread : NonCopyable {
+class Thread {
 public:
-  typedef std::function<void()> ThreadFunc;
+  Thread() = default;
 
-  explicit Thread(ThreadFunc, const STRING &name = STRING());
-  // FIXME: make it movable in C++11
-  ~Thread();
+  template<typename Callable, typename... Args>
+  explicit Thread(Callable&& func, Args&&... args)
+      : thread_(std::forward<Callable>(func), std::forward<Args>(args)...) {}
 
-  void Start();
-  int Join();// return pthread_join()
-
-  bool Started() const { return started_; }
-  // pthread_t pthreadId() const { return pthreadId_; }
-  pid_t GetTid() const { return tid_; }
-  const STRING &GetName() const { return name_; }
-  void SetSynchronizationContext(SynchronizationContext* context);
-
-  static int GetNumCreated() { return numCreated_; }
-
-  template<class _Fp, class... _Args>
-  static Thread * Create(_Fp &&__f, _Args &&...__args){
-
+  ~Thread() {
+    // Avoid detaching threads, it may lead to resource leaks
+    // Always join them in the destructor
+    if (thread_.joinable()) {
+      //      thread_.detach();
+      thread_.join();
+    }
   }
 
-  template<typename _Rep, typename _Period>
-  static auto Sleep(std::chrono::duration<_Rep, _Period> &&duration) noexcept {
-    return ;
+  Thread(const Thread&) = delete;
+  Thread& operator=(const Thread&) = delete;
+  Thread(Thread&&) = default;
+  Thread& operator=(Thread&&) = default;
+
+  template<typename Callable, typename... Args>
+  void Start(Callable&& func, Args&&... args) {
+    thread_ = std::thread(std::forward<Callable>(func), std::forward<Args>(args)...);
   }
 
-  static Thread* GetCurrentThread();
+  void Join() {
+    if (thread_.joinable()) {
+      thread_.join();
+    }
+  }
 
-  static INT32 GetProcessorCount();
+  void Abort() {
+    //C++ does not support aborting threads in the same way C# does
+    //suggest to use condition variables or atomics for signaling
+  }
 
-  private:
-    void setDefaultName();
+  bool IsAlive() const {
+    // May need a more sophisticated mechanism depending on your specific use case
+    return thread_.joinable();
+  }
 
-    bool started_;
-    bool joined_;
-    pthread_t pthreadId_;
-    pid_t tid_;
-    ThreadFunc func_;
-    STRING name_;
-    CountDownLatch latch_;
+  static void Sleep(int milliseconds) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+  }
 
-    static std::atomic<int> numCreated_;
-  };
+  static std::thread::id CurrentThread() {
+    return std::this_thread::get_id();
+  }
+
+private:
+  std::thread thread_;
+};
 
   THREAD_NAMESPACE_END
 
