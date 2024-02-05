@@ -42,6 +42,8 @@ protected:
   Singleton() = default;// 默认构造函数，用于创建实例
 
   void Register() override {
+    instance = static_cast<T &>(*this);
+    instance.isDisposed = false;
   }
 };
 

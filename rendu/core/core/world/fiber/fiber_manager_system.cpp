@@ -3,13 +3,8 @@
 */
 
 #include "fiber_manager_system.h"
-#include "../event/event_system.h"
-#include "common/thread/task/task.h"
-#include "exception/entity_exception.h"
 #include "fiber/fiber_init.h"
 #include "fmt/core.h"
-#include "logger/log.h"
-#include "task/task_completion_source.h"
 #include "thread_pool_scheduler.h"
 #include "thread_scheduler.h"
 

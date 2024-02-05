@@ -7,10 +7,11 @@
 
 #include "thread_define.h"
 #include <future>
+#include "synchronization_context.h"
 
 THREAD_NAMESPACE_BEGIN
 
-class ThreadSynchronizationContext {
+class ThreadSynchronizationContext: public SynchronizationContext{
 public:
   ThreadSynchronizationContext() : stop_requested(false), THREAD_operations(0), th(&ThreadSynchronizationContext::Update, this) {}
 

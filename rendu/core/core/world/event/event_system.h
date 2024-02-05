@@ -12,6 +12,7 @@
 #include "invoke_handler.h"
 #include <any>
 #include <typeinfo>
+#include <typeindex>
 
 CORE_NAMESPACE_BEGIN
 
@@ -26,7 +27,7 @@ CORE_NAMESPACE_BEGIN
     public:
       template<typename A, typename T>
       Task<T> Invoke(long type, A args) {
-        Dictionary<long, std::any> invokeHandlers;
+        CDictionary<long, std::any> invokeHandlers;
         if (!allInvokers.TryGetValue(typeid(A), invokeHandlers)) {
           throw Exception("Invoke error4: {} {}", type, typeid(A).name());
         }
@@ -44,8 +45,8 @@ CORE_NAMESPACE_BEGIN
       }
 
     private:
-      Dictionary<std::type_index, std::list<EventInfo>> allEvents;
-      Dictionary<std::type_index, Dictionary<long, std::any>> allInvokers;
+      CDictionary<std::type_index, std::list<EventInfo>> allEvents;
+      CDictionary<std::type_index, CDictionary<long, std::any>> allInvokers;
     };
 
 

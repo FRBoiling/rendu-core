@@ -10,19 +10,19 @@
 #include "entity/component_system.h"
 #include "logger.pb.h"
 
-namespace rendu {
+CORE_NAMESPACE_BEGIN
 
-    class LoggerSystem
-        : public Singleton<LoggerSystem>,
-          public ComponentSystem<proto::core::LogSetting>,
-          public SystemAwake {
-    public:
-      void Awake() override;
+class LoggerSystem
+    : public Singleton<LoggerSystem>,
+      public ComponentSystem<proto::core::LogSetting>,
+      public SystemAwake {
+public:
+  void Awake() override;
 
-    private:
-      proto::core::LogSetting *m_setting{};
-    };
+private:
+  proto::core::LogSetting *m_setting{};
+};
 
-}//namespace rendu
+CORE_NAMESPACE_END
 
-#endif //RENDU_LOGGER_SYSTEM_H
+#endif//RENDU_LOGGER_SYSTEM_H

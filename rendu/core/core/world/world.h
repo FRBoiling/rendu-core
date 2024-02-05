@@ -31,9 +31,9 @@ public:
 
 public:
   template<class T, typename... Args>
-  T AddSingleton(Args... args) {
-    static_assert(std::is_base_of<ASingleton, T>::value, "T must inherit from ASingleton");
-    static_assert(std::is_base_of<ISingletonAwake<Args...>, T>::value, "T must inherit from ISingletonAwake");
+  T* AddSingleton(Args... args) {
+//    static_assert(std::is_base_of<ASingleton, T>::value, "T must inherit from ASingleton");
+//    static_assert(std::is_base_of<ISingletonAwake<Args...>, T>::value, "T must inherit from ISingletonAwake");
 
     T *singleton = new T();
     singleton->Awake(args...);
@@ -46,7 +46,7 @@ public:
   template<class T>
   T *AddSingleton() {
     static_assert(std::is_base_of<ASingleton, T>::value, "T must inherit from ASingleton");
-    static_assert(std::is_base_of<ISingletonAwake<void>, T>::value, "T must inherit from ISingletonAwake");
+//    static_assert(std::is_base_of<ISingletonAwake<void>, T>::value, "T must inherit from ISingletonAwake");
 
     T *singleton = new T();
     singleton->Awake();
@@ -57,14 +57,14 @@ public:
     return singleton;
   }
 
-  void AddSingleton(ASingleton singleton) {
-//    const std::type_info& t = typeid(singleton);
-//    STRING type = t.name();
+  void AddSingleton(ASingleton* singleton) {
+    const std::type_info& t = typeid(singleton);
+    STRING type = t.name();
 //    if ("ISingletonReverseDispose" == type ) {
 //      stack.Push(type);
 //    }
 //    singletons[type] = singleton;
-//    singleton.Register();
+    singleton->Register();
   }
 };
 

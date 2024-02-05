@@ -7,7 +7,7 @@
 
 CORE_NAMESPACE_BEGIN
     void OuterNetSystem::Awake() {
-      auto ipEndPoint = IPEndPoint::from_string("127.0.0.1:11111");
+      auto ipEndPoint = IPEndPoint::FromString("127.0.0.1:11111");
       m_service = new TService(ipEndPoint.value(), ServiceType::Inner);
       SystemAwake::Awake();
     }

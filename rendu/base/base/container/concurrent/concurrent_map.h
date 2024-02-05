@@ -26,6 +26,16 @@ public:
     return {};
   }
 
+  bool TryGetValue(const Key& key,Value*& value) const {
+    std::shared_lock lock(_mutex);
+    if (const auto iter = _map.find(key); iter != _map.end()) {
+      value = iter->second;
+      return true;
+    }
+    return false;
+  }
+
+
   bool TryAdd(Key& key,const Value& value){
     std::unique_lock lock(_mutex);
     _map[key] = value;

@@ -65,14 +65,14 @@ void ConsoleArgumentParserSystem::Parser(int argc, char **argv) {
     std::cerr << parser;
     std::exit(1);
   }
-  auto entity = World::Instance().GetEntity();
-  m_options = &m_entityPool->emplace_or_replace<proto::core::Options>(entity);
-  m_options->set_apptype(parser.get<proto::core::AppType>("-a"));
-  m_options->set_startconfig(parser.get<std::string>("-s"));
-  m_options->set_process(parser.get<int>("-p"));
-  m_options->set_develop(parser.get<proto::core::DevelopModeType>("-d"));
-  m_options->set_loglevel(parser.get<int>("-l"));
-  m_options->set_console(parser.get<int>("-c"));
+//  auto entity = World::Instance().GetEntity();
+//  m_options = &m_entityPool->emplace_or_replace<proto::core::Options>(entity);
+//  m_options->set_apptype(parser.get<proto::core::AppType>("-a"));
+//  m_options->set_startconfig(parser.get<std::string>("-s"));
+//  m_options->set_process(parser.get<int>("-p"));
+//  m_options->set_develop(parser.get<proto::core::DevelopModeType>("-d"));
+//  m_options->set_loglevel(parser.get<int>("-l"));
+//  m_options->set_console(parser.get<int>("-c"));
 }
 
 

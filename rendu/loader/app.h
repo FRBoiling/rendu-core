@@ -5,19 +5,17 @@
 #ifndef RENDU_APP_H
 #define RENDU_APP_H
 
-#include "core_define.h"
+#include "core/core.hpp"
 
-RD_NAMESPACE_BEGIN
 
-    class App {
-    public :
-      static void Start(int argc, char **argv);
+class App {
+public:
+  static void Start(int argc, char **argv);
 
-      static void Update();
+  static void Update();
 
-      static void LateUpdate();
-    };
+  static void LateUpdate();
+};
 
-RD_NAMESPACE_END
 
-#endif //RENDU_APP_H
+#endif//RENDU_APP_H

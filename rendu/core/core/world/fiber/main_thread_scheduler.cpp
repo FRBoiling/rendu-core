@@ -5,12 +5,11 @@
 #include "main_thread_scheduler.h"
 #include "fiber_manager_system.h"
 #include "fiber/fiber.h"
-#include "thread/thread_synchronization_context.h"
 
 CORE_NAMESPACE_BEGIN
 
     MainThreadScheduler::MainThreadScheduler(FiberManagerSystem *fiberManagerSystem):m_fiberManagerSystem(fiberManagerSystem) {
-      SynchronizationContext::SetSynchronizationContext(&m_threadSynchronizationContext);
+      SynchronizationContext::SetSynchronizationContext(m_threadSynchronizationContext);
     }
 
     void MainThreadScheduler::Add(int fiberId) {
@@ -18,8 +17,8 @@ CORE_NAMESPACE_BEGIN
     }
 
     void MainThreadScheduler::Update() {
-      SynchronizationContext::SetSynchronizationContext(&m_threadSynchronizationContext);
-      m_threadSynchronizationContext.Update();
+      SynchronizationContext::SetSynchronizationContext(m_threadSynchronizationContext);
+      m_threadSynchronizationContext->Update();
 
       int count = m_idQueue.Size();
       while (count-- > 0) {
@@ -37,7 +36,7 @@ CORE_NAMESPACE_BEGIN
         }
 
         Fiber::Instance = fiber;
-        SynchronizationContext::SetSynchronizationContext(&fiber->GetThreadSynchronizationContext());
+        SynchronizationContext::SetSynchronizationContext(fiber->GetThreadSynchronizationContext());
         fiber->Update();
         Fiber::Instance = nullptr;
         m_idQueue.Enqueue(id);
@@ -59,7 +58,7 @@ CORE_NAMESPACE_BEGIN
           continue;
         }
         Fiber::Instance = fiber;
-        SynchronizationContext::SetSynchronizationContext(&fiber->GetThreadSynchronizationContext());
+        SynchronizationContext::SetSynchronizationContext(fiber->GetThreadSynchronizationContext());
         fiber->LateUpdate();
         Fiber::Instance = nullptr;
         m_idQueue.Enqueue(id);

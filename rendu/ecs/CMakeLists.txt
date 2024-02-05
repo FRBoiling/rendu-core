@@ -1,10 +1,10 @@
 #**********************************
-#  Created by boil on 2022/9/10.
+#  Created by boil on 2023/9/10.
 #**********************************
-set(target_name core)
+set(target_name ecs)
 rendu_add_library(
     DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    .
     PROJECT
     ${PROJECT_NAME}
     NAME
@@ -12,9 +12,5 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::log
-    rendu::ecs
-    rendu::net
-    rendu::io
-    proto::model
+    rendu::base
 )

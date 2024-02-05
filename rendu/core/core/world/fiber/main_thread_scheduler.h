@@ -23,7 +23,7 @@ CORE_NAMESPACE_BEGIN
     private:
       ConcurrentQueue<int> m_idQueue;
       ConcurrentQueue<int> m_addIds;
-      ThreadSynchronizationContext m_threadSynchronizationContext;
+      ThreadSynchronizationContext* m_threadSynchronizationContext;
 
       FiberManagerSystem* m_fiberManagerSystem;
 
