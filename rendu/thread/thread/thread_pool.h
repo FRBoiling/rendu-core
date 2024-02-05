@@ -14,69 +14,70 @@ THREAD_NAMESPACE_BEGIN
 
 class ThreadPool: public NonCopyable {
 public:
-  ThreadPool(size_t numThreads) : stop(false), workerLoad(numThreads, 0) {
-    if(numThreads < 1) {
+  ThreadPool(size_t num_threads) : m_stop(false), m_worker_load(num_threads, 0) {
+    if(num_threads < 1) {
       throw std::invalid_argument("Number of threads should be >= 1");
     }
-    workerThreads.resize(numThreads);
-    tasks.resize(numThreads);
-    for (size_t i = 0; i < numThreads; ++i) {
-      workerThreads[i] = std::make_shared<Thread>(std::bind(&ThreadPool::workerLoop, this, i));
+    m_worker_threads.resize(num_threads);
+    m_tasks.resize(num_threads);
+    for (size_t i = 0; i < num_threads; ++i) {
+      m_worker_threads[i] = std::make_shared<Thread>(std::bind(&ThreadPool::WorkerLoop, this, i));
     }
   }
 
   ~ThreadPool() {
-    stop = true;
+    m_stop = true;
 
-    for (auto& thread : workerThreads) {
+    for (auto& thread : m_worker_threads) {
       thread->Join();
     }
   }
 
+public:
   template<class F, class... Args>
   void Run(F&& f, Args&&... args) {
     std::function<void()> task = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-    size_t leastLoadedWorker = 0;
-    // Find the worker that is doing the least work
-    for(size_t i = 0; i < workerLoad.size(); ++i) {
-      if(workerLoad[i] < workerLoad[leastLoadedWorker]) {
-        leastLoadedWorker = i;
+    size_t least_loaded_worker = 0;
+    //找到负载最低的线程
+    for(size_t i = 0; i < m_worker_load.size(); ++i) {
+      if(m_worker_load[i] < m_worker_load[least_loaded_worker]) {
+        least_loaded_worker = i;
       }
     }
     // Give the job to the "least busy" worker
     {
-      std::lock_guard<std::mutex> lock(queueMutex);
-      tasks[leastLoadedWorker].push_back(task);
-      ++workerLoad[leastLoadedWorker];
+      std::lock_guard<std::mutex> lock(m_queue_mutex);
+      m_tasks[least_loaded_worker].push_back(task);
+      ++m_worker_load[least_loaded_worker];
     }
-    condition.notify_all();
+    m_condition.notify_all();
   }
 
 private:
-  void workerLoop(int workerId) {
-    while(!stop) {
+  void WorkerLoop(int workerId) {
+    while(!m_stop) {
       std::function<void()> task;
       {
-        std::unique_lock<std::mutex> lock(queueMutex);
-        condition.wait(lock, [this, workerId] { return this->stop || !this->tasks[workerId].empty(); });
-        if(this->stop && this->tasks.empty()) {
+        std::unique_lock<std::mutex> lock(m_queue_mutex);
+        m_condition.wait(lock, [this, workerId] { return this->m_stop || !this->m_tasks[workerId].empty(); });
+        if(this->m_stop && this->m_tasks.empty()) {
           return;
         }
-        task = tasks[workerId].front();
-        tasks[workerId].pop_front();
+        task = m_tasks[workerId].front();
+        m_tasks[workerId].pop_front();
       }
       try {
-        task(); // This could throw
-        --workerLoad[workerId];
+        task(); //
+        --m_worker_load[workerId];    //任务完成负载--
       } catch(const std::exception& e) {
-        std::cerr << "Task threw an exception: " << e.what() << std::endl;
-        if(!stop) {
+        RD_CRITICAL("Task threw an exception: {}",e.what() );
+        if(!m_stop) {
           // Re-throw exceptions when not stopping
           throw;
         }
       } catch(...) {
-        std::cerr << "Task threw an unknown exception." << std::endl;
-        if(!stop) {
+        RD_CRITICAL("Task threw an unknown exception: {}");
+        if(!m_stop) {
           // Re-throw exceptions when not stopping
           throw;
         }
@@ -84,12 +85,12 @@ private:
     }
   }
 
-  std::vector<std::shared_ptr<Thread>> workerThreads;
-  std::vector<size_t> workerLoad;
-  std::vector<std::deque<std::function<void()>>> tasks;
-  std::mutex queueMutex;
-  std::condition_variable condition;
-  bool stop;
+  std::vector<std::shared_ptr<Thread>> m_worker_threads;
+  std::vector<size_t> m_worker_load;
+  std::vector<std::deque<std::function<void()>>> m_tasks;
+  std::mutex m_queue_mutex;
+  std::condition_variable m_condition;
+  bool m_stop;
 };
 
 extern ThreadPool global_thread_pool;

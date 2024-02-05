@@ -31,9 +31,6 @@ public:
     return instance;
   }
 
-  Singleton(const Singleton &) = delete;
-  Singleton &operator=(const Singleton) = delete;
-
   virtual ~Singleton() = default;
 
 protected:

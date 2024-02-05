@@ -8,6 +8,4 @@ THREAD_NAMESPACE_BEGIN
 
 ThreadPool global_thread_pool(4);
 
-
-
 THREAD_NAMESPACE_END

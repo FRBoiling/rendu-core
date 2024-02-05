@@ -6,59 +6,59 @@
 #define RENDU_THREAD_THREAD_HPP
 
 #include "thread_define.h"
-#include <thread>
-#include <functional>
 #include <chrono>
+#include <functional>
+#include <thread>
 
 THREAD_NAMESPACE_BEGIN
 
 class SynchronizationContext;
 
-class Thread {
+class Thread : public NonCopyable {
 public:
   Thread() = default;
 
-  template<typename Callable, typename... Args>
-  explicit Thread(Callable&& func, Args&&... args)
-      : thread_(std::forward<Callable>(func), std::forward<Args>(args)...) {}
+  template<class _Fp, class... _Args>
+  Thread(_Fp &&__f, _Args &&...__args)
+      : thread_(std::make_unique<std::thread>(std::forward<_Fp>(__f), std::forward<_Args>(__args)...)) {}
 
   ~Thread() {
-    // Avoid detaching threads, it may lead to resource leaks
-    // Always join them in the destructor
-    if (thread_.joinable()) {
-      //      thread_.detach();
-      thread_.join();
-    }
-  }
-
-  Thread(const Thread&) = delete;
-  Thread& operator=(const Thread&) = delete;
-  Thread(Thread&&) = default;
-  Thread& operator=(Thread&&) = default;
-
-  template<typename Callable, typename... Args>
-  void Start(Callable&& func, Args&&... args) {
-    thread_ = std::thread(std::forward<Callable>(func), std::forward<Args>(args)...);
-  }
-
-  void Join() {
-    if (thread_.joinable()) {
-      thread_.join();
+    if (IsAlive()) {
+      Join();
     }
   }
 
   void Abort() {
-    //C++ does not support aborting threads in the same way C# does
-    //suggest to use condition variables or atomics for signaling
+    if (IsAlive()) {
+      std::cout << "Thread is running, can't abort" << std::endl;
+      return;
+    }
   }
 
   bool IsAlive() const {
-    // May need a more sophisticated mechanism depending on your specific use case
-    return thread_.joinable();
+    return thread_ && thread_->joinable();
   }
 
-  static void Sleep(int milliseconds) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+  void Join() {
+    if (IsAlive()) {
+      thread_->join();
+    }
+  }
+
+  void Detach() {
+    if (IsAlive()) {
+      thread_->detach();
+    }
+  }
+
+  template<typename Callable, typename... Args>
+  static Thread *Create(Callable &&func, Args &&...args) {
+    return new Thread(std::forward<Callable>(func), std::forward<Args>(args)...);
+  }
+
+  template<typename _Rep, typename _Period>
+  static auto Sleep(std::chrono::duration<_Rep, _Period> &&duration) noexcept {
+    std::this_thread::sleep_for(duration);
   }
 
   static std::thread::id CurrentThread() {
@@ -66,9 +66,9 @@ public:
   }
 
 private:
-  std::thread thread_;
+  std::unique_ptr<std::thread> thread_;
 };
 
-  THREAD_NAMESPACE_END
+THREAD_NAMESPACE_END
 
 #endif//RENDU_THREAD_THREAD_HPP

@@ -13,7 +13,7 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::log
-    rendu::thread
+#    rendu::log
+#    rendu::thread
     DEFINES
 )
