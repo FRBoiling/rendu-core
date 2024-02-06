@@ -34,6 +34,7 @@ void Loop() {
   RD_INFO("start");
   //  auto Task = Task<void>::Run(DoSomethingVoidAsync, 1);// 调用异步方法，返回一个 Task
   Task<void>::Run(DoSomethingVoidAsync, 1);   //TODO: 测试 构造和析构 打印this指针地址
+//  Task<void>::Run(DoSomethingVoidAsync, 2);   //TODO: 测试 构造和析构 打印this指针地址
 //  Task<void>::Run(DoSomethingVoidAsync, 2);   //TODO: 测试 构造和析构
 //    DoSomethingVoidAsync(1);
   RD_INFO("middle");

@@ -23,9 +23,7 @@ namespace detail {
     return operator co_await(static_cast<T &&>(value));
   }
 
-  template<
-      typename T,
-      std::enable_if_t<detail::IsAwaiter<T &&>::value, int> = 0>
+  template<typename T, std::enable_if_t<detail::IsAwaiter<T &&>::value, int> = 0>
   T &&get_awaiter_impl(T &&value, std::any) noexcept {
     return static_cast<T &&>(value);
   }
@@ -41,7 +39,7 @@ namespace detail {
     if constexpr (HasOperatorCoAwaitOperator<T>)
       return std::forward<T>(value).operator co_await();
     else if constexpr (HasAsAwaitableMethod<T>)
-      return operator co_await(std::forward<T>(value).AsAwaitable());
+      return std::forward<T>(value).AsAwaitable();
     else
       return std::forward<T>(value);
   }

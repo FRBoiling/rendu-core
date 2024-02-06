@@ -15,7 +15,7 @@ namespace detail {
   template<typename Awaitable>
   inline auto AwaitTransform(Awaitable &&awaitable) {
     if constexpr (detail::HasAsAwaitableMethod<Awaitable>) {
-      return detail::GetAwaiter( std::forward<Awaitable>(awaitable).AsAwaitable());
+      return detail::GetAwaiter( std::forward<Awaitable>(awaitable));
     } else {
 //      using AwaiterType = decltype(detail::GetAwaiter(std::forward<Awaitable>(awaitable)));
 //      return ViaAsyncAwaiter<std::decay_t<AwaiterType>>(std::forward<Awaitable>(awaitable));
