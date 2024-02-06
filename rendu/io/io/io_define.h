@@ -6,6 +6,7 @@
 #define RENDU_IO_DEFINE_H_
 
 #include "base/base.hpp"
+#include "task/task.hpp"
 
 #define IO_NAMESPACE_BEGIN \
   namespace rendu {        \
@@ -16,5 +17,6 @@
   } /*namespace rendu*/
 
 using namespace rendu;
+using namespace rendu::task;
 
 #endif//RENDU_IO_DEFINE_H_

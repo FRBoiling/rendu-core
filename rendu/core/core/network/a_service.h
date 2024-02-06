@@ -10,8 +10,6 @@
 #include <functional>
 #include <tuple>
 
-#include "serialize/memory_buffer.h"
-
 CORE_NAMESPACE_BEGIN
 
 enum ServiceType {
@@ -21,15 +19,16 @@ enum ServiceType {
 
 class AService {
 
+
 protected:
   using AcceptCallback = std::function<void(INT64, IPEndPoint *)>;
   using ReadCallback = std::function<void(INT64, MemoryBuffer *)>;
   using ErrorCallback = std::function<void(INT64, int32_t)>;
 
-public:
   int m_id;
   ServiceType m_serviceType;
   Queue<MemoryBuffer *> m_pool;
+  
   const int MaxMemoryBufferSize = 1024;
 
 public:
@@ -38,16 +37,24 @@ public:
   ErrorCallback OnErrorCallback;
 
 public:
-  MemoryBuffer *Fetch(int size = 0);
+  inline ServiceType GetServiceType() const {
+    return m_serviceType;
+  }
+
+  inline void SetServiceType(ServiceType type) {
+    m_serviceType = type;
+  }
+
+  MemoryBuffer *Fetch(int size);
 
   void Recycle(MemoryBuffer *&memoryBuffer);
 
-public:
-  [[nodiscard]] ServiceType GetServiceType() const;
-  void SetServiceType(ServiceType type);
+  virtual std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId);
+
+  virtual void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint);
 
 public:
-  virtual void Dispose(){};
+  virtual void Dispose() = 0;
 
   virtual void Update() = 0;
 
@@ -58,19 +65,8 @@ public:
   virtual void Create(INT64 id, IPEndPoint *ip_end_point) = 0;
 
   virtual void Send(INT64 channelId, MemoryBuffer *memoryBuffer) = 0;
-
-  [[maybe_unused]] virtual std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId);
-
-  virtual void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint);
 };
 
-inline ServiceType AService::GetServiceType() const {
-  return m_serviceType;
-}
-
-inline void AService::SetServiceType(ServiceType type) {
-  m_serviceType = type;
-}
 
 CORE_NAMESPACE_END
 
