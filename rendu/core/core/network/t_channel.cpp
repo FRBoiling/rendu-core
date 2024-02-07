@@ -8,13 +8,13 @@
 CORE_NAMESPACE_BEGIN
 
 TChannel::TChannel()
-    : AChannel(), m_sendCache(new BYTE[Packet::OpcodeLength + Packet::ActorIdLength]), m_socket(
+    : AChannel(), m_sendCache(new byte[Packet::OpcodeLength + Packet::ActorIdLength]), m_socket(
                                                                                            nullptr),
       m_innArgs(nullptr), m_outArgs(nullptr), m_recvBuffer(nullptr), m_sendBuffer(nullptr) {
 }
 
 TChannel::~TChannel() {
-  INT64 id = m_id;
+  Long id = m_id;
   m_id = 0;
   m_service->Remove(id, 0);
   m_socket->Close();
@@ -26,7 +26,7 @@ TChannel::~TChannel() {
   m_socket = nullptr;
 }
 
-TChannel::TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service)
+TChannel::TChannel(Long id, IPEndPoint *ipEndPoint, TService *service)
     : AChannel(ChannelType::Connect, *ipEndPoint, id), m_service(service) {
   m_socket = new Socket(ipEndPoint->GetAddressFamily(), SocketType::Stream, ProtocolType::Tcp);
   m_socket->SetTcpNoDelay(true);
@@ -44,7 +44,7 @@ TChannel::TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service)
   m_service->m_queue.Enqueue(new TArgs(TcpOp::Connect, m_id));
 }
 
-TChannel::TChannel(INT64 id, Socket *socket, TService *service)
+TChannel::TChannel(Long id, Socket *socket, TService *service)
     : AChannel(ChannelType::Accept, socket->GetRemoteEndPoint(), id), m_service(service) {
   m_id = id;
   m_service = service;
@@ -78,7 +78,7 @@ void TChannel::Send(MemoryBuffer *stream) {
   }
 
   m_sendBuffer->Write(stream->GetBuffer(), stream->GetPosition(),
-                      (INT32) (stream->GetLength() - stream->GetPosition()));
+                      (int) (stream->GetLength() - stream->GetPosition()));
 
   if (!m_isSending) {
     //m_StartSend();
@@ -160,7 +160,7 @@ void TChannel::HandleRecv(SocketAsyncEventArgs *e) {
     return;
   }
 
-  m_recvBuffer->SetLastIndex((INT32) m_recvBuffer->GetLastIndex() + e->GetBytesTransferred());
+  m_recvBuffer->SetLastIndex((int) m_recvBuffer->GetLastIndex() + e->GetBytesTransferred());
   if (m_recvBuffer->GetLastIndex() == m_recvBuffer->ChunkSize) {
     m_recvBuffer->AddLast();
     m_recvBuffer->SetLastIndex(0);
@@ -249,7 +249,7 @@ void TChannel::OnRead(MemoryBuffer *memoryStream) {
 
 void TChannel::OnError(int error) {
   RD_INFO("TChannel OnError: {} {}", error, GetRemoteAddress()->ToString());
-  INT64 channelId = m_id;
+  Long channelId = m_id;
   m_service->Remove(channelId, error);
   m_service->OnErrorCallback(channelId, error);
 }

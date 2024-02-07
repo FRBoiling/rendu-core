@@ -7,5 +7,6 @@
 
 #include "stream.h"
 #include "memory_stream.h"
+#include "circular_buffer.h"
 
 #endif//RENDU_IO_H_

@@ -10,16 +10,16 @@ bool PacketParser::Parse(MemoryBuffer *&memoryBuffer) {
   while (true) {
     switch (m_state) {
       case ParserState::PacketSize: {
-        if (m_service->m_serviceType == ServiceType::Inner) {
+        if (m_service->GetServiceType() == ServiceType::Inner) {
           if (m_buffer->GetLength() < InnerPacketSizeLength) {
             memoryBuffer = nullptr;
             return false;
           }
 
-          m_buffer->Read(m_cache, 0, InnerPacketSizeLength);
+          m_buffer->Read(std::span<byte>(m_cache, OuterPacketSizeLength));
 
-          m_packetSize = BitConverter::ToInt32(m_cache, 0);
-          if (m_packetSize > std::numeric_limits<UINT16>::max() * 16 || m_packetSize < Packet::MinPacketSize) {
+          m_packetSize = BitConverter::ToInt(m_cache,0);
+          if (m_packetSize > std::numeric_limits<ushort>::max() * 16 || m_packetSize < Packet::MinPacketSize) {
             throw Exception("recv packet Size error, 可能是外网探测端口: {}", m_packetSize);
           }
         } else {
@@ -28,9 +28,8 @@ bool PacketParser::Parse(MemoryBuffer *&memoryBuffer) {
             return false;
           }
 
-          m_buffer->Read(m_cache, 0, OuterPacketSizeLength);
-
-          m_packetSize = BitConverter::ToUInt16(m_cache, 0);
+          m_buffer->Read(std::span<byte>(m_cache, OuterPacketSizeLength));
+          m_packetSize = BitConverter::ToUShort(m_cache,0);
           if (m_packetSize < Packet::MinPacketSize) {
             throw Exception("recv packet Size error, 可能是外网探测端口: {}", m_packetSize);
           }

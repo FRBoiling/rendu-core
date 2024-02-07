@@ -30,8 +30,8 @@ class Exception : public std::exception {
   }
 
  private:
-  STRING message_;
-  STRING stack_;
+  string message_;
+  string stack_;
 };
 
 RD_NAMESPACE_END

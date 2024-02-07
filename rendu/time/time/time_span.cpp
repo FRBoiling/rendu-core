@@ -9,26 +9,26 @@ TIME_NAMESPACE_BEGIN
 TimeSpan::TimeSpan(std::int64_t ticks)
     : m_duration(std::chrono::milliseconds{ticks / TicksPerMillisecond}) {}
 
-TimeSpan::TimeSpan(INT32 days, INT32 hours, INT32 minutes, INT32 seconds, INT64 milliseconds)
+TimeSpan::TimeSpan(int days, int hours, int minutes, int seconds, Long milliseconds)
     : m_duration(date::days{days} + std::chrono::hours{hours} + std::chrono::minutes{minutes} + std::chrono::seconds{seconds} + std::chrono::milliseconds{milliseconds}) {}
 
-INT32 TimeSpan::TotalDays() const {
+int TimeSpan::TotalDays() const {
   return duration_cast<date::days>(m_duration.time_since_epoch()).count();
 }
 
-INT32 TimeSpan::TotalHours() const {
+int TimeSpan::TotalHours() const {
   return duration_cast<std::chrono::hours>(m_duration.time_since_epoch()).count();
 }
 
-INT32 TimeSpan::TotalMinutes() const {
+int TimeSpan::TotalMinutes() const {
   return duration_cast<std::chrono::minutes>(m_duration.time_since_epoch()).count();
 }
 
-INT32 TimeSpan::TotalSeconds() const {
+int TimeSpan::TotalSeconds() const {
   return duration_cast<std::chrono::seconds>(m_duration.time_since_epoch()).count();
 }
 
-INT64 TimeSpan::TotalMilliseconds() const {
+Long TimeSpan::TotalMilliseconds() const {
   return m_duration.time_since_epoch().count();
 }
 
@@ -37,23 +37,23 @@ TimeSpan::Rep TimeSpan::Ticks() const {
 }
 
 
-INT32 TimeSpan::Days() const {
+int TimeSpan::Days() const {
   return date::floor<date::days>(m_duration.time_since_epoch()).count();
 }
 
-INT32 TimeSpan::Hours() const {
+int TimeSpan::Hours() const {
   return date::floor<std::chrono::hours>(m_duration.time_since_epoch()).count() % HoursPerDay;
 }
 
-INT32 TimeSpan::Minutes() const {
+int TimeSpan::Minutes() const {
   return date::floor<std::chrono::minutes>(m_duration.time_since_epoch()).count() % MinutesPerHour;
 }
 
-INT32 TimeSpan::Seconds() const {
+int TimeSpan::Seconds() const {
   return date::floor<std::chrono::seconds>(m_duration.time_since_epoch()).count() % SecsPerMinute;
 }
 
-INT64 TimeSpan::Milliseconds() const {
+Long TimeSpan::Milliseconds() const {
   return m_duration.time_since_epoch().count() % MillisPerSecond;
 }
 
@@ -70,23 +70,23 @@ TimeSpan TimeSpan::operator%(const TimeSpan &rhs) const {
   return TimeSpan::FromMilliseconds(mod_ms);
 }
 
-TimeSpan TimeSpan::FromDays(INT32 days) {
+TimeSpan TimeSpan::FromDays(int days) {
   return {days};
 }
 
-TimeSpan TimeSpan::FromHours(INT32 hours){
+TimeSpan TimeSpan::FromHours(int hours){
   return {0,hours};
 
 }
-TimeSpan TimeSpan::FromMinutes(INT32 minutes){
+TimeSpan TimeSpan::FromMinutes(int minutes){
   return {0,0,minutes};
 
 }
-TimeSpan TimeSpan::FromSeconds(INT32 seconds){
+TimeSpan TimeSpan::FromSeconds(int seconds){
   return {0,0,0,seconds};
 
 }
-TimeSpan TimeSpan::FromMilliseconds(INT64 milliseconds){
+TimeSpan TimeSpan::FromMilliseconds(Long milliseconds){
   return {0,0,0,0,milliseconds};
 }
 

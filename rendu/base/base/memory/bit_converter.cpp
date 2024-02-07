@@ -7,28 +7,29 @@
 
 RD_NAMESPACE_BEGIN
 
-static INT32 ToInt32(const BYTE *data, INT32 start_index) {
-  if (sizeof(data) < sizeof(std::int32_t) + start_index) {
+static int ToInt32(const byte *data, int start_index) {
+  if (sizeof(data) < sizeof(int) + start_index) {
     // 处理长度不足的情况
     // 可以抛出异常或返回一个默认值，具体根据需求而定
     return 0;
   }
 
-  std::int32_t result;
-  std::memcpy(&result, data, sizeof(std::int32_t));
+  int result;
+  std::memcpy(&result, data, sizeof(int));
   return result;
 }
 
-static UINT16 ToUInt16(const BYTE *data, INT32 start_index) {
-  if (sizeof(data) < sizeof(std::int16_t) + start_index) {
+static ushort ToUShort(const byte *data, ushort start_index){
+  if (sizeof(data) < sizeof(ushort) + start_index) {
     // 处理长度不足的情况
     // 可以抛出异常或返回一个默认值，具体根据需求而定
     return 0;
   }
 
-  std::int16_t result;
-  std::memcpy(&result, data, sizeof(std::int16_t));
+  short result;
+  std::memcpy(&result, data, sizeof(ushort));
   return result;
 }
+
 
 RD_NAMESPACE_END

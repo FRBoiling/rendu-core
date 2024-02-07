@@ -2,8 +2,8 @@
 * Created by boil on 2023/10/15.
 */
 
-#ifndef RENDU_MEMORY_BUFFER_H
-#define RENDU_MEMORY_BUFFER_H
+#ifndef RENDU_SERIALIZE_BUFFER_H
+#define RENDU_SERIALIZE_BUFFER_H
 
 #include "serialize_define.h"
 
@@ -20,4 +20,4 @@ public:
 SERIALIZE_NAMESPACE_END
 
 
-#endif//RENDU_MEMORY_BUFFER_H
+#endif//RENDU_SERIALIZE_BUFFER_H

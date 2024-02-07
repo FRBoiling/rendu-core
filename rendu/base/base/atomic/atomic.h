@@ -73,7 +73,7 @@ RD_NAMESPACE_BEGIN
     };
   }  // namespace detail
 
-  typedef detail::AtomicIntegerT<std::int32_t> AtomicInt32;
+  typedef detail::AtomicIntegerT<int> AtomicInt32;
   typedef detail::AtomicIntegerT<std::int64_t> AtomicInt64;
 
 RD_NAMESPACE_END

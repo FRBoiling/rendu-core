@@ -36,7 +36,7 @@ CORE_NAMESPACE_BEGIN
       m_idChannels.Clear();
     }
 
-    void TService::Create(INT64 id, IPEndPoint* ip_end_point) {
+    void TService::Create(Long id, IPEndPoint* ip_end_point) {
       TChannel *channel = nullptr;
       if (m_idChannels.TryGetValue(id, channel)) {
         return;
@@ -45,7 +45,7 @@ CORE_NAMESPACE_BEGIN
       m_idChannels.Add(channel->GetId(), channel);
     }
 
-    void TService::Send(INT64 channelId, MemoryBuffer *memoryBuffer) {
+    void TService::Send(Long channelId, MemoryBuffer *memoryBuffer) {
       try {
         TChannel *channel = Get(channelId);
         if (channel == nullptr) {
@@ -60,7 +60,7 @@ CORE_NAMESPACE_BEGIN
       }
     }
 
-    void TService::Remove(INT64 id, int error) {
+    void TService::Remove(Long id, int error) {
       TChannel *channel = nullptr;
       if (m_idChannels.TryGetValue(id, channel)) {
         channel->SetError(error);
@@ -140,7 +140,7 @@ CORE_NAMESPACE_BEGIN
             break;
           }
           default:
-            throw ArgumentOutOfRangeException("Update: {}", (INT32)eventArgs->GetLastOperation());
+            throw ArgumentOutOfRangeException("Update: {}", (int)eventArgs->GetLastOperation());
         }
       }
     }
@@ -162,16 +162,16 @@ CORE_NAMESPACE_BEGIN
       }
 
       if (socketError != SocketError::Success) {
-        RD_CRITICAL("accept error {}", (INT32) socketError);
+        RD_CRITICAL("accept error {}", (int) socketError);
         AcceptAsync();
         return;
       }
 
       try {
-        INT64 id = NetServices::GetInstance().CreateAcceptChannelId();
+        Long id = NetServices::GetInstance().CreateAcceptChannelId();
         TChannel *channel = new TChannel(id, acceptSocket, this);
         m_idChannels.Add(channel->GetId(), channel);
-        INT64 channelId = channel->GetId();
+        Long channelId = channel->GetId();
 
         OnAcceptCallback(channelId, channel->GetRemoteAddress());
       }
@@ -183,7 +183,7 @@ CORE_NAMESPACE_BEGIN
     }
 
 
-    TChannel *TService::Get(INT64 id) {
+    TChannel *TService::Get(Long id) {
       TChannel *channel = nullptr;
       m_idChannels.TryGetValue(id, channel);
       return channel;
@@ -205,11 +205,11 @@ CORE_NAMESPACE_BEGIN
       return false;
     }
 
-    std::tuple<uint32_t, uint32_t> TService::GetChannelConn(INT64 channelId) {
+    std::tuple<uint32_t, uint32_t> TService::GetChannelConn(Long channelId) {
       return AService::GetChannelConn(channelId);
     }
 
-    void TService::ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) {
+    void TService::ChangeAddress(Long channelId, IPEndPoint ipEndPoint) {
       AService::ChangeAddress(channelId, ipEndPoint);
     }
 

@@ -33,42 +33,42 @@ public:
   using SysTimePoint = std::chrono::system_clock::time_point;
 
 public:
-  DateTime(INT32 year, UINT32 month, UINT32 day, Kind kind = Kind::Local);
-  DateTime(INT32 year, UINT32 month, UINT32 day, INT32 hour, INT32 minute, INT32 second, INT32 millisecond, Kind kind = Kind::Local);
-  DateTime(const INT64 ticks, Kind kind = Kind::Local);
+  DateTime(int year, uint month, uint day, Kind kind = Kind::Local);
+  DateTime(int year, uint month, uint day, int hour, int minute, int second, int millisecond, Kind kind = Kind::Local);
+  DateTime(const Long ticks, Kind kind = Kind::Local);
   DateTime(const SysTimePoint &time_point);
 
   bool operator<(const DateTime& other) const;
   bool operator==(const DateTime& other) const;
 
 public:
-  DateTime AddYears(INT32 years) const;
-  DateTime AddMonths(INT32 months) const;
-  DateTime AddDays(INT32 days) const;
+  DateTime AddYears(int years) const;
+  DateTime AddMonths(int months) const;
+  DateTime AddDays(int days) const;
 
 public:
-  INT32 Year() const;
-  UINT32 Month() const;
-  UINT32 Day() const;
-  INT32 Hour() const;
-  INT32 Minute() const;
-  INT32 Second() const;
-  INT64 MilliSecond() const;
+  int Year() const;
+  uint Month() const;
+  uint Day() const;
+  int Hour() const;
+  int Minute() const;
+  int Second() const;
+  Long MilliSecond() const;
 
 public:
-  INT32 DayOfWeek() const;
-  INT32 DayOfYear() const;
+  int DayOfWeek() const;
+  int DayOfYear() const;
   bool IsLeapYear() const;
   DateTime operator+(const TimeSpan &t) const;
   DateTime operator-(const TimeSpan &t) const;
-  STRING ToString(const std::string &format = "%F %T") const;
+  string ToString(const std::string &format = "%F %T") const;
 
 private:
   void ToKind(Kind kind);
   void ConvertToKind(Kind kind);
 
-  INT32 MilliSecondsInLastDay() const;
-  INT64 MilliSecondsInDayParts() const;
+  int MilliSecondsInLastDay() const;
+  Long MilliSecondsInDayParts() const;
 
 public:
   static DateTime Now(const std::string &timezone = "");

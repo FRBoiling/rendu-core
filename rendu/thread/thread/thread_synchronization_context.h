@@ -27,7 +27,7 @@ public:
   template<typename Task>
   void Post(Task task) {
     std::unique_lock<std::mutex> locker(mtx);
-    tasks.push(std::move(task));
+    tasks.push(task);
     cv.notify_all();
   }
 

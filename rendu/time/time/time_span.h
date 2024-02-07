@@ -11,34 +11,34 @@ public:
   using Duration = date::sys_time<std::chrono::milliseconds>;
   using Rep = std::chrono::milliseconds::rep;
 
-  TimeSpan(INT64 ticks);
+  TimeSpan(Long ticks);
 
-  TimeSpan(INT32 days = 0, INT32 hours = 0, INT32 minutes = 0, INT32 seconds = 0, INT64 milliseconds = 0);
+  TimeSpan(int days = 0, int hours = 0, int minutes = 0, int seconds = 0, Long milliseconds = 0);
 
 public:
-  INT32 TotalDays() const;
-  INT32 TotalHours() const;
-  INT32 TotalMinutes() const;
-  INT32 TotalSeconds() const;
-  INT64 TotalMilliseconds() const;
+  int TotalDays() const;
+  int TotalHours() const;
+  int TotalMinutes() const;
+  int TotalSeconds() const;
+  Long TotalMilliseconds() const;
   Rep Ticks() const;
 
-  INT32 Days() const;
-  INT32 Hours() const;
-  INT32 Minutes() const;
-  INT32 Seconds() const;
-  INT64 Milliseconds() const;
+  int Days() const;
+  int Hours() const;
+  int Minutes() const;
+  int Seconds() const;
+  Long Milliseconds() const;
 
   TimeSpan operator*(const double &rhs) const;
   TimeSpan operator/(const double &rhs) const;
   TimeSpan operator%(const TimeSpan &rhs) const;
 
 public:
-  static TimeSpan FromDays(INT32 days);
-  static TimeSpan FromHours(INT32 hours);
-  static TimeSpan FromMinutes(INT32 minutes);
-  static TimeSpan FromSeconds(INT32 seconds);
-  static TimeSpan FromMilliseconds(INT64 milliseconds);
+  static TimeSpan FromDays(int days);
+  static TimeSpan FromHours(int hours);
+  static TimeSpan FromMinutes(int minutes);
+  static TimeSpan FromSeconds(int seconds);
+  static TimeSpan FromMilliseconds(Long milliseconds);
 
 private:
   Duration m_duration;

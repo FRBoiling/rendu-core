@@ -14,4 +14,5 @@ rendu_add_library(
     DEPS
     rendu::base
     rendu::io
+    rendu::memory
 )

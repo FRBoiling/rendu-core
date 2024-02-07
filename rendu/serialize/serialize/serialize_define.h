@@ -7,6 +7,7 @@
 
 #include "base/base.hpp"
 #include "io/io.hpp"
+#include "memory/memory.hpp"
 
 #define SERIALIZE_NAMESPACE_BEGIN \
   namespace rendu {         \
@@ -18,5 +19,6 @@
 
 using namespace rendu;
 using namespace rendu::io;
+using namespace rendu::memory;
 
 #endif//RENDU_SERIALIZE_DEFINE_H_

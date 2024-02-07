@@ -12,11 +12,11 @@ RD_NAMESPACE_BEGIN
 
 class ALogger {
 public:
-  ALogger(STRING flag, LogMode mode = LogMode::LM_SYNC, LogPosition position = LogPosition::LP_CONSOLE, LogLevel level = LogLevel::LL_TRACE) : flag_(flag), level_(level), position_(position), mode_(mode) {}
+  ALogger(string flag, LogMode mode = LogMode::LM_SYNC, LogPosition position = LogPosition::LP_CONSOLE, LogLevel level = LogLevel::LL_TRACE) : flag_(flag), level_(level), position_(position), mode_(mode) {}
   virtual ~ALogger() = default;
 
 protected:
-  STRING flag_;
+  string flag_;
   LogLevel level_;
   LogPosition position_;
   LogMode mode_;
@@ -43,8 +43,8 @@ public:
   virtual void InitChannel();
   virtual void AddChannel(ALoggerChannel *channel);
 
-  void SetFlag(STRING flag);
-  STRING GetFlag() const;
+  void SetFlag(string flag);
+  string GetFlag() const;
 
   void SetLevel(LogLevel level);
   LogLevel GetLevel() const;

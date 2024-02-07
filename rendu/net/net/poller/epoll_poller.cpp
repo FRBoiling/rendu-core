@@ -34,7 +34,7 @@
 ////      for (int i = 0; i < numEvents; ++i) {
 ////        struct epoll_event *e = &events_[i];
 ////        Channel *channel = static_cast<Channel*>(events_[i].data.ptr);
-////        int32 mask = 0;
+////        int mask = 0;
 ////        if (e->events & EPOLLIN) mask |= AE_READABLE;
 ////        if (e->events & EPOLLOUT) mask |= AE_WRITABLE;
 ////        if (e->events & EPOLLERR) mask |= AE_WRITABLE|AE_READABLE;

@@ -14,34 +14,21 @@ RD_NAMESPACE_BEGIN
 
 class ASingleton : public NonCopyable {
 public:
-  virtual ~ASingleton() { isDisposed = true; }
-
-  virtual void Register() = 0;// 纯虚函数
-
-protected:
-  ASingleton() : isDisposed(false) {}
-
-  bool isDisposed;
+  virtual ~ASingleton() { }
 };
 
 template<class T>
 class Singleton : public ASingleton {
 public:
   static T &GetInstance() {
+    static T instance;
     return instance;
   }
 
   virtual ~Singleton() = default;
 
 protected:
-  static T instance;
-
-  Singleton() = default;// 默认构造函数，用于创建实例
-
-  void Register() override {
-    instance = static_cast<T &>(*this);
-    instance.isDisposed = false;
-  }
+  Singleton() =default;
 };
 
 

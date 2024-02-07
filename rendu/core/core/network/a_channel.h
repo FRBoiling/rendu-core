@@ -20,22 +20,22 @@ class AChannel {
 public:
   AChannel() {}
 
-  AChannel(ChannelType channel_type, IPEndPoint remote_address, INT64 id)
+  AChannel(ChannelType channel_type, IPEndPoint remote_address, Long id)
       : m_channel_type(channel_type), m_remote_address(remote_address), m_id(id) {
   }
 
   virtual ~AChannel() {}
 
 protected:
-  INT64 m_id;
-  INT32 m_error;
+  Long m_id;
+  int m_error;
 
   ChannelType m_channel_type;
   IPEndPoint m_remote_address;
 
 public:
-  INT64 GetId() const { return m_id; }
-  INT64 SetId(INT64 id) {
+  Long GetId() const { return m_id; }
+  Long SetId(Long id) {
     m_id = id;
     return m_id;
   }
@@ -52,8 +52,8 @@ public:
     return m_remote_address;
   }
 
-  INT32 GetError() const { return m_error; }
-  INT32 SetError(INT32 error) {
+  int GetError() const { return m_error; }
+  int SetError(int error) {
     m_error = error;
     return m_error;
   }

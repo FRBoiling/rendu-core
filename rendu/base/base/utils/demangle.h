@@ -25,7 +25,7 @@ RD_NAMESPACE_BEGIN
 //   returns junk values for non-mangled symbol names (ex. function
 //   names in C linkage).  For example,
 //     abi::__cxa_demangle("main", 0,  0, &status)
-//   returns "unsigned long" and the status code is 0 (successful).
+//   returns "unsigned Long" and the status code is 0 (successful).
 //
 // Also,
 //

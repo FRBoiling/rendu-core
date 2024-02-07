@@ -26,8 +26,8 @@ CORE_NAMESPACE_BEGIN
 
     public:
       template<typename A, typename T>
-      Task<T> Invoke(long type, A args) {
-        CDictionary<long, std::any> invokeHandlers;
+      Task<T> Invoke(Long type, A args) {
+        CDictionary<Long, std::any> invokeHandlers;
         if (!allInvokers.TryGetValue(typeid(A), invokeHandlers)) {
           throw Exception("Invoke error4: {} {}", type, typeid(A).name());
         }
@@ -46,7 +46,7 @@ CORE_NAMESPACE_BEGIN
 
     private:
       CDictionary<std::type_index, std::list<EventInfo>> allEvents;
-      CDictionary<std::type_index, CDictionary<long, std::any>> allInvokers;
+      CDictionary<std::type_index, CDictionary<Long, std::any>> allInvokers;
     };
 
 

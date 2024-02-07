@@ -406,7 +406,7 @@
 
 
 #define RD_ERRNO_MAP(XX)                                                      \
-  XX(E2BIG, "argument list too long")                                         \
+  XX(E2BIG, "argument list too Long")                                         \
   XX(EACCES, "permission denied")                                             \
   XX(EADDRINUSE, "GetAddress already in use")                                    \
   XX(EADDRNOTAVAIL, "GetAddress not available")                                  \
@@ -446,8 +446,8 @@
   XX(EISDIR, "illegal operation on a directory")                              \
   XX(ELOOP, "too many symbolic links encountered")                            \
   XX(EMFILE, "too many open files")                                           \
-  XX(EMSGSIZE, "message too long")                                            \
-  XX(ENAMETOOLONG, "name too long")                                           \
+  XX(EMSGSIZE, "message too Long")                                            \
+  XX(ENAMETOOLONG, "name too Long")                                           \
   XX(ENETDOWN, "network is down")                                             \
   XX(ENETUNREACH, "network is unreachable")                                   \
   XX(ENFILE, "file table overflow")                                           \

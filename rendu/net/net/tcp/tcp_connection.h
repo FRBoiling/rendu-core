@@ -29,7 +29,7 @@
 //    /// User should not create this object.
 //    TcpConnection(EventLoop *loop,
 //                  const std::string &name,
-//                  std::int32_t sockfd,
+//                  int sockfd,
 //                  const IPEndPoint &localAddr,
 //                  const IPEndPoint &peerAddr);
 //

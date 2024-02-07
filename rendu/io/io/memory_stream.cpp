@@ -4,30 +4,28 @@
 
 #include "memory_stream.h"
 #include <algorithm>// 用于std::min
-#include <cstring>  // 用于std::memcpy
 #include <stdexcept>// 用于异常
-
 
 IO_NAMESPACE_BEGIN
 
 #define BUFFER_GROWTH_SIZE 1024
 
 MemoryStream::MemoryStream()
-    : _origin(0), _position(0), _length(0),
+    : _origin(0),
       _capacity(1024), _expandable(true),
       _writable(true), _exposable(false),
       _isOpen(true) {
 }
 
 MemoryStream::MemoryStream(int capacity)
-    : _origin(0), _position(0), _length(0),
+    : _origin(0),
       _capacity(capacity), _expandable(true),
       _writable(true), _exposable(false),
       _isOpen(true) {
 }
 
-MemoryStream::MemoryStream(std::span<std::byte> buffer, size_t index, size_t count, bool writable /*= true*/, bool publiclyVisible /*= false*/)
-    : _origin(index), _position(index), _length(count),
+MemoryStream::MemoryStream(std::span<byte> buffer, int index, int count, bool writable /*= true*/, bool publiclyVisible /*= false*/)
+    : _origin(index),
       _capacity(buffer.size()), _expandable(false),// 使用buffer的实际大小作为_capacity
       _writable(writable), _exposable(publiclyVisible),
       _isOpen(true) {
@@ -52,64 +50,58 @@ bool MemoryStream::CanSeek() const {
   return _isOpen;
 }
 
-size_t MemoryStream::GetLength() const {
-  return static_cast<size_t>(_length);
-}
-
-void MemoryStream::SetLength(size_t length) {
+void MemoryStream::SetLength(int length) {
   if (!_isOpen || !_writable || length > _buffer.size()) {
     throw std::runtime_error("Stream is not open, writable or length out of range");
   }
-  _length = length;
-  if (_position > _length) {
-    _position = _length;
+  m_length = length;
+  if (m_position > m_length) {
+    m_position = m_length;
   }
 }
 
-size_t MemoryStream::GetPosition() const {
-  return static_cast<size_t>(_position);
-}
-
-void MemoryStream::SetPosition(size_t position) {
-  if (position > GetLength()) {
+void MemoryStream::SetPosition(int position) {
+  if (m_position > m_length) {
     throw std::out_of_range("Position is out of range.");
   }
-  _position = position;
+  m_position = position;
 }
 
-void MemoryStream::Seek(size_t offset, SeekOrigin origin) {
+void MemoryStream::Seek(int offset, SeekOrigin origin) {
   ssize_t newPos = 0;// use a signed integer to handle possible negative offset
   switch (origin) {
     case SeekOrigin::Begin:
-      newPos = static_cast<ssize_t>(_origin) + offset;
+      newPos = _origin + offset;
       break;
     case SeekOrigin::Current:
-      newPos = static_cast<ssize_t>(_position) + offset;
+      newPos = m_position + offset;
       break;
     case SeekOrigin::End:
-      newPos = static_cast<ssize_t>(_length) + offset;
+      newPos = m_length + offset;
       break;
   }
-  if (newPos < 0 || newPos > static_cast<ssize_t>(_length)) {
+  if (newPos < 0 || newPos > GetLength()) {
     throw std::out_of_range("Seek position is out of range.");
   }
-  _position = static_cast<size_t>(newPos);
+  m_position = newPos;
 }
 
-bool MemoryStream::CheckBufferSizeAndAutoGrowth(size_t required_capacity){
-  if (!_expandable) {
+bool MemoryStream::EnsureCapacity(int required_capacity)
+{
+  if (required_capacity < 0)
+    throw std::runtime_error("EnsureCapacity value <0 .");
+  if (required_capacity <= _capacity)
     return false;
-  }
-  while (required_capacity > _capacity){
-    _capacity += BUFFER_GROWTH_SIZE;// increase capacity
-  }
-  if (required_capacity <= _capacity){
-    _buffer.resize(_capacity);       // resize the buffer, not just reserve
-  }
+  int num = std::max(required_capacity, 256);
+  if (num < this->_capacity * 2)
+    num = this->_capacity * 2;
+  if ((uLong)(this->_capacity * 2) > 2147483591U)
+    num = std::max(required_capacity, 2147483591);
+  this->_capacity = num;
   return true;
 }
 
-void MemoryStream::Write(const std::vector<std::byte>& buffer, size_t offset, size_t count) {
+void MemoryStream::Write(const std::vector<byte> &buffer, int offset, int count) {
   if (!CanWrite()) {
     throw std::runtime_error("Stream cannot write.");
   }
@@ -118,109 +110,112 @@ void MemoryStream::Write(const std::vector<std::byte>& buffer, size_t offset, si
     throw std::out_of_range("Write operation exceeds buffer bounds.");
   }
 
-  size_t requiredCapacity = _position + count;
+  int requiredCapacity = m_position + count;
   if (requiredCapacity > _capacity) {
     if (!CheckBufferSizeAndAutoGrowth(requiredCapacity)) {
       throw std::runtime_error("Stream is not expandable and data exceeds capacity.");
     }
   }
-  _buffer.insert(_buffer.begin() + _position, buffer.begin() + offset, buffer.begin() + offset + count);
-  _position += count;
-  if (_position > _length)
-    _length = _position;
+  _buffer.insert(_buffer.begin() + m_position, buffer.begin() + offset, buffer.begin() + offset + count);
+  m_position += count;
+  if (m_position > m_length)
+    m_length = m_position;
 }
 
-void MemoryStream::Write(const std::span<std::byte> buffer){
+void MemoryStream::Write(const std::span<byte> buffer) {
   if (!CanWrite()) {
     throw std::runtime_error("Stream cannot write.");
   }
-  int count = buffer.size();
-  size_t requiredCapacity = _position + count;
+  int length = buffer.size();
+  int requiredCapacity = m_position + length;
   if (requiredCapacity > _capacity) {
     if (!CheckBufferSizeAndAutoGrowth(requiredCapacity)) {
       throw std::runtime_error("Stream is not expandable and data exceeds capacity.");
     }
   }
-  _buffer.insert(_buffer.begin() + _position, buffer.begin(), buffer.end());
-  _position += count;
-  if (_position > _length)
-    _length = _position;
+
+  if (length > m_length)
+  {
+    bool flag = m_position > m_length;
+    if (length > _capacity && this.EnsureCapacity(num))
+      flag = false;
+    if (flag)
+      Array.Clear((Array) this._buffer, this._length, num - this._length);
+    this._length = num;
+  }
+  buffer.CopyTo(new Span<byte>(this._buffer, this._position, buffer.Length));
+  this._position = num;
+
+  _buffer.insert(_buffer.begin() + m_position, buffer.begin(), buffer.end());
+  m_position += count;
+  if (m_position > m_length)
+    m_length = m_position;
 }
 
-size_t MemoryStream::Read(std::vector<std::byte>& buffer, size_t offset, size_t count) {
+int MemoryStream::Read(std::vector<byte> &buffer, int offset, int count) {
   if (!CanRead()) {
     throw std::runtime_error("Stream is not open.");
   }
   if (count > buffer.size() - offset)
     throw std::runtime_error("Offset and count exceed buffer size.");
-  size_t requiredCapacity = offset + count;
+  int requiredCapacity = offset + count;
   if (requiredCapacity > buffer.size()) {
     throw std::runtime_error("Buffer is not expandable and data exceeds capacity.");
   }
 
-  size_t read_count = std::min(count, _length - _position);
-  std::copy(_buffer.begin() + _position, _buffer.begin() + _position + read_count, buffer.begin() + offset);
-  _position += read_count;
+  int read_count = std::min(count, m_length - m_position);
+  std::copy(_buffer.begin() + m_position, _buffer.begin() + m_position + read_count, buffer.begin() + offset);
+  m_position += read_count;
 
   return read_count;
 }
 
-size_t MemoryStream::Read(std::span<std::byte> buffer) {
+int MemoryStream::Read(std::span<byte> buffer) {
   if (!CanRead()) {
     throw std::runtime_error("Stream is not open.");
   }
-  if (buffer.size()> _length - _position){
-    throw std::runtime_error("Buffer size exceeds data available for reading.");
+  int length = std::min(buffer.size(), m_length - m_position);
+  if (length <= 0) {
+    return 0;
   }
-
-  size_t read_count = std::min(buffer.size(), _length - _position);
-  std::copy(_buffer.begin() + _position, _buffer.begin() + _position + read_count, buffer.begin());
-  _position += read_count;
-  return read_count;
+  std::copy_n(_buffer.begin() + m_position, length, buffer.begin());
+  m_position += length;
+  return length;
 }
 
-std::vector<std::byte> MemoryStream::GetBufferData() const {
-  if(!_exposable) {
-      throw std::runtime_error("Trying to access an unexposed buffer.");
+std::vector<byte> &MemoryStream::GetBuffer() {
+  if (!_exposable) {
+    throw std::runtime_error("Trying to access an unexposed buffer.");
   }
-
   return _buffer;
-}
+};
 
-void MemoryStream::WriteByte(std::byte b) {
-  std::vector<std::byte> buffer = {b};
-  Write(buffer, 0, 1);
-}
-
-int MemoryStream::ReadByte() {
-  if (IsEndOfStream()) {
-      return -1;
+bool MemoryStream::TryGetBuffer(std::vector<byte> *&buffer) {
+  if (!_exposable) {
+    return false;
   }
-  std::vector<std::byte> buffer(1);
-  Read(buffer, 0, 1);
-  return static_cast<int>(buffer[0]);
+  buffer = &_buffer;
+  return true;
 }
 
 // 检查是否读到了流的末尾
 bool MemoryStream::IsEndOfStream() const {
-  return _position >= _length;
+  return m_position >= m_length;
 }
 
-void MemoryStream::CopyTo(Stream &destination, size_t buff_size) {
-  auto mem_dest = dynamic_cast<MemoryStream*>(&destination);
-  if (!mem_dest)
-  {
-      throw std::invalid_argument("The provided destination is not a MemoryStream.");
+void MemoryStream::CopyTo(Stream &destination, int buff_size) {
+  auto mem_dest = dynamic_cast<MemoryStream *>(&destination);
+  if (!mem_dest) {
+    throw std::invalid_argument("The provided destination is not a MemoryStream.");
   }
 
-  std::vector<std::byte> buffer(buff_size);
-  size_t read_count;
+  std::vector<byte> buffer(buff_size);
+  int read_count;
 
   // 从源复制数据，直到没有数据可读
-  while ((read_count = Read(buffer, 0, buff_size)) > 0)
-  {
-      // 写入读取的数据到目标
-      mem_dest->Write(std::span<std::byte>(buffer.data(), read_count));
+  while ((read_count = Read(buffer, 0, buff_size)) > 0) {
+    // 写入读取的数据到目标
+    mem_dest->Write(std::span<byte>(buffer.data(), read_count));
   }
 }
 

@@ -27,10 +27,10 @@ LogMode ALogger::GetMode() const {
   return mode_;
 }
 
-void ALogger::SetFlag(STRING flag) {
+void ALogger::SetFlag(string flag) {
   flag_ = flag;
 }
-STRING ALogger::GetFlag() const {
+string ALogger::GetFlag() const {
   return flag_;
 }
 

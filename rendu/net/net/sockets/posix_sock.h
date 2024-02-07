@@ -25,7 +25,7 @@
 //
 //NET_NAMESPACE_BEGIN
 //
-//#define SOCKET int32
+//#define SOCKET int
 //
 //NET_NAMESPACE_END
 //

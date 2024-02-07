@@ -6,10 +6,10 @@
 
 CORE_NAMESPACE_BEGIN
 
-INT64 NetServices::CreateAcceptChannelId() {
+Long NetServices::CreateAcceptChannelId() {
   return 0;
 }
-INT64 NetServices::CreateConnectChannelId() {
+Long NetServices::CreateConnectChannelId() {
   return 1;
 }
 

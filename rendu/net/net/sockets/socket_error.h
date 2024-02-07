@@ -39,7 +39,7 @@ NET_NAMESPACE_BEGIN
   NotSocket = 10038, // 0x00002736
   /// <summary>A required address was omitted from an operation on a <see cref="T:System.Net.Sockets.Socket" />.</summary>
   DestinationAddressRequired = 10039, // 0x00002737
-  /// <summary>The datagram is too long.</summary>
+  /// <summary>The datagram is too Long.</summary>
   MessageSize = 10040, // 0x00002738
   /// <summary>The protocol type is incorrect for this <see cref="T:System.Net.Sockets.Socket" />.</summary>
   ProtocolType = 10041, // 0x00002739

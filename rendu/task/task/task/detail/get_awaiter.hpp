@@ -18,7 +18,7 @@ namespace detail {
   }
 
   template<typename T>
-  auto get_awaiter_impl(T &&value, long) noexcept(noexcept(operator co_await(static_cast<T &&>(value))))
+  auto get_awaiter_impl(T &&value, Long) noexcept(noexcept(operator co_await(static_cast<T &&>(value))))
       -> decltype(operator co_await(static_cast<T &&>(value))) {
     return operator co_await(static_cast<T &&>(value));
   }

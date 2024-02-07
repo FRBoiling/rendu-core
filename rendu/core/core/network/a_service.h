@@ -21,9 +21,9 @@ class AService {
 
 
 protected:
-  using AcceptCallback = std::function<void(INT64, IPEndPoint *)>;
-  using ReadCallback = std::function<void(INT64, MemoryBuffer *)>;
-  using ErrorCallback = std::function<void(INT64, int32_t)>;
+  using AcceptCallback = std::function<void(Long, IPEndPoint *)>;
+  using ReadCallback = std::function<void(Long, MemoryBuffer *)>;
+  using ErrorCallback = std::function<void(Long, int32_t)>;
 
   int m_id;
   ServiceType m_serviceType;
@@ -49,22 +49,22 @@ public:
 
   void Recycle(MemoryBuffer *&memoryBuffer);
 
-  virtual std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId);
+  virtual std::tuple<uint32_t, uint32_t> GetChannelConn(Long channelId);
 
-  virtual void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint);
+  virtual void ChangeAddress(Long channelId, IPEndPoint ipEndPoint);
 
 public:
   virtual void Dispose() = 0;
 
   virtual void Update() = 0;
 
-  virtual void Remove(INT64 id, int error) = 0;
+  virtual void Remove(Long id, int error) = 0;
 
   virtual bool IsDisposed() = 0;
 
-  virtual void Create(INT64 id, IPEndPoint *ip_end_point) = 0;
+  virtual void Create(Long id, IPEndPoint *ip_end_point) = 0;
 
-  virtual void Send(INT64 channelId, MemoryBuffer *memoryBuffer) = 0;
+  virtual void Send(Long channelId, MemoryBuffer *memoryBuffer) = 0;
 };
 
 

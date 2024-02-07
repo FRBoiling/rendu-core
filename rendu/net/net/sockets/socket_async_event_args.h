@@ -22,9 +22,11 @@ public:
 
   void SetRemoteEndPoint(IPEndPoint *remote_end_point);
 
-  void SetBuffer(BYTE *buffer, int offset, int count);
+  void SetBuffer(std::vector<byte>& buffer, int offset, int count);
+  void SetBuffer(Memory<byte> buffer);
+  void SetBuffer(std::span<byte> buffer);
 
-  INT32 GetBytesTransferred();
+  int GetBytesTransferred();
   SocketAsyncOperation GetLastOperation();
 
 

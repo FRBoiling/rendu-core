@@ -24,7 +24,7 @@ private:
   string_view_t logger_name_;
   LogLevel lvl_{LogLevel::LL_OFF};
   LogMsgTime time_;
-  UINT64  thread_id_;
+  uLong  thread_id_;
   LogMsgSource source_;
   string_view_t content_;
 

@@ -10,7 +10,7 @@
 LOG_NAMESPACE_BEGIN
 namespace detail {
 
-  UINT64 GetCurrThreadId() {
+  uLong GetCurrThreadId() {
 #ifdef _WIN32
     return static_cast<size_t>(::GetCurrentThreadId());
 #elif defined(__linux__)
@@ -43,7 +43,7 @@ namespace detail {
   }
 }// namespace detail
 
-STRING ThreadIdToString(std::thread::id id) {
+string ThreadIdToString(std::thread::id id) {
   std::ostringstream oss;
   oss << id;
   return oss.str();

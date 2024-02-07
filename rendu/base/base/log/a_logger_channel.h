@@ -24,10 +24,10 @@ public:
   void Init(ALogger *logger);
   virtual void WriteMsg(const LogLevel level, const LogMsgSource &prefix, const std::string &content);
 
-  STRING GetName() { return m_name; }
+  string GetName() { return m_name; }
 
 protected:
-  STRING m_name;
+  string m_name;
   ALogger *m_logger;
 };
 

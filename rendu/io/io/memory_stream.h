@@ -21,7 +21,7 @@ public:
 
   MemoryStream(int capacity);
 
-  MemoryStream(std::span<std::byte> buffer, size_t index, size_t count, bool writable = true, bool publiclyVisible = false);
+  MemoryStream(std::span<byte> buffer, int index, int count, bool writable = true, bool publiclyVisible = false);
 
   ~MemoryStream();
 
@@ -30,8 +30,8 @@ public:
     if (this != &other) {
       _buffer = std::move(other._buffer);
       _origin = other._origin;
-      _position = other._position;
-      _length = other._length;
+      SetPosition(other.GetPosition());
+      SetLength(other.GetLength());
       _capacity = other._capacity;
       _expandable = other._expandable;
       _writable = other._writable;
@@ -39,8 +39,8 @@ public:
       _isOpen = other._isOpen;
 
       // 将other置于有效的空状态
-      other._position = 0;
-      other._length = 0;
+      other.SetPosition(0);
+      other.SetLength(0);
       other._capacity = 0;
       other._isOpen = false;
     }
@@ -53,42 +53,36 @@ public:
   bool CanWrite() const override;
   bool CanSeek() const override;
 
-  size_t GetCapacity() const { return _capacity; };
+  int GetCapacity() const { return _capacity; };
 
-  size_t GetLength() const override;
-  void SetLength(size_t length) override;
+  void SetLength(int length) override;
+  void SetPosition(int position) override;
 
-  size_t GetPosition() const override;
-  void SetPosition(size_t position) override;
+  void Seek(int offset, SeekOrigin origin) override;
 
-  void Seek(size_t offset, SeekOrigin origin) override;
+  void Write(const std::vector<byte> &buffer, int offset, int count) override;
+  void Write(const std::span<byte> buffer) override;
 
-  void Write(const std::vector<std::byte> &buffer, size_t offset, size_t count) override;
-  void Write(const std::span<std::byte> buffer) override;
+  int Read(std::vector<byte> &buffer, int offset, int count) override;
+  int Read(std::span<byte> buffer) override;
 
-  size_t Read(std::vector<std::byte> &buffer, size_t offset, size_t count) override;
-  size_t Read(std::span<std::byte> buffer) override;
+  bool IsEndOfStream() const;
 
-  void WriteByte(std::byte b) override;
-  int ReadByte() override;
+  void CopyTo(Stream &destination, int buff_size) override;
 
-  bool IsEndOfStream() const override;
+  //  Task<void> WriteAsync(std::span<byte> buffer, int offset, int count) override;
+  //  Task<int> ReadAsync(std::span<byte> &buffer, int offset, int count) override;
 
-  void CopyTo(Stream &destination, size_t buff_size) override;
-
-//  Task<void> WriteAsync(std::span<std::byte> buffer, size_t offset, size_t count) override;
-//  Task<size_t> ReadAsync(std::span<std::byte> &buffer, size_t offset, size_t count) override;
+  std::vector<byte> &GetBuffer();
+  bool TryGetBuffer(std::vector<byte> *&buffer);
 
 private:
-  std::vector<std::byte> GetBufferData() const;
-  bool CheckBufferSizeAndAutoGrowth(size_t required_capacity);
+  bool EnsureCapacity(int required_capacity);
 
 private:
-  std::vector<std::byte> _buffer;
-  size_t _origin;
-  size_t _position;
-  size_t _length;
-  size_t _capacity;
+  std::vector<byte> _buffer;
+  int _origin;
+  int _capacity;
   bool _expandable;
   bool _writable;
   bool _exposable;

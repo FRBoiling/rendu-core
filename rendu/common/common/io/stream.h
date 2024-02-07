@@ -12,7 +12,7 @@ COMMON_NAMESPACE_BEGIN
     class Stream {
 
     public:
-      void Write(std::byte *buffer, int offset, int count);
+      void Write(byte *buffer, int offset, int count);
 
     };
 

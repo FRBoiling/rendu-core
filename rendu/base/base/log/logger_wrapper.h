@@ -13,7 +13,7 @@ RD_NAMESPACE_BEGIN
 class LoggerWrapper {
 
 public:
-  static void Init(STRING log_flag = "default", LogLevel log_level = LogLevel::LL_TRACE,LogPosition log_position = LogPosition::LP_CONSOLE,LogMode log_mode = LogMode::LM_SYNC);
+  static void Init(string log_flag = "default", LogLevel log_level = LogLevel::LL_TRACE,LogPosition log_position = LogPosition::LP_CONSOLE,LogMode log_mode = LogMode::LM_SYNC);
   static void SetLogger(ALogger *logger);
 
   static ALogger *GetLogger();

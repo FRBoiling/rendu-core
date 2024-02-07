@@ -11,13 +11,13 @@
 
 RD_NAMESPACE_BEGIN
 
-ALIAS(std::byte, BYTE);
+using byte = unsigned char;
 
 class BitConverter {
 public:
-  static INT32 ToInt32(const BYTE *data, INT32 start_index);
+  static int ToInt(const byte *data, int start_index);
 
-  static UINT16 ToUInt16(const BYTE *data, INT32 start_index);
+  static ushort ToUShort(const byte *data, ushort start_index);
 };
 
 RD_NAMESPACE_END

@@ -55,19 +55,19 @@ void DateTime::ConvertToKind(DateTime::Kind kind) {
 }
 
 
-DateTime::DateTime(INT32 year, UINT32 month, UINT32 day, DateTime::Kind kind)
+DateTime::DateTime(int year, uint month, uint day, DateTime::Kind kind)
     : m_kind(kind),
       m_time_point(date::sys_days(date::year{year} / date::month{month} / date::day{day})) {
   ConvertToKind(m_kind);
 }
 
-DateTime::DateTime(INT32 year, UINT32 month, UINT32 day, INT32 hour, INT32 minute, INT32 second, INT32 millisecond, DateTime::Kind kind)
+DateTime::DateTime(int year, uint month, uint day, int hour, int minute, int second, int millisecond, DateTime::Kind kind)
     : m_kind(kind),
       m_time_point(date::sys_days(date::year{year} / date::month{month} / date::day{day}) + std::chrono::hours(hour) + std::chrono::minutes(minute) + std::chrono::seconds(second) + std::chrono::milliseconds(millisecond)) {
   ConvertToKind(m_kind);
 }
 
-DateTime::DateTime(const INT64 ticks, DateTime::Kind kind)
+DateTime::DateTime(const Long ticks, DateTime::Kind kind)
     : m_kind(kind),
       m_time_point(std::chrono::milliseconds(ticks)) {
   ConvertToKind(m_kind);
@@ -100,16 +100,16 @@ DateTime::SysTimePoint DateTime::GetSysTimePoint() const {
 //  return base_date_time + "." + oss.str(); //拼接字符串
 //}
 
-STRING DateTime::ToString(const std::string &format /*= "%F %T %3f"*/) const {
+string DateTime::ToString(const std::string &format /*= "%F %T %3f"*/) const {
   return date::format(format, date::floor<std::chrono::milliseconds>(m_time_point));
 }
 
 DateTime DateTime::operator-(const TimeSpan &t) const {
-  auto duration = std::chrono::duration<UINT64, std::milli>(t.TotalMilliseconds());
+  auto duration = std::chrono::duration<uLong, std::milli>(t.TotalMilliseconds());
   return DateTime(m_time_point - duration);
 }
 DateTime DateTime::operator+(const TimeSpan &t) const {
-  auto duration = std::chrono::duration<long long, std::milli>(t.TotalMilliseconds());
+  auto duration = std::chrono::duration<Long, std::milli>(t.TotalMilliseconds());
   return DateTime(m_time_point + duration);
 }
 
@@ -117,24 +117,24 @@ bool DateTime::IsLeapYear() const {
   return date::year_month_day{date::floor<date::days>(m_time_point)}.year().is_leap();
 }
 
-INT32 DateTime::DayOfYear() const {
-  return static_cast<INT32>(date::floor<date::days>(m_time_point).time_since_epoch().count() -
+int DateTime::DayOfYear() const {
+  return static_cast<int>(date::floor<date::days>(m_time_point).time_since_epoch().count() -
                             date::sys_days(date::year{Year()} / 1 / 1).time_since_epoch().count() + 1);
 }
-INT32 DateTime::DayOfWeek() const {
-  return (INT32) (date::weekday{date::year_month_day{date::floor<date::days>(m_time_point)}}.iso_encoding());
+int DateTime::DayOfWeek() const {
+  return (int) (date::weekday{date::year_month_day{date::floor<date::days>(m_time_point)}}.iso_encoding());
 }
 
-INT32 DateTime::Year() const {
-  return (INT32) (date::year_month_day{date::floor<date::days>(m_time_point)}.year());
+int DateTime::Year() const {
+  return (int) (date::year_month_day{date::floor<date::days>(m_time_point)}.year());
 }
 
-UINT32 DateTime::Month() const {
-  return (UINT32) (date::year_month_day{date::floor<date::days>(m_time_point)}.month());
+uint DateTime::Month() const {
+  return (uint) (date::year_month_day{date::floor<date::days>(m_time_point)}.month());
 }
 
-UINT32 DateTime::Day() const {
-  return (UINT32) (date::year_month_day{date::floor<date::days>(m_time_point)}.day());
+uint DateTime::Day() const {
+  return (uint) (date::year_month_day{date::floor<date::days>(m_time_point)}.day());
 }
 
 // MilliSecondsInLastDay函数计算自午夜以来的毫秒数
@@ -142,49 +142,49 @@ UINT32 DateTime::Day() const {
 // 8639999毫秒是23小时59分钟59秒
 // 23小时59分钟59秒是24小时中的1秒
 // 因此，返回值的范围是从0到8639999，表示自午夜以来的毫秒数
-INT32 DateTime::MilliSecondsInLastDay() const {
+int DateTime::MilliSecondsInLastDay() const {
   const auto seconds_since_epoch = std::chrono::duration_cast<std::chrono::milliseconds>(m_time_point.time_since_epoch()).count();
-  return static_cast<INT32>(seconds_since_epoch % MillisPerDay);
+  return static_cast<int>(seconds_since_epoch % MillisPerDay);
 }
 
-INT32 DateTime::Hour() const {
+int DateTime::Hour() const {
   return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).hours().count();
 }
 
-INT32 DateTime::Minute() const {
+int DateTime::Minute() const {
   return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).minutes().count();
 }
 
-INT32 DateTime::Second() const {
+int DateTime::Second() const {
   return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).seconds().count();
 }
 
 // MilliSecondsInDayParts函数计算表示小时、分钟和秒的毫秒数总和，这将用于计算剩余毫秒数
-INT64 DateTime::MilliSecondsInDayParts() const {
+Long DateTime::MilliSecondsInDayParts() const {
   auto hms_ms = std::chrono::milliseconds(MilliSecondsInLastDay());
   date::hh_mm_ss hms(hms_ms);
-  return INT64(hms.hours().count()) * MillisPerHour + INT64(hms.minutes().count()) * MillisPerMinute + INT64(hms.seconds().count()) * MillisPerSecond;
+  return Long(hms.hours().count()) * MillisPerHour + Long(hms.minutes().count()) * MillisPerMinute + Long(hms.seconds().count()) * MillisPerSecond;
 }
 
-INT64 DateTime::MilliSecond() const {
+Long DateTime::MilliSecond() const {
   return std::chrono::milliseconds(MilliSecondsInLastDay()).count() - MilliSecondsInDayParts();
 }
 
-DateTime DateTime::AddYears(INT32 years) const {
+DateTime DateTime::AddYears(int years) const {
   auto dt = date::floor<date::days>(m_time_point);
   auto ymd = date::year_month_day{dt} + date::years(years);
   auto time_of_day = m_time_point - dt;
   return DateTime(SysTimePoint(date::sys_days{ymd}) + time_of_day);
 }
 
-DateTime DateTime::AddMonths(INT32 months) const {
+DateTime DateTime::AddMonths(int months) const {
   auto dt = date::floor<date::days>(m_time_point);
   auto ymd = date::year_month_day{dt} + date::months(months);
   auto time_of_day = m_time_point - dt;
   return DateTime(SysTimePoint(date::sys_days{ymd}) + time_of_day);
 }
 
-DateTime DateTime::AddDays(INT32 days) const {
+DateTime DateTime::AddDays(int days) const {
   return DateTime(m_time_point + date::days{days});
 }
 

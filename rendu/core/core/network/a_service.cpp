@@ -36,11 +36,11 @@ void AService::Recycle(MemoryBuffer *&memoryBuffer) {
   m_pool.Enqueue(memoryBuffer);
 }
 
-std::tuple<uint32_t, uint32_t> AService::GetChannelConn(INT64 channelId) {
+std::tuple<uint32_t, uint32_t> AService::GetChannelConn(Long channelId) {
   throw Exception("default conn throw Exception! {}", channelId);
 }
 
-void AService::ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) {
+void AService::ChangeAddress(Long channelId, IPEndPoint ipEndPoint) {
 }
 
 CORE_NAMESPACE_END

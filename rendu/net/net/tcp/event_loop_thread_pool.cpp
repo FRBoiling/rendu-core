@@ -11,7 +11,7 @@
 //
 //NET_NAMESPACE_BEGIN
 //
-//  EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const STRING &nameArg)
+//  EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const string &nameArg)
 //    : baseLoop_(baseLoop),
 //      name_(nameArg),
 //      started_(false),

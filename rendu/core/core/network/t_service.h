@@ -20,10 +20,10 @@ enum class TcpOp {
 
 struct TArgs {
 public:
-  TArgs(TcpOp op, INT64 channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
+  TArgs(TcpOp op, Long channel_id) : Op(op), ChannelId(channel_id), SocketAsyncEventArgs(nullptr) {
   }
 
-  TArgs(INT64 channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
+  TArgs(Long channel_id, SocketAsyncEventArgs *pArgs) : Op(TcpOp::Connect), ChannelId(channel_id),
                                                          SocketAsyncEventArgs(pArgs) {
   }
 
@@ -32,7 +32,7 @@ public:
 
 public:
   TcpOp Op;
-  INT64 ChannelId;
+  Long ChannelId;
   SocketAsyncEventArgs *SocketAsyncEventArgs;
 };
 
@@ -46,11 +46,11 @@ public:
   ~TService();
 
 public:
-  void Create(INT64 id, IPEndPoint *ip_end_point) override;
+  void Create(Long id, IPEndPoint *ip_end_point) override;
 
-  void Send(INT64 channelId, MemoryBuffer *memoryBuffer) override;
+  void Send(Long channelId, MemoryBuffer *memoryBuffer) override;
 
-  void Remove(INT64 id, int error) override;
+  void Remove(Long id, int error) override;
 
   void Update() override;
 
@@ -63,12 +63,12 @@ public:
 
   bool IsDisposed() override;
 
-  std::tuple<uint32_t, uint32_t> GetChannelConn(INT64 channelId) override;
+  std::tuple<uint32_t, uint32_t> GetChannelConn(Long channelId) override;
 
-  void ChangeAddress(INT64 channelId, IPEndPoint ipEndPoint) override;
+  void ChangeAddress(Long channelId, IPEndPoint ipEndPoint) override;
 
 private:
-  TChannel *Get(INT64 id);
+  TChannel *Get(Long id);
 
   void AcceptAsync();
 
@@ -76,7 +76,7 @@ public:
   ConcurrentQueue<TArgs *> m_queue;
 
 private:
-  CDictionary<INT64, TChannel *> m_idChannels;
+  CDictionary<Long, TChannel *> m_idChannels;
 
   SocketAsyncEventArgs *m_innArgs{};
 

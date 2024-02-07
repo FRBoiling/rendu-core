@@ -75,7 +75,7 @@ NET_NAMESPACE_BEGIN
             return std::nullopt;
           }
 
-          // Check for over-long or octal notation.
+          // Check for over-Long or octal notation.
           if (digitCount > 3 || (digitCount > 1 && digits[0] == 0)) {
             return std::nullopt;
           }

@@ -18,9 +18,9 @@ class TChannel : public AChannel {
 public:
   TChannel();
 
-  TChannel(INT64 id, IPEndPoint *ipEndPoint, TService *service);
+  TChannel(Long id, IPEndPoint *ipEndPoint, TService *service);
 
-  TChannel(INT64 id, Socket *socket, TService *service);
+  TChannel(Long id, Socket *socket, TService *service);
   ~TChannel();
 
 public:
@@ -67,7 +67,7 @@ private:
 
   PacketParser *m_parser;
 
-  BYTE *m_sendCache;
+  byte *m_sendCache;
 };
 
 CORE_NAMESPACE_END

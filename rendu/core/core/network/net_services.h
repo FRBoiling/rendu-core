@@ -14,8 +14,8 @@ CORE_NAMESPACE_BEGIN
 
 class NetServices : public Singleton<NetServices> {
 public:
-  INT64 CreateAcceptChannelId();
-  INT64 CreateConnectChannelId();
+  Long CreateAcceptChannelId();
+  Long CreateConnectChannelId();
 };
 
 CORE_NAMESPACE_END

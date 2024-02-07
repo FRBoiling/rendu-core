@@ -11,7 +11,7 @@ CORE_NAMESPACE_BEGIN
 
 class IScheduler {
 public:
-  virtual void Add(INT32 fiberId) = 0;
+  virtual void Add(int fiberId) = 0;
 };
 
 CORE_NAMESPACE_END

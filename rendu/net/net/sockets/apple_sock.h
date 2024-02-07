@@ -29,7 +29,7 @@
 
 NET_NAMESPACE_BEGIN
 
-#define SOCKET std::int32_t
+#define SOCKET int
 
 NET_NAMESPACE_END
 

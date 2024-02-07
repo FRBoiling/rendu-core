@@ -23,7 +23,7 @@
 * Winsock doesn't have this POSIX type; it's used for the
 * tv_usec value of struct timeval.
 */
-typedef long suseconds_t;
+typedef Long suseconds_t;
 
 /*!
  * \brief In Winsock, the error return if socket() fails is INVALID_SOCKET;
@@ -43,7 +43,7 @@ typedef long suseconds_t;
 #include <mstcpip.h>
 
 #ifdef _MSC_VER
-typedef long long ssize_t;
+typedef Long ssize_t;
 #endif
 
 #include "define.h"
@@ -54,7 +54,7 @@ int win32_getaddrinfo(const char *node, const char *service, const struct addrin
 void win32_freeaddrinfo(struct addrinfo *res);
 const char *win32_gai_strerror(int errcode);
 SOCKET win32_socket(int domain, int type, int protocol);
-int win32_ioctl(SOCKET fd, unsigned long request, unsigned long *argp);
+int win32_ioctl(SOCKET fd, unsigned Long request, unsigned Long *argp);
 int win32_bind(SOCKET sockfd, const struct sockaddr *addr, socklen_t addrlen);
 int win32_connect(SOCKET sockfd, const struct sockaddr *addr, socklen_t addrlen);
 int win32_getsockopt(SOCKET sockfd, int level, int optname, void *optval, socklen_t *optlen);

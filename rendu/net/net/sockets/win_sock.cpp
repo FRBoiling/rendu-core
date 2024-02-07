@@ -137,8 +137,8 @@ SOCKET win32_socket(int domain, int type, int protocol) {
     return s;
 }
 
-int win32_ioctl(SOCKET fd, unsigned long request, unsigned long *argp) {
-    int ret = ioctlsocket(fd, (long)request, argp);
+int win32_ioctl(SOCKET fd, unsigned Long request, unsigned Long *argp) {
+    int ret = ioctlsocket(fd, (Long)request, argp);
     _updateErrno(ret != SOCKET_ERROR);
     return ret != SOCKET_ERROR ? ret : -1;
 }

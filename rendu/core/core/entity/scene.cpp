@@ -7,7 +7,7 @@
 
 RD_NAMESPACE_BEGIN
 
-    Scene::Scene(Fiber &fiber, long id, long instanceId, rendu::SceneType sceneType, std::string& name) {
+    Scene::Scene(Fiber &fiber, Long id, Long instanceId, rendu::SceneType sceneType, std::string& name) {
       m_id = id;
       m_name = name;
       m_instanceId = instanceId;

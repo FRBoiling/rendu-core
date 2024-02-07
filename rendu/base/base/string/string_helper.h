@@ -11,7 +11,7 @@
 
 RD_NAMESPACE_BEGIN
 
-ALIAS(std::string, STRING);
+ALIAS(std::string, string);
 
 namespace Digit {
 

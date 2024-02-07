@@ -23,8 +23,8 @@ private:
   ;
 
 private:
-  CStack<STRING> stack;
-  CDictionary<STRING, ASingleton> singletons;
+  CStack<string> stack;
+  CDictionary<string, ASingleton> singletons;
 
 public:
   static World &Instance();
@@ -59,7 +59,7 @@ public:
 
   void AddSingleton(ASingleton* singleton) {
     const std::type_info& t = typeid(singleton);
-    STRING type = t.name();
+    string type = t.name();
 //    if ("ISingletonReverseDispose" == type ) {
 //      stack.Push(type);
 //    }

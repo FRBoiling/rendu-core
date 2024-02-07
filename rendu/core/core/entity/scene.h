@@ -14,7 +14,7 @@ RD_NAMESPACE_BEGIN
 
     class Scene {
     public:
-      Scene(Fiber& fiber, long id, long instanceId, SceneType sceneType, std::string& name);
+      Scene(Fiber& fiber, Long id, Long instanceId, SceneType sceneType, std::string& name);
 
     public:
       int64_t m_id;

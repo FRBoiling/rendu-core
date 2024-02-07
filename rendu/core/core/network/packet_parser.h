@@ -26,11 +26,11 @@ private:
   CircularBuffer *m_buffer;
   AService *m_service;
 
-  INT64 m_packetSize;
+  int m_packetSize;
   ParserState m_state;
-  BYTE m_cache[8]{};
-  const INT8 InnerPacketSizeLength = 4;
-  const INT8 OuterPacketSizeLength = 2;
+  byte m_cache[8]{};
+  const int InnerPacketSizeLength = 4;
+  const int OuterPacketSizeLength = 2;
   MemoryBuffer *m_memoryBuffer;
 
 public:

@@ -12,7 +12,7 @@
 
 NET_NAMESPACE_BEGIN
 
-  void Close(const int32 sfd) {
+  void Close(const int sfd) {
     close(sfd);
   }
 
@@ -279,7 +279,7 @@ NET_NAMESPACE_BEGIN
 
   int SetNoBlocked(int fd, bool noblock) {
 #if defined(_WIN32)
-    unsigned long ul = noblock;
+    unsigned Long ul = noblock;
 #else
     int ul = noblock;
 #endif //defined(_WIN32)
@@ -427,7 +427,7 @@ NET_NAMESPACE_BEGIN
 }, []() {
   WSACleanup();
 });
-int ioctl(int fd, long cmd, u_long *ptr) {
+int ioctl(int fd, Long cmd, u_long *ptr) {
   return ioctlsocket(fd, cmd, ptr);
 }
 int close(int fd) {
@@ -436,7 +436,7 @@ int close(int fd) {
 #if (_WIN32_WINNT < _WIN32_WINNT_VISTA)
 const char *inet_ntop(int af, const void *src, char *dst, socklen_t size) {
   struct sockaddr_storage ss;
-  unsigned long s = size;
+  unsigned Long s = size;
 
   ZeroMemory(&ss, sizeof(ss));
   ss.ss_family = af;
@@ -661,7 +661,7 @@ int inet_pton(int af, const char *src, void *dst) {
 #if defined(_WIN32)
   template<typename FUN>
 void for_each_netAdapter_win32(FUN && fun) { //type: PIP_ADAPTER_INFO
-  unsigned long nSize = sizeof(IP_ADAPTER_INFO);
+  unsigned Long nSize = sizeof(IP_ADAPTER_INFO);
   PIP_ADAPTER_INFO adapterList = (PIP_ADAPTER_INFO)new char[nSize];
   int nRet = GetAdaptersInfo(adapterList, &nSize);
   if (ERROR_BUFFER_OVERFLOW == nRet) {

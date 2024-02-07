@@ -17,13 +17,13 @@ public:
     return m_address;
   }
 
-  UINT64 GetInstanceId() const{
+  uLong GetInstanceId() const{
     return m_instance_id;
   }
 
 private:
   ActorAddress m_address;
-  UINT64 m_instance_id;
+  uLong m_instance_id;
 };
 
 RD_NAMESPACE_END

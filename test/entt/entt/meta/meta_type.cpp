@@ -252,7 +252,7 @@ TEST_F(MetaType, Traits) {
     ASSERT_FALSE(entt::resolve<double>().is_integral());
     ASSERT_FALSE(entt::resolve<clazz_t>().is_integral());
 
-    ASSERT_TRUE(entt::resolve<long>().is_signed());
+    ASSERT_TRUE(entt::resolve<Long>().is_signed());
     ASSERT_FALSE(entt::resolve<unsigned int>().is_signed());
     ASSERT_FALSE(entt::resolve<clazz_t>().is_signed());
 

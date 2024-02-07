@@ -53,12 +53,12 @@ CORE_NAMESPACE_BEGIN
           try {
             auto fiber_init = new FiberInit(*fiber);
             // 根据Fiber的SceneType分发Init,必须在Fiber线程中执行
-            co_await EventSystem::Instance().Invoke<FiberInit, void>((long) sceneType, *fiber_init);
+            co_await EventSystem::Instance().Invoke<FiberInit, void>((Long) sceneType, *fiber_init);
             tcs.SetResult(true);
             co_return;
           }
           catch (std::exception &e) {
-            RD_CRITICAL("init fiber fail: {} {}", (long) sceneType, e.what());
+            RD_CRITICAL("init fiber fail: {} {}", (Long) sceneType, e.what());
           }
           co_return;
         });

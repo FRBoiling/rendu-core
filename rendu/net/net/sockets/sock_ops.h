@@ -32,7 +32,7 @@ NET_NAMESPACE_BEGIN
 
     int CreateNonblockingOrDie(sa_family_t family);
 
-    void Close(std::int32_t sfd);
+    void Close(int sfd);
 
     void ShutdownWrite(SOCKET sockfd);
 

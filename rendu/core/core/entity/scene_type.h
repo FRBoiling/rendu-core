@@ -8,7 +8,7 @@
 #include "core_define.h"
 RD_NAMESPACE_BEGIN
 
-enum SceneType: long
+enum SceneType: Long
 {
   None = 0,
   Main = 1, // 主纤程,一个进程一个, 初始化从这里开始

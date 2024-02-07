@@ -11,7 +11,6 @@
 CORE_NAMESPACE_BEGIN
 
     struct Packet {
-    public:
       static const int MinPacketSize = 2;
       static const int OpcodeIndex = 16;
       static const int KcpOpcodeIndex = 0;
@@ -20,9 +19,9 @@ CORE_NAMESPACE_BEGIN
       static const int ActorIdLength = 16;
       static const int MessageIndex = 18;
 
-      UINT16 Opcode;
-      INT64 ActorId;
-      MemoryStream MemoryStream;
+      ushort m_opcode;
+      Long m_actorId;
+      MemoryStream m_memory_stream;
     };
 
 CORE_NAMESPACE_END

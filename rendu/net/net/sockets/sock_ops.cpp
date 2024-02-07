@@ -21,7 +21,7 @@ int CreateNonblockingOrDie(sa_family_t family) {
   return sockfd;
 }
 
-void Close(const std::int32_t sfd) {
+void Close(const int sfd) {
   close(sfd);
 }
 
