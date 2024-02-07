@@ -34,15 +34,18 @@ public:
 
   virtual void Seek(size_t offset, SeekOrigin origin) = 0;
 
-  virtual void Write(std::span<std::byte> buffer, size_t offset, size_t count) = 0;
-  virtual size_t Read(std::span<std::byte> &buffer, size_t offset, size_t count) = 0;
+  virtual void Write(const std::vector<std::byte>& buffer, size_t offset, size_t count)  = 0;
+  virtual void Write(const std::span<std::byte> buffer){};
+
+  virtual size_t Read(std::vector<std::byte>& buffer, size_t offset, size_t count)  = 0;
+  virtual size_t Read(std::span<std::byte> buffer) { return 0;};
 
   virtual void WriteByte(std::byte b) = 0;
   virtual int ReadByte() = 0;
 
   virtual bool IsEndOfStream() const = 0;
 
-  virtual void CopyTo(Stream &destination) = 0;
+  virtual void CopyTo(Stream &destination,size_t buff_size) = 0;
 
   virtual Task<void> WriteAsync(std::span<std::byte> buffer, size_t offset, size_t count) = 0;
   virtual Task<size_t> ReadAsync(std::span<std::byte> &buffer, size_t offset, size_t count) = 0;

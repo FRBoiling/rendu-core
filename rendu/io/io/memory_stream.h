@@ -13,19 +13,8 @@
 
 IO_NAMESPACE_BEGIN
 
-
 class MemoryStream : public Stream,
                      public NonCopyable {
-private:
-  std::vector<std::byte> _buffer;
-  size_t _origin;
-  size_t _position;
-  size_t _length;
-  size_t _capacity;
-  bool _expandable;
-  bool _writable;
-  bool _exposable;
-  bool _isOpen;
 
 public:
   MemoryStream();
@@ -58,6 +47,7 @@ public:
     return *this;
   }
 
+
 public:
   bool CanRead() const override;
   bool CanWrite() const override;
@@ -73,18 +63,36 @@ public:
 
   void Seek(size_t offset, SeekOrigin origin) override;
 
-  void Write(std::span<std::byte> buffer, size_t offset, size_t count) override;
-  size_t Read(std::span<std::byte> &buffer, size_t offset, size_t count) override;
+  void Write(const std::vector<std::byte> &buffer, size_t offset, size_t count) override;
+  void Write(const std::span<std::byte> buffer) override;
+
+  size_t Read(std::vector<std::byte> &buffer, size_t offset, size_t count) override;
+  size_t Read(std::span<std::byte> buffer) override;
 
   void WriteByte(std::byte b) override;
   int ReadByte() override;
 
   bool IsEndOfStream() const override;
 
-  void CopyTo(Stream &destination) override;
+  void CopyTo(Stream &destination, size_t buff_size) override;
 
-  Task<void> WriteAsync(std::span<std::byte> buffer, size_t offset, size_t count) override;
-  Task<size_t> ReadAsync(std::span<std::byte> &buffer, size_t offset, size_t count) override;
+//  Task<void> WriteAsync(std::span<std::byte> buffer, size_t offset, size_t count) override;
+//  Task<size_t> ReadAsync(std::span<std::byte> &buffer, size_t offset, size_t count) override;
+
+private:
+  std::vector<std::byte> GetBufferData() const;
+  bool CheckBufferSizeAndAutoGrowth(size_t required_capacity);
+
+private:
+  std::vector<std::byte> _buffer;
+  size_t _origin;
+  size_t _position;
+  size_t _length;
+  size_t _capacity;
+  bool _expandable;
+  bool _writable;
+  bool _exposable;
+  bool _isOpen;
 };
 
 
