@@ -65,6 +65,9 @@ public:
     return std::this_thread::get_id();
   }
 
+  static int GetProcessorCount(){
+    return std::thread::hardware_concurrency();
+  }
 private:
   std::unique_ptr<std::thread> thread_;
 };
