@@ -64,7 +64,7 @@ public:
 //      stack.Push(type);
 //    }
 //    singletons[type] = singleton;
-    singleton->Register();
+//    singleton->Register();
   }
 };
 

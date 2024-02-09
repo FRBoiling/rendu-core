@@ -60,9 +60,11 @@ public:
 
   void Seek(int offset, SeekOrigin origin) override;
 
+  void Write(const byte *buffer, int offset, int count) override;
   void Write(const std::vector<byte> &buffer, int offset, int count) override;
   void Write(const std::span<byte> buffer) override;
 
+  int Read(byte *buffer, int offset, int count) override;
   int Read(std::vector<byte> &buffer, int offset, int count) override;
   int Read(std::span<byte> buffer) override;
 

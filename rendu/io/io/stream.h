@@ -25,9 +25,11 @@ public:
   virtual bool CanWrite() const = 0;
   virtual bool CanSeek() const = 0;
 
+  virtual void Write(const byte *buffer, int offset, int count) = 0;
   virtual void Write(const std::vector<byte> &buffer, int offset, int count) = 0;
   virtual void Write(const std::span<byte> buffer);
 
+  virtual int Read(byte *buffer, int offset, int count) = 0;
   virtual int Read(std::vector<byte> &buffer, int offset, int count) = 0;
   virtual int Read(std::span<byte> buffer);
 
@@ -55,6 +57,9 @@ public:
   virtual void SetTimeout(int timeout){};
 
   virtual void Close(){};
+
+protected:
+  static void ValidateBufferArguments(const byte* buffer, int offset, int count);
 
 private:
   const int DefaultCopyBufferSize = 81920;

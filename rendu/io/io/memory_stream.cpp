@@ -86,102 +86,98 @@ void MemoryStream::Seek(int offset, SeekOrigin origin) {
   m_position = newPos;
 }
 
-bool MemoryStream::EnsureCapacity(int required_capacity)
-{
+bool MemoryStream::EnsureCapacity(int required_capacity) {
   if (required_capacity < 0)
     throw std::runtime_error("EnsureCapacity value <0 .");
   if (required_capacity <= _capacity)
     return false;
   int num = std::max(required_capacity, 256);
-  if (num < this->_capacity * 2)
-    num = this->_capacity * 2;
-  if ((uLong)(this->_capacity * 2) > 2147483591U)
+  if (num < _capacity * 2)
+    num = _capacity * 2;
+  if ((uLong) (_capacity * 2) > 2147483591U)
     num = std::max(required_capacity, 2147483591);
-  this->_capacity = num;
+  _capacity = num;
   return true;
 }
 
-void MemoryStream::Write(const std::vector<byte> &buffer, int offset, int count) {
+void MemoryStream::Write(const byte *buffer, int offset, int count){
   if (!CanWrite()) {
     throw std::runtime_error("Stream cannot write.");
   }
 
-  if (offset + count > buffer.size()) {
+  Stream::ValidateBufferArguments(buffer, offset, count);
+
+  if (offset + count < 0) {
     throw std::out_of_range("Write operation exceeds buffer bounds.");
   }
 
   int requiredCapacity = m_position + count;
   if (requiredCapacity > _capacity) {
-    if (!CheckBufferSizeAndAutoGrowth(requiredCapacity)) {
+    if (!EnsureCapacity(requiredCapacity)) {
       throw std::runtime_error("Stream is not expandable and data exceeds capacity.");
     }
   }
-  _buffer.insert(_buffer.begin() + m_position, buffer.begin() + offset, buffer.begin() + offset + count);
+  _buffer.insert(_buffer.begin() + m_position, buffer + offset, buffer + offset + count);
   m_position += count;
   if (m_position > m_length)
     m_length = m_position;
 }
 
+
+
+void MemoryStream::Write(const std::vector<byte> &buffer, int offset, int count) {
+  if (buffer.empty()) {
+    throw std::runtime_error("Buffer cannot be empty.");
+  }
+
+  Write(buffer.data(), offset, count);
+}
 void MemoryStream::Write(const std::span<byte> buffer) {
-  if (!CanWrite()) {
-    throw std::runtime_error("Stream cannot write.");
-  }
-  int length = buffer.size();
-  int requiredCapacity = m_position + length;
-  if (requiredCapacity > _capacity) {
-    if (!CheckBufferSizeAndAutoGrowth(requiredCapacity)) {
-      throw std::runtime_error("Stream is not expandable and data exceeds capacity.");
-    }
+  if (buffer.empty()) {
+    throw std::runtime_error("Buffer cannot be empty.");
   }
 
-  if (length > m_length)
-  {
-    bool flag = m_position > m_length;
-    if (length > _capacity && this.EnsureCapacity(num))
-      flag = false;
-    if (flag)
-      Array.Clear((Array) this._buffer, this._length, num - this._length);
-    this._length = num;
-  }
-  buffer.CopyTo(new Span<byte>(this._buffer, this._position, buffer.Length));
-  this._position = num;
-
-  _buffer.insert(_buffer.begin() + m_position, buffer.begin(), buffer.end());
-  m_position += count;
-  if (m_position > m_length)
-    m_length = m_position;
+  Write(buffer.data(), 0, buffer.size());
 }
-
-int MemoryStream::Read(std::vector<byte> &buffer, int offset, int count) {
+int MemoryStream::Read(byte *buffer, int offset, int count) {
   if (!CanRead()) {
     throw std::runtime_error("Stream is not open.");
   }
-  if (count > buffer.size() - offset)
-    throw std::runtime_error("Offset and count exceed buffer size.");
+
+  if (offset + count < 0)
+    throw std::out_of_range("Read operation exceeds buffer size.");
+
   int requiredCapacity = offset + count;
-  if (requiredCapacity > buffer.size()) {
-    throw std::runtime_error("Buffer is not expandable and data exceeds capacity.");
+  if (requiredCapacity > _capacity) {
+    throw std::runtime_error("Stream is not expandable and data exceeds capacity.");
   }
 
-  int read_count = std::min(count, m_length - m_position);
-  std::copy(_buffer.begin() + m_position, _buffer.begin() + m_position + read_count, buffer.begin() + offset);
+  int read_count = std::min(count, (int)(m_length - m_position));
+  std::copy(_buffer.begin() + m_position, _buffer.begin() + m_position + read_count, buffer + offset);
   m_position += read_count;
 
   return read_count;
 }
 
-int MemoryStream::Read(std::span<byte> buffer) {
-  if (!CanRead()) {
-    throw std::runtime_error("Stream is not open.");
+int MemoryStream::Read(std::vector<byte> &buffer, int offset, int count) {
+  if (buffer.empty()) {
+    throw std::runtime_error("Buffer cannot be empty.");
   }
-  int length = std::min(buffer.size(), m_length - m_position);
-  if (length <= 0) {
-    return 0;
-  }
-  std::copy_n(_buffer.begin() + m_position, length, buffer.begin());
-  m_position += length;
-  return length;
+
+  return Read(buffer.data(), offset, count);
 }
+
+
+
+int MemoryStream::Read(std::span<byte> buffer) {
+  if (buffer.empty()) {
+    throw std::runtime_error("Buffer cannot be empty.");
+  }
+
+  return Read(buffer.data(), 0, buffer.size());
+}
+
+
 
 std::vector<byte> &MemoryStream::GetBuffer() {
   if (!_exposable) {

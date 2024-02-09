@@ -43,11 +43,25 @@ int Stream::GetCopyBufferSize() {
     } else {
       Long remaining = length - position;
       if (remaining > 0) {
-        bufferSize = std::min((Long)bufferSize, remaining);
+        bufferSize = std::min((Long) bufferSize, remaining);
       }
     }
   }
   return bufferSize;
+}
+
+void Stream::ValidateBufferArguments(const byte *buffer, int offset, int count) {
+  if (buffer == nullptr) {
+    ThrowHelper::ThrowArgumentNullException(ExceptionArgument::buffer);
+  }
+
+  if (offset < 0) {
+    ThrowHelper::ThrowArgumentOutOfRangeException(ExceptionArgument::offset, ExceptionResource::ArgumentOutOfRange_NeedNonNegNum);
+  }
+
+  if ((uint) count > sizeof(buffer) - offset) {
+    ThrowHelper::ThrowArgumentOutOfRangeException(ExceptionArgument::count, ExceptionResource::Argument_InvalidOffLen);
+  }
 }
 
 IO_NAMESPACE_END
