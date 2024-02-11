@@ -43,7 +43,7 @@ CORE_NAMESPACE_BEGIN
     private:
       int idGenerator = 10000000; // 10000000以下为保留的用于StartSceneConfig的fiber id, 1个区配置1000个纤程，可以配置10000个区
       MainThreadScheduler *m_mainThreadScheduler;
-      ConcurrentMap<int, Fiber> m_fibers;
+      ConcurrentMap<int, Fiber*> m_fibers;
       IScheduler *m_schedulers[3];
     };
 

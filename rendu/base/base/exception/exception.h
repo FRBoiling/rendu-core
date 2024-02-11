@@ -12,7 +12,8 @@
 RD_NAMESPACE_BEGIN
 
 class Exception : public std::exception {
- public:
+public:
+  Exception() = default;
   template<typename... Args>
   Exception(string_view_t fmt, Args &&...args) {
   }
@@ -29,7 +30,7 @@ class Exception : public std::exception {
     return stack_.c_str();
   }
 
- private:
+private:
   string message_;
   string stack_;
 };

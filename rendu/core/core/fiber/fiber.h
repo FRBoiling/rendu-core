@@ -11,10 +11,10 @@
 #include "entity_system.h"
 #include "mailboxes.h"
 #include "actor/actor_address.h"
-
+#include "thread_synchronization_context.h"
 #include <queue>
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
 
     class Fiber {
@@ -58,6 +58,6 @@ RD_NAMESPACE_BEGIN
 
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_FIBER_H

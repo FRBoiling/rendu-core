@@ -8,7 +8,7 @@
 #include "core_define.h"
 #include "scene_type.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class Fiber;
 
@@ -27,6 +27,6 @@ RD_NAMESPACE_BEGIN
       bool m_isRegister;
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_SCENE_H

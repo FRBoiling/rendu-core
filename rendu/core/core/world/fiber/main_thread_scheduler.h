@@ -7,6 +7,7 @@
 
 #include "fiber_fwd.h"
 #include "i_scheduler.h"
+#include "thread_synchronization_context.h"
 
 CORE_NAMESPACE_BEGIN
 

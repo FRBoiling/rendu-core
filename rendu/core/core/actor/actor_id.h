@@ -8,7 +8,7 @@
 #include "actor_address.h"
 #include "core_define.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
 class ActorId {
 
@@ -26,6 +26,6 @@ private:
   uLong m_instance_id;
 };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif//RENDU_ACTOR_ID_H

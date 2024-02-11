@@ -18,28 +18,34 @@ private:
   mutable std::shared_mutex _mutex;
 
 public:
+public:
   std::optional<Value> Get(const Key& key) const {
     std::shared_lock lock(_mutex);
     if (const auto iter = _map.find(key); iter != _map.end()) {
       return iter->second;
     }
-    return {};
+    return std::nullopt;
   }
 
-  bool TryGetValue(const Key& key,Value*& value) const {
+  bool TryGetValue(const Key& key, Value& value) const {
     std::shared_lock lock(_mutex);
-    if (const auto iter = _map.find(key); iter != _map.end()) {
+    if (auto iter = _map.find(key); iter != _map.end()) {
       value = iter->second;
       return true;
     }
     return false;
   }
 
-
-  bool TryAdd(Key& key,const Value& value){
+  bool TryAdd(const Key& key, const Value& value){
     std::unique_lock lock(_mutex);
+    if (_map.count(key) > 0) {
+      // If the key already exists, we do not add anything and return false
+      return false;
+    }
     _map[key] = value;
+    return true;
   }
+
 
   void Remove(Key& key) {
     std::unique_lock lock(_mutex);

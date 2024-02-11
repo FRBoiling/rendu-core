@@ -84,6 +84,17 @@ namespace detail {
       m_value.template emplace<T>(std::forward<VALUE>(value));
     }
 
+    void SetException(std::exception_ptr exception) {
+      m_value.template emplace<std::exception_ptr>(std::current_exception());
+    }
+
+    template<typename VALUE, typename = std::enable_if_t<std::is_convertible_v<VALUE &&, T>>>
+    void SetValue(VALUE &&value) noexcept(std::is_nothrow_constructible_v<T, VALUE &&>)
+      requires std::is_convertible_v<VALUE &&, T>
+    {
+      m_value.template emplace<T>(std::forward<VALUE>(value));
+    }
+
     T &GetResult() & {
       if (std::holds_alternative<std::exception_ptr>(m_value))
         std::rethrow_exception(std::get<std::exception_ptr>(m_value));
@@ -121,6 +132,10 @@ namespace detail {
       if (m_exception) {
         std::rethrow_exception(m_exception);
       }
+    }
+
+    void SetException(std::exception_ptr exception){
+        m_exception = exception;
     }
 
   private:
@@ -250,7 +265,12 @@ namespace detail {
     auto AsAwaitable() {
       return Awaitable(std::exchange(m_coroutine, nullptr));
     }
+
+    promise_type GetPromise(){
+      return m_coroutine.promise();
+    }
   };
+
 
 
 }// namespace detail
@@ -283,6 +303,8 @@ public:
   static auto Delay(std::chrono::duration<_Rep, _Period> &&duration) noexcept {
     co_return ;
   }
+
+
 
 };
 

@@ -5,8 +5,7 @@
 #ifndef RENDU_THREAD_H
 #define RENDU_THREAD_H
 
-#include "thread.h"
-#include "thread_synchronization_context.h"
 #include "synchronization_context.h"
+#include "thread.h"
 
 #endif //RENDU_THREAD_H

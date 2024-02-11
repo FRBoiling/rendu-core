@@ -6,7 +6,7 @@
 #define RENDU_SCENE_TYPE_H
 
 #include "core_define.h"
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
 enum SceneType: Long
 {
@@ -41,6 +41,6 @@ enum SceneType: Long
   All = 0x7FFFFFFF
 };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_SCENE_TYPE_H

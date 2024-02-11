@@ -10,7 +10,7 @@
 #include "fwd/core_fwd.h"
 #include "options.pb.h"
 
-namespace rendu {
+CORE_NAMESPACE_BEGIN
 
     class ConsoleArgumentParserSystem
         : public Singleton<ConsoleArgumentParserSystem>,
@@ -28,6 +28,6 @@ namespace rendu {
       proto::core::Options *m_options;
     };
 
-}// namespace rendu
+CORE_NAMESPACE_END
 
 #endif //RENDU_CONSOLE_ARGUMENT_PARSER_SYSTEM_H

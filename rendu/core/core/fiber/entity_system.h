@@ -7,7 +7,7 @@
 
 #include "core_define.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class EntitySystem {
 
@@ -17,6 +17,6 @@ RD_NAMESPACE_BEGIN
       void LateUpdate();
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_ENTITY_SYSTEM_H

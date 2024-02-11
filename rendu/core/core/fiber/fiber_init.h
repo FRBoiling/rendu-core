@@ -8,7 +8,7 @@
 #include "core_define.h"
 #include "fiber.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     class FiberInit {
     public:
@@ -17,6 +17,6 @@ RD_NAMESPACE_BEGIN
       Fiber *m_fiber;
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 
 #endif //RENDU_FIBER_INIT_H

@@ -9,6 +9,7 @@
 #include "net/net.hpp"
 #include "task/task.hpp"
 #include "io/io.hpp"
+#include "ecs/ecs.hpp"
 #include "serialize/serialize.hpp"
 
 #define CORE_NAMESPACE_BEGIN \
@@ -23,6 +24,7 @@ using namespace rendu::log;
 using namespace rendu::task;
 using namespace rendu::io;
 using namespace rendu::net;
+using namespace rendu::ecs;
 using namespace rendu::serialize;
 
 #endif//RENDU_CORE_DEFINE_H

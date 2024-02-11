@@ -6,11 +6,11 @@
 #include "entity/scene.h"
 #include "task.hpp"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     Fiber::Fiber() = default;
 
-    Fiber::Fiber(int id, int zone, rendu::SceneType sceneType, std::string &name)
+    Fiber::Fiber(int id, int zone, SceneType sceneType, std::string &name)
         : m_id(id), m_zone(zone), m_name(name) {
       m_root = new Scene(*this, m_id, 1, sceneType, m_name);
     }
@@ -62,4 +62,4 @@ RD_NAMESPACE_BEGIN
     }
 
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

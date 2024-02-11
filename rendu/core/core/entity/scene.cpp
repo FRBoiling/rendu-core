@@ -5,9 +5,9 @@
 #include "scene.h"
 #include "fiber/fiber.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
-    Scene::Scene(Fiber &fiber, Long id, Long instanceId, rendu::SceneType sceneType, std::string& name) {
+    Scene::Scene(Fiber &fiber, Long id, Long instanceId, SceneType sceneType, std::string& name) {
       m_id = id;
       m_name = name;
       m_instanceId = instanceId;
@@ -18,4 +18,4 @@ RD_NAMESPACE_BEGIN
       m_isRegister = true;
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END

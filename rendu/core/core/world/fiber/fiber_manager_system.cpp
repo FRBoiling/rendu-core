@@ -7,6 +7,8 @@
 #include "fmt/core.h"
 #include "thread_pool_scheduler.h"
 #include "thread_scheduler.h"
+#include "world/event/event_system.h"
+#include "thread_synchronization_context.h"
 
 CORE_NAMESPACE_BEGIN
 
@@ -40,20 +42,20 @@ CORE_NAMESPACE_BEGIN
                                          std::string &name) {
 
       try {
-        auto *fiber = new Fiber(fiberId, zone, sceneType, name);
+        auto fiber = new Fiber(fiberId, zone, sceneType, name);
 
-        if (!m_fibers.TryAdd(fiberId, *fiber)) {
+        if (!m_fibers.TryAdd(fiberId, fiber)) {
           throw EntityException("same fiber already existed, if you remove, please await Remove Then Create fiber! {}",
                                 fiberId);
         }
         m_schedulers[(int) schedulerType]->Add(fiberId);
 
         TaskCompletionSource<bool> tcs;
-        fiber->GetThreadSynchronizationContext().Post([sceneType, fiber, tcs]() -> Task<> {
+        fiber->GetThreadSynchronizationContext()->Post([&fiber,&tcs,sceneType]() -> Task<void> {
           try {
             auto fiber_init = new FiberInit(*fiber);
             // 根据Fiber的SceneType分发Init,必须在Fiber线程中执行
-            co_await EventSystem::Instance().Invoke<FiberInit, void>((Long) sceneType, *fiber_init);
+            co_await EventSystem::GetInstance().Invoke<FiberInit, void>((Long) sceneType, *fiber_init);
             tcs.SetResult(true);
             co_return;
           }

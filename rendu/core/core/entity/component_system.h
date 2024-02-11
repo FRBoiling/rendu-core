@@ -7,7 +7,7 @@
 
 #include "core_define.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
     template<typename Component>
     class ComponentSystem {
@@ -37,5 +37,5 @@ RD_NAMESPACE_BEGIN
       virtual void LateUpdate() {};
     };
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
 #endif //RENDU_COMPONENT_SYSTEM_H

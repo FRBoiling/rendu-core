@@ -1,18 +1,16 @@
-/*
-* Created by boil on 2024/1/28.
-*/
+#ifndef RENDU_CORE_THREAD_SYNCHRONIZATION_CONTEXT_H
+#define RENDU_CORE_THREAD_SYNCHRONIZATION_CONTEXT_H
 
-#ifndef RENDU_THREAD_THREAD_SYNCHRONIZATION_CONTEXT_H
-#define RENDU_THREAD_THREAD_SYNCHRONIZATION_CONTEXT_H
-
-#include "thread_define.h"
+#include "core_define.h"
 #include <future>
-#include "synchronization_context.h"
 
-THREAD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
 class ThreadSynchronizationContext: public SynchronizationContext{
+
 public:
+  using Action = std::function<Task<void>()>;
+
   ThreadSynchronizationContext() : stop_requested(false), THREAD_operations(0), th(&ThreadSynchronizationContext::Update, this) {}
 
   ~ThreadSynchronizationContext() {
@@ -24,10 +22,9 @@ public:
     th.join();
   }
 
-  template<typename Task>
-  void Post(Task task) {
+  void Post(Action action) {
     std::unique_lock<std::mutex> locker(mtx);
-    tasks.push(task);
+    tasks.push(action);
     cv.notify_all();
   }
 
@@ -57,6 +54,7 @@ public:
     }
   }
 
+public:
   void Update() {
     std::unique_lock<std::mutex> locker(mtx);
     cv.wait(locker, [&]() {
@@ -65,13 +63,14 @@ public:
     if (THREAD_operations == 0 && stop_requested) {
       return;
     }
-    std::packaged_task<void()> task = std::move(tasks.front());
+    auto task = std::move(tasks.front());
     tasks.pop();
     locker.unlock();
     task();
   }
 
-  std::queue<std::packaged_task<void()>> tasks;
+public:
+  std::queue<Action> tasks;
   std::mutex mtx;
   std::condition_variable cv;
   std::thread th;
@@ -79,6 +78,6 @@ public:
   int THREAD_operations;
 };
 
-THREAD_NAMESPACE_END
+CORE_NAMESPACE_END
 
-#endif//RENDU_THREAD_THREAD_SYNCHRONIZATION_CONTEXT_H
+#endif//RENDU_CORE_THREAD_SYNCHRONIZATION_CONTEXT_H

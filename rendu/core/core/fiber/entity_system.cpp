@@ -4,7 +4,7 @@
 
 #include "entity_system.h"
 
-RD_NAMESPACE_BEGIN
+CORE_NAMESPACE_BEGIN
 
 void EntitySystem::Update() {
 
@@ -14,4 +14,4 @@ void EntitySystem::Update() {
 
     }
 
-RD_NAMESPACE_END
+CORE_NAMESPACE_END
