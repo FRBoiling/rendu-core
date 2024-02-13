@@ -66,7 +66,7 @@ public:
     auto task = std::move(tasks.front());
     tasks.pop();
     locker.unlock();
-    task();
+    auto result = task();
   }
 
 public:

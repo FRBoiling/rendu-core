@@ -12,6 +12,8 @@
 RD_NAMESPACE_BEGIN
 
 using byte = unsigned char;
+#define BYTE_MAX UCHAR_MAX
+
 
 class BitConverter {
 public:

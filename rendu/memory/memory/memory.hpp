@@ -6,5 +6,6 @@
 #define RENDU_MEMORY_H
 
 #include "memory.h"
+#include "memory_extensions.h"
 
 #endif//RENDU_MEMORY_H
