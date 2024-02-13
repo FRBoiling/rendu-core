@@ -8,6 +8,7 @@
 #include "number/number_helper.h"
 #include "string_define.h"
 #include "string_format.h"
+#include <optional>
 
 RD_NAMESPACE_BEGIN
 

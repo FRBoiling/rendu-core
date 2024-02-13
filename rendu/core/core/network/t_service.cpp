@@ -13,8 +13,8 @@ CORE_NAMESPACE_BEGIN
 
     TService::TService(IPEndPoint &ipEndPoint, ServiceType serviceType) : m_innArgs(new SocketAsyncEventArgs()){
       m_acceptor = new Socket(ipEndPoint.GetAddressFamily(), SocketType::Stream, ProtocolType::Tcp);
-      // 容易出问题，先注释掉，按需开启
-      //m_acceptor.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+//      // 容易出问题，先注释掉，按需开启
+//      m_acceptor->SetSocketOption(SocketOptionLevel::Socket, SocketOptionName::ReuseAddress, true);
       m_innArgs->Completed += [this](auto &&PH1, auto &&PH2) {
         OnComplete(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
       };
@@ -173,7 +173,7 @@ CORE_NAMESPACE_BEGIN
         m_idChannels.Add(channel->GetId(), channel);
         Long channelId = channel->GetId();
 
-        OnAcceptCallback(channelId, channel->GetRemoteAddress());
+        OnAcceptCallback(channelId, &channel->GetRemoteAddress());
       }
       catch (Exception &ex) {
         RD_CRITICAL(ex.what());
@@ -198,7 +198,6 @@ CORE_NAMESPACE_BEGIN
     }
 
     void TService::Dispose() {
-      AService::Dispose();
     }
 
     bool TService::IsDisposed() {
@@ -209,9 +208,10 @@ CORE_NAMESPACE_BEGIN
       return AService::GetChannelConn(channelId);
     }
 
-    void TService::ChangeAddress(Long channelId, IPEndPoint ipEndPoint) {
+    void TService::ChangeAddress(Long channelId, IPEndPoint* ipEndPoint) {
       AService::ChangeAddress(channelId, ipEndPoint);
     }
+
 
 
 CORE_NAMESPACE_END

@@ -9,6 +9,10 @@
 CORE_NAMESPACE_BEGIN
 
     void LoggerSystem::Awake() {
+      RD_LOGGER_CLEAN();
+      RD_LOGGER_SET(new Logger());
+      RD_LOGGER_INIT("app", LogLevel::LL_TRACE);
+
 //      auto entity = World::Instance().GetEntity();
 //      auto options = m_entityPool->try_get<proto::core::Options>(entity);
 //      if (options == nullptr) {

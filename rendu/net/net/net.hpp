@@ -10,5 +10,8 @@
 #include "sockets/socket_error.h"
 #include "sockets/socket_async_event_args.h"
 #include "sockets/socket_async_operation.h"
+#include "sockets/safe_socket_handle.h"
+#include "sockets/socket_pal.h"
+#include "address/socket_address_pal.h"
 
 #endif//RENDU_NET_H

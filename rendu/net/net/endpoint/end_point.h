@@ -10,13 +10,17 @@
 
 NET_NAMESPACE_BEGIN
 
-class EndPoint {
+class EndPoint : public Copyable{
+public:
+  using Ptr = std::shared_ptr<EndPoint>;
 public:
   virtual AddressFamily GetAddressFamily() = 0;
 
-  virtual SocketAddress Serialize() = 0;
+  virtual SocketAddress *Serialize() = 0;
 
-  virtual EndPoint* Create(SocketAddress socketAddress) = 0;
+  virtual EndPoint *Create(SocketAddress *socketAddress) = 0;
+
+  virtual string ToString() const = 0;
 };
 
 NET_NAMESPACE_END

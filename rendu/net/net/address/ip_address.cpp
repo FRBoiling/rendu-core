@@ -3,22 +3,44 @@
 */
 
 #include "ip_address.h"
+#include "ip_address_parser.h"
 
 NET_NAMESPACE_BEGIN
 
-  std::string IPAddress::ToString() const {
-    return IsIpv4() ? m_ipv4.ToString() : m_ipv6.ToString();
-  }
 
-  std::optional<IPAddress>
-  IPAddress::FromString(std::string_view string) noexcept {
-    if (auto ipv4 = IPv4Address::FromString(string); ipv4) {
-      return *ipv4;
-    }
-    if (auto ipv6 = IPv6Address::FromString(string); ipv6) {
-      return *ipv6;
-    }
-    return std::nullopt;
+AddressFamily IPAddress::GetFamily() {
+  return IsIPv4() ? AddressFamily::InterNetwork : IsIPv6() ? AddressFamily::InterNetworkV6
+                                                           : AddressFamily::Unknown;
+}
+
+
+std::span< byte> IPAddress::GetAddressBytes()  {
+  if (IsIPv4()) {
+    return m_ipv4.GetBytes();
+  } else if (IsIPv6()) {
+    return m_ipv6.GetBytes();
+  } else {
+    // Return an empty span for non-IPv4/IPv6 cases
+    return std::span< byte>();
   }
+};
+
+bool IPAddress::IsIPv4MappedToIPv6() {
+  //TODO:
+  return false;
+}
+
+IPAddress *MapToIPv6() {
+  //TODO:
+  return nullptr;
+}
+
+std::optional<IPAddress> IPAddress::Parse(const std::string_view ip_string) {
+  return detail::IPAddressParser::Parse(ip_string, false);
+}
+
+std::string IPAddress::ToString() const {
+  return IsIPv4() ? m_ipv4.ToString() : m_ipv6.ToString();
+}
 
 NET_NAMESPACE_END

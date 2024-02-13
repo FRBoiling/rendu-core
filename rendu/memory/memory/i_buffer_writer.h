@@ -14,15 +14,10 @@ template<typename T>
 class IBufferWriter {
 public:
   virtual ~IBufferWriter() = default;
-
-  // 对应C#中的Advance
   virtual void Advance(size_t count) = 0;
-
-  // 对应C#中的GetMemory
   virtual Memory<T>& GetMemory(size_t sizeHint = 0) = 0;
-
-  // 对应C#中的GetSpan
   virtual std::span<T> GetSpan(size_t sizeHint = 0) = 0;
+
 };
 
 MEMORY_NAMESPACE_END

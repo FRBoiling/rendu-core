@@ -19,14 +19,14 @@ void App::Start(int argc, char **argv) {
   World::Instance().AddSingleton<FiberManagerSystem>();
 
   World::Instance().AddSingleton<OuterNetSystem>();
-  ConsoleArgumentParserSystem::Instance().Show();
+  ConsoleArgumentParserSystem::GetInstance().Show();
 }
 
 void App::Update() {
-  TimeSystem::Instance().Update();
-  FiberManagerSystem::Instance().Update();
+  TimeSystem::GetInstance().Update();
+  FiberManagerSystem::GetInstance().Update();
 }
 
 void App::LateUpdate() {
-  FiberManagerSystem::Instance().LateUpdate();
+  FiberManagerSystem::GetInstance().LateUpdate();
 }

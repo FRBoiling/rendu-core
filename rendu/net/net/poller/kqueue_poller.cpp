@@ -4,7 +4,6 @@
 //
 //#include "kqueue_poller.h"
 //#include "base/utils/type_cast.h"
-//#include "sockets/sock_ops.h"
 //
 //NET_NAMESPACE_BEGIN
 //

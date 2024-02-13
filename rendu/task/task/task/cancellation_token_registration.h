@@ -6,8 +6,8 @@
 #define RENDU_TASK_TASK_TASK_TASK_CANCELLATION_REGISTRATION_H_
 
 
-#include "task_define.h"
 #include "cancellation_token.h"
+#include "task_define.h"
 
 TASK_NAMESPACE_BEGIN
 namespace detail {

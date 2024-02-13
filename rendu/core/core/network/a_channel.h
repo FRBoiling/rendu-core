@@ -20,7 +20,7 @@ class AChannel {
 public:
   AChannel() {}
 
-  AChannel(ChannelType channel_type, IPEndPoint remote_address, Long id)
+  AChannel(ChannelType channel_type,IPEndPoint* remote_address,Long id)
       : m_channel_type(channel_type), m_remote_address(remote_address), m_id(id) {
   }
 
@@ -31,7 +31,7 @@ protected:
   int m_error;
 
   ChannelType m_channel_type;
-  IPEndPoint m_remote_address;
+  IPEndPoint *m_remote_address;
 
 public:
   Long GetId() const { return m_id; }
@@ -46,9 +46,9 @@ public:
     return m_channel_type;
   }
 
-  IPEndPoint GetRemoteAddress() const { return m_remote_address; }
-  IPEndPoint SetRemoteAddress(IPEndPoint value) {
-    m_remote_address = value;
+  IPEndPoint* GetRemoteAddress() const { return m_remote_address; }
+  IPEndPoint* SetRemoteAddress(IPEndPoint& value) {
+    m_remote_address = &value;
     return m_remote_address;
   }
 

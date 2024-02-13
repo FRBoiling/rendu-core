@@ -7,5 +7,7 @@
 
 #include "synchronization_context.h"
 #include "thread.h"
+#include "i_thread_pool_work_item.h"
+#include "execution_context.h"
 
 #endif //RENDU_THREAD_H

@@ -5,7 +5,7 @@
 #ifndef RENDU_NET_PIPE_H
 #define RENDU_NET_PIPE_H
 
-#include "sockets/sock_ops.h"
+#include "net_define.h"
 
 NET_NAMESPACE_BEGIN
 

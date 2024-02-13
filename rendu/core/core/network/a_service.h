@@ -51,7 +51,7 @@ public:
 
   virtual std::tuple<uint32_t, uint32_t> GetChannelConn(Long channelId);
 
-  virtual void ChangeAddress(Long channelId, IPEndPoint ipEndPoint);
+  virtual void ChangeAddress(Long channelId, IPEndPoint* ipEndPoint);
 
 public:
   virtual void Dispose() = 0;

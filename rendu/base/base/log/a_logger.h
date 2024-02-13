@@ -7,6 +7,7 @@
 
 #include "a_logger_channel.h"
 #include "base_define.h"
+#include <vector>
 
 RD_NAMESPACE_BEGIN
 

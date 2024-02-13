@@ -10,18 +10,18 @@
 NET_NAMESPACE_BEGIN
 
 enum class SocketType {
-  /// <summary>Specifies an unknown <see cref="T:System.Net.Sockets.Socket" /> type.</summary>
+  // 未知类型的 Socket
   Unknown = -1,// 0xFFFFFFFF
-  /// <summary>Supports reliable, two-way, connection-based byte streams without the duplication of data and without preservation of boundaries. A <see cref="T:System.Net.Sockets.Socket" /> of this type communicates with a single peer and requires a remote host connection before communication can begin. <see cref="F:System.Net.Sockets.SocketType.Stream" /> uses the Transmission Control Protocol (<see langword="ProtocolType" />.<see cref="F:System.Net.Sockets.ProtocolType.Tcp" />) and the <see langword="AddressFamily" />.<see cref="F:System.Net.Sockets.AddressFamily.InterNetwork" /> address family.</summary>
+  // 支持可靠的、双向的、基于连接的字节流传输，不重复数据，不保留边界。一个 Socket 类型的通信与一个单一的对等体进行通信，需要在通信开始前建立远程主机连接。使用传输控制协议 (TCP) 和 Internet 协议版本 4 (IPv4) 地址家族。
   Stream = 1,
-  /// <summary>Supports datagrams, which are connectionless, unreliable messages of a fixed (typically small) maximum length. Messages might be lost or duplicated and might arrive out of order. A <see cref="T:System.Net.Sockets.Socket" /> of type <see cref="F:System.Net.Sockets.SocketType.Dgram" /> requires no connection prior to sending and receiving data, and can communicate with multiple peers. <see cref="F:System.Net.Sockets.SocketType.Dgram" /> uses the Datagram Protocol (<see langword="ProtocolType" />.<see cref="F:System.Net.Sockets.ProtocolType.Udp" />) and the <see langword="AddressFamily" />.<see cref="F:System.Net.Sockets.AddressFamily.InterNetwork" /> address family.</summary>
+  // 支持基于数据报的连接，是一种无连接的、不可靠的消息，最大长度为固定（通常较小）。消息可能会丢失或重复，并且可能会以错误的顺序到达。一个类型为 Dgram 的 Socket 无需在发送和接收数据之前建立连接，并且可以与多个对等体进行通信。使用用户数据报协议 (UDP) 和 IPv4 地址家族。
   Dgram = 2,
-  /// <summary>Supports access to the underlying transport protocol. Using <see cref="F:System.Net.Sockets.SocketType.Raw" />, you can communicate using protocols like Internet Control Message Protocol (<see langword="ProtocolType" />.<see cref="F:System.Net.Sockets.ProtocolType.Icmp" />) and Internet Group Management Protocol (<see langword="ProtocolType" />.<see cref="F:System.Net.Sockets.ProtocolType.Igmp" />). Your application must provide a complete IP header when sending. Received datagrams return with the IP header and options intact.</summary>
+  // 支持对底层传输协议的访问。使用 Dgram ，你可以使用协议，如互联网控制消息协议 (ICMP) 和互联网组管理协议 (IGMP)。你的应用程序必须在发送时提供完整的 IP 头。接收到的数据报将返回完整的 IP 头和选项。
   Raw = 3,
-  /// <summary>Supports connectionless, message-oriented, reliably delivered messages, and preserves message boundaries in data. Rdm (Reliably Delivered Messages) messages arrive unduplicated and in order. Furthermore, the sender is notified if messages are lost. If you initialize a <see cref="T:System.Net.Sockets.Socket" /> using <see cref="F:System.Net.Sockets.SocketType.Rdm" />, you do not require a remote host connection before sending and receiving data. With <see cref="F:System.Net.Sockets.SocketType.Rdm" />, you can communicate with multiple peers.</summary>
+  // 支持无连接的、基于消息的、可靠的、按顺序交付的消息，并且在数据中保留消息边界。Rdm（可靠数据报）消息到达时不会重复，并且发送者会收到丢失消息的通知。如果你使用 SocketType.Rdm 初始化一个 Socket ，则无需在发送和接收数据之前建立远程主机连接。使用 Rdm ，你可以与多个对等体进行通信。
   Rdm = 4,
-  /// <summary>Provides connection-oriented and reliable two-way transfer of ordered byte streams across a network. <see cref="F:System.Net.Sockets.SocketType.Seqpacket" /> does not duplicate data, and it preserves boundaries within the data stream. A <see cref="T:System.Net.Sockets.Socket" /> of type <see cref="F:System.Net.Sockets.SocketType.Seqpacket" /> communicates with a single peer and requires a remote host connection before communication can begin.</summary>
-  Seqpacket = 5,
+  // 提供面向连接的和可靠的双向传输的有序字节流。SocketType.Seqpacket 不重复数据，并且在数据流中保留边界。一个类型为 Seqpacket 的 Socket 与一个单一的对等体进行通信，需要在通信开始前建立远程主机连接。
+  Seqpacket = 5
 };
 
 NET_NAMESPACE_END

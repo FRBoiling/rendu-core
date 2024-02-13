@@ -39,9 +39,6 @@
     "name" : "concurrentqueue",
     "version>=" : "1.0.4"
   }, {
-    "name" : "cppcoro",
-    "version>=" : "2022-10-25"
-  }, {
     "name" : "libuv",
     "version>=" : "1.46.0"
   } ]

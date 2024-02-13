@@ -65,7 +65,7 @@ public:
 
   std::tuple<uint32_t, uint32_t> GetChannelConn(Long channelId) override;
 
-  void ChangeAddress(Long channelId, IPEndPoint ipEndPoint) override;
+  void ChangeAddress(Long channelId, IPEndPoint* ipEndPoint) override;
 
 private:
   TChannel *Get(Long id);

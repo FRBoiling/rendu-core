@@ -7,5 +7,6 @@
 
 #include "task/task.hpp"
 #include "task/task_completion_source.h"
+#include "task/cancellation_token.h"
 
 #endif //RENDU_TASK_H

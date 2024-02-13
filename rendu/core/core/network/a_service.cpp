@@ -40,7 +40,7 @@ std::tuple<uint32_t, uint32_t> AService::GetChannelConn(Long channelId) {
   throw Exception("default conn throw Exception! {}", channelId);
 }
 
-void AService::ChangeAddress(Long channelId, IPEndPoint ipEndPoint) {
+void AService::ChangeAddress(Long channelId, IPEndPoint* ipEndPoint) {
 }
 
 CORE_NAMESPACE_END

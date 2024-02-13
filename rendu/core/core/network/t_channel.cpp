@@ -27,7 +27,7 @@ TChannel::~TChannel() {
 }
 
 TChannel::TChannel(Long id, IPEndPoint *ipEndPoint, TService *service)
-    : AChannel(ChannelType::Connect, *ipEndPoint, id), m_service(service) {
+    : AChannel(ChannelType::Connect, ipEndPoint, id), m_service(service) {
   m_socket = new Socket(ipEndPoint->GetAddressFamily(), SocketType::Stream, ProtocolType::Tcp);
   m_socket->SetTcpNoDelay(true);
   m_parser = new PacketParser(m_recvBuffer, (AService *) m_service);
@@ -45,7 +45,7 @@ TChannel::TChannel(Long id, IPEndPoint *ipEndPoint, TService *service)
 }
 
 TChannel::TChannel(Long id, Socket *socket, TService *service)
-    : AChannel(ChannelType::Accept, socket->GetRemoteEndPoint(), id), m_service(service) {
+    : AChannel(ChannelType::Accept, dynamic_cast<IPEndPoint*>(&socket->GetRemoteEndPoint()), id), m_service(service) {
   m_id = id;
   m_service = service;
   m_socket = socket;
@@ -88,7 +88,7 @@ void TChannel::Send(MemoryBuffer *stream) {
 }
 
 void TChannel::ConnectAsync() {
-  m_outArgs->SetRemoteEndPoint(GetRemoteAddress());
+  m_outArgs->SetRemoteEndPoint(&GetRemoteAddress());
   if (m_socket->ConnectAsync(m_outArgs)) {
     return;
   }
@@ -181,7 +181,7 @@ void TChannel::HandleRecv(SocketAsyncEventArgs *e) {
       OnRead(memoryBuffer);
       m_service->Recycle(memoryBuffer);
     } catch (Exception &ex) {
-      RD_CRITICAL("ip: {} {}", GetRemoteAddress()->ToString(), ex.what());
+      RD_CRITICAL("ip: {} {}", GetRemoteAddress().ToString(), ex.what());
       OnError(ErrorCore::ERR_SocketError);
       return;
     }
@@ -248,7 +248,7 @@ void TChannel::OnRead(MemoryBuffer *memoryStream) {
 }
 
 void TChannel::OnError(int error) {
-  RD_INFO("TChannel OnError: {} {}", error, GetRemoteAddress()->ToString());
+  RD_INFO("TChannel OnError: {} {}", error, GetRemoteAddress().ToString());
   Long channelId = m_id;
   m_service->Remove(channelId, error);
   m_service->OnErrorCallback(channelId, error);
@@ -275,5 +275,8 @@ void TChannel::HandleSend(SocketAsyncEventArgs *eventArgs) {
   }
 }
 
+IPEndPoint &TChannel::GetRemoteAddress(){
+  return (IPEndPoint&)m_socket->GetRemoteEndPoint();
+}
 
 CORE_NAMESPACE_END

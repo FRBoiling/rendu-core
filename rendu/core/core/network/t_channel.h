@@ -24,7 +24,7 @@ public:
   ~TChannel();
 
 public:
-  IPEndPoint *GetRemoteAddress();
+  IPEndPoint &GetRemoteAddress();
   void OnComplete(void *sender, SocketAsyncEventArgs *args);
   bool IsDisposed();
 public:

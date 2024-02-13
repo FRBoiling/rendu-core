@@ -5,8 +5,8 @@
 #ifndef RENDU_TASK_TASK_HPP
 #define RENDU_TASK_TASK_HPP
 
-#include "detail/broken_promise.hpp"
 #include "detail/awaitable_transform.hpp"
+#include "detail/broken_promise.hpp"
 #include "thread/thread_pool.h"
 
 TASK_NAMESPACE_BEGIN
@@ -134,8 +134,8 @@ namespace detail {
       }
     }
 
-    void SetException(std::exception_ptr exception){
-        m_exception = exception;
+    void SetException(std::exception_ptr exception) {
+      m_exception = exception;
     }
 
   private:
@@ -201,13 +201,12 @@ namespace detail {
   public:
     TaskBase() noexcept
         : m_coroutine(nullptr) {
-
       RD_TRACE("TaskBase::TaskBase() [{}]- coroutine is nullptr ", Convert::ToString(this));
     }
 
     TaskBase(CoroutineHandle coroutine)
         : m_coroutine(coroutine) {
-      RD_TRACE("TaskBase::TaskBase() [{}]- coroutine is not nullptr",Convert::ToString(this))
+      RD_TRACE("TaskBase::TaskBase() [{}]- coroutine is not nullptr", Convert::ToString(this));
     }
 
     ~TaskBase() {
@@ -215,9 +214,9 @@ namespace detail {
         if (m_coroutine.done()) {
           m_coroutine.destroy();
           m_coroutine = nullptr;
-          RD_TRACE("TaskBase::~TaskBase() [{}]- coroutine is done",Convert::ToString(this));
+          RD_TRACE("TaskBase::~TaskBase() [{}]- coroutine is done", Convert::ToString(this));
         } else {
-          RD_WARN("TaskBase::~TaskBase() [{}]- coroutine is not done",Convert::ToString(this))
+          RD_WARN("TaskBase::~TaskBase() [{}]- coroutine is not done", Convert::ToString(this))
         }
       }
     }
@@ -266,11 +265,10 @@ namespace detail {
       return Awaitable(std::exchange(m_coroutine, nullptr));
     }
 
-    promise_type GetPromise(){
+    promise_type GetPromise() {
       return m_coroutine.promise();
     }
   };
-
 
 
 }// namespace detail
@@ -301,11 +299,8 @@ public:
 
   template<typename _Rep, typename _Period>
   static auto Delay(std::chrono::duration<_Rep, _Period> &&duration) noexcept {
-    co_return ;
+    co_return;
   }
-
-
-
 };
 
 namespace detail {

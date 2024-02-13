@@ -11,7 +11,7 @@
 
 RD_NAMESPACE_BEGIN
 
-using byte = unsigned char;
+using byte = std::byte;
 #define BYTE_MAX UCHAR_MAX
 
 
