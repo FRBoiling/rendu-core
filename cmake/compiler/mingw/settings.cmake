@@ -1,8 +1,5 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
 # set up output paths for executable binaries (.exe-files, and .dll-files on DLL-capable platforms)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Set build-directive (used in core to tell which buildtype we used)
 target_compile_definitions(rendu-compile-option-interface
@@ -22,7 +19,7 @@ target_compile_definitions(rendu-compile-option-interface
     -D__SSE2__)
 message(STATUS "GCC: SFMT enabled, SSE2 flags forced")
 
-if(RD_WITH_WARNINGS)
+if(WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
     INTERFACE
       -W

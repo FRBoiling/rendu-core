@@ -1,19 +1,23 @@
-#**********************************
-#  Created by boil on 2022/8/14.
-#**********************************
+# This file is part of the RenduCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 #
-# 强制非源代码构建
+# Force out-of-source build
 #
+
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" BUILDING_IN_SOURCE)
 
 if(BUILDING_IN_SOURCE)
   message(FATAL_ERROR "
-  此项目需要使用非源代码构建。
-  删除文件'CMakeCache.txt'。
-  在继续之前，创建一个单独的构建目录，
-  然后从那里运行'cmake path_to_project [options]'。")
+    This project requires an out of source build. Remove the file 'CMakeCache.txt'
+    found in this directory before continuing, create a separate build directory
+    and run 'cmake path_to_project [options]' from there.
+  ")
 endif()
-# This project requires an out of source build. Remove the file 'CMakeCache.txt'
-# found in this directory before continuing, create a separate build directory
-# and run 'cmake path_to_project [options]' from there.

@@ -14,6 +14,6 @@ rendu_add_library(
     DEPS
     rendu::base
     proto::model
-    dep::entt
-    dep::magic_enum
+    third_party::entt
+    third_party::magic_enum
 )

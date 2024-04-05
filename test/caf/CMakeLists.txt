@@ -14,9 +14,9 @@ rendu_add_test(
     rendu-core-interface
     DEPS
     proto::model
-    dep::protobuf
-    dep::caf
-    dep::caf
+    third_party::protobuf
+    third_party::caf
+    third_party::caf
     rendu::test
     DEFINES
 )

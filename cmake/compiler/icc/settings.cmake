@@ -1,6 +1,3 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
 target_compile_definitions(rendu-compile-option-interface
   INTERFACE
     -D_BUILD_DIRECTIVE="$<CONFIG>")
@@ -15,7 +12,7 @@ else()
       -xSSE2)
 endif()
 
-if(RD_WITH_WARNINGS)
+if(WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
     INTERFACE
       -w1)

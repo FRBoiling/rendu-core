@@ -13,5 +13,5 @@ rendu_add_library(
     rendu-core-interface
     DEPS
     rendu::base
-#    dep::date
+#    third_party::date
 )

@@ -1,43 +1,47 @@
-#**********************************
-#  Created by boil on 2022/8/14.
-#**********************************
+# This file is part of the RenduCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# 返回源目录中脚本目录的基本路径
+# Returns the base path to the script directory in the source directory
 function(WarnAboutSpacesInBuildPath)
-  # 只检查win32，因为unix不允许路径中有空格
+  # Only check win32 since unix doesn't allow spaces in paths
   if(WIN32)
     string(FIND "${CMAKE_BINARY_DIR}" " " SPACE_INDEX_POS)
 
     if(SPACE_INDEX_POS GREATER -1)
       message("")
-      # message(WARNING " *** WARNING!\n"
-      #                 " *** Your selected build directory contains spaces!\n"
-      #                 " *** Please note that this will cause issues!")
       message(WARNING " *** WARNING!\n"
-                      " *** 您选择的生成目录包含空格!\n"
-                      " *** 请注意，这将导致问题!")               
+                      " *** Your selected build directory contains spaces!\n"
+                      " *** Please note that this will cause issues!")
     endif()
   endif()
 endfunction()
 
-# 返回源目录中脚本目录的基本路径
+# Returns the base path to the script directory in the source directory
 function(GetScriptsBasePath variable)
   set(${variable} "${CMAKE_SOURCE_DIR}/src/server/scripts" PARENT_SCOPE)
 endfunction()
 
-# 在变量中存储给定模块的绝对路径
+# Stores the absolut path of the given module in the variable
 function(GetPathToScriptModule module variable)
   GetScriptsBasePath(SCRIPTS_BASE_PATH)
   set(${variable} "${SCRIPTS_BASE_PATH}/${module}" PARENT_SCOPE)
 endfunction()
 
-# 将给定模块的项目名称存储在变量中
+# Stores the project name of the given module in the variable
 function(GetProjectNameOfScriptModule module variable)
   string(TOLOWER "scripts_${SCRIPT_MODULE}" GENERATED_NAME)
   set(${variable} "${GENERATED_NAME}" PARENT_SCOPE)
 endfunction()
 
-# 创建所有脚本模块的列表，并将其存储在给定变量中。
+# Creates a list of all script modules
+# and stores it in the given variable.
 function(GetScriptModuleList variable)
   GetScriptsBasePath(BASE_PATH)
   file(GLOB LOCALE_SCRIPT_MODULE_LIST RELATIVE
@@ -54,14 +58,15 @@ function(GetScriptModuleList variable)
   set(${variable} ${${variable}} PARENT_SCOPE)
 endfunction()
 
-# 将给定的脚本模块名转换为包含链接类型的变量名
+# Converts the given script module name into it's
+# variable name which holds the linkage type.
 function(ScriptModuleNameToVariable module variable)
   string(TOUPPER ${module} ${variable})
   set(${variable} "SCRIPTS_${${variable}}")
   set(${variable} ${${variable}} PARENT_SCOPE)
 endfunction()
 
-# 存储在给定变量中是否需要动态链接
+# Stores in the given variable whether dynamic linking is required
 function(IsDynamicLinkingRequired variable)
   if(SCRIPTS MATCHES "dynamic")
     set(IS_DEFAULT_VALUE_DYNAMIC ON)
@@ -80,7 +85,7 @@ function(IsDynamicLinkingRequired variable)
   set(${variable} ${IS_REQUIRED} PARENT_SCOPE)
 endfunction()
 
-# 存储本机变量名
+# Stores the native variable name
 function(GetNativeSharedLibraryName module variable)
   if(WIN32)
     set(${variable} "${module}.dll" PARENT_SCOPE)
@@ -91,7 +96,7 @@ function(GetNativeSharedLibraryName module variable)
   endif()
 endfunction()
 
-# 在变量中存储本机安装路径
+# Stores the native install path in the variable
 function(GetInstallOffset variable)
   if(WIN32)
     set(${variable} "${CMAKE_INSTALL_PREFIX}/scripts" PARENT_SCOPE)

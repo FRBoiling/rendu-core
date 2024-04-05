@@ -13,8 +13,8 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::fmt
-    dep::spdlog
+    third_party::fmt
+    third_party::spdlog
     rendu::base
     DEFINES
 )

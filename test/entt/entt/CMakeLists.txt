@@ -13,7 +13,7 @@ rendu_add_test(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::entt
+    third_party::entt
     rendu::test
     DEFINES
 )

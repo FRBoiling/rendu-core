@@ -13,6 +13,6 @@ rendu_add_executable(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::fmt
+    third_party::fmt
     DEFINES
 )
