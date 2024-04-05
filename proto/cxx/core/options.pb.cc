@@ -24,14 +24,15 @@ namespace rendu {
 namespace proto {
 namespace core {
 PROTOBUF_CONSTEXPR Options::Options(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.startconfig_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.apptype_)*/0
-  , /*decltype(_impl_.process_)*/0
-  , /*decltype(_impl_.develop_)*/0
-  , /*decltype(_impl_.loglevel_)*/0
-  , /*decltype(_impl_.console_)*/0
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+    ::_pbi::ConstantInitialized)
+  : startconfig_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , apptype_(0)
+
+  , process_(0)
+  , develop_(0)
+
+  , loglevel_(0)
+  , console_(0){}
 struct OptionsDefaultTypeInternal {
   PROTOBUF_CONSTEXPR OptionsDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -55,12 +56,12 @@ const uint32_t TableStruct_core_2foptions_2eproto::offsets[] PROTOBUF_SECTION_VA
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.apptype_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.startconfig_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.process_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.develop_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.loglevel_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, _impl_.console_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, apptype_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, startconfig_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, process_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, develop_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, loglevel_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::Options, console_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::rendu::proto::core::Options)},
@@ -147,53 +148,35 @@ class Options::_Internal {
 Options::Options(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+  SharedCtor();
   // @@protoc_insertion_point(arena_constructor:rendu.proto.core.Options)
 }
 Options::Options(const Options& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
-  Options* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.startconfig_){}
-    , decltype(_impl_.apptype_){}
-    , decltype(_impl_.process_){}
-    , decltype(_impl_.develop_){}
-    , decltype(_impl_.loglevel_){}
-    , decltype(_impl_.console_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.startconfig_.InitDefault();
+  startconfig_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.startconfig_.Set("", GetArenaForAllocation());
+    startconfig_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_startconfig().empty()) {
-    _this->_impl_.startconfig_.Set(from._internal_startconfig(), 
-      _this->GetArenaForAllocation());
+    startconfig_.Set(from._internal_startconfig(), 
+      GetArenaForAllocation());
   }
-  ::memcpy(&_impl_.apptype_, &from._impl_.apptype_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.console_) -
-    reinterpret_cast<char*>(&_impl_.apptype_)) + sizeof(_impl_.console_));
+  ::memcpy(&apptype_, &from.apptype_,
+    static_cast<size_t>(reinterpret_cast<char*>(&console_) -
+    reinterpret_cast<char*>(&apptype_)) + sizeof(console_));
   // @@protoc_insertion_point(copy_constructor:rendu.proto.core.Options)
 }
 
-inline void Options::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.startconfig_){}
-    , decltype(_impl_.apptype_){0}
-    , decltype(_impl_.process_){0}
-    , decltype(_impl_.develop_){0}
-    , decltype(_impl_.loglevel_){0}
-    , decltype(_impl_.console_){0}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.startconfig_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.startconfig_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void Options::SharedCtor() {
+startconfig_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  startconfig_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&apptype_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&console_) -
+    reinterpret_cast<char*>(&apptype_)) + sizeof(console_));
 }
 
 Options::~Options() {
@@ -207,11 +190,11 @@ Options::~Options() {
 
 inline void Options::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.startconfig_.Destroy();
+  startconfig_.Destroy();
 }
 
 void Options::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
+  _cached_size_.Set(size);
 }
 
 void Options::Clear() {
@@ -220,10 +203,10 @@ void Options::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.startconfig_.ClearToEmpty();
-  ::memset(&_impl_.apptype_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.console_) -
-      reinterpret_cast<char*>(&_impl_.apptype_)) + sizeof(_impl_.console_));
+  startconfig_.ClearToEmpty();
+  ::memset(&apptype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&console_) -
+      reinterpret_cast<char*>(&apptype_)) + sizeof(console_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -255,7 +238,7 @@ const char* Options::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
       // int32 process = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.process_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          process_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -272,7 +255,7 @@ const char* Options::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
       // int32 logLevel = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          _impl_.loglevel_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          loglevel_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -280,7 +263,7 @@ const char* Options::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
       // int32 console = 6;
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          _impl_.console_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          console_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -406,43 +389,47 @@ size_t Options::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_console());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Options::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
     Options::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Options::GetClassData() const { return &_class_data_; }
 
+void Options::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<Options *>(to)->MergeFrom(
+      static_cast<const Options &>(from));
+}
 
-void Options::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<Options*>(&to_msg);
-  auto& from = static_cast<const Options&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:rendu.proto.core.Options)
-  GOOGLE_DCHECK_NE(&from, _this);
+
+void Options::MergeFrom(const Options& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rendu.proto.core.Options)
+  GOOGLE_DCHECK_NE(&from, this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_startconfig().empty()) {
-    _this->_internal_set_startconfig(from._internal_startconfig());
+    _internal_set_startconfig(from._internal_startconfig());
   }
   if (from._internal_apptype() != 0) {
-    _this->_internal_set_apptype(from._internal_apptype());
+    _internal_set_apptype(from._internal_apptype());
   }
   if (from._internal_process() != 0) {
-    _this->_internal_set_process(from._internal_process());
+    _internal_set_process(from._internal_process());
   }
   if (from._internal_develop() != 0) {
-    _this->_internal_set_develop(from._internal_develop());
+    _internal_set_develop(from._internal_develop());
   }
   if (from._internal_loglevel() != 0) {
-    _this->_internal_set_loglevel(from._internal_loglevel());
+    _internal_set_loglevel(from._internal_loglevel());
   }
   if (from._internal_console() != 0) {
-    _this->_internal_set_console(from._internal_console());
+    _internal_set_console(from._internal_console());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Options::CopyFrom(const Options& from) {
@@ -462,15 +449,15 @@ void Options::InternalSwap(Options* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.startconfig_, lhs_arena,
-      &other->_impl_.startconfig_, rhs_arena
+      &startconfig_, lhs_arena,
+      &other->startconfig_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Options, _impl_.console_)
-      + sizeof(Options::_impl_.console_)
-      - PROTOBUF_FIELD_OFFSET(Options, _impl_.apptype_)>(
-          reinterpret_cast<char*>(&_impl_.apptype_),
-          reinterpret_cast<char*>(&other->_impl_.apptype_));
+      PROTOBUF_FIELD_OFFSET(Options, console_)
+      + sizeof(Options::console_)
+      - PROTOBUF_FIELD_OFFSET(Options, apptype_)>(
+          reinterpret_cast<char*>(&apptype_),
+          reinterpret_cast<char*>(&other->apptype_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Options::GetMetadata() const {

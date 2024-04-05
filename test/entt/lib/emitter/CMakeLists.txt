@@ -13,9 +13,9 @@ rendu_add_test(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::entt
-    dep::cr
-    dep::cereal
+    third_party::entt
+    third_party::cr
+    third_party::cereal
     rendu::test
     DEFINES
 )

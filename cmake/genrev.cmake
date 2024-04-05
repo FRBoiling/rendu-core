@@ -1,6 +1,12 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
+# This file is part of the RenduCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 # User has manually chosen to ignore the git-tests, so throw them a warning.
 # This is done EACH compile so they can be alerted about the consequences.
@@ -10,22 +16,14 @@ if(NOT BUILDDIR)
   set(BUILDDIR ${CMAKE_BINARY_DIR})
 endif()
 
-if(RD_WITHOUT_GIT)
+if(WITHOUT_GIT)
   set(rev_date "1970-01-01 00:00:00 +0000")
   set(rev_hash "unknown")
   set(rev_branch "Archived")
   # No valid git commit date, use today
   string(TIMESTAMP rev_date_fallback "%Y-%m-%d %H:%M:%S" UTC)
 else()
-  find_package(Git 1.7)
   if(GIT_EXECUTABLE)
-    # Retrieve repository dirty status
-    execute_process(
-      COMMAND "${GIT_EXECUTABLE}" diff-index --quiet HEAD --
-      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-      RESULT_VARIABLE is_dirty
-    )
-
     # Create a revision-string that we can use
     execute_process(
       COMMAND "${GIT_EXECUTABLE}" rev-parse --short=12 HEAD
@@ -35,58 +33,68 @@ else()
       ERROR_QUIET
     )
 
-    # Append dirty marker to commit hash
-    if(is_dirty)
-      set(rev_hash "${rev_hash}+")
-    endif()
-
-    # And grab the commits timestamp
-    execute_process(
-      COMMAND "${GIT_EXECUTABLE}" show -s --format=%ci
-      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-      OUTPUT_VARIABLE rev_date
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-      ERROR_QUIET
-    )
-
-    # Also retrieve branch name
-    execute_process(
-      COMMAND "${GIT_EXECUTABLE}" symbolic-ref -q --short HEAD
-      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-      OUTPUT_VARIABLE rev_branch
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-      ERROR_QUIET
-    )
-
-    # when ran on CI, repository is put in detached HEAD state, attempt to scan for known local branches
-    if(NOT rev_branch)
+    if(rev_hash)
+      # Retrieve repository dirty status
       execute_process(
-        COMMAND "${GIT_EXECUTABLE}" for-each-ref --points-at=HEAD refs/heads "--format=%(refname:short)"
+        COMMAND "${GIT_EXECUTABLE}" diff-index --quiet HEAD --
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        RESULT_VARIABLE is_dirty
+        ERROR_QUIET
+      )
+
+      # Append dirty marker to commit hash
+      if(is_dirty)
+        set(rev_hash "${rev_hash}+")
+      endif()
+
+      # And grab the commits timestamp
+      execute_process(
+        COMMAND "${GIT_EXECUTABLE}" show -s --format=%ci
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        OUTPUT_VARIABLE rev_date
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+      )
+
+      # Also retrieve branch name
+      execute_process(
+        COMMAND "${GIT_EXECUTABLE}" symbolic-ref -q --short HEAD
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         OUTPUT_VARIABLE rev_branch
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_QUIET
       )
-    endif()
 
-    # if local branch scan didn't find anything, try remote branches
-    if(NOT rev_branch)
-      execute_process(
-        COMMAND "${GIT_EXECUTABLE}" for-each-ref --points-at=HEAD refs/remotes "--format=%(refname:short)"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        OUTPUT_VARIABLE rev_branch
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        ERROR_QUIET
-      )
-    endif()
+      # when ran on CI, repository is put in detached HEAD state, attempt to scan for known local branches
+      if(NOT rev_branch)
+        execute_process(
+          COMMAND "${GIT_EXECUTABLE}" for-each-ref --points-at=HEAD refs/heads "--format=%(refname:short)"
+          WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+          OUTPUT_VARIABLE rev_branch
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+          ERROR_QUIET
+        )
+      endif()
 
-    # give up finding a name for branch, use commit hash
-    if(NOT rev_branch)
-      set(rev_branch ${rev_hash})
-    endif()
+      # if local branch scan didn't find anything, try remote branches
+      if(NOT rev_branch)
+        execute_process(
+          COMMAND "${GIT_EXECUTABLE}" for-each-ref --points-at=HEAD refs/remotes "--format=%(refname:short)"
+          WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+          OUTPUT_VARIABLE rev_branch
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+          ERROR_QUIET
+        )
+      endif()
 
-    # normalize branch to single line (for-each-ref can output multiple lines if there are multiple branches on the same commit)
-    string(REGEX MATCH "^[^ \t\r\n]+" rev_branch ${rev_branch})
+      # give up finding a name for branch, use commit hash
+      if(NOT rev_branch)
+        set(rev_branch ${rev_hash})
+      endif()
+      
+      # normalize branch to single line (for-each-ref can output multiple lines if there are multiple branches on the same commit)
+      string(REGEX MATCH "^[^ \t\r\n]+" rev_branch ${rev_branch})
+    endif()
   endif()
 
   # Last minute check - ensure that we have a proper revision

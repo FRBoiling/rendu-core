@@ -1,22 +1,26 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
+include(CheckCXXSourceCompiles)
+
 # Set build-directive (used in core to tell which buildtype we used)
 target_compile_definitions(rendu-compile-option-interface
-    INTERFACE
-    -D_BUILD_DIRECTIVE= "$<CONFIG>")
+  INTERFACE
+    -D_BUILD_DIRECTIVE="$<CONFIG>")
 
-set(CLANG_EXPECTED_VERSION 7.0.0)
+set(CLANG_EXPECTED_VERSION 11.0.0)
+if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+  # apple doesnt like to do the sane thing which would be to use the same version numbering as regular clang
+  # version number pulled from https://en.wikipedia.org/wiki/Xcode#Toolchain_versions for row matching LLVM 11
+  set(CLANG_EXPECTED_VERSION 12.0.5)
+endif()
 
-if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS CLANG_EXPECTED_VERSION)
+if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS CLANG_EXPECTED_VERSION)
   message(FATAL_ERROR "Clang: RenduCore requires version ${CLANG_EXPECTED_VERSION} to build but found ${CMAKE_CXX_COMPILER_VERSION}")
-else ()
+else()
   message(STATUS "Clang: Minimum version required is ${CLANG_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
-endif ()
+endif()
 
 # This tests for a bug in clang-7 that causes linkage to fail for 64-bit from_chars (in some configurations)
 # If the clang requirement is bumped to >= clang-8, you can remove this check, as well as
-# the associated ifdef block in src/common/utils/StringConvert.h
+# the associated ifdef block in src/common/Utilities/StringConvert.h
 include(CheckCXXSourceCompiles)
 
 check_cxx_source_compiles("
@@ -35,14 +39,13 @@ int main()
 if (NOT CLANG_HAVE_PROPER_CHARCONV)
   message(STATUS "Clang: Detected from_chars bug for 64-bit integers, workaround enabled")
   target_compile_definitions(rendu-compile-option-interface
-      INTERFACE
-      -DRENDU_NEED_CHARCONV_WORKAROUND
-      )
-endif ()
+  INTERFACE
+    -DTRINITY_NEED_CHARCONV_WORKAROUND)
+endif()
 
-if (RD_WITH_WARNINGS)
+if(WITH_WARNINGS)
   target_compile_options(rendu-warning-interface
-      INTERFACE
+    INTERFACE
       -W
       -Wall
       -Wextra
@@ -53,37 +56,37 @@ if (RD_WITH_WARNINGS)
       -Woverloaded-virtual)
 
   message(STATUS "Clang: All warnings enabled")
-endif ()
+endif()
 
-if (WITH_COREDEBUG)
+if(WITH_COREDEBUG)
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -g3)
 
   message(STATUS "Clang: Debug-flags set (-g3)")
-endif ()
+endif()
 
-if (ASAN)
+if(ASAN)
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=address
       -fsanitize-recover=address
       -fsanitize-address-use-after-scope)
 
   target_link_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=address
       -fsanitize-recover=address
       -fsanitize-address-use-after-scope)
 
   message(STATUS "Clang: Enabled Address Sanitizer ASan")
-endif ()
+endif()
 
-if (MSAN)
+if(MSAN)
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=memory
       -fsanitize-memory-track-origins
@@ -91,64 +94,83 @@ if (MSAN)
       -msan-keep-going=1)
 
   target_link_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=memory
       -fsanitize-memory-track-origins)
 
   message(STATUS "Clang: Enabled Memory Sanitizer MSan")
-endif ()
+endif()
 
-if (UBSAN)
+if(UBSAN)
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=undefined)
 
   target_link_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=undefined)
 
   message(STATUS "Clang: Enabled Undefined Behavior Sanitizer UBSan")
-endif ()
+endif()
 
-if (TSAN)
+if(TSAN)
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=thread)
 
   target_link_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fno-omit-frame-pointer
       -fsanitize=thread)
 
   message(STATUS "Clang: Enabled Thread Sanitizer TSan")
-endif ()
+endif()
+
+if(BUILD_TIME_ANALYSIS)
+  target_compile_options(rendu-compile-option-interface
+    INTERFACE
+      -ftime-trace)
+
+  message(STATUS "Clang: Enabled build time analysis (-ftime-trace)")
+endif()
 
 # -Wno-narrowing needed to suppress a warning in g3d
 # -Wno-deprecated-register is needed to suppress 185 gsoap warnings on Unix systems.
-# -Wno-deprecated-copy needed to suppress a warning in g3d
+# -Wno-undefined-inline needed for a compile time optimization hack with fmt
 target_compile_options(rendu-compile-option-interface
-    INTERFACE
+  INTERFACE
     -Wno-narrowing
-    -Wno-deprecated-register)
+    -Wno-deprecated-register
+    -Wno-undefined-inline)
 
-if (RD_BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
   # -fPIC is needed to allow static linking in shared libs.
   # -fvisibility=hidden sets the default visibility to hidden to prevent exporting of all symbols.
   target_compile_options(rendu-compile-option-interface
-      INTERFACE
+    INTERFACE
       -fPIC)
 
   target_compile_options(rendu-hidden-symbols-interface
-      INTERFACE
+    INTERFACE
       -fvisibility=hidden)
 
   # --no-undefined to throw errors when there are undefined symbols
-  # (caused through missing RENDU_*_API macros).
+  # (caused through missing TRINITY_*_API macros).
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --no-undefined")
 
   message(STATUS "Clang: Disallow undefined symbols")
-endif ()
+endif()
+
+# speedup PCH builds by forcing template instantiations during PCH generation
+set(CMAKE_REQUIRED_FLAGS "-fpch-instantiate-templates")
+check_cxx_source_compiles("int main() { return 0; }" CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
+unset(CMAKE_REQUIRED_FLAGS)
+if(CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
+  target_compile_options(rendu-compile-option-interface
+    INTERFACE
+      -fpch-instantiate-templates)
+endif()

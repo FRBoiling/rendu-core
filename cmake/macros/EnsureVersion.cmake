@@ -1,6 +1,3 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
 # This file defines the following macros for developers to use in ensuring
 # that installed software is of the right version:
 #

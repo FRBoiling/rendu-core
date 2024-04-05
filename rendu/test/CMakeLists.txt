@@ -12,6 +12,6 @@ rendu_add_library(
     PRIVATE
     rendu-core-interface
     DEPS
-    dep::gtest
+    third_party::gtest
 )
 

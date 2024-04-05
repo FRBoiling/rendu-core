@@ -12,7 +12,8 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::entt
-    dep::spdlog
-    dep::date
+    third_party::entt
+    third_party::spdlog
+    third_party::date
+    third_party::fmt
 )

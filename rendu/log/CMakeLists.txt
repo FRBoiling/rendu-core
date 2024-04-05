@@ -15,5 +15,5 @@ rendu_add_library(
     rendu::base
     rendu::time
     rendu::thread
-    dep::spdlog
+    third_party::spdlog
 )

@@ -9,6 +9,7 @@ if (RD_BUILD_EXAMPLES)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}
       # Exclude
+      ${CMAKE_CURRENT_SOURCE_DIR}/zltoolkit
   )
 endif ()
 

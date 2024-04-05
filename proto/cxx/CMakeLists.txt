@@ -9,5 +9,5 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    dep::protobuf
+    third_party::protobuf
 )

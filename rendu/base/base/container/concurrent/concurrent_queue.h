@@ -6,43 +6,31 @@
 #define RENDU_BASE_CONCURRENT_QUEUE_H
 
 #include "base_define.h"
-#include <concurrentqueue/concurrentqueue.h>
+#include "boost/lockfree/queue.hpp"
+
 
 RD_NAMESPACE_BEGIN
-    template<typename T>
-    class ConcurrentQueue{
-    public:
+template<typename T>
+class ConcurrentQueue {
+private:
+  boost::lockfree::queue<T> queue_;
 
-      void push(const T &t) {
-        moodycamel::ConcurrentQueue<T>::enqueue(t);
-      }
+public:
+  ConcurrentQueue() : queue_(128) {}// 初始化队列大小
 
-      void push(T &&t) {
-        moodycamel::ConcurrentQueue<T>::enqueue(std::move(t));
-      }
+  void push(const T &value) {
+    queue_.push(value);
+  }
 
-      bool pop(T &t) {
-        return moodycamel::ConcurrentQueue<T>::try_dequeue(t);
-      }
+  bool try_pop(T &popped_value) {
+    return queue_.pop(popped_value);
+  }
 
-      int Size() {
-        return 0;
-      }
-
-      bool TryDequeue(T& t) {
-
-        return true;
-      }
-
-      void Enqueue(T& t) {
-
-      }
-
-      void Enqueue(T&& t) {
-
-      }
-    };
+  bool empty() const {
+    return queue_.empty();
+  }
+};
 
 RD_NAMESPACE_END
 
-#endif //RENDU_BASE_CONCURRENT_QUEUE_H
+#endif//RENDU_BASE_CONCURRENT_QUEUE_H

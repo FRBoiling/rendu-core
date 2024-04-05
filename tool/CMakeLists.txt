@@ -4,7 +4,7 @@
 #|--------------------------------
 #| rendu-core tools module
 #|--------------------------------
-if (RD_BUILD_TOOLS)
+if (TOOLS)
   set(PROJECT_NAME tool)
   rendu_add_subdirectory(
       ${CMAKE_CURRENT_SOURCE_DIR}

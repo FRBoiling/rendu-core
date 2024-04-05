@@ -6,7 +6,7 @@
 #define RENDU_STRING_FORMAT_H
 
 #include "base_define.h"
-#include <fmt/core.h>
+#include "fmt/core.h"
 #include <fmt/format.h>
 
 RD_NAMESPACE_BEGIN

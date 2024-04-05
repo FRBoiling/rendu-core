@@ -24,11 +24,10 @@ namespace rendu {
 namespace proto {
 namespace core {
 PROTOBUF_CONSTEXPR LogSetting::LogSetting(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.path_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.perheader_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.level_)*/0
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+    ::_pbi::ConstantInitialized)
+  : path_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , perheader_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , level_(0){}
 struct LogSettingDefaultTypeInternal {
   PROTOBUF_CONSTEXPR LogSettingDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -52,9 +51,9 @@ const uint32_t TableStruct_core_2flogger_2eproto::offsets[] PROTOBUF_SECTION_VAR
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, _impl_.level_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, _impl_.path_),
-  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, _impl_.perheader_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, level_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, path_),
+  PROTOBUF_FIELD_OFFSET(::rendu::proto::core::LogSetting, perheader_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::rendu::proto::core::LogSetting)},
@@ -97,57 +96,42 @@ class LogSetting::_Internal {
 LogSetting::LogSetting(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+  SharedCtor();
   // @@protoc_insertion_point(arena_constructor:rendu.proto.core.LogSetting)
 }
 LogSetting::LogSetting(const LogSetting& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
-  LogSetting* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.path_){}
-    , decltype(_impl_.perheader_){}
-    , decltype(_impl_.level_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.path_.InitDefault();
+  path_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.path_.Set("", GetArenaForAllocation());
+    path_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_path().empty()) {
-    _this->_impl_.path_.Set(from._internal_path(), 
-      _this->GetArenaForAllocation());
+    path_.Set(from._internal_path(), 
+      GetArenaForAllocation());
   }
-  _impl_.perheader_.InitDefault();
+  perheader_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.perheader_.Set("", GetArenaForAllocation());
+    perheader_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_perheader().empty()) {
-    _this->_impl_.perheader_.Set(from._internal_perheader(), 
-      _this->GetArenaForAllocation());
+    perheader_.Set(from._internal_perheader(), 
+      GetArenaForAllocation());
   }
-  _this->_impl_.level_ = from._impl_.level_;
+  level_ = from.level_;
   // @@protoc_insertion_point(copy_constructor:rendu.proto.core.LogSetting)
 }
 
-inline void LogSetting::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.path_){}
-    , decltype(_impl_.perheader_){}
-    , decltype(_impl_.level_){0}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.path_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.path_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.perheader_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.perheader_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void LogSetting::SharedCtor() {
+path_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  path_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+perheader_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  perheader_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+level_ = 0;
 }
 
 LogSetting::~LogSetting() {
@@ -161,12 +145,12 @@ LogSetting::~LogSetting() {
 
 inline void LogSetting::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.path_.Destroy();
-  _impl_.perheader_.Destroy();
+  path_.Destroy();
+  perheader_.Destroy();
 }
 
 void LogSetting::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
+  _cached_size_.Set(size);
 }
 
 void LogSetting::Clear() {
@@ -175,9 +159,9 @@ void LogSetting::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.path_.ClearToEmpty();
-  _impl_.perheader_.ClearToEmpty();
-  _impl_.level_ = 0;
+  path_.ClearToEmpty();
+  perheader_.ClearToEmpty();
+  level_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -190,7 +174,7 @@ const char* LogSetting::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // int32 level = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.level_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          level_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -305,34 +289,38 @@ size_t LogSetting::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_level());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData LogSetting::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
     LogSetting::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*LogSetting::GetClassData() const { return &_class_data_; }
 
+void LogSetting::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<LogSetting *>(to)->MergeFrom(
+      static_cast<const LogSetting &>(from));
+}
 
-void LogSetting::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<LogSetting*>(&to_msg);
-  auto& from = static_cast<const LogSetting&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:rendu.proto.core.LogSetting)
-  GOOGLE_DCHECK_NE(&from, _this);
+
+void LogSetting::MergeFrom(const LogSetting& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rendu.proto.core.LogSetting)
+  GOOGLE_DCHECK_NE(&from, this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_path().empty()) {
-    _this->_internal_set_path(from._internal_path());
+    _internal_set_path(from._internal_path());
   }
   if (!from._internal_perheader().empty()) {
-    _this->_internal_set_perheader(from._internal_perheader());
+    _internal_set_perheader(from._internal_perheader());
   }
   if (from._internal_level() != 0) {
-    _this->_internal_set_level(from._internal_level());
+    _internal_set_level(from._internal_level());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void LogSetting::CopyFrom(const LogSetting& from) {
@@ -352,14 +340,14 @@ void LogSetting::InternalSwap(LogSetting* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.path_, lhs_arena,
-      &other->_impl_.path_, rhs_arena
+      &path_, lhs_arena,
+      &other->path_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.perheader_, lhs_arena,
-      &other->_impl_.perheader_, rhs_arena
+      &perheader_, lhs_arena,
+      &other->perheader_, rhs_arena
   );
-  swap(_impl_.level_, other->_impl_.level_);
+  swap(level_, other->level_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata LogSetting::GetMetadata() const {
