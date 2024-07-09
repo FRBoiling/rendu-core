@@ -5,7 +5,7 @@
 #ifndef RENDU_TIME_DEFINE_H
 #define RENDU_TIME_DEFINE_H
 
-#include "base/base.hpp"
+#include "basic/basic_include.h"
 #include <chrono>
 
 #define TIME_NAMESPACE_BEGIN \
@@ -87,7 +87,7 @@ const double OADateMaxAsDouble = 2958466.0;
 const uint EafMultiplier = (uint) (((1UL << 32) + DaysPer4Years - 1) / DaysPer4Years);// 2,939,745
 const uint EafDivider = EafMultiplier * 4;                                              // 11,758,980
 
-const uLong TicksPer6Hours = TicksPerHour * 6;
+const ULong TicksPer6Hours = TicksPerHour * 6;
 const int March1BasedDayOfNewYear = 306;// Days between March 1 and January 1
 
 const std::array<uint, 13> s_daysToMonth365{
@@ -100,17 +100,17 @@ const std::array<char, 12> DaysInMonth365{
 const std::array<char, 12> DaysInMonth366{
     31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-const uLong TicksMask = 0x3FFFFFFFFFFFFFFF;
-const uLong FlagsMask = 0xC000000000000000;
+const ULong TicksMask = 0x3FFFFFFFFFFFFFFF;
+const ULong FlagsMask = 0xC000000000000000;
 const Long TicksCeiling = 0x4000000000000000;
-const uLong KindUnspecified = 0x0000000000000000;
-const uLong KindUtc = 0x4000000000000000;
-const uLong KindLocal = 0x8000000000000000;
-const uLong KindLocalAmbiguousDst = 0xC000000000000000;
-const int KindShift = 62;
+const ULong KindUnspecified = 0x0000000000000000;
+const ULong KindUtc = 0x4000000000000000;
+const ULong KindLocal = 0x8000000000000000;
+const ULong KindLocalAmbiguousDst = 0xC000000000000000;
+const Int KindShift = 62;
 
-const string TicksField = "ticks";      // Do not rename (binary serialization)
-const string DateDataField = "dateData";// Do not rename (binary serialization)
+const std::string TicksField = "ticks";      // Do not rename (binary serialization)
+const std::string DateDataField = "dateData";// Do not rename (binary serialization)
 
 TIME_NAMESPACE_END
 

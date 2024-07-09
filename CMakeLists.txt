@@ -1,6 +1,15 @@
 #|--------------------------------
 #| rendu-core rendu project
 #|--------------------------------
+message("* * * * * * * * * * * * *")
+message("*  _____     ____    *")
+message("* |  __  \\   | __  \\   *")
+message("* | |__) |   | |  \\ \\  *")
+message("* |  ___/    | |  | |  *")
+message("* | | \\ \\    | |_/  /  *")
+message("* |_|  \\_\\   |___ /    *")
+message("* * * * * * * * * * * * *")
+
 cmake_minimum_required (VERSION 3.21.7)
 
 # add this options before PROJECT keyword
@@ -14,6 +23,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(RENDU_PROJECT_NAME rendu)
 set(RENDU_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(RENDU_PROJECT_VERSION 2.0.0)
+
+
+
 project(
     ${RENDU_PROJECT_NAME}
     DESCRIPTION "Gaming meets modern C++ - a study project"

@@ -40,7 +40,7 @@ if (NOT CLANG_HAVE_PROPER_CHARCONV)
   message(STATUS "Clang: Detected from_chars bug for 64-bit integers, workaround enabled")
   target_compile_definitions(rendu-compile-option-interface
   INTERFACE
-    -DTRINITY_NEED_CHARCONV_WORKAROUND)
+    -DRD_NEED_CHARCONV_WORKAROUND)
 endif()
 
 if(WITH_WARNINGS)
@@ -159,7 +159,7 @@ if(BUILD_SHARED_LIBS)
       -fvisibility=hidden)
 
   # --no-undefined to throw errors when there are undefined symbols
-  # (caused through missing TRINITY_*_API macros).
+  # (caused through missing RD_*_API macros).
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --no-undefined")
 
   message(STATUS "Clang: Disallow undefined symbols")
