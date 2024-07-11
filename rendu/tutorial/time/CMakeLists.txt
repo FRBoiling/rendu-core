@@ -15,5 +15,6 @@ rendu_add_executable(
     rendu-core-interface
     DEPS
     rendu::time
+    third_party::spdlog
     DEFINES
 )

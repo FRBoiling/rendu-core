@@ -39,6 +39,11 @@
   } /*namespace rendu*/
 
 
+#define RD_DETAIL_NAMESPACE_BEGIN \
+  namespace detail {
+
+#define RD_DETAIL_NAMESPACE_END   \
+  } /* namespace detail */
 
 RD_NAMESPACE_BEGIN
 

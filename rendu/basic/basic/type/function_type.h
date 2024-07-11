@@ -5,7 +5,7 @@
 #ifndef RENDU_BASIC_BASIC_TYPE_FUNCTION_TYPE_H_
 #define RENDU_BASIC_BASIC_TYPE_FUNCTION_TYPE_H_
 
-#include "internal/function_type_define.h"
+#include "detail/function_type_define.h"
 #include "value_type.h"
 
 RD_NAMESPACE_BEGIN
@@ -19,14 +19,14 @@ enum class EFunctionType {
   DESTROY = 3            /** 释放函数 */
 };
 
-using RD_DEFAULT_FUNCTION = rendu::internal::RD_DEFAULT_FUNCTION;
-using RD_DEFAULT_CONST_FUNCTION_REF = rendu::internal::RD_DEFAULT_CONST_FUNCTION_REF;
+using RD_DEFAULT_FUNCTION = rendu::detail::RD_DEFAULT_FUNCTION;
+using RD_DEFAULT_CONST_FUNCTION_REF = rendu::detail::RD_DEFAULT_CONST_FUNCTION_REF;
 
-using RD_STATUS_FUNCTION = rendu::internal::RD_STATUS_FUNCTION;
-using RD_STATUS_CONST_FUNCTION_REF = rendu::internal::RD_STATUS_CONST_FUNCTION_REF;
+using RD_STATUS_FUNCTION = rendu::detail::RD_STATUS_FUNCTION;
+using RD_STATUS_CONST_FUNCTION_REF = rendu::detail::RD_STATUS_CONST_FUNCTION_REF;
 
-using RD_CALLBACK_FUNCTION = rendu::internal::RD_CALLBACK_FUNCTION;
-using RD_CALLBACK_CONST_FUNCTION_REF = rendu::internal::RD_CALLBACK_CONST_FUNCTION_REF;
+using RD_CALLBACK_FUNCTION = rendu::detail::RD_CALLBACK_FUNCTION;
+using RD_CALLBACK_CONST_FUNCTION_REF = rendu::detail::RD_CALLBACK_CONST_FUNCTION_REF;
 
 /** 开启函数流程 */
 #define RD_FUNCTION_BEGIN                                           \

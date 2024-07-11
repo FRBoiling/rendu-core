@@ -9,5 +9,6 @@
 #include "type/function_type.h"
 #include "type/struct.h"
 #include "type/object.h"
+#include <array>
 
 #endif//RENDU_BASIC_BASIC_TYPE_TYPE_INCLUDE_H_

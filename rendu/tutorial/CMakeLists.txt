@@ -19,5 +19,4 @@ rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}/task
     ${CMAKE_CURRENT_SOURCE_DIR}/test
     ${CMAKE_CURRENT_SOURCE_DIR}/thread
-    ${CMAKE_CURRENT_SOURCE_DIR}/time
 )
