@@ -58,103 +58,52 @@ String DateTime::ToString(const std::string &format /*= "%F %T %3f"*/) const {
 
 DateTime DateTime::Now(Kind kind /*= Kind::Local */) {
   auto now = detail::SysClock::now();
-  return {now,kind};
+  return {now, kind};
 }
 
 DateTime DateTime::AddYears(Int years) const {
-
   auto dt = floor<detail::Days>(m_time_point);
   auto ymd = detail::YearMonthDay{dt} + detail::Years(years);
   auto time_of_day = m_time_point - dt;
-  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day,m_kind};
+  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day, m_kind};
 }
 
 DateTime DateTime::AddMonths(Int months) const {
   auto dt = floor<detail::Days>(m_time_point);
   auto ymd = detail::YearMonthDay{dt} + detail::Months(months);
   auto time_of_day = m_time_point - dt;
-  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day,m_kind};
+  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day, m_kind};
 }
 
 DateTime DateTime::AddDays(Int days) const {
-  return {m_time_point + detail::Days(days), m_kind};
+  //  return {m_time_point + detail::Days(days), m_kind};
+  TimeSpan ts{days, 0};
+  return *this + ts;
 }
 
 DateTime DateTime::AddHours(Int hours) const {
-  return {m_time_point + detail::Hours(hours),m_kind};
+  //  return {m_time_point + detail::Hours(hours), m_kind};
+  TimeSpan ts{0, hours};
+  return *this + ts;
 }
 
 DateTime DateTime::AddMinutes(Long minutes) const {
-  return {m_time_point + detail::Minutes(minutes),m_kind};
+  //  return {m_time_point + detail::Minutes(minutes), m_kind};
+  TimeSpan ts{0, 0, minutes};
+  return *this + ts;
 }
 
 DateTime DateTime::AddSeconds(Long seconds) const {
-  return {m_time_point + detail::Seconds(seconds),m_kind};
+  //  return {m_time_point + detail::Seconds(seconds), m_kind};
+  TimeSpan ts{0, 0, 0, seconds};
+  return *this + ts;
 }
 
 DateTime DateTime::AddMilliseconds(Long milliseconds) const {
-  return {m_time_point + detail::Milliseconds(milliseconds)};
+  //  return {m_time_point + detail::Milliseconds(milliseconds)};
+  TimeSpan ts{0, 0, 0, 0, milliseconds};
+  return *this + ts;
 }
-
-
-//void DateTime::ToKind(time::DateTime::Kind kind) {
-////  using namespace std::chrono;
-////
-////  if (m_kind == kind) return;
-////
-////  auto tp_sys = time_point_cast<detail::Milliseconds>(m_time_point);
-////  auto tp_sys_time_t = system_clock::to_time_t(time_point_cast<seconds>(tp_sys));// Convert to seconds to feed to localtime/gmtime
-////
-////  // Extract the milliseconds part
-////  auto ms_part = duration_cast<milliseconds>(tp_sys.time_since_epoch()).count() % 1000;
-////
-////  std::tm result = {};
-////  std::tm *tm = &result;
-////  if (kind == Kind::Local) {
-////    localtime_r(&tp_sys_time_t, tm);
-////  } else if (kind == Kind::Utc) {
-////    gmtime_r(&tp_sys_time_t, tm);
-////  }
-////
-////  if (!tm) {
-////    throw std::runtime_error("Fail to convert to time kind");
-////  }
-////
-////  tm->tm_isdst = 0;
-////  using namespace date;
-////  auto dp = date::year{tm->tm_year + 1900} / date::month{tm->tm_mon + 1} / date::day{tm->tm_mday};// From struct tm to date::year_month_day
-////  auto t = hours{tm->tm_hour} + minutes{tm->tm_min} + seconds{tm->tm_sec};                        // From struct tm to std::chrono::*
-////  auto tp2 = sys_days(dp) + t + milliseconds(ms_part);
-////
-////  m_time_point = SysTimePoint(duration_cast<milliseconds>(tp2.time_since_epoch()));
-////  m_kind = kind;
-//}
-//
-//void DateTime::ConvertToKind(DateTime::Kind kind) {
-//  if (kind != Kind::Unspecified) {
-//    this->ToKind(kind);
-//  }
-//}
-
-
-//
-//DateTime::SysTimePoint DateTime::GetSysTimePoint() const {
-//  return m_time_point;
-//}
-//
-////std::string DateTime::ToString(const std::string& format /*= "%F %T"*/) const {
-////  auto tp = floor<milliseconds>(m_time_point);
-////  auto ms = tp.time_since_epoch().count() % 1000;
-////  std::string base_date_time = date::format(format, tp);
-////
-////  std::ostringstream oss;
-////  oss << std::setfill('0') << std::setw(3) << ms; //添加毫秒并确保毫秒值为三位数
-////
-////  return base_date_time + "." + oss.str(); //拼接字符串
-////}
-//
-
-//
 
 //
 //bool DateTime::IsLeapYear() const {

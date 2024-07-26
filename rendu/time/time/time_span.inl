@@ -85,8 +85,5 @@ inline TimeSpan TimeSpan::fromMilliseconds(Long milliseconds) {
   return {0, 0, 0, 0, milliseconds};
 }
 
-//inline TimeSpan TimeSpan::fromMicroseconds(Long microseconds) {
-//  return {microseconds};
-//}
 
 RD_TIME_NAMESPACE_END

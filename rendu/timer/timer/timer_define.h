@@ -7,6 +7,7 @@
 
 #include "basic/basic_include.h"
 #include "async/async_include.h"
+#include "time/time_include.h"
 
 #define RD_TIMER_NAMESPACE_BEGIN \
   RD_NAMESPACE_BEGIN             \
@@ -16,6 +17,9 @@
   } /*namespace timer*/        \
                                \
   RD_NAMESPACE_END
+
+
+
 
 
 #endif//RENDU_TIMER_TIMER_TIMER_DEFINE_H_

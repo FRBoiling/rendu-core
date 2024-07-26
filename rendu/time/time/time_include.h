@@ -5,8 +5,6 @@
 #ifndef RENDU_TIME_TIME_HPP_
 #define RENDU_TIME_TIME_HPP_
 
-#include "time_zone.h"
-#include "time_span.h"
 #include "date_time.h"
 
 #endif//RENDU_TIME_TIME_HPP_

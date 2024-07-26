@@ -13,7 +13,7 @@ public:
 public:
   TimeSpan(Long milliseconds);
 
-  TimeSpan(Int days, Int hours, Int minutes = 0, Int seconds = 0, Long milliseconds = 0);
+  TimeSpan(Int days, Int hours, Long minutes = 0, Long seconds = 0, Long milliseconds = 0);
 
 public:
   Int totalDays() const;
@@ -41,7 +41,6 @@ public:
   bool operator<(const TimeSpan &rhs) const {
     return m_duration < rhs.m_duration;
   }
-
 
 public:
   static TimeSpan fromDays(Int days);

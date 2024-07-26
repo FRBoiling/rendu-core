@@ -22,6 +22,12 @@ public:
     Local
   };
 
+  enum class Clock {
+    Unspecified,
+    System,
+    Steady
+  };
+
 public:
   static DateTime MinValue;
   static DateTime MaxValue;
@@ -37,7 +43,7 @@ public:
   String ToString(const std::string &format = "%Y-%m-%d %H:%M:%S") const;
 
 public:
-  static DateTime Now( Kind kind = Kind::Local);
+  static DateTime Now(Kind kind = Kind::Local);
 
   bool operator<(const DateTime &other) const;
   bool operator==(const DateTime &other) const;
@@ -74,26 +80,6 @@ private:
   Kind m_kind;
 };
 
-
-//
-/**
- * 获取当前的ms信息
- * @return
- */
-inline MSec RD_GET_CURRENT_MS() {
-  // 获取当前的时间戳信息
-  return (MSec) std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()).time_since_epoch().count();
-}
-
-
-/**
- * 获取当前的ms信息(包含小数)
- * @return
- */
-inline FMSec RD_GET_CURRENT_ACCURATE_MS() {
-  // 获取当前的时间戳信息
-  return (FMSec) std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()).time_since_epoch().count() / (FMSec) 1000.0;
-}
 
 RD_TIME_NAMESPACE_END
 

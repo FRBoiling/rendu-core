@@ -137,13 +137,6 @@ using Years = std::chrono::duration<Int, detail::ratio_multiply<std::ratio<DaysP
 using Months = std::chrono::duration<Int, detail::ratio_divide<Years::period, std::ratio<MonthsPerYear>>>;
 
 
-const std::string TicksField = "ticks";
-const std::string DateDataField = "dateData";
-
-
-
-
-
 RD_DETAIL_NAMESPACE_END
 
 RD_TIME_NAMESPACE_END

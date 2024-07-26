@@ -136,6 +136,8 @@ int date_time_example() {
   //  DateTime now{tp, DateTime::Kind::Utc};
   DateTime now{tp};
   SPDLOG_ERROR("DateTime now: {}", now.ToString());
+  auto sc = steady_clock::now();
+  std::cout << "steady_clock now: "  << std::endl;
 
   ////  auto tp = zoned_time{current_zone(), system_clock::now()}.get_local_time();
   auto dp = floor<days>(tp);
@@ -172,15 +174,15 @@ int date_time_example() {
 
   std::cout << "now11111: " << now << std::endl;
   auto date_time = now.AddYears(1);
-  SPDLOG_ERROR("date_time: {}", date_time.ToString());
-  date_time = now.AddMonths(detail::MonthsPerYear);
-  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  SPDLOG_ERROR("AddYears date_time: {}", date_time.ToString());
+  date_time = now.AddMonths(detail::MonthsPerYear-1);
+  SPDLOG_ERROR("AddMonths date_time: {}", date_time.ToString());
   date_time = now.AddDays(detail::MonthsPerYear * 30);
-  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  SPDLOG_ERROR("AddDays date_time: {}", date_time.ToString());
   date_time = now.AddHours(detail::HoursPerDay);
-  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  SPDLOG_ERROR("AddHours date_time: {}", date_time.ToString());
   date_time = now.AddMinutes(detail::MinutesPerHour * detail::HoursPerDay);
-  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  SPDLOG_ERROR("AddMinutes date_time: {}", date_time.ToString());
 
 
   //      if (Week::CheckInSameWeek(date1, date2)) {
@@ -225,7 +227,7 @@ int time_example() {
 
   //  duration_example();
   //  time_span_example();
-  //  date_time_example();
+    date_time_example();
   //  time_zone_example();
 }
 

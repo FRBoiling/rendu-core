@@ -21,6 +21,8 @@ using SysMinutes = SysTime<Minutes>;
 using SysHours = SysTime<Hours>;
 using SysDays = SysTime<Days>;
 
+using SteadyClock = std::chrono::steady_clock;
+
 RD_DETAIL_NAMESPACE_END
 RD_TIME_NAMESPACE_END
 #endif//RENDU_TIME_TIME_DATE_INCLUDE_TIME_POINT_H_

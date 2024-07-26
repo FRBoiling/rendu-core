@@ -10,7 +10,7 @@ TimeSpan::TimeSpan(Long microseconds)
     : m_duration{microseconds} {
 }
 
-TimeSpan::TimeSpan(Int days, Int hours, Int minutes, Int seconds, Long milliseconds)
+TimeSpan::TimeSpan(Int days, Int hours, Long minutes, Long seconds, Long milliseconds)
     : m_duration(detail::Days{days} + detail::Hours{hours} + detail::Minutes{minutes} + detail::Seconds{seconds} + detail::Milliseconds{milliseconds}) {
 }
 
