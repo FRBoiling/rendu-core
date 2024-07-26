@@ -3,8 +3,6 @@
 */
 
 #include "date_time.h"
-#include "date_time_define.h"
-#include "time_cast.h"
 
 RD_TIME_NAMESPACE_BEGIN
 
@@ -13,34 +11,91 @@ DateTime DateTime::MaxValue{detail::MaxMicroseconds, DateTime::Kind::Unspecified
 DateTime DateTime::UnixEpoch{detail::UnixEpochMicros, DateTime::Kind::Utc};
 
 
-DateTime::DateTime(int year, uint month, uint day, DateTime::Kind kind)
-    : m_kind(kind),
-      m_time_point(detail::SysDays(detail::YearMonthDay(detail::Year(year), detail::Month(month), detail::Day(day)))) {
+DateTime::DateTime(Int year, uint month, uint day, DateTime::Kind kind)
+    : m_time_point{detail::SysDays{detail::YearMonthDay{detail::Year{year}, detail::Month{month}, detail::Day{day}}}},
+      m_kind{kind} {
   //  ConvertToKind(m_kind);
 }
 
-DateTime::DateTime(int year, uint month, uint day, int hour, int minute, int second, int millisecond, DateTime::Kind kind)
-    : m_kind(kind),
-      m_time_point(detail::SysDays(detail::YearMonthDay(detail::Year(year), detail::Month{month}, detail::Day{day})) + detail::Hours(hour) + detail::Minutes(minute) + detail::Seconds(second) + detail::Milliseconds(millisecond)) {
+DateTime::DateTime(Int year, uint month, uint day, Int hour, Int minute, Int second, Int millisecond, DateTime::Kind kind)
+    : m_time_point{detail::SysDays{detail::YearMonthDay{detail::Year{year}, detail::Month{month}, detail::Day{day}}} + detail::Hours(hour) + detail::Minutes(minute) + detail::Seconds(second) + detail::Milliseconds(millisecond)},
+      m_kind{kind} {
   //  ConvertToKind(m_kind);
 }
 
-DateTime::DateTime(const Long microseconds, DateTime::Kind kind)
-    : m_kind(kind),
-      m_time_point(detail::SysDays(detail::YearMonthDay(detail::Year(0), detail::Month{0}, detail::Day{0})) + detail::Hours(0) + detail::Minutes(0) + detail::Seconds(0) + detail::Milliseconds(0) + detail::Microseconds(microseconds)) {}
+DateTime::DateTime(Long microseconds, DateTime::Kind kind)
+    : m_time_point{detail::SysDays{detail::YearMonthDay{detail::Year{0}, detail::Month{0}, detail::Day{0}}} + detail::Hours(0) + detail::Minutes(0) + detail::Seconds(0) + detail::Milliseconds(0) + detail::Microseconds(microseconds)},
+      m_kind{kind} {
+}
 
-DateTime::DateTime(const DateTime::SysTimePoint &time_point) : m_time_point(time_point) {}
+DateTime::DateTime(const DateTime::SysTimePoint &time_point, DateTime::Kind kind)
+    : m_time_point(time_point),
+      m_kind(kind) {
+}
 
 String DateTime::ToString(const std::string &format /*= "%F %T %3f"*/) const {
-  std::stringstream ss;
-  ss << m_time_point;
-  return ss.str();
+  if (m_kind == Kind::Unspecified) {
+    return "";
+  }
+  if (m_kind == Kind::Utc) {
+    std::stringstream ss;
+    ss << m_time_point;
+    return ss.str();
+  }
+
+  // 将 time_point 转换为 time_t
+  std::time_t tt = std::chrono::system_clock::to_time_t(m_time_point);
+  // 将 time_t 转换为本地时间的 tm 结构体
+  std::tm *tm = std::localtime(&tt);
+  std::ostringstream oss;
+  oss << std::put_time(tm, "%Y-%m-%d %H:%M:%S.");
+
+  detail::Milliseconds ms = duration_cast<detail::Milliseconds>(m_time_point.time_since_epoch()) % 1000000;
+  oss << std::setfill('0') << std::setw(3) << ms.count() % 1000;
+  // 格式化本地时间为字符串
+  return oss.str();
 }
 
-DateTime DateTime::Now(const std::string &timezone /*= ""*/) {
+DateTime DateTime::Now(Kind kind /*= Kind::Local */) {
   auto now = detail::SysClock::now();
-  return DateTime(now);
+  return {now,kind};
 }
+
+DateTime DateTime::AddYears(Int years) const {
+
+  auto dt = floor<detail::Days>(m_time_point);
+  auto ymd = detail::YearMonthDay{dt} + detail::Years(years);
+  auto time_of_day = m_time_point - dt;
+  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day,m_kind};
+}
+
+DateTime DateTime::AddMonths(Int months) const {
+  auto dt = floor<detail::Days>(m_time_point);
+  auto ymd = detail::YearMonthDay{dt} + detail::Months(months);
+  auto time_of_day = m_time_point - dt;
+  return {SysTimePoint(detail::SysDays{ymd}) + time_of_day,m_kind};
+}
+
+DateTime DateTime::AddDays(Int days) const {
+  return {m_time_point + detail::Days(days), m_kind};
+}
+
+DateTime DateTime::AddHours(Int hours) const {
+  return {m_time_point + detail::Hours(hours),m_kind};
+}
+
+DateTime DateTime::AddMinutes(Long minutes) const {
+  return {m_time_point + detail::Minutes(minutes),m_kind};
+}
+
+DateTime DateTime::AddSeconds(Long seconds) const {
+  return {m_time_point + detail::Seconds(seconds),m_kind};
+}
+
+DateTime DateTime::AddMilliseconds(Long milliseconds) const {
+  return {m_time_point + detail::Milliseconds(milliseconds)};
+}
+
 
 //void DateTime::ToKind(time::DateTime::Kind kind) {
 ////  using namespace std::chrono;
@@ -100,96 +155,22 @@ DateTime DateTime::Now(const std::string &timezone /*= ""*/) {
 //
 
 //
-//DateTime DateTime::operator-(const TimeSpan &t) const {
-//  auto duration = std::chrono::duration<uLong, std::milli>(t.TotalMilliseconds());
-//  return DateTime(m_time_point - duration);
-//}
-//DateTime DateTime::operator+(const TimeSpan &t) const {
-//  auto duration = std::chrono::duration<Long, std::milli>(t.TotalMilliseconds());
-//  return DateTime(m_time_point + duration);
-//}
+
 //
 //bool DateTime::IsLeapYear() const {
 //  return Year_month_day{date::floor<date::days>(m_time_point)}.year().is_leap();
 //}
 //
-//int DateTime::DayOfYear() const {
-//  return static_cast<int>(date::floor<date::days>(m_time_point).time_since_epoch().count() -
+//Int DateTime::DayOfYear() const {
+//  return static_cast<Int>(date::floor<date::days>(m_time_point).time_since_epoch().count() -
 //                            detail::SysDays(Year{Year()} / 1 / 1).time_since_epoch().count() + 1);
 //}
-//int DateTime::DayOfWeek() const {
-//  return (int) (date::weekday{date::year_month_day{date::floor<date::days>(m_time_point)}}.iso_encoding());
+//Int DateTime::DayOfWeek() const {
+//  return (Int) (date::weekday{date::year_month_day{date::floor<date::days>(m_time_point)}}.iso_encoding());
 //}
+
+
 //
-//int DateTime::Year() const {
-//  return (int) (date::year_month_day{date::floor<date::days>(m_time_point)}.year());
-//}
-//
-//uint DateTime::Month() const {
-//  return (uint) (date::year_month_day{date::floor<date::days>(m_time_point)}.month());
-//}
-//
-//uint DateTime::Day() const {
-//  return (uint) (date::year_month_day{date::floor<date::days>(m_time_point)}.day());
-//}
-//
-//// MilliSecondsInLastDay函数计算自午夜以来的毫秒数
-//// 返回值的范围是0到8639999
-//// 8639999毫秒是23小时59分钟59秒
-//// 23小时59分钟59秒是24小时中的1秒
-//// 因此，返回值的范围是从0到8639999，表示自午夜以来的毫秒数
-//int DateTime::MilliSecondsInLastDay() const {
-//  const auto seconds_since_epoch = std::chrono::duration_cast<std::chrono::milliseconds>(m_time_point.time_since_epoch()).count();
-//  return static_cast<int>(seconds_since_epoch % MillisPerDay);
-//}
-//
-//int DateTime::Hour() const {
-//  return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).hours().count();
-//}
-//
-//int DateTime::Minute() const {
-//  return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).minutes().count();
-//}
-//
-//int DateTime::Second() const {
-//  return date::make_time(std::chrono::milliseconds(MilliSecondsInLastDay())).seconds().count();
-//}
-//
-//// MilliSecondsInDayParts函数计算表示小时、分钟和秒的毫秒数总和，这将用于计算剩余毫秒数
-//Long DateTime::MilliSecondsInDayParts() const {
-//  auto hms_ms = std::chrono::milliseconds(MilliSecondsInLastDay());
-//  date::hh_mm_ss hms(hms_ms);
-//  return Long(hms.hours().count()) * MillisPerHour + Long(hms.minutes().count()) * MillisPerMinute + Long(hms.seconds().count()) * MillisPerSecond;
-//}
-//
-//Long DateTime::MilliSecond() const {
-//  return std::chrono::milliseconds(MilliSecondsInLastDay()).count() - MilliSecondsInDayParts();
-//}
-//
-//DateTime DateTime::AddYears(int years) const {
-//  auto dt = date::floor<date::days>(m_time_point);
-//  auto ymd = date::year_month_day{dt} + date::years(years);
-//  auto time_of_day = m_time_point - dt;
-//  return DateTime(SysTimePoint(detail::SysDays{ymd}) + time_of_day);
-//}
-//
-//DateTime DateTime::AddMonths(int months) const {
-//  auto dt = date::floor<date::days>(m_time_point);
-//  auto ymd = date::year_month_day{dt} + date::months(months);
-//  auto time_of_day = m_time_point - dt;
-//  return DateTime(SysTimePoint(detail::SysDays{ymd}) + time_of_day);
-//}
-//
-//DateTime DateTime::AddDays(int days) const {
-//  return DateTime(m_time_point + date::days{days});
-//}
-//
-//bool DateTime::operator==(const DateTime &other) const {
-//  return m_time_point == other.m_time_point;
-//}
-//bool DateTime::operator<(const DateTime &other) const {
-//  return m_time_point < other.m_time_point;
-//}
-//
+
 //
 RD_TIME_NAMESPACE_END

@@ -110,17 +110,107 @@ int time_span_example() {
   std::chrono::system_clock::time_point tp = std::chrono::sys_days(std::chrono::year_month_day(y, m, d)) + h + min + s + ms;
 
   // 输出结果
-  std::cout << "初始化的 std::chrono::system_clock::time_point: " << tp  << std::endl;
+  std::cout << "初始化的 std::chrono::system_clock::time_point: " << tp << std::endl;
 
-  DateTime dt(year, month, day, hour, minute, second,millisecond);
-  std::cout << "初始化的 DateTime: " << dt.ToString()  << std::endl;
+  DateTime dt(year, month, day, hour, minute, second, millisecond);
+  std::cout << "初始化的 DateTime: " << dt.ToString() << std::endl;
   std::cout << "初始化的 DateTime: " << dt << std::endl;
 
   auto now = DateTime::Now();
   std::cout << "当前时间: " << now << std::endl;
-
 }
 
+int getYearFromTimePoint(std::chrono::system_clock::time_point timePoint) {
+  std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint);
+  struct tm *timeInfo = std::localtime(&timeT);
+  return timeInfo->tm_year + 1900;
+}
+
+int date_time_example() {
+  std::cout << "------------date_time_example--------- " << std::endl;
+  using namespace std::chrono;
+  auto tp = system_clock::now();
+  std::cout << "system_clock now: " << tp << std::endl;
+  using namespace rendu::time;
+  //  DateTime now = DateTime::Now(DateTime::Kind::Utc);
+  //  DateTime now{tp, DateTime::Kind::Utc};
+  DateTime now{tp};
+  SPDLOG_ERROR("DateTime now: {}", now.ToString());
+
+  ////  auto tp = zoned_time{current_zone(), system_clock::now()}.get_local_time();
+  auto dp = floor<days>(tp);
+  year_month_day ymd{dp};
+  hh_mm_ss time{floor<milliseconds>(tp - dp)};
+  auto y = ymd.year();
+  auto m = ymd.month();
+  auto d = ymd.day();
+  auto h = time.hours();
+  auto M = time.minutes();
+  auto s = time.seconds();
+  auto ms = time.subseconds();
+  std::cout << "year: " << y << std::endl;
+  std::cout << "month: " << m << std::endl;
+  std::cout << "day: " << d << std::endl;
+  std::cout << "hour: " << h << std::endl;
+  std::cout << "minutes: " << M << std::endl;
+  std::cout << "seconds: " << s << std::endl;
+  std::cout << "millisecond: " << ms.count() << std::endl;
+
+  SPDLOG_ERROR("year: {}", now.Year());
+  SPDLOG_ERROR("month: {}", now.Month());
+  SPDLOG_ERROR("day: {}", now.Day());
+  SPDLOG_ERROR("hour: {}", now.Hour());
+  SPDLOG_ERROR("minutes: {}", now.Minute());
+  SPDLOG_ERROR("seconds: {}", now.Second());
+  SPDLOG_ERROR("millisecond: {}", now.Millisecond());
+
+  TimeSpan timeSpan = TimeSpan::fromDays(1);
+  DateTime date1 = now.AddDays(2) - timeSpan;
+  DateTime date2 = now.AddDays(2) + timeSpan;
+  SPDLOG_ERROR("date1: {}", date1.ToString());
+  SPDLOG_ERROR("date2: {}", date2.ToString());
+
+  std::cout << "now11111: " << now << std::endl;
+  auto date_time = now.AddYears(1);
+  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  date_time = now.AddMonths(detail::MonthsPerYear);
+  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  date_time = now.AddDays(detail::MonthsPerYear * 30);
+  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  date_time = now.AddHours(detail::HoursPerDay);
+  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+  date_time = now.AddMinutes(detail::MinutesPerHour * detail::HoursPerDay);
+  SPDLOG_ERROR("date_time: {}", date_time.ToString());
+
+
+  //      if (Week::CheckInSameWeek(date1, date2)) {
+  //        SPDLOG_ERROR("date1 and date2 are in the same week");
+  //      } else {
+  //        SPDLOG_ERROR("date1 and date2 are not in the same week");
+  //      }
+
+  return 0;
+}
+
+int time_zone_example() {
+  //  std::cout << "------------time_zone_example--------- " << std::endl;
+  //  using namespace std::chrono;
+  //  // 假设当前时间（这里仅作示例，实际应使用 system_clock::now()）
+  //  sys_time<seconds> now = sys_time<seconds>{};
+  //  // 获取本地时区
+  //  auto z = std::chrono::current_zone();
+  //  zoned_time<seconds> zt{z, floor<seconds>(now)};
+  //
+  //  // 打印本地时间
+  //  std::cout << "本地时间: " << std::format("{:%Y-%m-%d %H:%M:%S %Z}", zt) << std::endl;
+  //  //  auto zone = TimeZoneInfo::Local();
+  //  //  SPDLOG_ERROR("zone: {}", zone.Id());
+  //  //  SPDLOG_ERROR("zone: {}", zone.DisplayName());
+  //  //  SPDLOG_ERROR("zone: {}", zone.StandardName());
+  //  //  SPDLOG_ERROR("zone: {}", zone.DaylightName());
+  //  //  SPDLOG_ERROR("zone: {}", zone.BaseUtcOffset().count());
+  //  //  SPDLOG
+}
 
 int time_example() {
   //  using namespace std;
@@ -133,34 +223,10 @@ int time_example() {
   //  auto ymd = YearMonthDay{dp};
   //  std::cout << ymd << std::endl;
 
-  duration_example();
-  time_span_example();
-}
-
-int date_time_example() {
-  //  DateTime now = DateTime::Now();
-  //  RD_INFO(" The current date and time is {}", now.ToString());
-  //
-  //  RD_INFO(" The current Year is {}", now.Year());
-  //  RD_INFO(" The current Month is {}", now.Month());
-  //  RD_INFO(" The current Hour is {}", now.Hour());
-  //  RD_INFO(" The current Minute is {}", now.Minute());
-  //  RD_INFO(" The current Second is {}", now.Second());
-  //  RD_INFO(" The current MilliSecond is {}", now.MilliSecond());
-  //  RD_INFO(" The current DayOfWeek is {}", now.DayOfWeek());
-  //  RD_INFO(" The current DayOfYear is {}", now.DayOfYear());
-  //
-  //  TimeSpan timeSpan = TimeSpan::FromDays(1);
-  //  DateTime date1 = now.AddDays(2) - timeSpan;
-  //  DateTime date2 = now.AddDays(2) + timeSpan;
-  //
-  //  if (Week::CheckInSameWeek(date1, date2)) {
-  //    RD_INFO("date1 and date2 are in the same week");
-  //  } else {
-  //    RD_INFO("date1 and date2 are not in the same week");
-  //  }
-  //
-  //  return 0;
+  //  duration_example();
+  //  time_span_example();
+  //  date_time_example();
+  //  time_zone_example();
 }
 
 

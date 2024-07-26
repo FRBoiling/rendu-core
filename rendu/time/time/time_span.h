@@ -2,37 +2,34 @@
 #define RENDU_TIME_TIME_TIME_SPAN_H_
 
 #include "time_point.h"
-
 RD_TIME_NAMESPACE_BEGIN
 
 class TimeSpan
     : public EqualityComparable<TimeSpan>,
       public LessThanComparable<TimeSpan> {
 public:
-  using Duration = detail::Microseconds;
+  using Duration = detail::Milliseconds;
 
 public:
-  TimeSpan(Long microseconds = 0);
+  TimeSpan(Long milliseconds);
 
   TimeSpan(Int days, Int hours, Int minutes = 0, Int seconds = 0, Long milliseconds = 0);
 
 public:
   Int totalDays() const;
-  Int totalHours() const;
-  Int totalMinutes() const;
-  Int totalSeconds() const;
+  Long totalHours() const;
+  Long totalMinutes() const;
+  Long totalSeconds() const;
   Long totalMilliseconds() const;
-  Double totalMicroseconds() const;
 
   Int Days() const;
-  Int Hours() const;
-  Int Minutes() const;
-  Int Seconds() const;
+  Long Hours() const;
+  Long Minutes() const;
+  Long Seconds() const;
   Long Milliseconds() const;
-  Double Microseconds() const;
 
-  TimeSpan operator*(const Double &rhs) const;
-  TimeSpan operator/(const Double &rhs) const;
+  TimeSpan operator*(const Long &rhs) const;
+  TimeSpan operator/(const Long &rhs) const;
   TimeSpan operator%(const TimeSpan &rhs) const;
   TimeSpan operator+(const TimeSpan &rhs) const;
   TimeSpan operator-(const TimeSpan &rhs) const;
@@ -52,12 +49,13 @@ public:
   static TimeSpan fromMinutes(Int minutes);
   static TimeSpan fromSeconds(Int seconds);
   static TimeSpan fromMilliseconds(Long milliseconds);
-  static TimeSpan fromMicroseconds(Double microseconds);
 
 private:
   Duration m_duration;
 };
 
 RD_TIME_NAMESPACE_END
+
+#include "time_span.inl"
 
 #endif//RENDU_TIME_TIME_TIME_SPAN_H_
