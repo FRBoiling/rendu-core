@@ -4,41 +4,41 @@
 #ifndef RENDU_LOG_EXAMPLE_H
 #define RENDU_LOG_EXAMPLE_H
 
-#include "log.hpp"
-
-using namespace rendu::log;
-
-int log_example() {
-  RD_LOGGER_INIT();
-  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
-  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
-  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
-  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
-  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
-  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
-
-  RD_LOGGER_CLEAN();
-  RD_LOGGER_SET(new Logger());
-  RD_LOGGER_INIT("color_log",LogLevel::LL_TRACE);
-  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
-  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
-  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
-  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
-  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
-  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
-
-  RD_LOGGER_CLEAN();
-  RD_LOGGER_SET(new SpdLogger());
-  RD_LOGGER_INIT("spd_log",LogLevel::LL_TRACE);
-  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
-  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
-  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
-  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
-  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
-  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
-
-  return 0;
-}
+//#include "log.hpp"
+//
+//using namespace rendu::log;
+//
+//int log_example() {
+//  RD_LOGGER_INIT();
+//  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
+//  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
+//  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
+//  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
+//  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
+//  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
+//
+//  RD_LOGGER_CLEAN();
+//  RD_LOGGER_SET(new Logger());
+//  RD_LOGGER_INIT("color_log",LogLevel::LL_TRACE);
+//  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
+//  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
+//  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
+//  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
+//  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
+//  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
+//
+//  RD_LOGGER_CLEAN();
+//  RD_LOGGER_SET(new SpdLogger());
+//  RD_LOGGER_INIT("spd_log",LogLevel::LL_TRACE);
+//  RD_TRACE("{} {} {}", "RD_TRACE", 1, 11);
+//  RD_DEBUG("{} {} {}", "RD_DEBUG", 2, 22);
+//  RD_INFO("{} {} {}", "RD_INFO", 2, 22);
+//  RD_WARN("{} {} {}", "RD_WARN", 3, 33);
+//  RD_ERROR("{} {} {}", "RD_ERROR", 3, 33);
+//  RD_CRITICAL("{} {} {}", "RD_ERROR", 3, 33);
+//
+//  return 0;
+//}
 
 //int log_example() {
 ////  //初始化日志模块

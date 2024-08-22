@@ -32,6 +32,8 @@
 #endif
 #endif
 
+#include "fmt/format.h"
+
 #define RD_NAMESPACE_BEGIN \
   namespace rendu {
 
