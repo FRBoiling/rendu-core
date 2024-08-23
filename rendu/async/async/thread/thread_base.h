@@ -11,7 +11,7 @@
 #include "thread_object.h"
 #include "thread_pool/thread_pool_config.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class ThreadBase : public ThreadObject {
 protected:
@@ -32,11 +32,11 @@ protected:
 
 
   /**
-     * 所有线程类的 destroy 函数应该是一样的
+     * 所有线程类的 Destroy 函数应该是一样的
      * 但是init函数不一样，因为线程构造函数不同
      * @return
      */
-  Status destroy() override {
+  Status Destroy() override {
     RD_FUNCTION_BEGIN
     RD_ASSERT_INIT(true)
 
@@ -234,6 +234,6 @@ protected:
   std::thread thread_;
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_THREAD_THREAD_BASE_H_

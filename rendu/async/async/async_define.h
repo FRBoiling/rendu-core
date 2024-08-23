@@ -16,5 +16,4 @@
                                \
   RD_NAMESPACE_END
 
-
 #endif//RENDU_ASYNC_ASYNC_ASYNC_DEFINE_H_

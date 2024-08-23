@@ -5,5 +5,5 @@
 #include "mailboxes.h"
 #include "core_define.h"
 
-CORE_NAMESPACE_BEGIN
-CORE_NAMESPACE_END
+RD_NAMESPACE_BEGIN
+RD_NAMESPACE_END

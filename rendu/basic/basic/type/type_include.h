@@ -11,4 +11,6 @@
 #include "type/object.h"
 #include <array>
 
+using Type = std::type_info;
+
 #endif//RENDU_BASIC_BASIC_TYPE_TYPE_INCLUDE_H_

@@ -2,20 +2,21 @@
 * Created by boil on 2022/12/31.
 */
 
-#include "app.h"
-#include "log/log.hpp"
+#include "loader_include.h"
 
-using namespace rendu::log;
+using namespace rendu;
 
 int main(int argc, char **argv) {
-  App::Start(argc, argv);
-  while (true) {
+  Host host;
+  host.Start();
+
+  while (host.isRunning) {
     try {
-      App::Update();
-      App::LateUpdate();
+      host.Update();
+      host.LateUpdate();
     }
-    catch (const std::exception &ex) {
-      RD_CRITICAL("{}", ex.what());
+    catch (const Exception &ex) {
+      Log::Error(ex);
     }
   }
   return 0;

@@ -15,6 +15,5 @@ rendu_add_executable(
     DEPS
     third_party::fmt
     third_party::spdlog
-    rendu::base
     DEFINES
 )

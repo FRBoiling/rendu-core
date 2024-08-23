@@ -7,7 +7,7 @@
 
 #include "thread_base.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class ThreadPrimary : public ThreadBase {
 public:
@@ -18,14 +18,14 @@ public:
   }
 
 protected:
-  Status init() override {
+  Status Init() override {
     RD_FUNCTION_BEGIN
     RD_ASSERT_INIT(false)
     RD_ASSERT_NOT_NULL(config_)
 
     is_init_ = true;
     buildStealTargets();
-    thread_ = std::move(std::thread(&ThreadPrimary::run, this));
+    thread_ = std::move(std::thread(&ThreadPrimary::Run, this));
     setSchedParam();
     setAffinity(index_);
     RD_FUNCTION_END
@@ -59,7 +59,7 @@ protected:
      * 线程执行函数
      * @return
      */
-  Status run() final {
+  Status Run() final {
     RD_FUNCTION_BEGIN
     RD_ASSERT_INIT(true)
     RD_ASSERT_NOT_NULL(pool_threads_)
@@ -255,6 +255,6 @@ private:
 
 using ThreadPrimaryPtr = ThreadPrimary *;
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_THREAD_THREAD_PRIMARY_H_

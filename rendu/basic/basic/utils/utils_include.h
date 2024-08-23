@@ -13,4 +13,5 @@
 #include "singleton.h"
 #include "type_cast.h"
 
+
 #endif//RENDU_BASIC_BASIC_UTILS_UTILS_INCLUDE_H_

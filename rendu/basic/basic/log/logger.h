@@ -33,16 +33,27 @@ public:
   template<typename... Args>
   void write(LogMsgSource prefix, LogLevel level, Args &&...args) {
     setLevel(level);
-    write(prefix, writeContent(std::forward<Args>(args)...));
+    write(prefix, writeContent(args...));
   }
 
 protected:
   template<typename... Args>
-  LogMsg writeContent(StringView format_string, Args &&...args) {
+  LogMsg writeContent(FormatString<Args...> format_string, Args &&... args)
+  {
     LogMsg msg_;
     msg_.setMsg(format_string, args...);
     return msg_;
   }
+
+  template<typename T>
+  LogMsg writeContent(const T &msg)
+  {
+    LogMsg msg_;
+    msg_.setMsg(msg);
+    return msg_;
+  }
+
+  virtual void write(LogMsgSource prefix, LogMsg content) ;
 
 public:
   virtual void init(String flag, LogLevel log_level, LogPosition log_position, LogMode log_mode);
@@ -63,8 +74,7 @@ public:
 
   void clean();
 
-protected:
-  virtual void write(LogMsgSource prefix, LogMsg content) ;
+
 };
 
 

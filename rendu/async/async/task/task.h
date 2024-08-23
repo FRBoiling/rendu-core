@@ -8,7 +8,7 @@
 #include "thread/thread_object.h"
 #include "utils/non_copyable.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class Task : public ThreadObject {
   struct taskBased {
@@ -67,6 +67,6 @@ using TaskPtr = Task *;
 using TaskArr = std::vector<Task>;
 using TaskArrRef = std::vector<Task> &;
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_TASK_TASK_H_

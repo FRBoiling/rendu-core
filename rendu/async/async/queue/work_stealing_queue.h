@@ -8,7 +8,7 @@
 #include <deque>
 #include "queue_object.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 template<typename T>
 class WorkStealingQueue : public QueueObject {
@@ -173,6 +173,6 @@ private:
   std::mutex lock_;                // 用于处理deque_的锁
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_QUEUE_WORK_STEALING_QUEUE_H_

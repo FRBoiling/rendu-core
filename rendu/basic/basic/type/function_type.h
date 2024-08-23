@@ -10,6 +10,8 @@
 
 RD_NAMESPACE_BEGIN
 
+using Action = std::function<void()>;
+
 /**
  * 描述函数类型
  */
@@ -79,6 +81,9 @@ using RD_CALLBACK_CONST_FUNCTION_REF = rendu::detail::RD_CALLBACK_CONST_FUNCTION
 /** 根据条件判断是否抛出异常 */
 #define RD_THROW_EXCEPTION_BY_CONDITION(cond, info)                 \
     if (unlikely(cond)) { RD_THROW_EXCEPTION(info); }               \
+
+
+
 
 RD_NAMESPACE_END
 

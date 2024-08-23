@@ -24,6 +24,10 @@ public:
      content_ = format(format_string, args...);
   }
 
+  void setMsg(StringView msg){
+    content_ = msg.data();
+  }
+
   String getMsg() const{
     return content_;
   }

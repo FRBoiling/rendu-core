@@ -1,7 +1,7 @@
-#include "test/test1.hpp"
+#include "test/main_test.hpp"
 
 int main(){
-  test1();
+  main_test();
 }
 
 

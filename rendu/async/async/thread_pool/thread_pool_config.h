@@ -8,7 +8,7 @@
 #include "async_define.h"
 #include "thread_pool_define.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 struct ThreadPoolConfig : public Struct {
   /** 具体值含义，参考UThreadPoolDefine.h文件 */
@@ -64,6 +64,6 @@ protected:
 
 using ThreadPoolConfigPtr = ThreadPoolConfig *;
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_THREAD_POOL_THREAD_POOL_CONFIG_H_

@@ -7,7 +7,7 @@
 
 #include "lock/lock_include.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class Condition: public ThreadObject{
 public:
@@ -45,6 +45,6 @@ private:
 };
 
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_CONDITION_CONDITION_H_

@@ -24,19 +24,14 @@ class Object {
     /**
      * 初始化函数
      */
-    virtual Status init() {
+    virtual Status Init() {
       RD_EMPTY_FUNCTION
     }
 
     /**
-     * 流程处理函数
-     */
-    virtual Status run() = 0;
-
-    /**
      * 释放函数
      */
-    virtual Status destroy() {
+    virtual Status Destroy() {
       RD_EMPTY_FUNCTION
     }
 

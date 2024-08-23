@@ -14,6 +14,9 @@ using memory_buf_t = fmt::basic_memory_buffer<char, 250>;
 using StringView = fmt::string_view;
 
 template<typename... Args>
+using FormatString = fmt::format_string<Args...>;
+
+template<typename... Args>
 std::string format(const StringView format_string, const Args &...args) {
   memory_buf_t buf;
   fmt::detail::vformat_to(buf, format_string, fmt::make_format_args(args...));

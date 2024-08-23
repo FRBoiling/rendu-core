@@ -6,17 +6,26 @@
 #define RENDU_ENTITY_SYSTEM_H
 
 #include "core_define.h"
+#include "ecs/entity.h"
 
-CORE_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
+class EntitySystem {
+  public:
+    EntitySystem();
+    ~EntitySystem();
 
-    class EntitySystem {
+    template<typename T>
+    void Publish(T t) {
+    }
 
-    public:
-      void Update();
+    std::queue<std::shared_ptr<Entity> > &GetQueue(Type type);
 
-      void LateUpdate();
-    };
+    void RegisterSystem(Entity component);
 
-CORE_NAMESPACE_END
+  private:
+    std::unordered_map<Type, std::queue<std::shared_ptr<Entity> > > queues;
+};
 
-#endif //RENDU_ENTITY_SYSTEM_H
+RD_NAMESPACE_END
+
+#endif//RENDU_ENTITY_SYSTEM_H

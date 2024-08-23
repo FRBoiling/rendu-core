@@ -15,7 +15,7 @@
 #endif
 #include <memory>
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 static const Int RD_CPU_NUM = (Int) std::thread::hardware_concurrency();
 static const Int RD_THREAD_TYPE_PRIMARY = 1;
@@ -65,6 +65,6 @@ static const Int RD_SECONDARY_THREAD_POLICY = RD_THREAD_SCHED_OTHER;   // 辅助
 static const Int RD_PRIMARY_THREAD_PRIORITY = RD_THREAD_MIN_PRIORITY;  // 主线程调度优先级（取值范围0~99，配合调度策略一起使用，不建议不了解相关内容的童鞋做修改）
 static const Int RD_SECONDARY_THREAD_PRIORITY = RD_THREAD_MIN_PRIORITY;// 辅助线程调度优先级（同上）
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_THREAD_POOL_THREAD_POOL_DEFINE_H_

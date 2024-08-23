@@ -4,14 +4,14 @@
 
 #include "thread_pool.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 ThreadPool::ThreadPool(Bool autoInit, const ThreadPoolConfig &config) noexcept {
   cur_index_ = 0;
   is_init_ = false;
   this->setConfig(config);// setConfig 函数，用在 is_init_ 设定之后
   if (autoInit) {
-    this->init();
+    this->Init();
   }
 }
 
@@ -21,7 +21,7 @@ ThreadPool::~ThreadPool() {
     monitor_thread_.join();
   }
 
-  destroy();
+  Destroy();
 }
 
 
@@ -34,7 +34,7 @@ Status ThreadPool::setConfig(const ThreadPoolConfig &config) {
 }
 
 
-Status ThreadPool::init() {
+Status ThreadPool::Init() {
   RD_FUNCTION_BEGIN
   if (is_init_) {
     RD_FUNCTION_END
@@ -53,7 +53,7 @@ Status ThreadPool::init() {
   }
 
   for (auto *pt: primary_threads_) {
-    status += pt->init();
+    status += pt->Init();
   }
   RD_FUNCTION_CHECK_STATUS
 
@@ -123,7 +123,7 @@ Index ThreadPool::getThreadIndex(Size tid) {
 }
 
 
-Status ThreadPool::destroy() {
+Status ThreadPool::Destroy() {
   RD_FUNCTION_BEGIN
   if (!is_init_) {
     RD_FUNCTION_END
@@ -131,7 +131,7 @@ Status ThreadPool::destroy() {
 
   // primary 线程是普通指针，需要delete
   for (auto &pt: primary_threads_) {
-    status += pt->destroy();
+    status += pt->Destroy();
   }
   RD_FUNCTION_CHECK_STATUS
 
@@ -139,7 +139,7 @@ Status ThreadPool::destroy() {
      * 这里之所以 destroy和 delete分开两个循环执行，
      * 是因为当前线程被delete后，还可能存在未被delete的主线程，来steal当前线程的任务
      * 在windows环境下，可能出现问题。
-     * destroy 和 delete 分开之后，不会出现此问题。
+     * Destroy 和 delete 分开之后，不会出现此问题。
      * 感谢 Ryan大佬(https://github.com/ryanhuang) 提供的帮助
      */
   for (auto &pt: primary_threads_) {
@@ -149,7 +149,7 @@ Status ThreadPool::destroy() {
 
   // secondary 线程是智能指针，不需要delete
   for (auto &st: secondary_threads_) {
-    status += st->destroy();
+    status += st->Destroy();
   }
   RD_FUNCTION_CHECK_STATUS
   secondary_threads_.clear();
@@ -216,7 +216,7 @@ Status ThreadPool::createSecondaryThread(Int size) {
   for (int i = 0; i < realSize; i++) {
     auto ptr = RD_SAFE_MALLOC_OBJECT(ThreadSecondary)
                    ptr->setThreadPoolInfo(&task_queue_, &priority_task_queue_, &config_);
-    status += ptr->init();
+    status += ptr->Init();
     secondary_threads_.emplace_back(std::move(ptr));
   }
 
@@ -253,4 +253,4 @@ Void ThreadPool::monitor() {
   }
 }
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END

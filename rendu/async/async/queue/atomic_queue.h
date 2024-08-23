@@ -9,7 +9,7 @@
 #include "thread_pool/thread_pool_define.h"
 #include "lock/lock_include.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 template<typename T>
 class AtomicQueue : public QueueObject{
@@ -133,6 +133,6 @@ private:
   std::queue<std::unique_ptr<T>> queue_;
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_QUEUE_ATOMIC_QUEUE_H_

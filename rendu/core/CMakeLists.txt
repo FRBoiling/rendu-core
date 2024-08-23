@@ -12,10 +12,5 @@ rendu_add_library(
     LINKOPTS
     rendu-core-interface
     DEPS
-    rendu::log
-    rendu::ecs
-    rendu::net
-    rendu::io
-    rendu::serialize
-    proto::model
+    rendu::async
 )

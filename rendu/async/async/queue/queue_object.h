@@ -9,7 +9,7 @@
 #include "thread/thread_object.h"
 #include <queue>
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class QueueObject : public ThreadObject {
 protected:
@@ -17,7 +17,7 @@ protected:
   std::condition_variable cv_;
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 
 #endif//RENDU_ASYNC_ASYNC_QUEUE_QUEUE_OBJECT_H_

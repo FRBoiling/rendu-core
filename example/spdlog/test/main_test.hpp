@@ -9,7 +9,6 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
 // spdlog usage example
-
 #include <cstdio>
 #include <chrono>
 
@@ -45,7 +44,7 @@ std::string FormatString(format_string<Args...> fmt,Args... args)
   return fmt::format(fmt, std::forward<Args>(args)...);
 }
 
-int main(int, char *[])
+int main_test()
 {
   auto str = FormatString("{}{}", 1,2);
 

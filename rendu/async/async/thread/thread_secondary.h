@@ -7,7 +7,7 @@
 
 #include "thread_base.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class ThreadSecondary : public ThreadBase {
 public:
@@ -18,14 +18,14 @@ public:
   
 
 protected:
-  Status init() override {
+  Status Init() override {
     RD_FUNCTION_BEGIN
     RD_ASSERT_INIT(false)
     RD_ASSERT_NOT_NULL(config_)
 
     cur_ttl_ = config_->secondary_thread_ttl_;
     is_init_ = true;
-    thread_ = std::move(std::thread(&ThreadSecondary::run, this));
+    thread_ = std::move(std::thread(&ThreadSecondary::Run, this));
     setSchedParam();
     RD_FUNCTION_END
   }
@@ -52,7 +52,7 @@ protected:
   }
 
 
-  Status run() final {
+  Status Run() final {
     RD_FUNCTION_BEGIN
     RD_ASSERT_INIT(true)
 
@@ -119,6 +119,6 @@ private:
 
 using ThreadSecondaryPtr = ThreadSecondary *;
   
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_THREAD_THREAD_SECONDARY_H_

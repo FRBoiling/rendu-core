@@ -9,7 +9,7 @@
 #include "queue_object.h"
 #include "lock/lock_include.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 template<typename T>
 class AtomicPriorityQueue : public QueueObject {
@@ -85,6 +85,6 @@ private:
   std::priority_queue<std::unique_ptr<T> > priority_queue_;    // 优先队列信息，根据重要级别决定先后执行顺序
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_QUEUE_ATOMIC_PRIORITY_QUEUE_H_

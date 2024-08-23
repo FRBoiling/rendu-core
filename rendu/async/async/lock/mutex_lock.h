@@ -7,7 +7,7 @@
 
 #include "thread/thread_object.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class MutexLock : public ThreadObject {
 public:
@@ -57,6 +57,6 @@ private:
   bool locked_;
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_LOCK_MUTEX_LOCK_H_

@@ -7,7 +7,7 @@
 
 #include "thread_define.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class ThreadObject : public Object {
 protected:
@@ -15,11 +15,11 @@ protected:
      * 部分thread中的算子，可以不实现run方法
      * @return
      */
-  Status run() override {
+  virtual Status Run()  {
     RD_NO_SUPPORT
   }
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_THREAD_THREAD_OBJECT_H_

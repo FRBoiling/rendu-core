@@ -7,5 +7,6 @@
 
 #include "thread_primary.h"
 #include "thread_secondary.h"
+#include "thread_synchronization_context.h"
 
 #endif//RENDU_ASYNC_ASYNC_THREAD_THREAD_INCLUDE_H_

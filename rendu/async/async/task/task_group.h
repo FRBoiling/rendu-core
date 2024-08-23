@@ -9,7 +9,7 @@
 #include "thread_pool/thread_pool_define.h"
 #include "utils/non_copyable.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class TaskGroup : public ThreadObject {
 public:
@@ -93,6 +93,6 @@ private:
 using TaskGroupPtr = TaskGroup *;
 using TaskGroupRef = TaskGroup &;
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_TASK_TASK_GROUP_H_

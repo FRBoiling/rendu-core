@@ -1,6 +1,6 @@
 #include "thread_pool.h"
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 template<typename FunctionType>
 auto ThreadPool::commit(const FunctionType &func, Index index)
@@ -46,4 +46,4 @@ auto ThreadPool::commitWithPriority(const FunctionType &func, int priority)
   return result;
 }
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END

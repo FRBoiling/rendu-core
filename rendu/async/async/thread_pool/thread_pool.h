@@ -20,7 +20,7 @@
 #include <memory>
 #include <functional>
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class ThreadPool : public ThreadObject {
 public:
@@ -41,7 +41,7 @@ public:
      * 设置线程池相关配置信息，需要在init()函数调用前，完成设置
      * @param config
      * @return
-     * @notice 通过单例类(ThreadPoolSingleton)开启线程池，则线程池默认init。需要 destroy 后才可以设置参数
+     * @notice 通过单例类(ThreadPoolSingleton)开启线程池，则线程池默认init。需要 Destroy 后才可以设置参数
      */
   Status setConfig(const ThreadPoolConfig &config);
 
@@ -49,7 +49,7 @@ public:
      * 开启所有的线程信息
      * @return
      */
-  Status init() final;
+  Status Init() final;
 
   /**
      * 提交任务信息
@@ -110,7 +110,7 @@ public:
      * 释放所有的线程信息
      * @return
      */
-  Status destroy() final;
+  Status Destroy() final;
 
   /**
      * 判断线程池是否已经初始化了
@@ -163,7 +163,7 @@ private:
 
 using ThreadPoolPtr = ThreadPool *;
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #include "thread_pool.inl"
 

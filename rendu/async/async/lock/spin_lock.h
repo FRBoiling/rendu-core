@@ -8,7 +8,7 @@
 #include "thread/thread_object.h"
 #include <atomic>
 
-RD_ASYNC_NAMESPACE_BEGIN
+RD_NAMESPACE_BEGIN
 
 class SpinLock : public ThreadObject {
 public:
@@ -41,6 +41,6 @@ private:
   std::atomic_flag flag_ = ATOMIC_FLAG_INIT;// 标志位
 };
 
-RD_ASYNC_NAMESPACE_END
+RD_NAMESPACE_END
 
 #endif//RENDU_ASYNC_ASYNC_LOCK_SPIN_LOCK_H_
