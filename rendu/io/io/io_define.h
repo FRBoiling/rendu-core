@@ -5,20 +5,14 @@
 #ifndef RENDU_IO_DEFINE_H_
 #define RENDU_IO_DEFINE_H_
 
-#include "base/base.hpp"
-#include "task/task.hpp"
-#include "memory/memory.hpp"
+#include "basic/basic_include.h"
 
-#define IO_NAMESPACE_BEGIN \
-  namespace rendu {        \
-    namespace io {
+#define RD_IO_NAMESPACE_BEGIN \
+  RD_NAMESPACE_BEGIN             \
+  namespace io {
 
-#define IO_NAMESPACE_END \
-  } /*namespace io*/     \
-  } /*namespace rendu*/
-
-using namespace rendu;
-using namespace rendu::task;
-using namespace rendu::memory;
+#define RD_IO_NAMESPACE_END \
+  } /*namespace async*/        \
+  RD_NAMESPACE_END
 
 #endif//RENDU_IO_DEFINE_H_
