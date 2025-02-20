@@ -12,6 +12,7 @@ option(SERVERS          "Build worldserver and bnetserver"                      
 
 set(SCRIPTS_AVAILABLE_OPTIONS none static dynamic minimal-static minimal-dynamic)
 
+option(SCRIPTS          "Build core with scripts"                            0)
 # Log a fatal error when the value of the SCRIPTS variable isn't a valid option.
 if(SCRIPTS)
   list(FIND SCRIPTS_AVAILABLE_OPTIONS "${SCRIPTS}" SCRIPTS_INDEX)
@@ -20,18 +21,17 @@ if(SCRIPTS)
                         "Allowed values are: ${SCRIPTS_AVAILABLE_OPTIONS} if you still "
                         "have problems search on forum for TCE00019.")
   endif()
+  set(SCRIPTS "static" CACHE STRING "Build core with scripts")
+  set_property(CACHE SCRIPTS PROPERTY STRINGS ${SCRIPTS_AVAILABLE_OPTIONS})
+
+  # Build a list of all script modules when -DSCRIPT="custom" is selected
+  GetScriptModuleList(SCRIPT_MODULE_LIST)
+  foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
+    ScriptModuleNameToVariable(${SCRIPT_MODULE} SCRIPT_MODULE_VARIABLE)
+    set(${SCRIPT_MODULE_VARIABLE} "default" CACHE STRING "Build type of the ${SCRIPT_MODULE} module.")
+    set_property(CACHE ${SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
+  endforeach()
 endif()
-
-set(SCRIPTS "static" CACHE STRING "Build core with scripts")
-set_property(CACHE SCRIPTS PROPERTY STRINGS ${SCRIPTS_AVAILABLE_OPTIONS})
-
-# Build a list of all script modules when -DSCRIPT="custom" is selected
-GetScriptModuleList(SCRIPT_MODULE_LIST)
-foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
-  ScriptModuleNameToVariable(${SCRIPT_MODULE} SCRIPT_MODULE_VARIABLE)
-  set(${SCRIPT_MODULE_VARIABLE} "default" CACHE STRING "Build type of the ${SCRIPT_MODULE} module.")
-  set_property(CACHE ${SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
-endforeach()
 
 option(TOOLS            "Build map/vmap/mmap extraction/assembler tools"              1)
 option(USE_SCRIPTPCH    "Use precompiled headers when compiling scripts"              1)

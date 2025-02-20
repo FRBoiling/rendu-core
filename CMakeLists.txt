@@ -1,6 +1,7 @@
 #|--------------------------------
 #| rendu-core rendu project
 #|--------------------------------
+
 message("* * * * * * * * * * * * *")
 message("*  _____     ____    *")
 message("* |  __  \\   | __  \\   *")
@@ -12,10 +13,12 @@ message("* * * * * * * * * * * * *")
 
 cmake_minimum_required (VERSION 3.21.7)
 
-# add this options before PROJECT keyword
+# 项目基础配置前置
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 项目基础配置
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -62,17 +65,19 @@ endif ()
 #|--------------------------------
 # set macro-directory
 
-list(APPEND CMAKE_MODULE_PATH
-    "${CMAKE_SOURCE_DIR}/cmake/macros")
+list(APPEND CMAKE_MODULE_PATH   "${CMAKE_SOURCE_DIR}/cmake/macros")
+include(ConfigureBaseTargets)
 include(ConfigureScripts)
+include(CompilerWarnings)
+include(CheckPlatform)
+
+
 include(CheckCXXSourceRuns)
 include(CheckIncludeFiles)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
 include(RenduGroupSources)
-include(RenduBaseTargets)
-include(RenduCheckPlatform)
 include(RenduAutoCollect)
 include(RenduAddLibrary)
 include(RenduAddExecutable)

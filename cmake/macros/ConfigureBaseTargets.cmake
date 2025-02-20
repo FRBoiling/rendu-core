@@ -1,64 +1,71 @@
-# This file is part of the RenduCore Project. See AUTHORS file for Copyright information
-#
-# This file is free software; as a special exception the author gives
-# unlimited permission to copy and/or distribute it, with or without
-# modifications, as long as this notice is preserved.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# ... 文件头保持不变 ...
 
-# An interface library to make the target com available to other targets
+# 编译选项接口
 add_library(rendu-compile-option-interface INTERFACE)
-
-# Use -std=c++11 instead of -std=gnu++11
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 20)
 
-# An interface library to make the target features available to other targets
+# 功能特性接口
 add_library(rendu-feature-interface INTERFACE)
 
-# An interface library to make the warnings level available to other targets
-# This interface taget is set-up through the platform specific script
+# 警告级别接口
 add_library(rendu-warning-interface INTERFACE)
 
-# An interface used for all other interfaces
+# 默认接口聚合
 add_library(rendu-default-interface INTERFACE)
 target_link_libraries(rendu-default-interface
-  INTERFACE
+    INTERFACE
     rendu-compile-option-interface
     rendu-feature-interface)
 
-# An interface used for silencing all warnings
+# 警告抑制接口
 add_library(rendu-no-warning-interface INTERFACE)
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  target_compile_options(rendu-no-warning-interface
-    INTERFACE
-      /W0)
+  target_compile_options(rendu-no-warning-interface INTERFACE /W0)
 else()
-  target_compile_options(rendu-no-warning-interface
-    INTERFACE
-      -w)
+  target_compile_options(rendu-no-warning-interface INTERFACE -w)
 endif()
 
-# An interface library to change the default behaviour
-# to hide symbols automatically.
+# 符号隐藏接口
 add_library(rendu-hidden-symbols-interface INTERFACE)
 
-# An interface amalgamation which provides the flags and definitions
-# used by the dependency targets.
+# 兼容性接口
+add_library(rendu-compat-interface INTERFACE)
+target_compile_definitions(rendu-compat-interface INTERFACE
+    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:__STDC_FORMAT_MACROS>
+)
+
+# 警告屏蔽接口
+add_library(rendu-suppress-interface INTERFACE)
+target_compile_options(rendu-suppress-interface INTERFACE
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4996>
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wno-deprecated-declarations>
+)
+
+# 预编译头接口
+add_library(rendu-pch-interface INTERFACE)
+target_compile_options(rendu-pch-interface INTERFACE
+    $<$<CXX_COMPILER_ID:MSVC>:/Yu${CMAKE_SOURCE_DIR}/src/common/stdafx.h>
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-include ${CMAKE_SOURCE_DIR}/src/common/stdafx.h>
+)
+
+# 依赖项接口聚合
 add_library(rendu-dependency-interface INTERFACE)
 target_link_libraries(rendu-dependency-interface
-  INTERFACE
+    INTERFACE
     rendu-default-interface
     rendu-no-warning-interface
-    rendu-hidden-symbols-interface)
+    rendu-hidden-symbols-interface
+    rendu-compat-interface
+    rendu-suppress-interface
+)
 
-# An interface amalgamation which provides the flags and definitions
-# used by the core targets.
+# 核心接口聚合
 add_library(rendu-core-interface INTERFACE)
 target_link_libraries(rendu-core-interface
-  INTERFACE
+    INTERFACE
     rendu-default-interface
-    rendu-warning-interface)
+    rendu-warning-interface
+    rendu-pch-interface
+)

@@ -1,28 +1,13 @@
 #**********************************
 #  Created by boil on 2022/10/19.
 #**********************************
-# set default configuration directory
-if(NOT CONF_DIR)
-  set(CONF_DIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH "Configuration directory")
-  message(STATUS "LINUX: Using default configuration directory")
-endif()
+include(${CMAKE_SOURCE_DIR}/cmake/platform/common.cmake)
+configure_platform_settings("LINUX")
 
-# configure uninstaller
-configure_file(
-  "${CMAKE_SOURCE_DIR}/cmake/platform/cmake_uninstall.in.cmake"
-  "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-  @ONLY
-)
-message(STATUS "LINUX: Configuring uninstall target")
-
-# create uninstaller target (allows for using "make uninstall")
-add_custom_target(uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-)
-message(STATUS "LINUX: Created uninstall target")
-
+# RD_USE_LD_GOLD 链接器配置（Linux专用）
 if(RD_USE_LD_GOLD)
-  execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version ERROR_QUIET OUTPUT_VARIABLE LD_VERSION)
+  execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version
+      ERROR_QUIET OUTPUT_VARIABLE LD_VERSION)
   if("${LD_VERSION}" MATCHES "GNU gold")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=gold")
@@ -30,10 +15,9 @@ if(RD_USE_LD_GOLD)
   else()
     message(WARNING "LINUX: GNU gold linker isn't available, using the default system linker")
   endif()
-else()
-  message(STATUS "LINUX: Using default system linker")
 endif()
 
+# 编译器配置（Linux专用）
 message(STATUS "LINUX: Detected compiler: ${CMAKE_C_COMPILER}")
 if(CMAKE_C_COMPILER MATCHES "gcc" OR CMAKE_C_COMPILER_ID STREQUAL "GNU")
   include(${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake)
@@ -43,7 +27,5 @@ elseif(CMAKE_C_COMPILER MATCHES "clang" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
   include(${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake)
 else()
   target_compile_definitions(rendu-compile-option-interface
-    INTERFACE
-      -D_BUILD_DIRECTIVE="${CMAKE_BUILD_TYPE}"
-     )
+      INTERFACE -D_BUILD_DIRECTIVE="${CMAKE_BUILD_TYPE}")
 endif()

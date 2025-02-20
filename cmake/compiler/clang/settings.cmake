@@ -1,176 +1,126 @@
-include(CheckCXXSourceCompiles)
+#**********************************
+#  Created by boil on 2025/02/19.
+#**********************************
 
-# Set build-directive (used in core to tell which buildtype we used)
-target_compile_definitions(rendu-compile-option-interface
-  INTERFACE
-    -D_BUILD_DIRECTIVE="$<CONFIG>")
+include(${CMAKE_SOURCE_DIR}/cmake/compiler/common.cmake)
 
+# 设置编译器标识
+set(COMPILER_PREFIX "Clang")
 set(CLANG_EXPECTED_VERSION 11.0.0)
+
+# 基础编译指令
+target_compile_definitions(rendu-compile-option-interface
+    INTERFACE
+    -D_BUILD_DIRECTIVE="$<CONFIG>"
+    -DUSE_CLANG_COMPILER
+)
+
+# AppleClang特殊版本处理
 if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-  # apple doesnt like to do the sane thing which would be to use the same version numbering as regular clang
-  # version number pulled from https://en.wikipedia.org/wiki/Xcode#Toolchain_versions for row matching LLVM 11
-  set(CLANG_EXPECTED_VERSION 12.0.5)
+  set(CLANG_EXPECTED_VERSION 12.0.5)  # Xcode 12.5+对应LLVM 11
 endif()
 
-if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS CLANG_EXPECTED_VERSION)
-  message(FATAL_ERROR "Clang: RenduCore requires version ${CLANG_EXPECTED_VERSION} to build but found ${CMAKE_CXX_COMPILER_VERSION}")
-else()
-  message(STATUS "Clang: Minimum version required is ${CLANG_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
-endif()
+# 版本检查（调用公共宏）
+check_compiler_version(${CLANG_EXPECTED_VERSION}
+    ${CMAKE_CXX_COMPILER_VERSION}
+    ${COMPILER_PREFIX})
 
-# This tests for a bug in clang-7 that causes linkage to fail for 64-bit from_chars (in some configurations)
-# If the clang requirement is bumped to >= clang-8, you can remove this check, as well as
-# the associated ifdef block in src/common/Utilities/StringConvert.h
+# charconv 64位整型转换bug检测（保持核心逻辑）
+# charconv检测前需要包含
 include(CheckCXXSourceCompiles)
-
 check_cxx_source_compiles("
 #include <charconv>
 #include <cstdint>
 
-int main()
-{
+int main() {
     uint64_t n;
-    char const c[] = \"0\";
-    std::from_chars(c, c+1, n);
+    std::from_chars(\"0\", \"0\"+1, n);
     return static_cast<int>(n);
 }
 " CLANG_HAVE_PROPER_CHARCONV)
 
-if (NOT CLANG_HAVE_PROPER_CHARCONV)
-  message(STATUS "Clang: Detected from_chars bug for 64-bit integers, workaround enabled")
-  target_compile_definitions(rendu-compile-option-interface
-  INTERFACE
-    -DRD_NEED_CHARCONV_WORKAROUND)
+if(NOT CLANG_HAVE_PROPER_CHARCONV)
+  message(STATUS "Clang: 检测到64位from_chars缺陷，已启用兼容方案")
+  target_compile_definitions(rendu-compat-interface
+      INTERFACE -DRD_NEED_CHARCONV_WORKAROUND)
 endif()
 
-if(WITH_WARNINGS)
-  target_compile_options(rendu-warning-interface
-    INTERFACE
-      -W
-      -Wall
-      -Wextra
-      -Wimplicit-fallthrough
-      -Winit-self
-      -Wfatal-errors
-      -Wno-mismatched-tags
-      -Woverloaded-virtual)
+# 警告配置（通过公共函数管理）
+set(CURRENT_WARNING_FLAGS
+    -W
+    -Wall
+    -Wextra
+    -Wimplicit-fallthrough
+    -Winit-self
+    -Wfatal-errors
+    -Wno-mismatched-tags
+    -Woverloaded-virtual
+)
+configure_warnings()
 
-  message(STATUS "Clang: All warnings enabled")
-endif()
-
+# 调试配置
 if(WITH_COREDEBUG)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -g3)
-
-  message(STATUS "Clang: Debug-flags set (-g3)")
+  target_compile_options(rendu-debug-interface INTERFACE -g3)
+  message(STATUS "Clang: 调试标志已设置 (-g3)")
 endif()
 
-if(ASAN)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=address
-      -fsanitize-recover=address
-      -fsanitize-address-use-after-scope)
+# Sanitizer统一配置
+set(ASAN_FLAGS
+    -fno-omit-frame-pointer
+    -fsanitize=address
+    -fsanitize-recover=address
+    -fsanitize-address-use-after-scope)
+configure_sanitizers(ASAN)
 
-  target_link_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=address
-      -fsanitize-recover=address
-      -fsanitize-address-use-after-scope)
+set(MSAN_FLAGS
+    -fno-omit-frame-pointer
+    -fsanitize=memory
+    -fsanitize-memory-track-origins
+    -mllvm -msan-keep-going=1)
+configure_sanitizers(MSAN)
 
-  message(STATUS "Clang: Enabled Address Sanitizer ASan")
-endif()
+set(UBSAN_FLAGS
+    -fno-omit-frame-pointer
+    -fsanitize=undefined)
+configure_sanitizers(UBSAN)
 
-if(MSAN)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=memory
-      -fsanitize-memory-track-origins
-      -mllvm
-      -msan-keep-going=1)
+set(TSAN_FLAGS
+    -fno-omit-frame-pointer
+    -fsanitize=thread)
+configure_sanitizers(TSAN)
 
-  target_link_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=memory
-      -fsanitize-memory-track-origins)
-
-  message(STATUS "Clang: Enabled Memory Sanitizer MSan")
-endif()
-
-if(UBSAN)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=undefined)
-
-  target_link_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=undefined)
-
-  message(STATUS "Clang: Enabled Undefined Behavior Sanitizer UBSan")
-endif()
-
-if(TSAN)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=thread)
-
-  target_link_options(rendu-compile-option-interface
-    INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=thread)
-
-  message(STATUS "Clang: Enabled Thread Sanitizer TSan")
-endif()
-
+# 构建时间分析
 if(BUILD_TIME_ANALYSIS)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -ftime-trace)
-
-  message(STATUS "Clang: Enabled build time analysis (-ftime-trace)")
+  target_compile_options(rendu-perf-interface INTERFACE -ftime-trace)
+  message(STATUS "Clang: 启用编译耗时分析")
 endif()
 
-# -Wno-narrowing needed to suppress a warning in g3d
-# -Wno-deprecated-register is needed to suppress 185 gsoap warnings on Unix systems.
-# -Wno-undefined-inline needed for a compile time optimization hack with fmt
-target_compile_options(rendu-compile-option-interface
-  INTERFACE
-    -Wno-narrowing
-    -Wno-deprecated-register
-    -Wno-undefined-inline)
+# 特殊警告抑制
+target_compile_options(rendu-suppress-interface
+    INTERFACE
+    -Wno-narrowing        # 抑制g3d相关警告
+    -Wno-deprecated-register  # 屏蔽gsoap警告
+    -Wno-undefined-inline)    # fmt优化hack
 
+# 共享库配置
 if(BUILD_SHARED_LIBS)
-  # -fPIC is needed to allow static linking in shared libs.
-  # -fvisibility=hidden sets the default visibility to hidden to prevent exporting of all symbols.
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fPIC)
-
-  target_compile_options(rendu-hidden-symbols-interface
-    INTERFACE
+  target_compile_options(rendu-shared-interface
+      INTERFACE
+      -fPIC
       -fvisibility=hidden)
-
-  # --no-undefined to throw errors when there are undefined symbols
-  # (caused through missing RD_*_API macros).
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --no-undefined")
-
-  message(STATUS "Clang: Disallow undefined symbols")
+  target_link_options(rendu-shared-interface
+      INTERFACE
+      --no-undefined)
+  message(STATUS "Clang: 共享库模式配置完成")
 endif()
 
-# speedup PCH builds by forcing template instantiations during PCH generation
+# PCH模板实例化优化（保留核心检测逻辑）
 set(CMAKE_REQUIRED_FLAGS "-fpch-instantiate-templates")
 check_cxx_source_compiles("int main() { return 0; }" CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
 unset(CMAKE_REQUIRED_FLAGS)
+
 if(CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
-  target_compile_options(rendu-compile-option-interface
-    INTERFACE
-      -fpch-instantiate-templates)
+  target_compile_options(rendu-pch-interface
+      INTERFACE -fpch-instantiate-templates)
+  message(STATUS "Clang: 启用PCH模板预实例化优化")
 endif()
