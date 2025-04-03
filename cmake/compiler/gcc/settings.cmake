@@ -1,57 +1,85 @@
-#**********************************
-#  Created by boil on 2025/02/19.
-#**********************************
+# RenduCore - CMake settings for GCC compiler
+# =========================
+# GCC 编译器相关设置
+# =========================
+function(rendu_setup_gcc_options)
+    set(RENDU_GCC_EXPECTED_VERSION 11.1.0)
 
-include(${CMAKE_SOURCE_DIR}/cmake/compiler/common.cmake)
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS RENDU_GCC_EXPECTED_VERSION)
+        rendu_log_fatal("GCC: RenduCore requires version ${RENDU_GCC_EXPECTED_VERSION} to build but found ${CMAKE_CXX_COMPILER_VERSION}")
+    else ()
+        rendu_log_info("GCC: Minimum version required is ${RENDU_GCC_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
+    endif ()
 
-# 设置编译器标识
-set(COMPILER_PREFIX "GCC")
-set(GCC_EXPECTED_VERSION 10.0.0)
+    target_compile_options(rendu-compile-option-interface
+            INTERFACE
+            -fno-delete-null-pointer-checks)
 
-# 基础配置
-target_compile_definitions(rendu-compile-option-interface
-    INTERFACE
-    -D_BUILD_DIRECTIVE="$<CONFIG>"
-    -DUSE_GCC_COMPILER
-)
+    if (RENDU_PLATFORM EQUAL 32)
+        # 32位系统需要手动开启 SSE2（x64 默认支持）
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -msse2
+                -mfpmath=sse)
+    endif ()
 
-# 版本检查
-check_compiler_version(${GCC_EXPECTED_VERSION}
-    ${CMAKE_CXX_COMPILER_VERSION}
-    ${COMPILER_PREFIX})
+    if (RENDU_SYSTEM_PROCESSOR MATCHES "x86|amd64")
+        target_compile_definitions(rendu-compile-option-interface
+                INTERFACE
+                HAVE_SSE2
+                __SSE2__)
+        rendu_log_info("GCC: SFMT enabled, SSE2 flags forced")
+    endif ()
 
-# 架构优化
-if(PLATFORM EQUAL 32)
-  target_compile_options(rendu-arch-interface INTERFACE -msse2 -mfpmath=sse)
-endif()
+    if (RENDU_WITH_WARNINGS)
+        target_compile_options(rendu-warning-interface
+                INTERFACE
+                -W
+                -Wall
+                -Wextra
+                -Winit-self
+                -Winvalid-pch
+                -Wfatal-errors
+                -Woverloaded-virtual
+                -Wno-missing-field-initializers # 结构体成员有默认值时该警告无意义
+                -Wno-maybe-uninitialized)       # std::optional 场景下该警告易误报
+        rendu_log_info("GCC: All warnings enabled")
+    endif ()
 
-if(RD_SYSTEM_PROCESSOR MATCHES "x86|amd64")
-  target_compile_definitions(rendu-arch-interface INTERFACE -DHAVE_SSE2 -D__SSE2__)
-endif()
+    if (RENDU_WITH_COREDEBUG)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -g3)
+        message(STATUS "GCC: Debug-flags set (-g3)")
+    endif ()
 
-# 警告配置
-set(CURRENT_WARNING_FLAGS
-    -W
-    -Wall
-    -Wextra
-    -Winit-self
-    -Winvalid-pch
-    -Wfatal-errors
-    -Woverloaded-virtual
-    -Wno-missing-field-initializers
-)
-configure_warnings()
+    if (RENDU_ASAN)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=address
+                -fsanitize-recover=address
+                -fsanitize-address-use-after-scope)
+        target_link_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=address
+                -fsanitize-recover=address
+                -fsanitize-address-use-after-scope)
+        rendu_log_info("GCC: Enabled Address Sanitizer")
+    endif ()
 
-# 消毒剂配置
-set(ASAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=address
-    -fsanitize-recover=address
-    -fsanitize-address-use-after-scope)
-configure_sanitizers(ASAN)
+    if (BUILD_SHARED_LIBS)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fPIC
+                -Wno-attributes)
+        target_compile_options(rendu-hidden-symbols-interface
+                INTERFACE
+                -fvisibility=hidden)
+        # -Wl,--no-undefined 可用于链接阶段强制符号完整，但会影响 PCH
+        rendu_log_info("GCC: Enabled shared linking")
+    endif ()
+endfunction()
 
-# 共享库配置
-if(BUILD_SHARED_LIBS)
-  target_compile_options(rendu-shared-interface INTERFACE -fPIC -Wno-attributes)
-  target_compile_options(rendu-hidden-symbols-interface INTERFACE -fvisibility=hidden)
-endif()
+rendu_setup_gcc_options()

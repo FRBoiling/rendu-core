@@ -1,132 +1,97 @@
-# ... 文件头注释保持不变 ...
+# ConfigureScripts.cmake
+# =========================
+# 脚本模块相关工具函数
+# =========================
 
-# 构建路径空格检查（Windows平台专用）
-function(WarnAboutSpacesInBuildPath)
-  if(WIN32 AND " ${CMAKE_BINARY_DIR}" MATCHES " ")
-    message(WARNING
-        "构建路径包含空格可能引发问题:\n"
-        "当前路径: ${CMAKE_BINARY_DIR}\n"
-        "建议使用不含空格的路径"
-    )
-  endif()
+# 检查构建路径中是否包含空格（仅 Windows 需关注）
+function(rendu_warn_about_spaces_in_build_path)
+    if (WIN32)
+        string(FIND "${CMAKE_BINARY_DIR}" " " space_index_pos)
+        if (space_index_pos GREATER -1)
+            message("")
+            message(WARNING " *** WARNING!\n"
+                    " *** Your selected build directory contains spaces!\n"
+                    " *** Please note that this will cause issues!")
+        endif ()
+    endif ()
 endfunction()
 
-# 获取脚本基础路径（带有效性验证）
-function(GetScriptsBasePath out_var)
-  cmake_path(SET script_path NORMALIZE "${CMAKE_SOURCE_DIR}/scripts")
-  if(NOT EXISTS "${script_path}")  # 添加双引号处理空格路径
-    message(FATAL_ERROR "关键脚本目录不存在: ${script_path}\n"
-        "请确认：\n"
-        "1. 项目是否完整克隆\n"
-        "2. 目录结构是否正确\n"
-        "3. 存在有效的脚本模块")
-  endif()
-  set(${out_var} "${script_path}" PARENT_SCOPE)  # 添加双引号
+# 获取脚本目录的基础路径
+function(rendu_get_scripts_base_path variable)
+    set(${variable} "${CMAKE_SOURCE_DIR}/src/server/scripts" PARENT_SCOPE)
 endfunction()
 
-
-# 获取指定模块路径（使用现代路径处理）
-function(GetPathToScriptModule module out_var)
-  GetScriptsBasePath(base_path)
-  cmake_path(SET module_path NORMALIZE "${base_path}/${module}")
-  set(${out_var} ${module_path} PARENT_SCOPE)
+# 获取指定模块的绝对路径
+function(rendu_get_path_to_script_module module variable)
+    rendu_get_scripts_base_path(scripts_base_path)
+    set(${variable} "${scripts_base_path}/${module}" PARENT_SCOPE)
 endfunction()
 
-# 生成模块项目名称（修正变量引用）
-function(GetProjectNameOfScriptModule module out_var)
-  string(TOLOWER "scripts_${module}" generated_name)  # 修正为使用参数module
-  set(${out_var} ${generated_name} PARENT_SCOPE)
+# 获取指定模块的项目名
+function(rendu_get_project_name_of_script_module module variable)
+    string(TOLOWER "scripts_${module}" generated_name)
+    set(${variable} "${generated_name}" PARENT_SCOPE)
 endfunction()
 
-function(GetScriptModuleList out_var)
-  GetScriptsBasePath(base_path)
+# 获取所有脚本模块列表
+function(rendu_get_script_module_list variable)
+    rendu_get_scripts_base_path(base_path)
+    file(GLOB locale_script_module_list RELATIVE
+            ${base_path}
+            ${base_path}/*)
 
-  # 仅获取顶层目录
-  file(GLOB children RELATIVE ${base_path} ${base_path}/*)
-
-  # 严格验证模块目录
-  set(valid_modules)
-  foreach(child IN LISTS children)
-    # 过滤非目录项和隐藏目录
-    if(IS_DIRECTORY "${base_path}/${child}" AND NOT child MATCHES "^\\.|_")
-      # 验证模块名格式
-      if(child MATCHES "^[A-Za-z][A-Za-z0-9_]*$")
-        # 检查必要构建文件
-        if(EXISTS "${base_path}/${child}/CMakeLists.txt")
-          list(APPEND valid_modules ${child})
-        else()
-          message(WARNING "脚本模块 ${child} 缺少CMakeLists.txt文件")
-        endif()
-      endif()
-    endif()
-  endforeach()
-
-  # 空目录处理策略
-  if(NOT valid_modules)
-    set(msg_type WARNING)  # 默认警告级别
-    if(DEFINED RENDU_SCRIPTS_REQUIRED)
-      if(RENDU_SCRIPTS_REQUIRED)
-        set(msg_type FATAL_ERROR)
-      endif()
-    else()
-      option(RENDU_SCRIPTS_REQUIRED "是否强制需要脚本模块" OFF)  # 默认改为OFF
-    endif()
-
-    message(${msg_type} "未找到有效脚本模块\n"
-        "扫描路径: ${base_path}\n"
-        "可能原因:\n"
-        "1. 尚未添加任何脚本模块\n"
-        "2. 模块目录名称不符合规范\n"
-        "3. 缺少CMakeLists.txt文件")
-  endif()
-
-  set(${out_var} ${valid_modules} PARENT_SCOPE)
+    set(${variable} "")
+    foreach (script_module ${locale_script_module_list})
+        rendu_get_path_to_script_module(${script_module} script_module_path)
+        if (IS_DIRECTORY ${script_module_path})
+            list(APPEND ${variable} ${script_module})
+        endif ()
+    endforeach ()
+    set(${variable} ${${variable}} PARENT_SCOPE)
 endfunction()
 
-
-# 转换模块名为配置变量名
-function(ScriptModuleNameToVariable module out_var)
-  string(TOUPPER "${module}" upper_module)
-  set(${out_var} "SCRIPTS_${upper_module}" PARENT_SCOPE)
+# 将脚本模块名转换为其对应的变量名
+function(rendu_script_module_name_to_variable module variable)
+    string(TOUPPER ${module} upper_module)
+    set(var_name "RENDU_SCRIPTS_${upper_module}")
+    set(${variable} ${var_name} PARENT_SCOPE)
 endfunction()
 
-# 动态链接需求检查（简化逻辑）
-function(IsDynamicLinkingRequired out_var)
-  string(TOLOWER "${SCRIPTS}" scripts_config)
-  set(is_required OFF)
+# 判断是否需要动态链接
+function(rendu_is_dynamic_linking_required variable)
+    if (RENDU_SCRIPTS MATCHES "dynamic")
+        set(is_default_value_dynamic ON)
+    endif ()
 
-  if(scripts_config MATCHES "dynamic")
-    set(is_required ON)
-  else()
-    GetScriptModuleList(modules)
-    foreach(module IN LISTS modules)
-      ScriptModuleNameToVariable(${module} var_name)
-      if(${${var_name}} STREQUAL "DYNAMIC")
-        set(is_required ON)
-        break()
-      endif()
-    endforeach()
-  endif()
-
-  set(${out_var} ${is_required} PARENT_SCOPE)
+    rendu_get_script_module_list(script_module_list)
+    set(is_required OFF)
+    foreach (script_module ${script_module_list})
+        rendu_script_module_name_to_variable(${script_module} script_module_variable)
+        if ((${${script_module_variable}} STREQUAL "dynamic") OR
+        (${${script_module_variable}} STREQUAL "default" AND is_default_value_dynamic))
+            set(is_required ON)
+            break()
+        endif ()
+    endforeach ()
+    set(${variable} ${is_required} PARENT_SCOPE)
 endfunction()
 
-# 生成平台原生库名（使用CMake内置变量）
-function(GetNativeSharedLibraryName module out_var)
-  set(lib_name
-      "${CMAKE_SHARED_LIBRARY_PREFIX}${module}${CMAKE_SHARED_LIBRARY_SUFFIX}"
-  )
-  set(${out_var} ${lib_name} PARENT_SCOPE)
+# 获取平台原生共享库文件名
+function(rendu_get_native_shared_library_name module variable)
+    if (WIN32)
+        set(${variable} "${module}.dll" PARENT_SCOPE)
+    elseif (APPLE)
+        set(${variable} "lib${module}.dylib" PARENT_SCOPE)
+    else ()
+        set(${variable} "lib${module}.so" PARENT_SCOPE)
+    endif ()
 endfunction()
 
-# 安装路径生成（支持多配置）
-function(GetInstallOffset out_var)
-  cmake_path(SET install_dir
-      NORMALIZE
-      "$<IF:$<CONFIG:Debug>,scripts_debug,scripts>"
-  )
-  set(${out_var}
-      "${CMAKE_INSTALL_PREFIX}/${install_dir}"
-      PARENT_SCOPE
-  )
+# 获取脚本安装路径
+function(rendu_get_install_offset variable)
+    if (WIN32)
+        set(${variable} "${CMAKE_INSTALL_PREFIX}/scripts" PARENT_SCOPE)
+    else ()
+        set(${variable} "${CMAKE_INSTALL_PREFIX}/bin/scripts" PARENT_SCOPE)
+    endif ()
 endfunction()
