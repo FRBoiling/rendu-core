@@ -1,36 +1,41 @@
 #**********************************
-#  Created by boil on 2025/02/19.
+#  Created by boil on 2025/02/21.
 #**********************************
 
-include(${CMAKE_SOURCE_DIR}/cmake/compiler/common.cmake)
+#======================= 编译器版本检测 =======================#
+set(GCC_EXPECTED_VERSION 11.1.0)
 
-# 设置编译器标识
-set(COMPILER_PREFIX "GCC")
-set(GCC_EXPECTED_VERSION 10.0.0)
+message(STATUS "GCC: 编译器路径 = ${CMAKE_CXX_COMPILER}")
+message(STATUS "GCC: 期望版本 >= ${GCC_EXPECTED_VERSION}")
+message(STATUS "GCC: 实际版本 = ${CMAKE_CXX_COMPILER_VERSION}")
 
-# 基础配置
-target_compile_definitions(rendu-compile-option-interface
+if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS GCC_EXPECTED_VERSION)
+  message(FATAL_ERROR "GCC: 不满足最低版本要求\n"
+      "需求版本: ${GCC_EXPECTED_VERSION}\n"
+      "当前版本: ${CMAKE_CXX_COMPILER_VERSION}\n"
+      "编译器路径: ${CMAKE_CXX_COMPILER}")
+else()
+  message(STATUS "GCC: 版本检查通过")
+endif()
+
+#======================= 核心编译选项 =======================#
+target_compile_options(rendu-compile-option-interface
     INTERFACE
-    -D_BUILD_DIRECTIVE="$<CONFIG>"
-    -DUSE_GCC_COMPILER
+    -fno-delete-null-pointer-checks
+    -Wno-attributes
 )
 
-# 版本检查
-check_compiler_version(${GCC_EXPECTED_VERSION}
-    ${CMAKE_CXX_COMPILER_VERSION}
-    ${COMPILER_PREFIX})
-
-# 架构优化
+#======================= 架构优化 =======================#
 if(PLATFORM EQUAL 32)
-  target_compile_options(rendu-arch-interface INTERFACE -msse2 -mfpmath=sse)
+  target_compile_options(rendu-compile-option-interface
+      INTERFACE
+      -msse2
+      -mfpmath=sse)
+  message(STATUS "GCC: 32位架构已启用SSE2优化")
 endif()
 
-if(RD_SYSTEM_PROCESSOR MATCHES "x86|amd64")
-  target_compile_definitions(rendu-arch-interface INTERFACE -DHAVE_SSE2 -D__SSE2__)
-endif()
-
-# 警告配置
-set(CURRENT_WARNING_FLAGS
+#======================= 警告选项配置 =======================#
+set(GCC_WARNING_OPTS
     -W
     -Wall
     -Wextra
@@ -39,19 +44,28 @@ set(CURRENT_WARNING_FLAGS
     -Wfatal-errors
     -Woverloaded-virtual
     -Wno-missing-field-initializers
+    -Wno-maybe-uninitialized
 )
-configure_warnings()
 
-# 消毒剂配置
-set(ASAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=address
-    -fsanitize-recover=address
-    -fsanitize-address-use-after-scope)
-configure_sanitizers(ASAN)
+if(WITH_WARNINGS)
+  target_compile_options(rendu-warning-interface INTERFACE ${GCC_WARNING_OPTS})
+  message(STATUS "GCC: 已启用严格警告模式")
+endif()
 
-# 共享库配置
+#======================= Sanitizers配置 =======================#
+function(configure_sanitizer name flags)
+  target_compile_options(rendu-compile-option-interface INTERFACE -fno-omit-frame-pointer ${flags})
+  target_link_options(rendu-compile-option-interface INTERFACE -fno-omit-frame-pointer ${flags})
+  message(STATUS "GCC: 已启用${name}")
+endfunction()
+
+if(ASAN)
+  configure_sanitizer("地址检测器(ASan)" "-fsanitize=address -fsanitize-recover=address")
+endif()
+
+#======================= 共享库配置 =======================#
 if(BUILD_SHARED_LIBS)
-  target_compile_options(rendu-shared-interface INTERFACE -fPIC -Wno-attributes)
-  target_compile_options(rendu-hidden-symbols-interface INTERFACE -fvisibility=hidden)
+  target_compile_options(rendu-compile-option-interface INTERFACE -fPIC)
+  target_link_options(rendu-compile-option-interface INTERFACE --no-undefined)
+  message(STATUS "GCC: 共享库模式已启用(PIC+符号检查)")
 endif()

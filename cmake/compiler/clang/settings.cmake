@@ -1,126 +1,208 @@
 #**********************************
-#  Created by boil on 2025/02/19.
+#  Created by boil on 2025/02/21.
 #**********************************
 
-include(${CMAKE_SOURCE_DIR}/cmake/compiler/common.cmake)
+#======================= 编译器版本检测 =======================#
+set(RENDU_CLANG_EXPECTED_VERSION 11.0.0)
 
-# 设置编译器标识
-set(COMPILER_PREFIX "Clang")
-set(CLANG_EXPECTED_VERSION 11.0.0)
+# 特殊处理AppleClang版本差异
+if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+  set(RENDU_CLANG_EXPECTED_VERSION 12.0.5)
+endif ()
 
-# 基础编译指令
-target_compile_definitions(rendu-compile-option-interface
+print_option("编译器路径" "${CMAKE_CXX_COMPILER}" ${Green})
+
+if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS RENDU_CLANG_EXPECTED_VERSION)
+  print_option("期望最低版本" "${RENDU_CLANG_EXPECTED_VERSION}" ${Red})
+  print_option("实际版本" "${CMAKE_CXX_COMPILER_VERSION}" ${Red})
+else ()
+  print_option("期望最低版本" "${RENDU_CLANG_EXPECTED_VERSION}" ${Green})
+  print_option("实际版本" "${CMAKE_CXX_COMPILER_VERSION}" ${Green})
+endif ()
+
+#======================= 警告系统配置 =======================#
+# 警告增强配置
+target_compile_options(rendu-warning-interface
     INTERFACE
-    -D_BUILD_DIRECTIVE="$<CONFIG>"
-    -DUSE_CLANG_COMPILER
+    -W                  # 启用所有警告类别
+    -Wall               # 标准警告集合
+    -Wextra             # 额外警告集合
+    -Wimplicit-fallthrough  # 检查未标记的case穿透
+    -Winit-self         # 初始化自身变量检测
+    -Wno-mismatched-tags    # 忽略类/结构体标签不匹配
+    -Woverloaded-virtual    # 虚函数重载检查
+    -Wno-missing-field-initializers  # 允许缺失字段初始化
 )
 
-# AppleClang特殊版本处理
-if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-  set(CLANG_EXPECTED_VERSION 12.0.5)  # Xcode 12.5+对应LLVM 11
-endif()
-
-# 版本检查（调用公共宏）
-check_compiler_version(${CLANG_EXPECTED_VERSION}
-    ${CMAKE_CXX_COMPILER_VERSION}
-    ${COMPILER_PREFIX})
-
-# charconv 64位整型转换bug检测（保持核心逻辑）
-# charconv检测前需要包含
-include(CheckCXXSourceCompiles)
-check_cxx_source_compiles("
-#include <charconv>
-#include <cstdint>
-
-int main() {
-    uint64_t n;
-    std::from_chars(\"0\", \"0\"+1, n);
-    return static_cast<int>(n);
-}
-" CLANG_HAVE_PROPER_CHARCONV)
-
-if(NOT CLANG_HAVE_PROPER_CHARCONV)
-  message(STATUS "Clang: 检测到64位from_chars缺陷，已启用兼容方案")
-  target_compile_definitions(rendu-compat-interface
-      INTERFACE -DRD_NEED_CHARCONV_WORKAROUND)
-endif()
-
-# 警告配置（通过公共函数管理）
-set(CURRENT_WARNING_FLAGS
-    -W
-    -Wall
-    -Wextra
-    -Wimplicit-fallthrough
-    -Winit-self
-    -Wfatal-errors
-    -Wno-mismatched-tags
-    -Woverloaded-virtual
-)
-configure_warnings()
-
-# 调试配置
-if(WITH_COREDEBUG)
-  target_compile_options(rendu-debug-interface INTERFACE -g3)
-  message(STATUS "Clang: 调试标志已设置 (-g3)")
-endif()
-
-# Sanitizer统一配置
-set(ASAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=address
-    -fsanitize-recover=address
-    -fsanitize-address-use-after-scope)
-configure_sanitizers(ASAN)
-
-set(MSAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=memory
-    -fsanitize-memory-track-origins
-    -mllvm -msan-keep-going=1)
-configure_sanitizers(MSAN)
-
-set(UBSAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=undefined)
-configure_sanitizers(UBSAN)
-
-set(TSAN_FLAGS
-    -fno-omit-frame-pointer
-    -fsanitize=thread)
-configure_sanitizers(TSAN)
-
-# 构建时间分析
-if(BUILD_TIME_ANALYSIS)
-  target_compile_options(rendu-perf-interface INTERFACE -ftime-trace)
-  message(STATUS "Clang: 启用编译耗时分析")
-endif()
-
-# 特殊警告抑制
-target_compile_options(rendu-suppress-interface
+# 警告抑制配置
+target_compile_options(rendu-no-warning-interface
     INTERFACE
-    -Wno-narrowing        # 抑制g3d相关警告
-    -Wno-deprecated-register  # 屏蔽gsoap警告
-    -Wno-undefined-inline)    # fmt优化hack
+    -w  # 禁用所有警告
+)
+print_option("警告系统" "已配置" ${Green})
 
-# 共享库配置
-if(BUILD_SHARED_LIBS)
-  target_compile_options(rendu-shared-interface
+
+#======================= 调试分析配置 =======================#
+if (WITH_COREDEBUG)
+  target_compile_options(rendu-compile-option-interface
       INTERFACE
-      -fPIC
-      -fvisibility=hidden)
-  target_link_options(rendu-shared-interface
+      -g3)
+  print_option("调试分析" "已配置三级调试符号(-g3)" ${Green})
+endif ()
+
+if (BUILD_TIME_ANALYSIS)
+  target_compile_options(rendu-compile-option-interface
+      INTERFACE
+      -ftime-trace)
+  print_option("调试分析" "已启用编译耗时分析(-ftime-trace)" ${Green})
+endif ()
+
+#======================= 诊断增强 =======================#
+target_compile_options(rendu-compile-option-interface
+    INTERFACE
+    -Weverything
+    -Wno-c++98-compat
+    -Wno-exit-time-destructors
+    -Wno-global-constructors)
+
+#======================= 兼容性配置 =======================#
+target_compile_options(rendu-compile-option-interface
+    INTERFACE
+    -Wno-narrowing
+    -Wno-deprecated-register
+    -Wno-undefined-inline)
+
+#======================= 共享库配置 =======================#
+if (BUILD_SHARED_LIBS)
+  target_compile_options(rendu-compile-option-interface
+      INTERFACE
+      -fPIC)
+  target_link_options(rendu-compile-option-interface
       INTERFACE
       --no-undefined)
-  message(STATUS "Clang: 共享库模式配置完成")
-endif()
+  print_option("共享库模式" "已启用(PIC+符号检查)" ${Green})
+endif ()
 
-# PCH模板实例化优化（保留核心检测逻辑）
-set(CMAKE_REQUIRED_FLAGS "-fpch-instantiate-templates")
-check_cxx_source_compiles("int main() { return 0; }" CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
-unset(CMAKE_REQUIRED_FLAGS)
+#======================= 预编译头优化 =======================#
+# ======================================================
+# 预编译头文件(PCH)加速配置
+# ======================================================
 
-if(CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
-  target_compile_options(rendu-pch-interface
-      INTERFACE -fpch-instantiate-templates)
-  message(STATUS "Clang: 启用PCH模板预实例化优化")
-endif()
+# 检测编译器是否支持模板预实例化优化标志
+include(CheckCXXCompilerFlag)  # 载入编译器标志检查模块
+
+# 检查Clang特有的 -fpch-instantiate-templates 编译选项
+# 该选项可加速模板在预编译头中的实例化（Clang 12+ 支持）
+check_cxx_compiler_flag(
+    -fpch-instantiate-templates
+    CLANG_HAS_PCH_INSTANTIATE_TEMPLATES
+)
+
+# 如果编译器支持该优化选项
+if (CLANG_HAS_PCH_INSTANTIATE_TEMPLATES)
+  # 将优化标志添加到全局编译选项接口
+  target_compile_options(rendu-compile-option-interface
+      INTERFACE
+      -fpch-instantiate-templates  # 启用模板预实例化
+  )
+
+  # 打印启用状态（绿色高亮显示）
+  print_option(
+      "预编译头文件加速"
+      "Clang模板预实例化已启用"
+      ${Green}
+  )
+endif ()
+
+#======================= 编译功能检测 =======================#
+#unset(CLANG_HAVE_PROPER_CHARCONV CACHE)
+
+#check_cxx_source_compiles("
+##include <charconv>
+#int main() {
+#    uint64_t n;
+#    return std::from_chars(\"0\", \"0\"+1, n).ec == std::errc();
+#}" CLANG_HAVE_PROPER_CHARCONV)
+#
+#if(NOT CLANG_HAVE_PROPER_CHARCONV)
+#  target_compile_definitions(rendu-compile-option-interface
+#      INTERFACE
+#      RENDU_NEED_CHARCONV_WORKAROUND)
+#  message(STATUS "Clang: 已启用64位from_chars兼容方案")
+#endif()
+
+
+#======================= 运行时检测配置 =======================#
+function(configure_sanitizer name flags)
+  target_compile_options(rendu-compile-option-interface
+      INTERFACE
+      -fno-omit-frame-pointer
+      ${flags})
+  target_link_options(rendu-compile-option-interface
+      INTERFACE
+      -fno-omit-frame-pointer
+      ${flags})
+  message(STATUS "Clang: 已启用${name}")
+endfunction()
+
+if (ASAN)
+  configure_sanitizer("地址检测器(ASan)" "-fsanitize=address -fsanitize-recover=address")
+endif ()
+
+if (MSAN)
+  configure_sanitizer("内存检测器(MSan)" "-fsanitize=memory -fsanitize-memory-track-origins -mllvm -msan-keep-going=1")
+endif ()
+
+if (UBSAN)
+  configure_sanitizer("未定义行为检测器(UBSan)" "-fsanitize=undefined")
+endif ()
+
+if (TSAN)
+  configure_sanitizer("线程检测器(TSan)" "-fsanitize=thread")
+endif ()
+
+# LTO优化
+if (ARG_ENABLE_LTO)
+  target_compile_options(rendu-compile-option-interface INTERFACE -flto=thin)
+  target_link_options(rendu-compile-option-interface INTERFACE
+      -flto=thin
+      -fuse-ld=lld)
+endif ()
+
+# 安全配置
+if (ARG_SECURE_INIT)
+  target_compile_options(rendu-compile-option-interface INTERFACE
+      -ftrivial-auto-var-init=pattern
+      -fsanitize=safe-stack)
+endif ()
+
+# 控制流完整性
+if (ARG_WITH_CFI)
+  target_compile_options(rendu-compile-option-interface INTERFACE
+      -fsanitize=cfi
+      -fvisibility=hidden)
+endif ()
+
+# 地址检测器
+if (ARG_WITH_ASAN)
+  target_compile_options(rendu-compile-option-interface INTERFACE
+      -fno-omit-frame-pointer
+      -fsanitize=address
+      -fsanitize-recover=address)
+  target_link_options(rendu-compile-option-interface INTERFACE
+      -fno-omit-frame-pointer
+      -fsanitize=address)
+endif ()
+
+# 共享库配置
+if (ARG_PIC_MODE)
+  target_compile_options(rendu-compile-option-interface INTERFACE -fPIC)
+  target_link_options(rendu-compile-option-interface INTERFACE --no-undefined)
+endif ()
+
+# macOS特殊配置
+if (APPLE)
+  target_compile_options(rendu-compile-option-interface INTERFACE
+      -Wno-objc-interface-ivars
+      -Wno-deprecated-declarations)
+endif ()

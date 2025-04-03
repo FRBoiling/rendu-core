@@ -62,7 +62,7 @@ public:
    * Destroy an item in-place at pointer P.
    */
   void destroy(pointer p) {
-    // destroy using "explicit destructor"
+    // Destroy using "explicit destructor"
     p->~T();
   }
 

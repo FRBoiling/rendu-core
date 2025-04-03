@@ -1,118 +1,60 @@
-#|--------------------------------
-#| rendu-core rendu project
-#|--------------------------------
+# CMakeLists.txt
+# 顶层CMake配置文件
 
-message("* * * * * * * * * * * * *")
-message("*  _____     ____    *")
-message("* |  __  \\   | __  \\   *")
-message("* | |__) |   | |  \\ \\  *")
-message("* |  ___/    | |  | |  *")
-message("* | | \\ \\    | |_/  /  *")
-message("* |_|  \\_\\   |___ /    *")
-message("* * * * * * * * * * * * *")
+# 最低CMake版本要求（必须第一个声明）
+cmake_minimum_required(VERSION 3.15)
 
-cmake_minimum_required (VERSION 3.21.7)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Utilities")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Project")
 
-# 项目基础配置前置
-set(CMAKE_DISABLE_SOURCE_CHANGES ON)
-set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+include(Policies)
+include(GlobalVariables)
 
-# 项目基础配置
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Set project name (must be done AFTER setting configuration types)
-set(RENDU_PROJECT_NAME rendu)
-set(RENDU_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(RENDU_PROJECT_VERSION 2.0.0)
-
-
-
-project(
-    ${RENDU_PROJECT_NAME}
-    DESCRIPTION "Gaming meets modern C++ - a study project"
-    HOMEPAGE_URL "https://github.com/FRBoiling/rendu-core"
-    LANGUAGES C CXX
+# 项目定义
+project(rendu
+    LANGUAGES CXX
+    VERSION 1.0.0
+    DESCRIPTION "Modern C++ Project"
+    HOMEPAGE_URL "https://github.com/yourusername/rendu"
 )
-#
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/lib) #默认存放静态库的文件夹位置
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/dll) #默认存放动态库的文件夹位置
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/exe) #存放可执行软件的目录
-set(LIBRARY_OUTPUT_PATH ${RENDU_PROJECT_DIR}/bin/library)
 
-#|--------------------------------
-#| Set supported build types
-#|--------------------------------
-#set(RENDU_SUPPORTED_BUILD_TYPES Debug Release RelWithDebInfo)
-# build in Release-mode by default if not explicitly set
-if (CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
-  set(CMAKE_DEFAULT_BUILD_TYPE "RelWithDebInfo" CACHE INTERNAL "")
-endif ()
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-endif ()
+include(BaseHead)
 
-## Set RPATH-handing (CMake parameters)
-#set(CMAKE_SKIP_BUILD_RPATH 0)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
+#----------------------- 项目配置 -----------------------
+include(BaseTargets)
 
+# 设置项目全局选项
+include(Options)
 
-#|--------------------------------
-#| rendu-core Framework Configuration
-#|--------------------------------
-# set macro-directory
-
-list(APPEND CMAKE_MODULE_PATH   "${CMAKE_SOURCE_DIR}/cmake/macros")
-include(ConfigureBaseTargets)
-include(ConfigureScripts)
-include(CompilerWarnings)
 include(CheckPlatform)
+include(CheckCompiler)
 
+include(GenRevisionData)
 
-include(CheckCXXSourceRuns)
-include(CheckIncludeFiles)
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
+include(OptionsShow)
 
-include(RenduGroupSources)
-include(RenduAutoCollect)
-include(RenduAddLibrary)
-include(RenduAddExecutable)
-include(RenduAddSubdirectory)
+# 创建排除目录列表（跨平台兼容写法）
+set(EXCLUDE_DIRS
+    "${CMAKE_CURRENT_SOURCE_DIR}/.git"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.cache"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.vscode"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.idea"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-*"  # 增强模式匹配
+    "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+    "${CMAKE_CURRENT_SOURCE_DIR}/build*"
+)
 
-# Find revision ID and hash of the sourcetree
-include(cmake/genrev.cmake)
-# set default buildoptions and print them
-include(cmake/options.cmake)
-# print out the results before continuing
-include(cmake/showoptions.cmake)
+include(CheckBuildDir)
 
-find_package(PCHSupport)
-
-set(test_dir ${CMAKE_CURRENT_SOURCE_DIR}/test)
-if (RD_BUILD_TESTING)
-  include(RenduAddTest)
-  include(CTest)
-  enable_testing()
-  # add test project
-  set(test_dir "")
-endif ()
+#-------------------------------------------------------------------------------
+# 子目录添加
+#-------------------------------------------------------------------------------
+include(CommonFunction)
 
 rendu_add_subdirectory(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    # Exclude
-    ${test_dir}
-    ${CMAKE_CURRENT_SOURCE_DIR}/.git
-    ${CMAKE_CURRENT_SOURCE_DIR}/.cache
-    ${CMAKE_CURRENT_SOURCE_DIR}/.vscode
-    ${CMAKE_CURRENT_SOURCE_DIR}/.idea
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/build
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
-    ${CMAKE_CURRENT_SOURCE_DIR}/bin
-    ${CMAKE_CURRENT_SOURCE_DIR}/proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/tool
+    RENDU_CORE_DIRS  # 明确接收变量
+    # 排除目录
+    ${EXCLUDE_DIRS}
 )

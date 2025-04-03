@@ -92,7 +92,7 @@ base). More often, we are returning the `zval` back to PHP from C.
 The `RETURN_COPY_VALUE()` macro (standard in PHP 8.x, and polyfilled in earlier
 versions) is the most common way we return a value back to PHP, because it
 donates our `zval`'s refcount to the caller, and thus saves us from needing to
-destroy our `zval` explicitly. This is ideal when we have a full `zval` to
+Destroy our `zval` explicitly. This is ideal when we have a full `zval` to
 return.
 
 Once in a while we have a `zval*` to return instead. For example when we parse

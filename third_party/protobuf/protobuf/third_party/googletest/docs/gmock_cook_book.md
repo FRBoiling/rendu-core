@@ -3094,7 +3094,7 @@ Remember the steps for using a mock:
     `EXPECT_CALL()`.
 3.  The code under test calls methods of `foo`.
 4.  Optionally, verify and reset the mock.
-5.  Destroy the mock yourself, or let the code under test destroy it. The
+5.  Destroy the mock yourself, or let the code under test Destroy it. The
     destructor will automatically verify it.
 
 If you follow the following simple rules, your mocks and threads can live
