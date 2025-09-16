@@ -43,4 +43,11 @@ macro(rendu_set_policies)
         cmake_policy(SET CMP0150 NEW)
         set(CMAKE_POLICY_DEFAULT_CMP0150 NEW)
     endif ()
+
+    # CMP0174: 允许 find_package() 继承父项目的 NO_POLICY_SCOPE 参数
+    # 确保策略作用域在依赖查找过程中正确传递
+    if (POLICY CMP0174)
+        cmake_policy(SET CMP0174 NEW)
+    endif ()
+
 endmacro()

@@ -413,7 +413,9 @@ endfunction()
 #   这些是 CMake 内部属性，使用时需谨慎，未来 CMake 版本可能需要调整
 #   来源：https://github.com/Kitware/CMake/blob/dc3d0b5a0a7d26d43d6cfeb511e224533b5d188f/Modules/FetchContent.cmake#L1152
 function(_override_fetchcontent contentName)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "SOURCE_DIR;BINARY_DIR" "")
+
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+            "" "SOURCE_DIR;BINARY_DIR" "")
     if (NOT "${arg_UNPARSED_ARGUMENTS}" STREQUAL "")
         rendu_log_error("不支持的参数: ${arg_UNPARSED_ARGUMENTS}")
     endif ()
