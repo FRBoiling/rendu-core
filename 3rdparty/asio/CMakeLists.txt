@@ -3,9 +3,9 @@
 #**********************************
 
 rendu_find_package(
-        NAME Spdlog
-        GITHUB_REPOSITORY gabime/spdlog
-        GIT_TAG v1.16.0
+        NAME asio
+        GITHUB_REPOSITORY boostorg/asio
+        GIT_TAG boost-1.89.0
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
@@ -15,7 +15,7 @@ rendu_add_library(
         PROJECT    ${PROJECT_NAME}
         NAME    ${FOLDER_NAME}
         LINKOPTS    rendu-dependency-interface
-        DEPS Spdlog::Spdlog
+        DEPS
         DEFINES
         INTERFACE
         ALIAS     ON

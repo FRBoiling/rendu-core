@@ -10,6 +10,7 @@
 #include <chrono>
 #include <iomanip>
 #include <system_error>
+#include <condition_variable>
 
 //=============== 平台抽象层 ===============//
 namespace Platform

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 # 项目基本信息
-project(rendu-core
+project(RenduCore
         LANGUAGES CXX
         VERSION 1.2.3
         DESCRIPTION "RenduCore C++"
