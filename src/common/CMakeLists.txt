@@ -13,8 +13,12 @@ rendu_add_library(
         NAME
         ${FOLDER_NAME}
         LINKOPTS
+        rendu-dependency-interface
         rendu-core-interface
         DEPS
+        3rdparty::entt
+        3rdparty::spdlog
+        3rdparty::asio
         DEFINES
         INTERFACE
         ALIAS ON

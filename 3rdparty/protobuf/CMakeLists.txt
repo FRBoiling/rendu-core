@@ -6,18 +6,9 @@
 #  Created by boil on 2023/4/9.
 #**********************************
 
-## 添加Protobuf依赖的GTest和Abseil查找配置
-#rendu_find_package(
-#        NAME GTest
-#        GITHUB_REPOSITORY google/googletest
-#        VERSION 1.17.0
-#)
-#
-#rendu_find_package(
-#        NAME absl
-#        GITHUB_REPOSITORY abseil/abseil-cpp
-#        VERSION 20250512.1
-#)
+# 在包含 protobuf 之前设置选项
+set(protobuf_BUILD_TESTS OFF)
+set(protobuf_BUILD_EXAMPLES OFF)
 
 # 原有的Protobuf查找配置
 rendu_find_package(

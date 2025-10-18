@@ -6,10 +6,10 @@ rendu_add_library(
     DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     PROJECT
-    ${CMAKE_PROJECT_NAME}
+    ${PROJECT_NAME}
     NAME
     ${FOLDER_NAME}
     LINKOPTS
-    rendu-core-interface
+        rendu-dependency-interface
     DEPS
 )

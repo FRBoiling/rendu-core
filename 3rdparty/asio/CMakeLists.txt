@@ -4,8 +4,8 @@
 
 rendu_find_package(
         NAME asio
-        GITHUB_REPOSITORY boostorg/asio
-        GIT_TAG boost-1.89.0
+        GITHUB_REPOSITORY chriskohlhoff/asio
+        GIT_TAG asio-1-36-0
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
@@ -15,7 +15,7 @@ rendu_add_library(
         PROJECT    ${PROJECT_NAME}
         NAME    ${FOLDER_NAME}
         LINKOPTS    rendu-dependency-interface
-        DEPS
+        DEPS asio::asio
         DEFINES
         INTERFACE
         ALIAS     ON
