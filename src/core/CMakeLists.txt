@@ -14,7 +14,7 @@ rendu_add_library(
         ${FOLDER_NAME}
         LINKOPTS
         rendu-core-interface
-        DEPS rendu::common
+        DEPS RenduCore::common
         DEFINES
         INTERFACE
         ALIAS ON
