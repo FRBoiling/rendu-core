@@ -5,6 +5,7 @@
 rendu_find_package(
         NAME asio
         GITHUB_REPOSITORY chriskohlhoff/asio
+        VERSION 1.36.0
         GIT_TAG asio-1-36-0
 )
 
