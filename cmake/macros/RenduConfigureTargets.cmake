@@ -32,8 +32,8 @@ set(CMAKE_CXX_STANDARD 20)
 # 添加配置相关预定义宏（自动设置_BUILD_DIRECTIVE=Debug/Release等）
 target_compile_definitions(rendu-compile-option-interface
         INTERFACE
-        _BUILD_DIRECTIVE="$<CONFIG>")
-
+        RENDU_BUILD_TYPE="$<CONFIG>"
+        RENDU_BUILD_HAS_DEBUG_INFO=$<CONFIG:Debug,RelWithDebInfo>)
 #------------------------
 # 2. 项目特性接口库
 #------------------------

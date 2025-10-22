@@ -1,32 +1,39 @@
-// main.cpp
+#include "common/ecs/application.h"
+#include <iostream>
 
-#include "core/log/LogSystem.hpp"
-#include "core/network/NetworkSystem.hpp"
-
-using namespace core;
-
-int main() {
-    try {
-        World world;
-        
-        // 初始化日志系统
-        world.addSystem<LogSystem>();
-        
-        // 初始化网络系统
-        world.addSystem<NetworkSystem>();
-
-        // 主循环
-        auto lastTime = std::chrono::high_resolution_clock::now();
-        while (true) {
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
-            lastTime = currentTime;
-            
-            world.update(deltaTime);
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-    } catch (const std::exception& e) {
-        // 错误处理
+using namespace common::Ecs;
+// 示例应用程序
+class MyApplication : public Application {
+protected:
+    void register_systems() override {
+        // 这里注册你的系统
+        // world_->add_system<MySystem>();
     }
-    return 0;
+    
+    void update(float delta_time) override {
+        // 应用程序特定更新逻辑
+    }
+    
+    void render() override {
+        // 渲染逻辑
+    }
+};
+
+int main(int argc, char* argv[]) {
+    try {
+        MyApplication app;
+        
+        if (!app.initialize()) {
+            std::cerr << "Failed to initialize application" << std::endl;
+            return 1;
+        }
+        
+        std::cout << "Starting application: " << app.get_name() << std::endl;
+        app.run();
+        
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "Unhandled exception: " << e.what() << std::endl;
+        return 1;
+    }
 }

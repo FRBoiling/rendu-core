@@ -13,7 +13,7 @@ rendu_add_executable(
         ${FOLDER_NAME}
         LINKOPTS
         rendu-core-interface
-        DEPS RenduCore::core
+        DEPS RenduCore::common
         DEFINES
         INTERFACE
         ALIAS ON

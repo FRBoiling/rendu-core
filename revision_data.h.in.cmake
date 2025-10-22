@@ -27,11 +27,17 @@
 #define RENDU_BUILD_CMAKE_BUILD_DIRECTORY  R"(@RENDU_BUILDDIR@)"
 
 // Windows 资源定义
-#define VER_COMPANYNAME_STR        "RenduCore Developers"
-#define VER_LEGALCOPYRIGHT_STR     "(c)2025-@RENDU_REV_YEAR@ RenduCore"
-#define VER_FILEVERSION            0,0,0
-#define VER_FILEVERSION_STR        "@RENDU_REV_HASH@ @RENDU_REV_DATE@ (@RENDU_REV_BRANCH@ branch)"
-#define VER_PRODUCTVERSION         VER_FILEVERSION
-#define VER_PRODUCTVERSION_STR     VER_FILEVERSION_STR
+#define RENDU_COMPANYNAME_STR         "RenduCore Developers"
+#define RENDU_LEGALCOPYRIGHT_STR      "(c)2025-@rev_year@ RenduCore"
+#define RENDU_FILEVERSION             0,0,0
+#define RENDU_FILEVERSION_STR         "@rev_hash@ @rev_date@ (@rev_branch@ branch)"
+#define RENDU_PRODUCTVERSION          RENDU_FILEVERSION
+#define RENDU_PRODUCTVERSION_STR      RENDU_FILEVERSION_STR
+
+// Database updater base information
+#define DATABASE_MYSQL_EXECUTABLE   R"(@MYSQL_EXECUTABLE@)"
+#define DATABASE_FULL_DATABASE      "TDB_full_world_1120.25081_2025_08_16.sql"
+#define DATABASE_HOTFIXES_DATABASE  "TDB_full_hotfixes_1120.25081_2025_08_16.sql"
+
 
 #endif // RENDUCORE_REVISION_DATA_H

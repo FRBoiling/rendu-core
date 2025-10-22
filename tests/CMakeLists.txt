@@ -4,13 +4,13 @@
 #|--------------------------------
 #| rendu-core tests module
 #|--------------------------------
-if (RENDU_ENABLE_TESTING)
+if (RENDU_BUILD_TESTING)
   include(CTest)
   enable_testing()
   set(PROJECT_NAME test)
-  rendu_add_subdirectory(
-      ${CMAKE_CURRENT_SOURCE_DIR}
-      # Exclude
+  rendu_add_subdirectories(
+          DIR ${CMAKE_CURRENT_SOURCE_DIR}
+          EXCLUDE_DIRS
   )
 endif ()
 

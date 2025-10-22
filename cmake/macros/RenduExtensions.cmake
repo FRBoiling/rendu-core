@@ -214,7 +214,7 @@ function(rendu_add_library)
     rendu_collect_include_directories(INCLUDE_DIRS "${ARG_DIR}"
             EXCLUDE_DIRS
             "${ARG_DIR}/tests"
-            "${CMAKE_BINARY_DIR}"
+#            "${CMAKE_BINARY_DIR}"
             EXCLUDE_REGEX ".*/private"
     )
 
