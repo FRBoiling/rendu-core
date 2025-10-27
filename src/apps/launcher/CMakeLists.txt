@@ -4,6 +4,8 @@
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
+
+
 rendu_add_executable(
         DIR
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -11,10 +13,10 @@ rendu_add_executable(
         ${PROJECT_NAME}
         NAME
         ${FOLDER_NAME}
-        LINKOPTS
+        PRIVATE_LINK
         rendu-core-interface
-        DEPS RenduCore::common
+        PUBLIC_LINK
+        RenduCore::common
         DEFINES
-        INTERFACE
         ALIAS ON
 )

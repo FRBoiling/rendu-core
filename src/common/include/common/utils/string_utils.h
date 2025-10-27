@@ -1,6 +1,5 @@
 #pragma once
 
-#include <fmt/core.h>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -10,12 +9,7 @@
 
 namespace common {
     namespace utils {
-        // 字符串格式化工具 - 已优化支持运行时格式字符串
-        template<typename S, typename... Args>
-        std::string format(const S& format_str, Args&&... args) {
-            return fmt::vformat(fmt::string_view(format_str), fmt::make_format_args(args...));
-        }
-        
+
         // 字符串分割工具
         std::vector<std::string> split(const std::string& str, const std::string& delimiter);
         

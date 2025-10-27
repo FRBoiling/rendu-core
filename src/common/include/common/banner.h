@@ -11,7 +11,7 @@
 BEGIN_NAMESPACE_COMMON
     namespace Banner
     {
-       RC_COMMON_API void Show(char const* applicationName, void(*log)(char const* text), void(*logExtraInfo)());
+       RC_COMMON_API void Show(char const* applicationName, void(*log)(char const* text), void(*logExtraInfo)(char const* text));
     }
 END_NAMESPACE_COMMON
 

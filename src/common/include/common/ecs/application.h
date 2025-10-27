@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "common/threading/frame_rate_limiter.h"
+
 BEGIN_NAMESPACE_COMMON
     namespace Ecs
     {
@@ -24,6 +26,15 @@ BEGIN_NAMESPACE_COMMON
 
             // 获取应用程序名称
             virtual std::string get_name() const { return "Rendu ECS Application"; }
+            
+            // 设置目标帧率
+            void set_target_fps(float fps);
+            
+            // 获取当前目标帧率
+            float get_target_fps() const;
+            
+            // 获取实际帧率
+            float get_actual_fps() const;
 
         protected:
             // 注册系统
@@ -32,11 +43,10 @@ BEGIN_NAMESPACE_COMMON
             // 应用程序更新
             virtual void update(float delta_time) = 0;
 
-            // 应用程序渲染
-            virtual void render() = 0;
-
             std::unique_ptr<World> world_;
             bool running_ = false;
+            Threading::FrameRateLimiter frame_rate_limiter_; // 添加帧率限制器成员
+            std::string name_;
         };
     } // namespace Ecs
 

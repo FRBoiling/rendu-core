@@ -5,34 +5,176 @@
 #include "common/utils/string_format.h"
 #include <fmt/format.h>
 
+// 定义实现类
 BEGIN_NAMESPACE_COMMON
-namespace Utils
-{
-    namespace Impl
+    namespace Utils
     {
-        std::string StringVFormat(FormatStringView fmt, FormatArgs args) noexcept
-        try
+        class FormatImpl
         {
-            return fmt::vformat(fmt, args);
-        }
-        catch (std::exception const& formatError)
+        public:
+            template <typename... Args>
+            static FormatArgs MakeFormatArgsImpl(Args&&... args)
+            {
+                FormatArgs result;
+                // 存储 fmt::format_args 的实际实现
+                auto args_ptr = new fmt::format_args(fmt::make_format_args(args...));
+                result.impl_ = args_ptr;
+                return result;
+            }
+
+            static fmt::format_args GetFormatArgs(const FormatArgs& args)
+            {
+                return *static_cast<fmt::format_args*>(args.impl_);
+            }
+        };
+
+        // FormatArgs 移动构造和赋值
+        FormatArgs::FormatArgs(FormatArgs&& other) noexcept : impl_(other.impl_)
         {
-            return fmt::format(R"(An error occurred formatting string "{}" : {})", fmt, formatError.what());
+            other.impl_ = nullptr;
         }
 
-        void StringVFormatToImpl(fmt::detail::buffer<char>& buffer, FormatStringView fmt, FormatArgs args) noexcept
-        try
+        FormatArgs& FormatArgs::operator=(FormatArgs&& other) noexcept
         {
-            fmt::detail::vformat_to(buffer, fmt, args, {});
+            if (this != &other)
+            {
+                delete static_cast<fmt::format_args*>(impl_);
+                impl_ = other.impl_;
+                other.impl_ = nullptr;
+            }
+            return *this;
         }
-        catch (std::exception const& formatError)
+
+        FormatArgs::~FormatArgs()
         {
-            fmt::detail::vformat_to(buffer, FormatStringView(R"(An error occurred formatting string "{}" : {})"),
-                                    MakeFormatArgs(fmt, formatError.what()), {});
+            if (impl_)
+            {
+                delete static_cast<fmt::format_args*>(impl_);
+            }
         }
+
+        // MakeFormatArgs 实现
+        template <typename... Args>
+        FormatArgs MakeFormatArgs(Args&&... args)
+        {
+            return FormatImpl::MakeFormatArgsImpl(std::forward<Args>(args)...);
+        }
+
+        namespace Impl
+        {
+            std::string StringVFormat(FormatStringView fmt, FormatArgs args) noexcept
+            try
+            {
+                // 确保格式字符串有效
+                if (!fmt.data() || fmt.size() == 0)
+                    return "[Empty Format String]";
+                
+                return fmt::vformat(fmt, FormatImpl::GetFormatArgs(args));
+            }
+            catch (std::exception const& formatError)
+            {
+                try
+                {
+                    // 使用更安全的错误处理方式
+                    std::string errorMsg = "Format error: ";
+                    errorMsg += formatError.what();
+                    return errorMsg;
+                }
+                catch (...)
+                {
+                    return "[Format Error]";
+                }
+            }
+        }
+
+        // StringVFormatTo 实现
+        template <typename OutputIt>
+        OutputIt StringVFormatTo(OutputIt out, FormatStringView fmt, FormatArgs args) noexcept
+        {
+            auto&& buf = fmt::detail::get_buffer<char>(out);
+            try
+            {
+                // 确保格式字符串有效
+                if (!fmt.data() || fmt.size() == 0)
+                {
+                    fmt::detail::vformat_to(buf, "[Empty Format String]", fmt::format_args(fmt::make_format_args()), {});
+                }
+                else
+                {
+                    fmt::detail::vformat_to(buf, fmt, FormatImpl::GetFormatArgs(args), {});
+                }
+            }
+            catch (const fmt::format_error& e)
+            {
+                // 使用直接字符串拼接代替fmt格式化
+                std::string errorMsg = "Format error: ";
+                errorMsg += e.what();
+                for (const char c : errorMsg) {
+                    *out++ = c;
+                }
+                return out;
+            }
+            return fmt::detail::get_iterator(buf, out);
+        }
+
+        // 为常用类型提供完整的模板实例化声明
+        // 单参数版本
+        template FormatArgs MakeFormatArgs<const char*>(const char*&&);
+        template FormatArgs MakeFormatArgs<const char*&>(const char*&);
+        template FormatArgs MakeFormatArgs<std::string>(std::string&&);
+        template FormatArgs MakeFormatArgs<std::string&>(std::string&);
+        template FormatArgs MakeFormatArgs<std::string_view>(std::string_view&&);
+        template FormatArgs MakeFormatArgs<std::string_view&>(std::string_view&);
+        
+        // 两个参数的组合
+        template FormatArgs MakeFormatArgs<const char*, const char*>(const char*&&, const char*&&);
+        template FormatArgs MakeFormatArgs<const char*, const char*&>(const char*&&, const char*&);
+        template FormatArgs MakeFormatArgs<const char*&, const char*>(const char*&, const char*&&);
+        template FormatArgs MakeFormatArgs<const char*&, const char*&>(const char*&, const char*&);
+        template FormatArgs MakeFormatArgs<const char*, std::string>(const char*&&, std::string&&);
+        template FormatArgs MakeFormatArgs<const char*, std::string&>(const char*&&, std::string&);
+        template FormatArgs MakeFormatArgs<const char*&, std::string>(const char*&, std::string&&);
+        template FormatArgs MakeFormatArgs<const char*&, std::string&>(const char*&, std::string&);
+        template FormatArgs MakeFormatArgs<std::string, const char*>(std::string&&, const char*&&);
+        template FormatArgs MakeFormatArgs<std::string, const char*&>(std::string&&, const char*&);
+        template FormatArgs MakeFormatArgs<std::string&, const char*>(std::string&, const char*&&);
+        template FormatArgs MakeFormatArgs<std::string&, const char*&>(std::string&, const char*&);
+        template FormatArgs MakeFormatArgs<int, std::string>(int&&, std::string&&);
+        template FormatArgs MakeFormatArgs<const char*, int>(const char*&&, int&&);
+
+        // 为常用输出迭代器提供模板实例化声明
+        template std::back_insert_iterator<std::string> StringVFormatTo<std::back_insert_iterator<std::string>>(
+            std::back_insert_iterator<std::string>, FormatStringView, FormatArgs) noexcept;
+    }
+
+END_NAMESPACE_COMMON
+
+// 为 Optional<T> 提供 fmt formatter 支持
+namespace fmt
+{
+    template <typename T, typename Char>
+    struct formatter<Optional<T>, Char> : formatter<T, Char>
+    {
+        template <typename FormatContext>
+        auto format(Optional<T> const& value, FormatContext& ctx) const -> decltype(ctx.out())
+        {
+            if (value.has_value())
+                return formatter<T, Char>::format(*value, ctx);
+
+            return formatter<string_view, Char>().format("(nullopt)", ctx);
+        }
+    };
+}
+
+// allow implicit enum to int conversions for formatting
+namespace Common
+{
+    namespace Utils
+    {
+        template <typename E, std::enable_if_t<std::is_enum_v<E>, std::nullptr_t> = nullptr>
+        inline constexpr auto format_as(E e) { return static_cast<std::underlying_type_t<E>>(e); }
     }
 }
-END_NAMESPACE_COMMON
 
 // explicit template instantiations
 template struct RC_COMMON_API fmt::formatter<int>;

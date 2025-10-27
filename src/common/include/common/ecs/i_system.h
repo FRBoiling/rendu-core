@@ -1,6 +1,8 @@
 #pragma once
 
 #include "common/define.h"
+#include <string>
+#include <vector>
 
 BEGIN_NAMESPACE_COMMON
     namespace Ecs

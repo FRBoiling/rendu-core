@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common/define.h"
-
 #include <string>
 
 BEGIN_NAMESPACE_COMMON

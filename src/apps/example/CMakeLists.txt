@@ -10,9 +10,9 @@ rendu_add_executable(
         ${PROJECT_NAME}
         NAME
         ${FOLDER_NAME}
-        LINKOPTS
+        PRIVATE_LINK
         rendu-core-interface
-        DEPS RenduCore::core
+        PUBLIC_LINK RenduCore::core
         DEFINES
         INTERFACE
         ALIAS ON

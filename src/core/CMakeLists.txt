@@ -12,9 +12,9 @@ rendu_add_library(
         ${PROJECT_NAME}
         NAME
         ${FOLDER_NAME}
-        LINKOPTS
+        PRIVATE_LINK
         rendu-core-interface
-        DEPS RenduCore::common
+        PUBLIC_LINK RenduCore::common
         DEFINES
         INTERFACE
         ALIAS ON

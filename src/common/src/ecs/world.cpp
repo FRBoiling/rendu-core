@@ -1,5 +1,4 @@
 #include "common/ecs/world.h"
-#include <algorithm>
 #include <stdexcept>
 
 using namespace common::Ecs;
@@ -90,7 +89,7 @@ std::vector<ISystem*> World::topological_sort_systems() {
     
     // 构建依赖图
     for (auto& [name, system] : systems_) {
-        auto& dependencies = system->get_dependencies();
+        const auto& dependencies = system->get_dependencies();
         in_degree[system.get()] = 0;
         
         for (const auto& dep_name : dependencies) {
@@ -130,6 +129,3 @@ std::vector<ISystem*> World::topological_sort_systems() {
     
     return sorted;
 }
-
-} // namespace ecs
-} // namespace rendu

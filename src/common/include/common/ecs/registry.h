@@ -1,166 +1,76 @@
 #pragma once
 
+#include <functional>
+
 #include "common/define.h"
-#include <entt/entt.hpp>
-#include <asio/asio.hpp>
+#include <memory>
+#include <string>
+#include <typeindex>
 
 BEGIN_NAMESPACE_COMMON
     namespace Ecs
     {
-        // 注册表封装，基于entt::registry
+        // 前置声明
+        class RegistryImpl;
+        
+        // Entity类型定义
+        using Entity = uint32_t;
+        
+        // Registry类 - 完全基于接口的非模板API
         class Registry
         {
         public:
-            using Entity = entt::entity;
-            using RegistryType = entt::registry;
-
-            // 在 Registry 构造函数中添加
-            Registry() {
-            }
-            ~Registry() = default;
-
-            // 创建实体
+            Registry();
+            ~Registry();
+            
+            // 禁止拷贝和移动
+            Registry(const Registry&) = delete;
+            Registry& operator=(const Registry&) = delete;
+            Registry(Registry&&) = delete;
+            Registry& operator=(Registry&&) = delete;
+            
+            // 实体管理
             Entity create();
-
-            // 销毁实体
             void destroy(Entity entity);
-
-            // 检查实体是否有效
             bool valid(Entity entity) const;
-
-            // 组件管理方法
-            template <typename Component, typename... Args>
-            Component& emplace(Entity entity, Args&&... args);
-
-            template <typename Component>
-            void remove(Entity entity);
-
-            template <typename Component>
-            bool has(Entity entity) const;
-
-            template <typename Component>
-            Component* try_get(Entity entity);
-
-            template <typename Component>
-            const Component* try_get(Entity entity) const;
-
-            template <typename Component>
-            Component& get(Entity entity);
-
-            template <typename Component>
-            const Component& get(Entity entity) const;
-
-            // 视图和组
-            template <typename... Components>
-            auto view();
-
-            template <typename... Components>
-            auto view() const;
-
-            template <typename... Components, typename... Exclude>
-            auto view(entt::exclude_t<Exclude...> tag);
-
-            template <typename... Components, typename... Exclude>
-            auto view(entt::exclude_t<Exclude...> tag) const;
-
-            // 事件管理
-            template <typename Event, typename... Args>
-            void trigger(Args&&... args);
-
-            template <typename Event>
-            entt::sink<Event> sink();
-
-            // 获取底层注册表
-            RegistryType& get_registry() { return registry_; }
-            const RegistryType& get_registry() const { return registry_; }
-
+            
+            // 组件管理（基于接口）
+            void register_component(const std::type_index& type, size_t size);
+            void add_component(Entity entity, const std::type_index& type, void* component);
+            void remove_component(Entity entity, const std::type_index& type);
+            bool has_component(Entity entity, const std::type_index& type) const;
+            void* get_component(Entity entity, const std::type_index& type);
+            const void* get_component(Entity entity, const std::type_index& type) const;
+            
+            // 实体组查询
+            class EntityView {
+            public:
+                EntityView(void* impl);
+                ~EntityView();
+                
+                // 遍历实体
+                void each(std::function<void(Entity)> callback);
+                
+                // 检查是否为空
+                bool empty() const;
+                
+                // 获取实体数量
+                size_t size() const;
+                
+            private:
+                void* impl_;
+            };
+            
+            // 创建实体视图（查询包含特定组件的实体）
+            EntityView create_view(const std::vector<std::type_index>& component_types);
+            
+            // 事件系统接口
+            void subscribe(const std::type_index& event_type, std::function<void(const void*)> callback);
+            void unsubscribe(const std::type_index& event_type, std::function<void(const void*)> callback);
+            void publish(const std::type_index& event_type, const void* event_data);
+            
         private:
-            RegistryType registry_;
+            std::unique_ptr<RegistryImpl> impl_;  // PIMPL模式隐藏实现细节
         };
-
-        // 模板方法实现
-
-        inline Registry::Entity Registry::create()
-        {
-            return registry_.create();
-        }
-
-        inline void Registry::destroy(Entity entity)
-        {
-            registry_.destroy(entity);
-        }
-
-        inline bool Registry::valid(Entity entity) const
-        {
-            return registry_.valid(entity);
-        }
-
-        template <typename Component, typename... Args>
-        inline Component& Registry::emplace(Entity entity, Args&&... args)
-        {
-            return registry_.emplace<Component>(entity, std::forward<Args>(args)...);
-        }
-
-        template <typename Component>
-        inline void Registry::remove(Entity entity)
-        {
-            registry_.remove<Component>(entity);
-        }
-
-        template <typename Component>
-        inline bool Registry::has(Entity entity) const
-        {
-            return registry_.all_of<Component>(entity);
-        }
-
-        template <typename Component>
-        inline Component* Registry::try_get(Entity entity)
-        {
-            return registry_.try_get<Component>(entity);
-        }
-
-        template <typename Component>
-        inline const Component* Registry::try_get(Entity entity) const
-        {
-            return registry_.try_get<Component>(entity);
-        }
-
-        template <typename Component>
-        inline Component& Registry::get(Entity entity)
-        {
-            return registry_.get<Component>(entity);
-        }
-
-        template <typename Component>
-        inline const Component& Registry::get(Entity entity) const
-        {
-            return registry_.get<Component>(entity);
-        }
-
-        template <typename... Components>
-        inline auto Registry::view()
-        {
-            return registry_.view<Components...>();
-        }
-
-        template <typename... Components>
-        inline auto Registry::view() const
-        {
-            return registry_.view<Components...>();
-        }
-
-        template <typename... Components, typename... Exclude>
-        inline auto Registry::view(entt::exclude_t<Exclude...> tag)
-        {
-            return registry_.view<Components...>(tag);
-        }
-
-        template <typename... Components, typename... Exclude>
-        inline auto Registry::view(entt::exclude_t<Exclude...> tag) const
-        {
-            return registry_.view<Components...>(tag);
-        }
-
-    } // namespace Ecs
-
+    }
 END_NAMESPACE_COMMON
