@@ -4,8 +4,7 @@
 
 #include "common.h"
 
-namespace common
-{
+BEGIN_NAMESPACE_COMMON
     char const* localeNames[TOTAL_LOCALES] =
     {
         "enUS",
@@ -47,4 +46,4 @@ namespace common
         CascLocaleBit::itIT
     };
 
-} // namespace common
+END_NAMESPACE_COMMON

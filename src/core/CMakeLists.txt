@@ -14,8 +14,8 @@ rendu_add_library(
         ${FOLDER_NAME}
         PRIVATE_LINK
         rendu-core-interface
-        PUBLIC_LINK RenduCore::common
+        PUBLIC_LINK
+        RenduCore::common
         DEFINES
-        INTERFACE
         ALIAS ON
 )

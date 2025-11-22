@@ -7,7 +7,7 @@
 #include "common/utils/string_format.h"
 #include <cstring>
 
-using namespace common;
+BEGIN_NAMESPACE_COMMON
 
 void Banner::Show(char const* applicationName, void(*log)(char const* text), void(*logExtraInfo)(char const* text))
 {
@@ -53,3 +53,5 @@ void Banner::Show(char const* applicationName, void(*log)(char const* text), voi
 
     logExtraInfo("Banner shown");
 }
+
+END_NAMESPACE_COMMON

@@ -1,13 +1,16 @@
 #include <iostream>
-#include <common/ecs/application.h>
+#include "common/ecs/application.h"
+#include "core/logging/logger_system.h"
 
-using namespace common::Ecs;
+
+using namespace Rendu::Ecs;
+using namespace Rendu::Core;
+
 // 示例应用程序
 class MyApplication : public Application {
 protected:
     void register_systems() override {
-        // 这里注册你的系统
-        // world_->add_system<MySystem>();
+         world_->add_system<LoggerSystem>();
     }
 
     void update(float delta_time) override {

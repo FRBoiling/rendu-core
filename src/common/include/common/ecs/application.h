@@ -47,6 +47,7 @@ BEGIN_NAMESPACE_COMMON
             bool running_ = false;
             Threading::FrameRateLimiter frame_rate_limiter_; // 添加帧率限制器成员
             std::string name_;
+            std::string _logger;
         };
     } // namespace Ecs
 

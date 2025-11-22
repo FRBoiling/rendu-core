@@ -1,7 +1,9 @@
 #include "common/ecs/world.h"
 #include <stdexcept>
 
-using namespace common::Ecs;
+BEGIN_NAMESPACE_COMMON
+
+using namespace Ecs;
 
 World::World(size_t num_threads)
     : thread_pool_(num_threads) {
@@ -129,3 +131,5 @@ std::vector<ISystem*> World::topological_sort_systems() {
     
     return sorted;
 }
+
+END_NAMESPACE_COMMON

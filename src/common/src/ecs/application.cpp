@@ -1,12 +1,13 @@
 #include "common/ecs/application.h"
+#include "common/logging/log.h"
+#include "common/banner.h"
 #include <chrono>
 #include <iostream>
+#include <sys/syslog.h>
 
-#include "common/banner.h"
-#include "common/ecs/logger_system.h"  // 添加LoggerSystem头文件
-
-using namespace common;
-using namespace common::Ecs;
+using namespace Rendu;
+using namespace Rendu::Ecs;
+using namespace Rendu::Logging;
 
 Application::Application()
 {    
@@ -23,42 +24,34 @@ bool Application::initialize()
 {
     try
     {
-        // 初始化并注册LoggerSystem
-        auto* logger_system = world_->add_system<LoggerSystem>();
-        if (!logger_system)
-        {
-            std::cerr << "Failed to create LoggerSystem!" << std::endl;
-            return false;
-        }
-        
-        // 配置系统
+        register_systems();
         world_->configure_systems();
-        
-        // 初始化系统
         world_->initialize_systems();
+        
+        // 将日志记录移到系统初始化完成之后
+        RC_LOG_INFO("application","{}", "Application initialized successfully");
         
         // 现在使用我们的日志系统显示banner
         Banner::Show(
             "RenduCore",                    // 应用名称
-            [](char const* text) { LOG_INFO(text); }, // 使用日志系统的INFO级别
-            [](char const* text) { LOG_DEBUG(text); }  // 使用无参数lambda函数
+            [](char const* text)
+            {
+                RC_LOG_INFO("application","{}", text);
+            }, // 使用日志系统的INFO级别
+            [](char const* text)
+            {
+                RC_LOG_DEBUG("application","{}", text);
+            }  // 使用日志系统的DEBUG级别
         );
 
-        // 注册其他系统（通过子类的register_systems方法）
-        register_systems();
-        
-        // 重新配置和初始化新增的系统
-        world_->configure_systems();
-        world_->initialize_systems();
-        
         running_ = true;
         return true;
     }
     catch (const std::exception& e)
     {
-        // 使用日志系统记录错误
-        LOG_ERROR("Failed to initialize application: {}", e.what());
+        // 如果日志系统初始化失败，使用std::cerr作为备用
         std::cerr << "Failed to initialize application: " << e.what() << std::endl;
+        RC_LOG_ERROR("application","Failed to initialize application: {}", e.what());
         return false;
     }
 }
