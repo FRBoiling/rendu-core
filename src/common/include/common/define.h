@@ -2,8 +2,8 @@
 // Created by FRee2 on 2025/10/18.
 //
 
-#ifndef RENDU_DEFINE_H
-#define RENDU_DEFINE_H
+#ifndef RENDU_COMMON_DEFINE_H
+#define RENDU_COMMON_DEFINE_H
 
 #define RENDU_PLATFORM_WINDOWS 0
 #define RENDU_PLATFORM_UNIX    1
@@ -162,7 +162,7 @@ typedef uint16_t uint16;
 typedef uint8_t uint8;
 
 // 添加命名空间宏定义
-#define BEGIN_NAMESPACE_COMMON namespace common {
-#define END_NAMESPACE_COMMON } // namespace common
+#define BEGIN_NAMESPACE_COMMON namespace Rendu {
+#define END_NAMESPACE_COMMON } // namespace Rendu
 
-#endif // RENDU_DEFINE_H
+#endif // RENDU_COMMON_DEFINE_H

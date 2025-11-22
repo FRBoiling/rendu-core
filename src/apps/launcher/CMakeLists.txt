@@ -16,7 +16,7 @@ rendu_add_executable(
         PRIVATE_LINK
         rendu-core-interface
         PUBLIC_LINK
-        RenduCore::common
+        RenduCore::core
         DEFINES
         ALIAS ON
 )

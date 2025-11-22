@@ -5,7 +5,7 @@
 #include "common/git_revision.h"
 #include "revision_data.h"
 
-using namespace common;
+BEGIN_NAMESPACE_COMMON
 
 char const* GitRevision::GetHash()
 {
@@ -108,3 +108,5 @@ char const* GitRevision::GetProductVersionStr()
 {
     return RENDU_PRODUCTVERSION_STR;
 }
+
+END_NAMESPACE_COMMON

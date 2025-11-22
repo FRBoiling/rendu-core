@@ -1,36 +1,48 @@
 #include <iostream>
-#include <common/ecs/application.h>
+#include "common/ecs/application.h"
+#include "common/logging/log.h"
+#include "core/logging/logger_system.h"
 
-using namespace common::Ecs;
+
+using namespace Rendu::Ecs;
+using namespace Rendu::Core;
+using namespace Rendu;
+
 // 示例应用程序
-class MyApplication : public Application {
+class MyApplication : public Application
+{
 protected:
-    void register_systems() override {
-        // 这里注册你的系统
-        // world_->add_system<MySystem>();
+    void register_systems() override
+    {
+        world_->add_system<LoggerSystem>();
     }
 
-    void update(float delta_time) override {
+    void update(float delta_time) override
+    {
         // 应用程序特定更新逻辑
     }
-
 };
 
-int main(int argc, char* argv[]) {
-    try {
+int main(int argc, char* argv[])
+{
+    try
+    {
         MyApplication app;
 
-        if (!app.initialize()) {
-            std::cerr << "Failed to initialize application" << std::endl;
+        if (!app.initialize())
+        {
+            RC_LOG_FATAL("MyApplication", "Failed to initialize application");
             return 1;
         }
 
-        std::cout << "Starting application: " << app.get_name() << std::endl;
+        RC_LOG_INFO("MyApplication", "Starting application: {}", app.get_name());
         app.run();
 
         return 0;
-    } catch (const std::exception& e) {
-        std::cerr << "Unhandled exception: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        RC_LOG_FATAL("MyApplication", "Unhandled exception:{}", e.what());
         return 1;
     }
 }

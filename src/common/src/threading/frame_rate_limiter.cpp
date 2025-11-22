@@ -1,7 +1,8 @@
 #include "common/threading/frame_rate_limiter.h"
 #include <thread>
+BEGIN_NAMESPACE_COMMON
 
-using namespace common::Threading;
+using namespace Threading;
 
 FrameRateLimiter::FrameRateLimiter(float target_fps)
     : target_fps_(target_fps),
@@ -62,3 +63,5 @@ float FrameRateLimiter::get_actual_fps() const
 {
     return actual_fps_;
 }
+
+END_NAMESPACE_COMMON

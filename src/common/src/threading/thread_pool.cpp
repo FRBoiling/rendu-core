@@ -4,7 +4,9 @@
 
 #include "common/threading/thread_pool.h"
 
-using namespace common::Threading;
+BEGIN_NAMESPACE_COMMON
+
+using namespace Threading;
 // ThreadPool模板实现
 
 ThreadPool::ThreadPool(size_t num_threads)
@@ -69,3 +71,5 @@ void ThreadPool::wait_for_all()
         return tasks_.empty() && active_tasks_ == 0;
     });
 }
+
+END_NAMESPACE_COMMON

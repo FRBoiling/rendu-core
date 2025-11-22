@@ -16,10 +16,9 @@ rendu_add_library(
         rendu-core-interface
         3rdparty::entt
         3rdparty::spdlog
-        3rdparty::asio
-        3rdparty::fmt
         PUBLIC_LINK
-
+        3rdparty::fmt
+        3rdparty::asio
         DEFINES
         ALIAS ON
 )
