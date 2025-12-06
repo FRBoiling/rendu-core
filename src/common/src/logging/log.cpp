@@ -4,6 +4,8 @@
 
 #include "common/logging/log.h"
 
+#include "common/asio/post.h"
+#include "common/logging/appender_default.h"
 #include "common/logging/invalid_appender_args_exception.h"
 #include "common/logging/log_message.h"
 #include "common/logging/log_operation.h"
@@ -17,6 +19,7 @@ BEGIN_NAMESPACE_COMMON
     Log::Log() : AppenderId(0), lowestLogLevel(LOG_LEVEL_FATAL), m_logsTimestamp('_' + GetTimestampStr()),
                  _ioContext(nullptr), _strand(nullptr)
     {
+        RegisterAppender<AppenderDefault>();
     }
 
     Log::~Log()
@@ -216,7 +219,7 @@ BEGIN_NAMESPACE_COMMON
                              Utils::FormatStringView messageFormat, Utils::FormatArgs messageFormatArgs) const noexcept
     {
         if (_ioContext)
-            Asio::post(*_strand, LogOperation(
+            Asio::Post(*_strand, LogOperation(
                            logger, new LogMessage(level, filter,
                                                   Utils::StringVFormat(messageFormat, std::move(messageFormatArgs)))));
         else
@@ -232,7 +235,7 @@ BEGIN_NAMESPACE_COMMON
         Logger const* logger = GetLoggerByType("commands.gm");
 
         if (_ioContext)
-            Asio::post(*_strand, LogOperation(logger, new LogMessage(LOG_LEVEL_INFO, "commands.gm",
+            Asio::Post(*_strand, LogOperation(logger, new LogMessage(LOG_LEVEL_INFO, "commands.gm",
                                                                      Utils::StringVFormat(
                                                                          messageFormat, std::move(messageFormatArgs)),
                                                                      ToString(account))));
@@ -312,7 +315,7 @@ BEGIN_NAMESPACE_COMMON
         Logger const* logger = GetLoggerByType("entities.player.dump");
 
         if (_ioContext)
-            Asio::post(*_strand, LogOperation(
+            Asio::Post(*_strand, LogOperation(
                            logger, new LogMessage(LOG_LEVEL_INFO, "entities.player.dump", std::move(ss),
                                                   std::move(param))));
         else
@@ -374,11 +377,11 @@ BEGIN_NAMESPACE_COMMON
 
     void Log::Initialize(Asio::IoContext* ioContext)
     {
-        // if (ioContext)
-        // {
-        //     _ioContext = ioContext;
-        //     _strand = new Asio::Strand(*ioContext);
-        // }
+        if (ioContext)
+        {
+            _ioContext = ioContext;
+            _strand = new Asio::IoContext::Strand(ioContext->make_strand());
+        }
 
         // LoadFromConfig();
     }

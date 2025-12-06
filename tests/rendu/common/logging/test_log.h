@@ -4,13 +4,11 @@
 
 #ifndef RENDU_TEST_LOG_H
 #define RENDU_TEST_LOG_H
-
-#include "common/log/log.h"
+#include "common/logging/log.h"
 
 void test_log()
 {
-    std::string logger;
-    RC_LOG_INFO(logger,"test log debug");
+    RC_LOG_INFO("test_log", "test log debug");
 }
 
 #endif //RENDU_TEST_LOG_H

@@ -10,7 +10,7 @@
 #include "log_level.h"
 #include "common/define.h"
 #include "common/asio/io_context.h"
-#include "common/asio/strand.h"
+#include "common/asio/io_context_strand.h"
 #include "common/utils/string_format.h"
 
 BEGIN_NAMESPACE_COMMON
@@ -138,7 +138,7 @@ BEGIN_NAMESPACE_COMMON
             std::string m_logsTimestamp;
 
             Asio::IoContext* _ioContext;
-            Asio::Strand* _strand;
+            Asio::IoContext::Strand* _strand;
         };
     } // namespace Logging
 

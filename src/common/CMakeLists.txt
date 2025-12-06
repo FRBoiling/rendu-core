@@ -14,11 +14,10 @@ rendu_add_library(
         ${FOLDER_NAME}
         PRIVATE_LINK
         rendu-core-interface
-        3rdparty::entt
-        3rdparty::spdlog
         PUBLIC_LINK
         3rdparty::fmt
         3rdparty::asio
+        3rdparty::entt
         DEFINES
         ALIAS ON
 )

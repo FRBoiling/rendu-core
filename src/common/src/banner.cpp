@@ -12,23 +12,6 @@ BEGIN_NAMESPACE_COMMON
 void Banner::Show(char const* applicationName, void(*log)(char const* text), void(*logExtraInfo)(char const* text))
 {
     auto version = GitRevision::GetFullVersion();
-    
-    // 添加调试信息
-    if (!version) {
-        logExtraInfo("version is null");
-    } else if (std::strlen(version) == 0) {
-        logExtraInfo("version is empty");
-    } else {
-        logExtraInfo("version is valid");
-    }
-
-    if (!applicationName) {
-        logExtraInfo("applicationName is null");
-    } else if (std::strlen(applicationName) == 0) {
-        logExtraInfo("applicationName is empty");
-    } else {
-        logExtraInfo("applicationName is valid");
-    }
 
     // 使用更安全的格式化方式
     std::string headStr;

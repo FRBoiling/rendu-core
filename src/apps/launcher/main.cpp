@@ -1,7 +1,10 @@
 #include <iostream>
 #include "common/ecs/application.h"
+#include "common/ecs/world.h"
 #include "common/logging/log.h"
+#include "core/async_event/async_event_system.h"
 #include "core/logging/logger_system.h"
+#include "core/signal/signal_system.h"
 
 
 using namespace Rendu::Ecs;
@@ -15,12 +18,10 @@ protected:
     void register_systems() override
     {
         world_->add_system<LoggerSystem>();
+        world_->add_system<SignalSystem>();
+        world_->add_system<AsyncEventSystem>();
     }
 
-    void update(float delta_time) override
-    {
-        // 应用程序特定更新逻辑
-    }
 };
 
 int main(int argc, char* argv[])

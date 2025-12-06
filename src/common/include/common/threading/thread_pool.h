@@ -9,54 +9,38 @@
 #include <future>
 #include <thread>
 
+#include <asio/post.hpp>
+#include <asio/thread_pool.hpp>
+
 BEGIN_NAMESPACE_COMMON
     namespace Threading
     {
-        // 线程池实现
         class ThreadPool
         {
         public:
-            ThreadPool(size_t num_threads);
-            ~ThreadPool();
+            explicit ThreadPool(std::size_t numThreads = std::thread::hardware_concurrency()) : _impl(numThreads)
+            {
+            }
 
-            // 提交任务到线程池
-            template <typename F, typename... Args>
-            auto submit(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>>;
+            template <typename T>
+            void PostWork(T&& work)
+            {
+                asio::post(_impl, std::forward<T>(work));
+            }
 
-            // 等待所有任务完成
-            void wait_for_all();
+            void Join()
+            {
+                _impl.join();
+            }
+
+            void Stop()
+            {
+                _impl.stop();
+            }
 
         private:
-            std::vector<std::thread> workers_;
-            std::queue<std::function<void()>> tasks_;
-
-            std::mutex queue_mutex_;
-            std::condition_variable condition_;
-            bool stop_;
-            std::atomic<size_t> active_tasks_;
-            std::mutex wait_mutex_;
-            std::condition_variable wait_condition_;
+            asio::thread_pool _impl;
         };
-
-        template <typename F, typename... Args>
-        auto ThreadPool::submit(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>>
-        {
-            using return_type = std::invoke_result_t<F, Args...>;
-            auto task = std::make_shared<std::packaged_task<return_type()>>(
-                std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-
-            std::future<return_type> result = task->get_future();
-            {
-                std::unique_lock<std::mutex> lock(queue_mutex_);
-                if (stop_)
-                {
-                    throw std::runtime_error("Cannot submit task to stopped ThreadPool");
-                }
-                tasks_.emplace([task]() { (*task)(); });
-            }
-            condition_.notify_one();
-            return result;
-        }
     } // namespace threading
 END_NAMESPACE_COMMON
 
