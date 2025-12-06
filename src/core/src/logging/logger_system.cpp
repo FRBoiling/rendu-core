@@ -1,9 +1,8 @@
 #include "core/logging/logger_system.h"
 #include "common/logging/log.h"
 #include "common/asio/io_context.h"
-#include <iostream>
-
 #include "common/logging/appender_default.h"
+#include <iostream>
 
 BEGIN_NAMESPACE_CORE
     LoggerSystem::LoggerSystem()
@@ -21,21 +20,13 @@ BEGIN_NAMESPACE_CORE
         {                
             try
             {                    
-                // 获取Log单例实例
                 auto* log_instance = Logging::Log::instance();
-                log_instance->RegisterAppender<Logging::AppenderDefault>();
-
                 // 创建一个IoContext用于日志系统
                 static Asio::IoContext io_context;
-                // 初始化日志系统
-                log_instance->Initialize(&io_context);
                 log_instance->RegisterAppender<Logging::AppenderDefault>();
-                // // 创建默认Appender
-                // log_instance->CreateAppenderFromConfigLine("DefaultAppender", "2,0,1"); // INFO级别，控制台输出
-                //
-                // // 创建默认Logger
-                // log_instance->CreateLoggerFromConfigLine("root", "2,DefaultAppender"); // INFO级别，使用DefaultAppender
-                // log_instance->CreateLoggerFromConfigLine("application", "2,DefaultAppender"); // INFO级别，使用DefaultAppender
+                log_instance->Initialize(&io_context);
+                log_instance->CreateAppenderFromConfigLine("Appender.Default", "1,1,7,13 11 9 5 3 1"); // Trace级别，控制台输出
+                log_instance->CreateLoggerFromConfigLine("Logger.application", "1,Default"); // Trace级别，使用DefaultAppender
 
                 initialized_ = true;
                 RC_LOG_INFO("application", "LoggerSystem initialized successfully");

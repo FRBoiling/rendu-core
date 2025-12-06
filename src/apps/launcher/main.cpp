@@ -31,18 +31,18 @@ int main(int argc, char* argv[])
 
         if (!app.initialize())
         {
-            RC_LOG_FATAL("MyApplication", "Failed to initialize application");
+            RC_LOG_FATAL("application", "Failed to initialize application");
             return 1;
         }
 
-        RC_LOG_INFO("MyApplication", "Starting application: {}", app.get_name());
+        RC_LOG_INFO("application", "Starting application: {}", app.get_name());
         app.run();
 
         return 0;
     }
     catch (const std::exception& e)
     {
-        RC_LOG_FATAL("MyApplication", "Unhandled exception:{}", e.what());
+        RC_LOG_FATAL("application", "Unhandled exception:{}", e.what());
         return 1;
     }
 }

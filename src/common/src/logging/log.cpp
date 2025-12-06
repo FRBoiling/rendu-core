@@ -102,7 +102,6 @@ BEGIN_NAMESPACE_COMMON
         }
     }
 
-
     void Log::CreateLoggerFromConfigLine(std::string const& loggerName, std::string const& options)
     {
         if (loggerName.empty())
@@ -167,7 +166,7 @@ BEGIN_NAMESPACE_COMMON
     // {
     //     CreateAppenderFromConfigLine(appenderName, sConfigMgr->GetStringDefault(appenderName, ""));
     // }
-
+    //
     // void Log::CreateLoggerFromConfig(std::string const& loggerName)
     // {
     //     CreateLoggerFromConfigLine(loggerName, sConfigMgr->GetStringDefault(loggerName, ""));
@@ -210,7 +209,7 @@ BEGIN_NAMESPACE_COMMON
     void Log::RegisterAppender(uint8 index, AppenderCreatorFn appenderCreateFn)
     {
         [[maybe_unused]] bool isNewAppender = appenderFactory.try_emplace(index, appenderCreateFn).second;
-        // ASSERT(isNewAppender);
+        ASSERT(isNewAppender);
     }
 
     void Log::OutMessageImpl(Logger const* logger, std::string_view filter, LogLevel level,
@@ -244,6 +243,7 @@ BEGIN_NAMESPACE_COMMON
             logger->write(&msg);
         }
     }
+
 
     Logger const* Log::GetLoggerByType(std::string_view type) const
     {
@@ -374,13 +374,13 @@ BEGIN_NAMESPACE_COMMON
 
     void Log::Initialize(Asio::IoContext* ioContext)
     {
-        if (ioContext)
-        {
-            _ioContext = ioContext;
-            _strand = new Asio::Strand(*ioContext);
-        }
+        // if (ioContext)
+        // {
+        //     _ioContext = ioContext;
+        //     _strand = new Asio::Strand(*ioContext);
+        // }
 
-        LoadFromConfig();
+        // LoadFromConfig();
     }
 
     void Log::SetSynchronous()
@@ -390,19 +390,20 @@ BEGIN_NAMESPACE_COMMON
         _ioContext = nullptr;
     }
 
-    void Log::LoadFromConfig()
-    {
-        Close();
-
-        lowestLogLevel = LOG_LEVEL_FATAL;
-        AppenderId = 0;
-        // m_logsDir = sConfigMgr->GetStringDefault("LogsDir", "");
-        // if (!m_logsDir.empty())
-        //     if ((m_logsDir.at(m_logsDir.length() - 1) != '/') && (m_logsDir.at(m_logsDir.length() - 1) != '\\'))
-        //         m_logsDir.push_back('/');
-        //
-        // ReadAppendersFromConfig();
-        // ReadLoggersFromConfig();
-    }
+    // void Log::LoadFromConfig()
+    // {
+    //     Close();
+    //
+    //     lowestLogLevel = LOG_LEVEL_TRACE;
+    //     AppenderId = 0;
+    //
+    //     m_logsDir = sConfigMgr->GetStringDefault("LogsDir", "");
+    //     if (!m_logsDir.empty())
+    //         if ((m_logsDir.at(m_logsDir.length() - 1) != '/') && (m_logsDir.at(m_logsDir.length() - 1) != '\\'))
+    //             m_logsDir.push_back('/');
+    //
+    //     ReadAppendersFromConfig();
+    //     ReadLoggersFromConfig();
+    // }
 
 END_NAMESPACE_COMMON

@@ -44,7 +44,6 @@ BEGIN_NAMESPACE_COMMON
 
             void Initialize(Asio::IoContext* ioContext);
             void SetSynchronous(); // Not threadsafe - should only be called from main() after all threads are joined
-            void LoadFromConfig();
             void Close();
             bool ShouldLog(std::string_view type, LogLevel level) const noexcept;
             Logger const* GetEnabledLogger(std::string_view type, LogLevel level) const noexcept;
@@ -115,16 +114,19 @@ BEGIN_NAMESPACE_COMMON
             Logger const* GetLoggerByType(std::string_view type) const;
             Appender* GetAppenderByName(std::string_view name);
             uint8 NextAppenderId();
-            // void CreateAppenderFromConfig(std::string const& name);
-            // void CreateLoggerFromConfig(std::string const& name);
-            // void ReadAppendersFromConfig();
-            // void ReadLoggersFromConfig();
+
             void RegisterAppender(uint8 index, AppenderCreatorFn appenderCreateFn);
             void OutMessageImpl(Logger const* logger, std::string_view filter, LogLevel level,
                                 Utils::FormatStringView messageFormat,
                                 Utils::FormatArgs messageFormatArgs) const noexcept;
             void OutCommandImpl(uint32 account, Utils::FormatStringView messageFormat,
                                 Utils::FormatArgs messageFormatArgs) const noexcept;
+
+            // void LoadFromConfig();
+            // void CreateAppenderFromConfig(std::string const& name);
+            // void CreateLoggerFromConfig(std::string const& name);
+            // void ReadAppendersFromConfig();
+            // void ReadLoggersFromConfig();
 
             std::unordered_map<uint8, AppenderCreatorFn> appenderFactory;
             std::unordered_map<uint8, std::unique_ptr<Appender>> appenders;
@@ -138,54 +140,69 @@ BEGIN_NAMESPACE_COMMON
             Asio::IoContext* _ioContext;
             Asio::Strand* _strand;
         };
-
     } // namespace Logging
 
-
-
-#define sLog Logging::Log::instance()
-
-#define RC_LOG_MESSAGE_BODY_CORE(filterType__, level__, message__, ...)                                                         \
-        do {                                                                                                                    \
-            Logging::Log* logInstance = sLog;                                                                                            \
-            if (Logging::Logger const* loggerInstance = logInstance->GetEnabledLogger(Logging::Log::make_string_view((filterType__)), (level__))) \
-                logInstance->OutMessageTo(loggerInstance, Logging::Log::make_string_view((filterType__)), (level__),                     \
-                    Logging::Log::make_format_string_view((message__)), ## __VA_ARGS__);                                                 \
-        } while (0)
-
+    template <typename... Args>
+    void LogMessageCore(std::string_view filterType, Logging::LogLevel level,
+                        Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
 #ifdef PERFORMANCE_PROFILING
-#define RC_LOG_MESSAGE_BODY(filterType__, level__, message__, ...) ((void)0)
-#elif RENDU_PLATFORM != RENDU_PLATFORM_WINDOWS
-#define RC_LOG_MESSAGE_BODY(filterType__, level__, message__, ...) RC_LOG_MESSAGE_BODY_CORE(filterType__, level__, message__, ## __VA_ARGS__)
+        return; // 性能分析时禁用日志
 #else
-#define RC_LOG_MESSAGE_BODY(filterType__, level__, message__, ...)                 \
-        __pragma(warning(push))                                                    \
-        __pragma(warning(disable:4127))                                            \
-        RC_LOG_MESSAGE_BODY_CORE(filterType__, level__, message__, ## __VA_ARGS__) \
-        __pragma(warning(pop))
+        Logging::Log* logInstance = Logging::Log::instance();
+        if (Logging::Logger const* loggerInstance = logInstance->GetEnabledLogger(filterType, level))
+        {
+            logInstance->OutMessageTo(loggerInstance, filterType, level,
+                                      message, std::forward<Args>(args)...);
+        }
 #endif
+    }
 
-#define RC_DEFAULT_FILTER_TYPE "rendu"
+    template <typename... Args>
+    void LogTrace(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_TRACE, message, std::forward<Args>(args)...);
+    }
 
-#define RC_LOG_TRACE(filterType__, message__, ...) \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_TRACE, message__, ## __VA_ARGS__)
+    template <typename... Args>
+    void LogDebug(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_DEBUG, message, std::forward<Args>(args)...);
+    }
 
-#define RC_LOG_DEBUG(filterType__, message__, ...) \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_DEBUG, message__, ## __VA_ARGS__)
+    template <typename... Args>
+    void LogInfo(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_INFO, message, std::forward<Args>(args)...);
+    }
 
-#define RC_LOG_INFO(filterType__, message__, ...)  \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_INFO, message__, ## __VA_ARGS__)
+    template <typename... Args>
+    void LogWarn(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_WARN, message, std::forward<Args>(args)...);
+    }
 
-#define RC_LOG_WARN(filterType__, message__, ...)  \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_WARN, message__, ## __VA_ARGS__)
+    template <typename... Args>
+    void LogError(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_ERROR, message, std::forward<Args>(args)...);
+    }
 
-#define RC_LOG_ERROR(filterType__, message__, ...) \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_ERROR, message__, ## __VA_ARGS__)
-
-#define RC_LOG_FATAL(filterType__, message__, ...) \
-    RC_LOG_MESSAGE_BODY(filterType__, Logging::LOG_LEVEL_FATAL, message__, ## __VA_ARGS__)
-
+    template <typename... Args>
+    void LogFatal(std::string_view filterType, Utils::FormatString<Args...> message, Args&&... args) noexcept
+    {
+        LogMessageCore(filterType, Logging::LOG_LEVEL_FATAL, message, std::forward<Args>(args)...);
+    }
 
 END_NAMESPACE_COMMON
+
+// 向后兼容的宏定义（可选，用于逐步迁移）
+#define RC_LOG_TRACE(filterType__, message__, ...) LogTrace(filterType__, message__, ## __VA_ARGS__)
+#define RC_LOG_DEBUG(filterType__, message__, ...) LogDebug(filterType__, message__, ## __VA_ARGS__)
+#define RC_LOG_INFO(filterType__, message__, ...)  LogInfo(filterType__, message__, ## __VA_ARGS__)
+#define RC_LOG_WARN(filterType__, message__, ...)  LogWarn(filterType__, message__, ## __VA_ARGS__)
+#define RC_LOG_ERROR(filterType__, message__, ...) LogError(filterType__, message__, ## __VA_ARGS__)
+#define RC_LOG_FATAL(filterType__, message__, ...) LogFatal(filterType__, message__, ## __VA_ARGS__)
+
 
 #endif //RENDU_LOG_H
