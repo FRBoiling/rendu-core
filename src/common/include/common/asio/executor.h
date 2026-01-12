@@ -23,14 +23,15 @@ BEGIN_NAMESPACE_COMMON
             Executor(Executor&&) noexcept;
             Executor& operator=(Executor&&) noexcept;
 
-            void post(std::function<void()> handler);
+            void post(const std::function<void()>& handler) const;
 
         private:
             friend class IoContext;
             class Impl;
-            std::unique_ptr<Impl> pImpl_;
+            std::unique_ptr<Impl> m_pImpl;
 
             explicit Executor(std::unique_ptr<Impl> impl);
+
         };
     } // namespace Asio
 

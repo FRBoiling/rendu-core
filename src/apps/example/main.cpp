@@ -1,50 +1,73 @@
-#include "common/ecs/application.h"
-#include "common/ecs/world.h"
-#include "common/logging/log.h"
+#include "example.h"
+#include "common/ecs/entity.h"
+#include "common/ecs/registry.h"
 #include <iostream>
 
-using namespace Rendu::Ecs;
 using namespace Rendu;
-
-// 简单的应用程序示例
-class ExampleApplication : public Application
-{
-protected:
-    void register_systems() override
-    {
-        // 这里可以添加系统
-        // world_->add_system<SomeSystem>();
-    }
-
-    void update(float delta_time) override
-    {
-        // 应用程序特定更新逻辑
-        RC_LOG_INFO("application", "Update delta_time: {:.3f}", delta_time);
-    }
-};
 
 int main()
 {
-    try
-    {
-        ExampleApplication app;
+    std::cout << "=== Rendu Core ECS 示例程序 ===" << std::endl;
+    std::cout << "\n1. 简单的 ECS 示例..." << std::endl;
 
-        if (!app.initialize())
+    // 创建 Registry
+    Registry registry;
+
+    // 创建实体
+    Entity entity = registry.create();
+    std::cout << "创建了实体: ID=" << entity.value() << std::endl;
+
+    // 添加组件
+    registry.emplace<Position>(entity, 10.0f, 20.0f);
+    registry.emplace<Velocity>(entity, 1.0f, 0.5f);
+    registry.emplace<Name>(entity, "TestEntity");
+
+    std::cout << "添加了 Position, Velocity, Name 组件" << std::endl;
+
+    // 获取组件
+    Position* pos = registry.tryGet<Position>(entity);
+    Velocity* vel = registry.tryGet<Velocity>(entity);
+    Name* name = registry.tryGet<Name>(entity);
+
+    if (pos && vel && name)
+    {
+        std::cout << "组件获取成功:" << std::endl;
+        std::cout << "  Name: " << name->value << std::endl;
+        std::cout << "  Position: (" << pos->x << ", " << pos->y << ")" << std::endl;
+        std::cout << "  Velocity: (" << vel->vx << ", " << vel->vy << ")" << std::endl;
+    }
+
+    // 模拟移动
+    std::cout << "\n2. 模拟移动..." << std::endl;
+    for (int i = 0; i < 5; ++i)
+    {
+        pos = registry.tryGet<Position>(entity);
+        vel = registry.tryGet<Velocity>(entity);
+
+        if (pos && vel)
         {
-            RC_LOG_FATAL("application", "Failed to initialize application");
-            return 1;
+            pos->x += vel->vx;
+            pos->y += vel->vy;
+            std::cout << "Frame " << i << ": Position=(" << pos->x << ", " << pos->y << ")" << std::endl;
         }
-
-        RC_LOG_INFO("application", "Starting example application");
-
-        // 运行应用
-        app.run();
-
-        return 0;
     }
-    catch (const std::exception& e)
+
+    // 创建多个实体
+    std::cout << "\n3. 创建多个实体并使用视图..." << std::endl;
+    for (int i = 0; i < 5; ++i)
     {
-        RC_LOG_FATAL("application", "Unhandled exception: {}", e.what());
-        return 1;
+        Entity e = registry.create();
+        registry.emplace<Position>(e, static_cast<float>(i * 10), static_cast<float>(i * 20));
+        registry.emplace<Velocity>(e, 1.0f, 0.5f);
     }
+
+    auto view = registry.view<Position, Velocity>();
+    std::cout << "视图中有 " << view.size() << " 个实体" << std::endl;
+
+    view.each([&](Entity e, Position* p, Velocity* v) {
+        std::cout << "  Entity " << e.value() << ": Position=(" << p->x << ", " << p->y << ")" << std::endl;
+    });
+
+    std::cout << "\n=== 示例完成 ===" << std::endl;
+    return 0;
 }

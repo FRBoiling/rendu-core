@@ -8,13 +8,12 @@
 #include <memory>
 #include <functional>
 
-#include "executor.h"
 #include "common/define.h"
+
 
 BEGIN_NAMESPACE_COMMON
     namespace Asio
     {
-
         class ExecutorWorkGuard;
         class SignalSet;
 
@@ -22,7 +21,7 @@ BEGIN_NAMESPACE_COMMON
         {
         public:
             IoContext();
-            explicit IoContext(int concurrency_hint);
+            explicit IoContext(int concurrencyHint);
             ~IoContext();
 
             IoContext(const IoContext&) = delete;
@@ -30,26 +29,23 @@ BEGIN_NAMESPACE_COMMON
             IoContext(IoContext&&) noexcept;
             IoContext& operator=(IoContext&&) noexcept;
 
-            std::size_t run();
-            std::size_t poll();
-            void stop();
-            bool stopped() const;
-            void restart();
+            [[nodiscard]] std::size_t run() const;
+            [[nodiscard]] std::size_t poll() const;
+            void stop() const;
+            [[nodiscard]] bool stopped() const;
+            void restart() const;
 
             class Strand;
             class Executor;
 
-            Strand make_strand();
-            void post(std::function<void()> handler) const;
-
-            Executor get_executor();
+            void post(const std::function<void()>& handler) const;
 
         private:
             friend class ExecutorWorkGuard;
             friend class SignalSet;
 
             class Impl;
-            std::unique_ptr<Impl> pImpl_;
+            std::unique_ptr<Impl> m_pImpl;
         };
 
 

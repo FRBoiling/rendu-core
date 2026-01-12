@@ -17,13 +17,13 @@ BEGIN_NAMESPACE_COMMON
         class SignalSet
         {
         public:
-            explicit SignalSet(IoContext& ioContext);
+            explicit SignalSet(const IoContext& ioContext);
             
-            SignalSet(IoContext& ioContext, int signal_number);
+            SignalSet(const IoContext& ioContext, int signalNumber);
             
-            SignalSet(IoContext& ioContext, int signal_number1, int signal_number2);
-            
-            SignalSet(IoContext& ioContext, int signal_number1, int signal_number2, int signal_number3);
+            SignalSet(const IoContext& ioContext, int signalNumber1, int signalNumber2);
+
+            SignalSet(const IoContext& ioContext, int signalNumber1, int signalNumber2, int signalNumber3);
 
             ~SignalSet();
 
@@ -33,27 +33,27 @@ BEGIN_NAMESPACE_COMMON
             SignalSet& operator=(SignalSet&&) noexcept;
 
             // 添加信号
-            void add(int signal_number);
+            void add(int signalNumber) const;
 
             // 移除信号
-            void remove(int signal_number);
+            void remove(int signalNumber) const;
 
             // 清空所有信号
-            void clear();
+            void clear() const;
 
             // 取消所有异步操作
-            void cancel();
+            void cancel() const;
 
             // 异步等待信号 (仅信号号)
-            void async_wait(std::function<void(int)> handler);
+            void asyncWait(std::function<void(int)> handler) const;
 
             // 异步等待信号 (带错误码)
-            void async_wait(std::function<void(const std::error_code&, int)> handler);
+            void asyncWait(std::function<void(const std::error_code&, int)> handler) const;
 
         private:
             friend class IoContext;
             class Impl;
-            std::unique_ptr<Impl> pImpl_;
+            std::unique_ptr<Impl> m_pImpl;
         };
     } // namespace Asio
 

@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_COMMON
         class ExecutorWorkGuard
         {
         public:
-            explicit ExecutorWorkGuard(IoContext& io_context);
+            explicit ExecutorWorkGuard(const IoContext& ioContext);
             ~ExecutorWorkGuard();
 
             // 禁用复制构造和赋值
@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_COMMON
         private:
             friend class IoContext;
             class Impl;
-            std::unique_ptr<Impl> pImpl_;
+            std::unique_ptr<Impl> m_pImpl;
         };
     } // namespace Asio
 

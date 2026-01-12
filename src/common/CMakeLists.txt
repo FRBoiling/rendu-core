@@ -16,8 +16,9 @@ rendu_add_library(
         rendu-core-interface
         PUBLIC_LINK
         3rdparty::fmt
-        3rdparty::asio
+        3rdparty::boost
         3rdparty::entt
         DEFINES
         ALIAS ON
 )
+

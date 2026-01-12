@@ -15,6 +15,7 @@ BEGIN_NAMESPACE_COMMON
         class IoContext::Strand
         {
         public:
+            Strand(const IoContext& ioContext);
             ~Strand();
 
             Strand(const Strand&) = delete;
@@ -22,13 +23,13 @@ BEGIN_NAMESPACE_COMMON
             Strand(Strand&&) noexcept;
             Strand& operator=(Strand&&) noexcept;
 
-            void post(std::function<void()> handler) const;
-            void dispatch(std::function<void()> handler) const;
+            void post(const std::function<void()>& handler) const;
+            void dispatch(const std::function<void()>& handler) const;
 
         private:
             friend class IoContext;
             class Impl;
-            std::unique_ptr<Impl> pImpl_;
+            std::unique_ptr<Impl> m_pImpl;
 
             explicit Strand(std::unique_ptr<Impl> impl);
         };

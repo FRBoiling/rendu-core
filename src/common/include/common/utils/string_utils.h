@@ -9,11 +9,29 @@
 #include "common.h"
 #include "errors.h"
 #include "optional.h"
-#include "common/define.h"
+#include "string_format.h"
 
 BEGIN_NAMESPACE_COMMON
     namespace Utils
     {
+        template <typename StringOrStringView>
+         constexpr std::string_view MakeStringView(StringOrStringView const& stringOrStringView)
+        {
+            return stringOrStringView;
+        }
+
+        template <size_t CharArraySize>
+         consteval std::string_view MakeStringView(char const (&chars)[CharArraySize])
+        {
+            return {std::begin(chars), (chars[CharArraySize - 1] == '\0' ? CharArraySize - 1 : CharArraySize)};
+        }
+
+        template <size_t CharArraySize>
+         consteval Utils::FormatStringView MakeFormatStringView(char const (&chars)[CharArraySize])
+        {
+            return {std::begin(chars), (chars[CharArraySize - 1] == '\0' ? CharArraySize - 1 : CharArraySize)};
+        }
+
         RC_COMMON_API void VerifyOsVersion();
 
         RC_COMMON_API std::vector<std::string_view> Tokenize(std::string_view str, char sep, bool keepEmpty);

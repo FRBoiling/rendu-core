@@ -165,4 +165,7 @@ typedef uint8_t uint8;
 #define BEGIN_NAMESPACE_COMMON namespace Rendu {
 #define END_NAMESPACE_COMMON } // namespace Rendu
 
+#define BEGIN_NAMESPACE_ECS namespace Rendu {
+#define END_NAMESPACE_ECS } // namespace Rendu
+
 #endif // RENDU_COMMON_DEFINE_H

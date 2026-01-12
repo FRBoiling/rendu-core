@@ -5,6 +5,7 @@ include(RenduAddExecutable)
 include(RenduAddLibrary)
 include(RenduAddSubdirectories)
 include(RenduSourceGroup)
+include(RenduAddTest)
 
 # =============================================
 # 函数: rendu_install_targets

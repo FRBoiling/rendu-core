@@ -10,6 +10,8 @@ option(RENDU_TOOLS "构建工具" ON)
 # 测试相关选项
 option(BUILD_TESTING "构建测试套件" ON)
 set(RENDU_BUILD_TESTING ${BUILD_TESTING})
+# 示例相关选项
+option(RENDU_BUILD_EXAMPLES "构建示例程序" ON)
 
 # 脚本构建模式可选项
 set(RENDU_SCRIPTS_AVAILABLE_OPTIONS none static dynamic minimal-static minimal-dynamic)

@@ -8,6 +8,7 @@
 #include "common/define.h"
 #include "iterator_pair.h"
 #include <iterator>
+#include <string_view>
 
 BEGIN_NAMESPACE_COMMON
     namespace Utils
@@ -168,6 +169,17 @@ BEGIN_NAMESPACE_COMMON
             template <typename Enum>
             static char const* ToDescription(Enum value) { return ToString(value).Description; }
         };
+
+
+        // 将枚举值转为整数（编译期/运行时均可）
+        template <typename Enum>
+        RC_COMMON_API constexpr auto EnumToInt(Enum e) noexcept -> std::underlying_type_t<Enum>
+        {
+            return static_cast<std::underlying_type_t<Enum>>(e); // static_cast 封装
+        }
+
+
+
     } // namespace Utils
 
 END_NAMESPACE_COMMON

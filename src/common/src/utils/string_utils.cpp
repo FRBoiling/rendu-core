@@ -1,9 +1,9 @@
 #include "common/utils/string_utils.h"
 
-#include "asio/ip/address.hpp"
+#include <unistd.h>
+
 #include "common/utils/string_convert.h"
 #include "common/utils/string_format.h"
-#include "common/utils/time_utils.h"
 
 BEGIN_NAMESPACE_COMMON
     namespace Utils
@@ -428,7 +428,7 @@ BEGIN_NAMESPACE_COMMON
                         result += L'e';
                         break;
                     case 0x00EC: // LATIN SMALL LETTER I WITH GRAVE
-case 0x00ED: // LATIN SMALL LETTER I WITH ACUTE
+                    case 0x00ED: // LATIN SMALL LETTER I WITH ACUTE
                     case 0x00EE: // LATIN SMALL LETTER I WITH CIRCUMFLEX
                     case 0x00EF: // LATIN SMALL LETTER I WITH DIAERESIS
                         result += L'i';
@@ -444,7 +444,7 @@ case 0x00ED: // LATIN SMALL LETTER I WITH ACUTE
                         result += L'o';
                         break;
                     case 0x00F9: // LATIN SMALL LETTER U WITH GRAVE
-case 0x00FA: // LATIN SMALL LETTER U WITH ACUTE
+                    case 0x00FA: // LATIN SMALL LETTER U WITH ACUTE
                     case 0x00FB: // LATIN SMALL LETTER U WITH CIRCUMFLEX
                     case 0x00FC: // LATIN SMALL LETTER U WITH DIAERESIS
                         result += L'u';
@@ -690,7 +690,7 @@ case 0x00FA: // LATIN SMALL LETTER U WITH ACUTE
 
             uint32 j = 0;
             for (int32 i = init; i != end; i += 2 * op)
-                out[j++] = Rendu::StringTo<uint8>(str.substr(i, 2), 16).value_or(0);
+                out[j++] = Utils::StringTo<uint8>(str.substr(i, 2), 16).value_or(0);
         }
 
         bool StringEqualI(std::string_view a, std::string_view b)
@@ -731,14 +731,15 @@ case 0x00FA: // LATIN SMALL LETTER U WITH ACUTE
             // 对于非MSVC编译器，提供一个简单的demangle实现
             // 或者直接返回原始名称
             std::string result(name);
-            
+
             // 简单的demangle处理：移除常见的编译器前缀
-            if (result.find("_Z") == 0) {
+            if (result.find("_Z") == 0)
+            {
                 // 这是一个GCC/Clang的mangled名称，我们无法完美demangle，
                 // 但可以提供一个简单的替代方案
                 return "mangled_type_" + result;
             }
-            
+
             return result;
 #endif
         }
