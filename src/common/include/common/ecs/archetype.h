@@ -5,7 +5,8 @@
 #ifndef RENDU_ECS_ARCHETYPE_H
 #define RENDU_ECS_ARCHETYPE_H
 
-#include "common/ecs/entity.h"
+#include "common/define.h"
+#include "entity.h"
 #include <vector>
 #include <tuple>
 #include <sstream>
@@ -77,6 +78,7 @@ BEGIN_NAMESPACE_ECS
         template <typename... Args>
         void emplace(uint32 entityIndex, Args&&... args)
         {
+            fprintf(stderr, "Archetype::emplace: entity=%u position=%zu\n", entityIndex, m_entityToPosition.size());
             static_assert(sizeof...(ComponentTypes) == sizeof...(Args),
                 "Number of arguments must match number of component types");
 
@@ -246,6 +248,24 @@ BEGIN_NAMESPACE_ECS
             }
 
             return getComponentByType<T, 0>(it->second);
+        }
+
+        /**
+         * @brief 更新实体的指定组件
+         * @param entityIndex 实体索引
+         * @param component 新的组件值
+         * @return 是否更新成功
+         */
+        template <typename T, typename... Args>
+        bool updateComponent(uint32 entityIndex, Args&&... args)
+        {
+            auto it = m_entityToPosition.find(entityIndex);
+            if (it == m_entityToPosition.end())
+            {
+                return false;
+            }
+
+            return updateComponentByType<T, 0>(it->second, std::forward<Args>(args)...);
         }
 
         /**
@@ -502,6 +522,32 @@ BEGIN_NAMESPACE_ECS
             }
 
             return nullptr;
+        }
+
+        // 更新组件辅助函数
+        template <typename T, size_t Index, typename... Args>
+        bool updateComponentByType(size_t position, Args&&... args)
+        {
+            if constexpr (Index < sizeof...(ComponentTypes))
+            {
+                using CurrentType = typename std::tuple_element<Index, std::tuple<ComponentTypes...>>::type;
+
+                if (std::is_same_v<T, CurrentType>)
+                {
+                    auto& componentVec = std::get<Index>(m_components);
+                    if (position < componentVec.size())
+                    {
+                        componentVec[position] = T(std::forward<Args>(args)...);
+                        return true;
+                    }
+                }
+                else
+                {
+                    return updateComponentByType<T, Index + 1>(position, std::forward<Args>(args)...);
+                }
+            }
+
+            return false;
         }
 
         // 内存使用计算辅助函数

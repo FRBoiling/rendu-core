@@ -1,11 +1,14 @@
 //
-// Archetype 单元测试
-// 使用 Catch2 框架
+// Archetype 存储系统单元测试
+//
+// 测试标签说明:
+// [archetype][basic]   - Archetype 基础操作测试
+// [archetype][batch]   - 批量操作测试
+// [archetype][memory]  - 内存布局测试
+// [archetype][edge]    - 边界情况测试
 //
 
 #include "common/ecs/archetype.h"
-
-#include <iostream>
 #include <catch2/catch_test_macros.hpp>
 
 using namespace Rendu;
@@ -85,29 +88,17 @@ TEST_CASE("Archetype - 内存布局", "[archetype][memory]") {
     }
 
     SECTION("组件连续存储") {
-        std::cout << "Starting 组件连续存储 test" << std::endl;
         Archetype<Position, Velocity> archetype;
 
-        std::cout << "Adding entities..." << std::endl;
         for (int i = 0; i < 5; ++i) {
-            std::cout << "  Adding entity " << i << std::endl;
             archetype.emplace(i, Position{static_cast<float>(i), static_cast<float>(i)}, Velocity{0, 0});
         }
-
-        std::cout << "Size: " << archetype.size() << std::endl;
-        std::cout << "Starting each() iteration..." << std::endl;
 
         int count = 0;
         archetype.each([&](Entity e, Position& p, Velocity& v) {
             count++;
-            std::cout << "  Entity " << e.value() << " processed" << std::endl;
-            if (count > 10) {
-                std::cerr << "Too many iterations!" << std::endl;
-                exit(1);
-            }
         });
 
-        std::cout << "Final count: " << count << std::endl;
         REQUIRE(count == 5);
     }
 }

@@ -6,9 +6,9 @@
 #ifndef RENDU_ECS_ARCHETYPE_MIGRATION_H
 #define RENDU_ECS_ARCHETYPE_MIGRATION_H
 
-#include "common/ecs/archetype.h"
-#include "common/ecs/entity.h"
 #include "common/define.h"
+#include "archetype.h"
+#include "entity.h"
 #include <unordered_map>
 #include <typeindex>
 #include <memory>
@@ -20,6 +20,19 @@ BEGIN_NAMESPACE_ECS
     // ============================================================================
     // Archetype 迁移器
     // ============================================================================
+
+    /**
+     * @brief std::pair<std::type_index, std::type_index> 的哈希函数
+     */
+    struct PairHash
+    {
+        size_t operator()(const std::pair<std::type_index, std::type_index>& key) const noexcept
+        {
+            size_t h1 = key.first.hash_code();
+            size_t h2 = key.second.hash_code();
+            return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+        }
+    };
 
     /**
      * @brief Archetype 迁移管理器
@@ -112,7 +125,7 @@ BEGIN_NAMESPACE_ECS
 
     private:
         using MigrateKey = std::pair<std::type_index, std::type_index>;
-        std::unordered_map<MigrateKey, MigrateFunc> m_migrateFuncs;
+        std::unordered_map<MigrateKey, MigrateFunc, PairHash> m_migrateFuncs;
     };
 
 END_NAMESPACE_ECS

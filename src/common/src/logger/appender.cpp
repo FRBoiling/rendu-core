@@ -11,8 +11,8 @@
 BEGIN_NAMESPACE_COMMON
     using namespace std::literals::string_view_literals;
 
-    Appender::Appender(uint8 id, std::string name, LogLevel level, AppenderFlags flags) : m_id(id), m_level(level),
-        m_flags(flags)
+    Appender::Appender(uint8 id, std::string name, LogLevel level, AppenderFlags flags)
+        : m_id(id), m_name(std::move(name)), m_level(level), m_flags(flags)
     {
     }
 

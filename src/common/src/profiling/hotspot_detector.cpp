@@ -2,7 +2,7 @@
 // Hotspot Detector 实现
 //
 
-#include "common/ecs/hotspot_detector.h"
+#include "common/profiling/hotspot_detector.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

@@ -75,6 +75,9 @@ BEGIN_NAMESPACE_ECS
         // 清理动态组件映射
         m_impl.entityComponents.erase(index);
 
+        // 清理实体组件类型映射
+        m_impl.entityComponentTypes.erase(index);
+
         // 增加版本号（使旧的 Entity 引用失效）
         if (index < m_impl.entityVersions.size())
         {

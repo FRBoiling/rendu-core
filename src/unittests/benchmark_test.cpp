@@ -1,8 +1,14 @@
 //
-// ECS 性能基准测试 - 使用 Catch2 TEST_CASE
+// ECS 快速基准测试单元测试
+//
+// 测试标签说明:
+// [benchmark][create]  - 创建基准测试
+// [benchmark][iterate] - 遍历基准测试
+// [benchmark][destroy] - 删除基准测试
+// [benchmark][mixed]   - 混合操作基准测试
 //
 
-#include "common/ecs/registry_optimized.h"
+#include "../common/include/common/ecs/registry_optimized.h"
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 

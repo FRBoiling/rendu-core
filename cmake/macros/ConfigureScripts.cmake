@@ -1,8 +1,13 @@
-# ConfigureScripts.cmake
-# =========================
-# 脚本模块相关工具函数
-# =========================
+# ====================================================================
+# 模块: ConfigureScripts
+# 描述: 脚本模块相关工具函数,提供脚本路径管理、模块配置等功能
+# 依赖模块:
+#   - 无
+# ====================================================================
 
+# ====================================================================
+# 构建路径检查
+# ====================================================================
 # 检查构建路径中是否包含空格（仅 Windows 需关注）
 function(rendu_warn_about_spaces_in_build_path)
     if (WIN32)
@@ -16,6 +21,9 @@ function(rendu_warn_about_spaces_in_build_path)
     endif ()
 endfunction()
 
+# ====================================================================
+# 脚本路径管理
+# ====================================================================
 # 获取脚本目录的基础路径
 function(rendu_get_scripts_base_path variable)
     set(${variable} "${CMAKE_SOURCE_DIR}/src/server/scripts" PARENT_SCOPE)
@@ -57,6 +65,9 @@ function(rendu_script_module_name_to_variable module variable)
     set(${variable} ${var_name} PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 动态链接检测
+# ====================================================================
 # 判断是否需要动态链接
 function(rendu_is_dynamic_linking_required variable)
     if (RENDU_SCRIPTS MATCHES "dynamic")
@@ -76,6 +87,9 @@ function(rendu_is_dynamic_linking_required variable)
     set(${variable} ${is_required} PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 平台相关函数
+# ====================================================================
 # 获取平台原生共享库文件名
 function(rendu_get_native_shared_library_name module variable)
     if (WIN32)

@@ -1,9 +1,17 @@
 //
-// ECS Registry 单元测试
-// 使用 Catch2 框架
+// ECS Registry 核心功能单元测试
+//
+// 测试标签说明:
+// [registry][basic]    - 基础创建和销毁测试
+// [registry][component] - 组件添加和获取测试
+// [registry][view]    - 视图遍历测试
+// [registry][group]   - 分组操作测试
+// [registry][snapshot] - 快照和恢复测试
+// [registry][dynamic] - 动态组件管理测试
+// [registry][edge]     - 边界情况测试
 //
 
-#include "common/ecs/registry_optimized.h"
+#include "../common/include/common/ecs/registry_optimized.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 

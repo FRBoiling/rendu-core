@@ -1,10 +1,19 @@
 //
-// ECS 信号/观察者系统测试
-// 使用 Catch2 框架
+// ECS 信号/观察者系统单元测试
+//
+// 测试标签说明:
+// [signal][construct] - on_construct 事件测试
+// [signal][update]    - onUpdate 事件测试
+// [signal][destroy]   - onDestroy 事件测试
+// [signal][raii]      - RAII 连接管理测试
+// [signal][chain]     - 信号链式操作测试
+// [signal][performance] - 性能测试
+// [signal][edge]      - 边界情况测试
+// [signal][integration] - 完整流程集成测试
 //
 
 #include "common/ecs/registry_optimized.h"
-#include "common/ecs/events.h"
+#include "common/events/events.h"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace Rendu;
@@ -49,9 +58,9 @@ TEST_CASE("Signal - on_construct 事件", "[signal][construct]") {
         int velCount = 0;
         int healthCount = 0;
 
-        registry.onConstruct<Position>([&](Entity e, Position& pos) { posCount++; });
-        registry.onConstruct<Velocity>([&](Entity e, Velocity& vel) { velCount++; });
-        registry.onConstruct<Health>([&](Entity e, Health& health) { healthCount++; });
+        auto conn1 = registry.onConstruct<Position>([&](Entity e, Position& pos) { posCount++; });
+        auto conn2 = registry.onConstruct<Velocity>([&](Entity e, Velocity& vel) { velCount++; });
+        auto conn3 = registry.onConstruct<Health>([&](Entity e, Health& health) { healthCount++; });
 
         Entity e = registry.create();
         registry.emplace<Position, Velocity, Health>(
@@ -70,8 +79,8 @@ TEST_CASE("Signal - on_construct 事件", "[signal][construct]") {
         int count1 = 0;
         int count2 = 0;
 
-        registry.onConstruct<Position>([&](Entity e, Position& pos) { count1++; });
-        registry.onConstruct<Position>([&](Entity e, Position& pos) { count2++; });
+        auto conn1 = registry.onConstruct<Position>([&](Entity e, Position& pos) { count1++; });
+        auto conn2 = registry.onConstruct<Position>([&](Entity e, Position& pos) { count2++; });
 
         Entity e = registry.create();
         registry.emplaceSingle<Position>(e, Position{0, 0, 0});
@@ -105,7 +114,7 @@ TEST_CASE("Signal - onUpdate 事件", "[signal][update]") {
     SECTION("多次更新") {
         int updateCount = 0;
 
-        registry.onUpdate<Position>([&](Entity e, Position& pos) {
+        auto conn = registry.onUpdate<Position>([&](Entity e, Position& pos) {
             updateCount++;
         });
 
@@ -128,7 +137,7 @@ TEST_CASE("Signal - onDestroy 事件", "[signal][destroy]") {
         int destroyCount = 0;
         Entity destroyedEntity;
 
-        registry.onDestroy<Position>([&](Entity e, Position& pos) {
+        auto conn = registry.onDestroy<Position>([&](Entity e, Position& pos) {
             destroyCount++;
             destroyedEntity = e;
         });
@@ -146,8 +155,8 @@ TEST_CASE("Signal - onDestroy 事件", "[signal][destroy]") {
         int posCount = 0;
         int velCount = 0;
 
-        registry.onDestroy<Position>([&](Entity e, Position& pos) { posCount++; });
-        registry.onDestroy<Velocity>([&](Entity e, Velocity& vel) { velCount++; });
+        auto conn1 = registry.onDestroy<Position>([&](Entity e, Position& pos) { posCount++; });
+        auto conn2 = registry.onDestroy<Velocity>([&](Entity e, Velocity& vel) { velCount++; });
 
         Entity e = registry.create();
         registry.emplace<Position, Velocity>(e, Position{0, 0, 0}, Velocity{0, 0, 0});
@@ -216,11 +225,11 @@ TEST_CASE("Signal - 信号链式操作", "[signal][chain]") {
     SECTION("监听器链") {
         std::vector<std::string> logs;
 
-        registry.onConstruct<Position>([&](Entity e, Position& pos) {
+        auto conn1 = registry.onConstruct<Position>([&](Entity e, Position& pos) {
             logs.push_back("LOG: Position created for " + std::to_string(e.index()));
         });
 
-        registry.onConstruct<Position>([&](Entity e, Position& pos) {
+        auto conn2 = registry.onConstruct<Position>([&](Entity e, Position& pos) {
             if (pos.x < 0) {
                 logs.push_back("WARN: Negative position!");
             }
@@ -239,9 +248,9 @@ TEST_CASE("Signal - 性能测试", "[signal][performance]") {
     RegistryOptimized registry;
 
     SECTION("大量实体创建") {
-        registry.onConstruct<Position>([&](Entity e, Position& pos) {});
+        auto conn = registry.onConstruct<Position>([&](Entity e, Position& pos) {});
 
-        const int COUNT = 1000;
+        constexpr int COUNT = 1000;
         auto entities = registry.createBatch<Position>(COUNT);
 
         REQUIRE(entities.size() == COUNT);
@@ -250,12 +259,12 @@ TEST_CASE("Signal - 性能测试", "[signal][performance]") {
     SECTION("多次更新") {
         int updateCount = 0;
 
-        registry.onUpdate<Position>([&](Entity e, Position& pos) {
+        auto conn = registry.onUpdate<Position>([&](Entity e, Position& pos) {
             updateCount++;
         });
 
-        const int COUNT = 100;
-        const int UPDATES = 10;
+        constexpr int COUNT = 100;
+        constexpr int UPDATES = 10;
 
         std::vector<Entity> entities;
         for (int i = 0; i < COUNT; ++i) {
@@ -313,16 +322,16 @@ TEST_CASE("Signal - 完整流程", "[signal][integration]") {
     SECTION("创建 -> 更新 -> 销毁") {
         std::vector<std::string> events;
 
-        registry.onConstruct<Position>([&](Entity e, Position& pos) {
-            events.push_back("construct");
+        auto conn1 = registry.onConstruct<Position>([&](Entity e, Position& pos) {
+            events.emplace_back("construct");
         });
 
-        registry.onUpdate<Position>([&](Entity e, Position& pos) {
-            events.push_back("update");
+        auto conn2 = registry.onUpdate<Position>([&](Entity e, Position& pos) {
+            events.emplace_back("update");
         });
 
-        registry.onDestroy<Position>([&](Entity e, Position& pos) {
-            events.push_back("destroy");
+        auto conn3 = registry.onDestroy<Position>([&](Entity e, Position& pos) {
+            events.emplace_back("destroy");
         });
 
         Entity e = registry.create();

@@ -1,9 +1,13 @@
 //
-// ECS 资源管理系统测试
-// 使用 Catch2 框架
+// ECS 资源管理系统单元测试
+//
+// 测试标签说明:
+// [resource][basic]   - 资源基础存储测试
+// [resource][exists] - 资源存在性检查测试
+// [resource][update] - 资源更新测试
 //
 
-#include "common/ecs/resource.h"
+#include "common/resources/resource.h"
 #include "common/ecs/registry_optimized.h"
 #include <catch2/catch_test_macros.hpp>
 #include <memory>

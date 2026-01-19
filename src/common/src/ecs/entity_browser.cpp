@@ -3,9 +3,6 @@
 //
 
 #include "common/ecs/entity_browser.h"
-#include "common/ecs/registry_optimized.h"
-#include "common/ecs/relationships.h"
-#include "common/ecs/archetype.h"
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -13,9 +10,11 @@
 #include <cxxabi.h>
 #include <memory>
 
-BEGIN_NAMESPACE_ECS
+#include "common/ecs/registry_optimized.h"
+#include "common/ecs/relationships.h"
 
-EntityBrowser::EntityBrowser()
+BEGIN_NAMESPACE_ECS
+    EntityBrowser::EntityBrowser()
     : m_refreshed(false)
     , m_registry(nullptr)
     , m_relationships(nullptr)

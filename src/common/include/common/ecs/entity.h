@@ -145,7 +145,7 @@ class Archetype;
 
         uint64 m_value;
 
-        friend class Registry;
+        friend class RegistryBase;
         friend class RegistryOptimized;
 
         // 为 Archetype 提供友元访问

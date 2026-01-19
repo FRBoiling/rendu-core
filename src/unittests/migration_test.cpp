@@ -1,10 +1,17 @@
 //
-// ECS Archetype 迁移测试
-// 使用 Catch2 框架
+// ECS 动态组件迁移单元测试
+//
+// 测试标签说明:
+// [migration][add]     - 动态添加组件测试
+// [migration][remove]  - 动态移除组件测试
+// [migration][update]  - 动态组件更新测试
+// [migration][multiple] - 多个动态组件测试
+// [migration][batch]   - 批量操作测试
+// [migration][edge]    - 边界情况测试
 //
 
-#include "common/ecs/registry_optimized.h"
-#include "common/ecs/archetype_migrator.h"
+#include "../common/include/common/ecs/registry_optimized.h"
+#include "../common/include/common/ecs/archetype_migrator.h"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace Rendu;
@@ -260,6 +267,7 @@ TEST_CASE("Migration - 批量操作", "[migration][batch]") {
             REQUIRE(registry.has<Position>(e));
             REQUIRE(registry.has<Velocity>(e));
         }
+
     }
 
     SECTION("批量添加动态组件") {

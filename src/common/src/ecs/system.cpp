@@ -69,7 +69,7 @@ BEGIN_NAMESPACE_ECS
     {
     }
 
-    void LambdaSystem::update(Registry& registry, float deltaTime)
+    void LambdaSystem::update(RegistryBase& registry, float deltaTime)
     {
         if (m_updateFunc)
         {
@@ -171,7 +171,7 @@ BEGIN_NAMESPACE_ECS
         return it != m_impl->systemMap.end() ? it->second : nullptr;
     }
 
-    void SystemExecutor::execute(Registry& registry, float deltaTime)
+    void SystemExecutor::execute(RegistryBase& registry, float deltaTime)
     {
         // 如果未排序,先排序
         if (!m_impl->sorted)
@@ -315,9 +315,9 @@ BEGIN_NAMESPACE_ECS
 END_NAMESPACE_ECS
 
 // 显式实例化常用模板
-template void Rendu::SystemExecutor::addSystem<std::function<void(Rendu::Registry&, float)>>(
+template void Rendu::SystemExecutor::addSystem<std::function<void(Rendu::RegistryBase&, float)>>(
     const Rendu::SystemBuilder&,
-    std::function<void(Rendu::Registry&, float)>&&);
+    std::function<void(Rendu::RegistryBase&, float)>&&);
 
-template std::unique_ptr<Rendu::System> Rendu::SystemBuilder::build<std::function<void(Rendu::Registry&, float)>>(
-    std::function<void(Rendu::Registry&, float)>&&) const;
+template std::unique_ptr<Rendu::System> Rendu::SystemBuilder::build<std::function<void(Rendu::RegistryBase&, float)>>(
+    std::function<void(Rendu::RegistryBase&, float)>&&) const;

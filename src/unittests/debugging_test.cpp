@@ -1,6 +1,12 @@
 //
-// 调试和可视化工具测试
-// 测试：EntityBrowser, RelationshipVisualizer
+// ECS 调试和可视化工具单元测试
+//
+// 测试标签说明:
+// [debugging][browser]     - 实体浏览器测试
+// [debugging][visualizer]  - 关系可视化测试
+// [debugging][export]      - 导出功能测试
+// [debugging][filter]      - 过滤器测试
+// [debugging][stats]       - 统计信息测试
 //
 
 #include "common/ecs/registry_optimized.h"

@@ -2,10 +2,11 @@
 // Created by boil on 2026/1/13.
 //
 
-#ifndef RENDU_ECS_REGISTRY_H
-#define RENDU_ECS_REGISTRY_H
+#ifndef RENDU_ECS_REGISTRY_BASE_H
+#define RENDU_ECS_REGISTRY_BASE_H
 
-#include "common/ecs/entity.h"
+#include "common/define.h"
+#include "entity.h"
 #include "common/utils/types.h"
 
 #include <memory>
@@ -146,7 +147,7 @@ BEGIN_NAMESPACE_ECS
     struct Component {};
 
     // ============================================================================
-    // Registry - 注册中心(实体组件系统管理器)
+    // RegistryBase - 注册中心(实体组件系统管理器)
     // ============================================================================
 
     /**
@@ -155,38 +156,38 @@ BEGIN_NAMESPACE_ECS
      * 管理 Entity、Component 的核心类。
      * 使用稀疏集和紧凑存储优化性能。
      */
-    class RC_COMMON_API Registry
+    class RC_COMMON_API RegistryBase
     {
     public:
         /**
          * @brief 默认构造函数
          */
-        Registry();
+        RegistryBase();
 
         /**
          * @brief 拷贝构造函数 (已删除)
          */
-        Registry(const Registry&) = delete;
+        RegistryBase(const RegistryBase&) = delete;
 
         /**
          * @brief 移动构造函数
          */
-        Registry(Registry&&) noexcept = default;
+        RegistryBase(RegistryBase&&) noexcept = default;
 
         /**
          * @brief 拷贝赋值运算符 (已删除)
          */
-        Registry& operator=(const Registry&) = delete;
+        RegistryBase& operator=(const RegistryBase&) = delete;
 
         /**
          * @brief 移动赋值运算符
          */
-        Registry& operator=(Registry&&) noexcept = default;
+        RegistryBase& operator=(RegistryBase&&) noexcept = default;
 
         /**
          * @brief 析构函数
          */
-        ~Registry();
+        ~RegistryBase();
 
         // ========================================================================
         // 实体管理
@@ -509,7 +510,7 @@ BEGIN_NAMESPACE_ECS
     // ============================================================================
 
     template <typename... ComponentTypes>
-    class Registry::View
+    class RegistryBase::View
     {
         public:
             View() = default;
@@ -569,9 +570,9 @@ BEGIN_NAMESPACE_ECS
             }
 
         private:
-            friend class Registry;
+            friend class RegistryBase;
 
-            View(Registry* registry) : m_registry(registry) {}
+            View(RegistryBase* registry) : m_registry(registry) {}
 
             /**
              * @brief 获取包含实体最少的组件集合（优化遍历起点）
@@ -617,7 +618,7 @@ BEGIN_NAMESPACE_ECS
                 func(e, m_registry->tryGet<ComponentTypes>(e)...);
             }
 
-            Registry* m_registry = nullptr;
+            RegistryBase* m_registry = nullptr;
         };
 
     // ============================================================================
@@ -625,7 +626,7 @@ BEGIN_NAMESPACE_ECS
     // ============================================================================
 
     template <typename ComponentType, typename... Args>
-    ComponentType& Registry::emplace(Entity entity, Args&&... args)
+    ComponentType& RegistryBase::emplace(Entity entity, Args&&... args)
     {
         std::type_index index(typeid(ComponentType));
 
@@ -641,7 +642,7 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename ComponentType>
-    void Registry::remove(Entity entity)
+    void RegistryBase::remove(Entity entity)
     {
         std::type_index index(typeid(ComponentType));
 
@@ -654,45 +655,45 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename ComponentType>
-    ComponentType* Registry::tryGet(Entity entity)
+    ComponentType* RegistryBase::tryGet(Entity entity)
     {
         return tryGet<ComponentType>(entity.index());
     }
 
     template <typename ComponentType>
-    const ComponentType* Registry::tryGet(Entity entity) const
+    const ComponentType* RegistryBase::tryGet(Entity entity) const
     {
         return tryGet<ComponentType>(entity.index());
     }
 
     template <typename ComponentType>
-    ComponentType* Registry::tryGet(uint32 index)
+    ComponentType* RegistryBase::tryGet(uint32 index)
     {
         auto* pool = getComponentPool<ComponentType>();
         return pool ? pool->get(index) : nullptr;
     }
 
     template <typename ComponentType>
-    const ComponentType* Registry::tryGet(uint32 index) const
+    const ComponentType* RegistryBase::tryGet(uint32 index) const
     {
         auto* pool = getComponentPool<ComponentType>();
         return pool ? pool->get(index) : nullptr;
     }
 
     template <typename ComponentType>
-    bool Registry::has(Entity entity) const
+    bool RegistryBase::has(Entity entity) const
     {
         return tryGet<ComponentType>(entity) != nullptr;
     }
 
     template <typename ComponentType>
-    bool Registry::has(uint32 index) const
+    bool RegistryBase::has(uint32 index) const
     {
         return tryGet<ComponentType>(index) != nullptr;
     }
 
     template <typename ComponentType>
-    ComponentType& Registry::getOrEmplace(Entity entity)
+    ComponentType& RegistryBase::getOrEmplace(Entity entity)
     {
         auto* ptr = tryGet<ComponentType>(entity);
         if (ptr) return *ptr;
@@ -700,7 +701,7 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename Func>
-    void Registry::each(Func&& func)
+    void RegistryBase::each(Func&& func)
     {
         for (uint32 index : m_impl.activeEntities.data())
         {
@@ -709,7 +710,7 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename Func>
-    void Registry::each(Func&& func) const
+    void RegistryBase::each(Func&& func) const
     {
         for (uint32 index : m_impl.activeEntities.data())
         {
@@ -718,13 +719,13 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename... ComponentTypes>
-    Registry::View<ComponentTypes...> Registry::view()
+    RegistryBase::View<ComponentTypes...> RegistryBase::view()
     {
         return View<ComponentTypes...>(this);
     }
 
     template <typename ComponentType>
-    auto Registry::getComponentPool() -> ComponentPool<ComponentType>*
+    auto RegistryBase::getComponentPool() -> ComponentPool<ComponentType>*
     {
         std::type_index index(typeid(ComponentType));
         auto it = m_impl.componentPools.find(index);
@@ -733,7 +734,7 @@ BEGIN_NAMESPACE_ECS
     }
 
     template <typename ComponentType>
-    auto Registry::getComponentPool() const -> const ComponentPool<ComponentType>*
+    auto RegistryBase::getComponentPool() const -> const ComponentPool<ComponentType>*
     {
         std::type_index index(typeid(ComponentType));
         auto it = m_impl.componentPools.find(index);
@@ -741,7 +742,7 @@ BEGIN_NAMESPACE_ECS
         return static_cast<const ComponentPool<ComponentType>*>(it->second.get());
     }
 
-    inline uint32 Registry::getEntityVersion(uint32 index) const
+    inline uint32 RegistryBase::getEntityVersion(uint32 index) const
     {
         if (index < m_impl.entityVersions.size())
         {
@@ -752,4 +753,4 @@ BEGIN_NAMESPACE_ECS
 
 END_NAMESPACE_ECS
 
-#endif //RENDU_ECS_REGISTRY_H
+#endif //RENDU_ECS_REGISTRY_BASE_H

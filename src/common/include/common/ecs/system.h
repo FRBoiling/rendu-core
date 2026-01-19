@@ -5,7 +5,8 @@
 #ifndef RENDU_ECS_SYSTEM_H
 #define RENDU_ECS_SYSTEM_H
 
-#include "common/ecs/registry.h"
+#include "common/define.h"
+#include "registry_base.h"
 #include <functional>
 #include <memory>
 #include <vector>
@@ -33,7 +34,7 @@ BEGIN_NAMESPACE_ECS
          * @param registry 注册中心引用
          * @param deltaTime 帧时间(秒)
          */
-        virtual void update(Registry& registry, float deltaTime) = 0;
+        virtual void update(RegistryBase& registry, float deltaTime) = 0;
 
         /**
          * @brief 获取系统名称
@@ -105,7 +106,7 @@ BEGIN_NAMESPACE_ECS
         /**
          * @brief 函数类型
          */
-        using UpdateFunc = std::function<void(Registry&, float)>;
+        using UpdateFunc = std::function<void(RegistryBase&, float)>;
 
         /**
          * @brief 构造函数
@@ -115,7 +116,7 @@ BEGIN_NAMESPACE_ECS
          */
         LambdaSystem(UpdateFunc updateFunc, const char* name, int priority = 0);
 
-        void update(Registry& registry, float deltaTime) override;
+        void update(RegistryBase& registry, float deltaTime) override;
         [[nodiscard]] const char* name() const override;
         [[nodiscard]] int priority() const override;
 
@@ -174,7 +175,7 @@ BEGIN_NAMESPACE_ECS
          * @param registry 注册中心引用
          * @param deltaTime 帧时间(秒)
          */
-        void execute(Registry& registry, float deltaTime);
+        void execute(RegistryBase& registry, float deltaTime);
 
         /**
          * @brief 清空所有系统
@@ -211,7 +212,7 @@ BEGIN_NAMESPACE_ECS
      * @return 系统指针
      */
     inline std::unique_ptr<System> makeSystem(
-        std::function<void(Registry&, float)> updateFunc,
+        std::function<void(RegistryBase&, float)> updateFunc,
         const char* name,
         int priority = 0)
     {
@@ -232,7 +233,7 @@ BEGIN_NAMESPACE_ECS
         const char* name,
         int priority = 0)
     {
-        auto wrappedFunc = [updateFunc = std::forward<Func>(updateFunc)](Registry& registry, float) {
+        auto wrappedFunc = [updateFunc = std::forward<Func>(updateFunc)](RegistryBase& registry, float) {
             auto view = registry.view<ComponentTypes...>();
             view.each([&](Entity e) {
                 // 临时存储组件指针

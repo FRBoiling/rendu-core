@@ -1,6 +1,6 @@
 #include "example.h"
-#include "common/ecs/entity.h"
-#include "common/ecs/registry.h"
+#include "../../common/include/common/ecs/entity.h"
+#include "../../common/include/common/ecs/registry_base.h"
 #include <iostream>
 
 using namespace Rendu;
@@ -11,7 +11,7 @@ int main()
     std::cout << "\n1. 简单的 ECS 示例..." << std::endl;
 
     // 创建 Registry
-    Registry registry;
+    RegistryBase registry;
 
     // 创建实体
     Entity entity = registry.create();

@@ -2,8 +2,7 @@
 // Cache Analyzer 实现
 //
 
-#include "common/ecs/cache_analyzer.h"
-#include "common/ecs/registry_optimized.h"
+#include "common/profiling/cache_analyzer.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

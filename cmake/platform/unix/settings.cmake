@@ -1,18 +1,30 @@
-# 设置 UNIX 平台相关选项
+# ====================================================================
+# 模块: unix/settings
+# 描述: UNIX 平台相关选项设置
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
 function(rendu_setup_unix_options)
+    # ====================================================================
+    # 配置目录设置
+    # ====================================================================
     # 设置默认配置目录
     if (NOT RENDU_CONF_DIR)
         set(RENDU_CONF_DIR "${CMAKE_INSTALL_PREFIX}/etc" CACHE PATH "Configuration directory")
         rendu_log_info("UNIX: Using default configuration directory: ${RENDU_CONF_DIR}")
     endif ()
 
+    # ====================================================================
     # RPATH 配置
+    # ====================================================================
     set(CMAKE_SKIP_BUILD_RPATH OFF)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
     list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
+    # ====================================================================
     # 链接器选择
+    # ====================================================================
     if (RENDU_USE_LD_GOLD)
         execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version ERROR_QUIET OUTPUT_VARIABLE LD_VERSION)
         if ("${LD_VERSION}" MATCHES "GNU gold")
@@ -26,7 +38,9 @@ function(rendu_setup_unix_options)
         rendu_log_info("UNIX: Using default system linker")
     endif ()
 
-    # macOS 下 Homebrew 支持
+    # ====================================================================
+    # Homebrew 支持 (macOS)
+    # ====================================================================
     if (APPLE)
         find_program(HOMEBREW_EXECUTABLE brew)
         if (HOMEBREW_EXECUTABLE)
@@ -41,7 +55,9 @@ function(rendu_setup_unix_options)
 
     rendu_log_info("UNIX: Detected compiler: ${CMAKE_C_COMPILER}")
 
-    # 设置输出目录
+    # ====================================================================
+    # 输出目录设置
+    # ====================================================================
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/bin")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/lib")
 endfunction()

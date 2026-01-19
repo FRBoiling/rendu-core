@@ -1,5 +1,5 @@
 #include "common/ecs/registry_optimized.h"
-#include "common/ecs/entity_browser.h"
+#include "common/ecs/profiling/entity_browser.h"
 #include <iostream>
 
 struct Position {

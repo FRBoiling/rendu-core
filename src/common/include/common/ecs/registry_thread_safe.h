@@ -6,8 +6,8 @@
 #ifndef RENDU_ECS_THREAD_SAFE_REGISTRY_H
 #define RENDU_ECS_THREAD_SAFE_REGISTRY_H
 
-#include "common/ecs/registry_optimized.h"
 #include "common/define.h"
+#include "common/ecs/registry_optimized.h"
 #include <shared_mutex>
 #include <mutex>
 #include <future>
@@ -83,11 +83,11 @@ BEGIN_NAMESPACE_ECS
      * - 查询操作使用读锁（多个线程可以同时查询）
      * - 修改操作使用写锁（独占访问）
      */
-    class RC_COMMON_API ThreadSafeRegistry
+    class RC_COMMON_API RegistryThreadSafe
     {
     public:
-        ThreadSafeRegistry();
-        ~ThreadSafeRegistry();
+        RegistryThreadSafe();
+        ~RegistryThreadSafe();
 
         // ========================================================================
         // 实体管理

@@ -4,15 +4,16 @@
 
 #include "common/ecs/relationship_visualizer.h"
 #include "common/ecs/relationships.h"
-#include "common/ecs/registry_optimized.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <unordered_set>
+
+#include "common/ecs/registry_optimized.h"
 
 BEGIN_NAMESPACE_ECS
-
-// 注意：由于 RelationshipManager 的 API 与设计不同，
+    // 注意：由于 RelationshipManager 的 API 与设计不同，
 // 这里提供一个简化的实现版本
 
 RelationshipVisualizer::Tree RelationshipVisualizer::buildTree(const RelationshipManager& relationships) {

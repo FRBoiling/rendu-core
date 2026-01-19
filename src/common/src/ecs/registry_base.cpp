@@ -2,19 +2,19 @@
 // Created by boil on 2026/1/13.
 //
 
-#include "common/ecs/registry.h"
+#include "common/ecs/registry_base.h"
 
 BEGIN_NAMESPACE_ECS
 
     // ============================================================================
-    // Registry 实现
+    // RegistryBase 实现
     // ============================================================================
 
-    Registry::Registry() = default;
+    RegistryBase::RegistryBase() = default;
 
-    Registry::~Registry() = default;
+    RegistryBase::~RegistryBase() = default;
 
-    Entity Registry::create()
+    Entity RegistryBase::create()
     {
         uint32 entityId;
         uint32 version;
@@ -50,7 +50,7 @@ BEGIN_NAMESPACE_ECS
         return Entity(entityId, version);
     }
 
-    std::vector<Entity> Registry::createMany(size_t count)
+    std::vector<Entity> RegistryBase::createMany(size_t count)
     {
         std::vector<Entity> result;
         result.reserve(count);
@@ -61,7 +61,7 @@ BEGIN_NAMESPACE_ECS
         return result;
     }
 
-    void Registry::destroy(Entity entity)
+    void RegistryBase::destroy(Entity entity)
     {
         uint32 index = entity.index();
 
@@ -84,7 +84,7 @@ BEGIN_NAMESPACE_ECS
         }
     }
 
-    void Registry::destroyMany(const std::vector<Entity>& entities)
+    void RegistryBase::destroyMany(const std::vector<Entity>& entities)
     {
         for (const auto& entity : entities)
         {
@@ -92,7 +92,7 @@ BEGIN_NAMESPACE_ECS
         }
     }
 
-    bool Registry::valid(Entity entity) const
+    bool RegistryBase::valid(Entity entity) const
     {
         uint32 index = entity.index();
 
@@ -103,17 +103,17 @@ BEGIN_NAMESPACE_ECS
         return entity.version() == currentVersion;
     }
 
-    size_t Registry::size() const
+    size_t RegistryBase::size() const
     {
         return m_impl.activeEntities.size();
     }
 
-    size_t Registry::capacity() const
+    size_t RegistryBase::capacity() const
     {
         return m_impl.activeEntities.size();
     }
 
-    void Registry::clear()
+    void RegistryBase::clear()
     {
         m_impl.activeEntities.clear();
         m_impl.destroyedIndices.clear();
@@ -122,7 +122,7 @@ BEGIN_NAMESPACE_ECS
         m_impl.nextEntityId = 1;
     }
 
-    void Registry::reserve(size_t capacity)
+    void RegistryBase::reserve(size_t capacity)
     {
         // SparseSet 不需要显式预留
     }

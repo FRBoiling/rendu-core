@@ -2,16 +2,16 @@
 // Created by boil on 2026/1/15.
 //
 
-#include "common/ecs/profiler.h"
-#include "common/ecs/registry_optimized.h"
+#include "common/profiling/profiler.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
 
-BEGIN_NAMESPACE_ECS
+#include "common/ecs/registry_optimized.h"
 
+BEGIN_NAMESPACE_ECS
     // ============================================================================
     // ScopeTimer 实现
     // ============================================================================
@@ -59,7 +59,18 @@ BEGIN_NAMESPACE_ECS
             return nullptr;
         }
 
-        return reinterpret_cast<const PerformanceStat*>(&it->second);
+        // 创建临时PerformanceStat对象并存储在缓存中
+        static thread_local std::unordered_map<std::string, PerformanceStat> statCache;
+        const auto& data = it->second;
+        PerformanceStat stat;
+        stat.name = name;
+        stat.count = data.count;
+        stat.totalTime = data.totalTime;
+        stat.avgTime = data.count > 0 ? data.totalTime / data.count : 0.0f;
+        stat.minTime = data.minTime;
+        stat.maxTime = data.maxTime;
+        statCache[name] = stat;
+        return &statCache[name];
     }
 
     std::vector<PerformanceStat> PerformanceProfiler::getAllStats() const

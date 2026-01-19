@@ -13,9 +13,7 @@ project(RenduCore
 
 # 设置 CMake 宏脚本目录
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/macros")
-include(RenduProject)
-include(RenduExtensions)
-include(RenduCheckPlatform)
+include(${CMAKE_SOURCE_DIR}/cmake/RenduCore.cmake)  # 统一入口，自动加载所有模块
 
 # 添加依赖与核心源码（排除 cmake /.git  /build 目录）
 rendu_add_subdirectories(

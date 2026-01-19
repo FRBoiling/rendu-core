@@ -1,3 +1,14 @@
+# ====================================================================
+# 模块: RenduPackageManager
+# 描述: 包管理器,提供依赖包的查找、下载、缓存和安装功能
+# 依赖模块:
+#   - RenduLogging (日志)
+#   - FetchContent (CMake 内置)
+# ====================================================================
+
+# ====================================================================
+# 包管理器选项配置
+# ====================================================================
 # 包管理相关选项
 option(RENDU_USE_LOCAL_PACKAGES "总是尝试用 find_package 获取依赖" OFF)
 option(RENDU_LOCAL_PACKAGES_ONLY "只用 find_package 获取依赖" OFF)
@@ -11,6 +22,9 @@ option(RENDU_PACKAGE_LOCK_ENABLED "包锁开启" OFF)
 set(RENDU_CURRENT_LIST_FILE ${CMAKE_CURRENT_LIST_FILE} CACHE INTERNAL "")
 set(RENDU_PACKAGES_LIST "" CACHE INTERNAL "")
 
+# ====================================================================
+# 缓存目录与模块路径配置
+# ====================================================================
 # 设置源码缓存目录
 set(RENDU_PACKAGES_CACHE "$ENV{HOME}/.rdpm/packages" CACHE PATH "用于下载 FetechContent包的目录")
 
@@ -34,6 +48,9 @@ endif ()
 
 include(FetchContent)
 
+# ====================================================================
+# FetchContent 基础目录配置
+# ====================================================================
 if (DEFINED FETCHCONTENT_BASE_DIR)
     # 若用户设置了 FETCHCONTENT_BASE_DIR，则使用
     set(RENDU_FETCHCONTENT_BASE_DIR ${FETCHCONTENT_BASE_DIR})
@@ -43,6 +60,9 @@ else ()
     rendu_log_debug("使用默认的 FETCHCONTENT_BASE_DIR: ${RENDU_FETCHCONTENT_BASE_DIR}")
 endif ()
 
+# ====================================================================
+# 内部辅助函数 - Git URI 解析
+# ====================================================================
 # 尝试从 git 仓库 URI 推断包名
 # 参数:
 #   uri             git 仓库 uri
@@ -60,6 +80,9 @@ function(_get_package_name_from_git_uri uri outName)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - URL 解析
+# ====================================================================
 # 从 URL 推断包名和版本
 # 参数:
 #   url      归档包的下载链接
@@ -92,6 +115,9 @@ function(_get_package_name_and_ver_from_url url outName outVer)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 哈希处理
+# ====================================================================
 # 查找可用的最短哈希
 # 参数:
 #   sourceCacheDir      源码缓存目录
@@ -99,6 +125,9 @@ endfunction()
 #   outShortHash  返回的最短哈希变量名（通过 PARENT_SCOPE 返回）
 # 返回:
 #   outShortHash 通过 PARENT_SCOPE 返回，未能找到则为 originHash
+# ====================================================================
+# 内部辅助函数 - 哈希处理
+# ====================================================================
 # 查找可用的最短哈希
 # 例如，如果 originHash 是 cccb77ae9609d2768ed80dd42cec54f77b1f1455，会依次检查如下文件，直到找到一个为空或内容匹配 originHash:
 # * .../cccb.hash
@@ -150,6 +179,9 @@ function(_get_shortest_hash sourceCacheDir originHash outShortHash)
     set(${outShortHash} "${foundShortHash}" PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 本地包查找
+# ====================================================================
 # 查找本地包
 # 参数:
 #   resultVar  结果变量 (ON/OFF)，通过 PARENT_SCOPE 返回
@@ -176,6 +208,9 @@ function(_find_package resultVar pkgName pkgVersion)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 模块文件创建
+# ====================================================================
 # 为 RENDU 包创建自定义 FindXXX.cmake 模块，防止 find_package 找到系统库
 # 参数:
 #   pkgName   包名
@@ -202,6 +237,9 @@ function(_create_module_file pkgName)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 包状态检查
+# ====================================================================
 # 检查包是否已添加
 # 参数:
 #   pkgName    包名
@@ -225,6 +263,9 @@ function(_check_if_package_already_added pkgName pkgVersion resultVar)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 参数解析
+# ====================================================================
 # 解析 rendu_add_package 的单参数写法
 # 例如 github:foo/bar@1.2.3 会被转换为 GITHUB_REPOSITORY;foo/bar;VERSION;1.2.3
 # 参数:
@@ -291,6 +332,9 @@ function(_parse_add_package_single_arg arg outArgs)
     set(${outArgs} ${out} PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - Git 状态检查
+# ====================================================================
 # 检查 git 仓库工作区是否干净
 # 参数:
 #   repoPath  仓库路径
@@ -342,6 +386,9 @@ function(_check_git_working_dir_is_clean repoPath gitTag isClean)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 补丁处理
+# ====================================================================
 # 为 ExternalProject_Add() 添加 PATCH_COMMAND
 #
 # 该函数接收 ARGN 中的补丁文件列表，并生成相应的 PATCH_COMMAND
@@ -402,6 +449,9 @@ function(_add_patches)
     set(ARGS_UNPARSED_ARGUMENTS "${ARGS_UNPARSED_ARGUMENTS} ${patch_command_string}" PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - FetchContent 重载
+# ====================================================================
 # 重载 FetchContent 内部属性，允许 RenduPackageManager.cmake 重载 FetchContent 调用
 # 参数:
 #   content_name  包名
@@ -449,19 +499,28 @@ function(_override_fetchcontent contentName)
     set_property(GLOBAL PROPERTY ${propertyName} TRUE)
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 变量导出
+# ====================================================================
 # 导出变量到父作用域
 #
 # 参数:
 #   varName - 要导出的变量名前缀
 #
 macro(_export_variables varName)
-    # 导出变量到父作用域
+    # ====================================================================
+# 内部辅助函数 - 变量导出
+# ====================================================================
+# 导出变量到父作用域
     set(${varName}_SOURCE_DIR "${${varName}_SOURCE_DIR}" PARENT_SCOPE)
     set(${varName}_BINARY_DIR "${${varName}_BINARY_DIR}" PARENT_SCOPE)
     set(${varName}_ADDED "${${varName}_ADDED}" PARENT_SCOPE)
     #  set(RENDU_LAST_PACKAGE_NAME "${varName}" PARENT_SCOPE)
 endmacro()
 
+# ====================================================================
+# 内部辅助函数 - 包锁文件管理
+# ====================================================================
 # 向 rendu-package-lock.cmake 文件中添加一个新的包
 #
 # 参数:
@@ -502,6 +561,9 @@ function(_add_comment_to_package_lock pkgName)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 包属性存储
+# ====================================================================
 # 存储和缓存包的源目录和二进制目录属性
 #
 # 参数:
@@ -515,6 +577,9 @@ function(_store_fetch_properties pkgName source_dir binary_dir)
     set(RENDU_PACKAGE_${pkgName}_BINARY_DIR "${binary_dir}" CACHE INTERNAL "")
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 子目录添加
+# ====================================================================
 # 按选项作为子目录添加包
 # 参数:
 #   pkgName        包名
@@ -546,6 +611,9 @@ function(_add_subdirectory pkgName download_only source_dir binary_dir exclude s
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - FetchContent 调用
+# ====================================================================
 # 通过 FetchContent 下载已声明包，并导出变量
 # 参数:
 #   pkgName      包名
@@ -598,6 +666,9 @@ function(rendu_fetch_content pkgName download_only populated)
     )
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 选项解析
+# ====================================================================
 # 拆分包选项
 # 参数:
 #   option        形如 "KEY VALUE" 或 "KEY" 的字符串
@@ -621,6 +692,9 @@ function(_parse_option option key_var value_var)
     set(${value_var} "${option_value}" PARENT_SCOPE)
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 版本推断
+# ====================================================================
 # 从 git tag 猜测包版本
 # 参数:
 #   git_tag      git 标签或哈希
@@ -662,6 +736,9 @@ function(_is_git_tag_commit_hash git_tag result)
     endif ()
 endfunction()
 
+# ====================================================================
+# 内部辅助函数 - 参数格式化
+# ====================================================================
 # 美化包参数，生成格式化字符串（可用于包锁文件或注释）
 # 参数:
 #   out_var         返回的格式化字符串变量名（通过 PARENT_SCOPE 返回）
@@ -764,6 +841,9 @@ function(_get_fetch_properties pkgName source_dir_var binary_dir_var)
     )
 endfunction()
 
+# ====================================================================
+# 公开 API - FetchContent 声明
+# ====================================================================
 # 用 FetchContent_Declare 声明包
 # 参数:
 #   pkgName   包名
@@ -775,6 +855,9 @@ function(rendu_fetchcontent_declare pkgName)
     FetchContent_Declare(${pkgName} ${ARGN})
 endfunction()
 
+# ====================================================================
+# 公开 API - 包锁文件管理
+# ====================================================================
 # 如果包锁文件存在则包含，并创建 rendu-update-package-lock 目标用于更新
 macro(rendu_use_package_lock file)
     if (NOT RENDU_DONT_CREATE_PACKAGE_LOCK)
@@ -789,6 +872,9 @@ macro(rendu_use_package_lock file)
     endif ()
 endmacro()
 
+# ====================================================================
+# 公开 API - 包注册与查询
+# ====================================================================
 # 注册已添加包
 function(rendu_register_package pkgName pkgVersion)
     list(APPEND RENDU_PACKAGES_LIST ${pkgName})
@@ -814,6 +900,9 @@ macro(rendu_declare_package pkgName)
     endif ()
 endmacro()
 
+# ====================================================================
+# 公开 API - 包查找与添加
+# ====================================================================
 # 本地查找包，否则回退到 rendu_add_package
 function(rendu_find_package)
     set(oneValueArgs NAME VERSION GIT_TAG FIND_PACKAGE_ARGUMENTS)
@@ -963,7 +1052,10 @@ function(rendu_add_package)
         rendu_log_fatal("未提供 'NAME'，且无法自动推断，参数为: '${ARGN}'。")
     endif ()
 
-    # 检查包是否已添加
+    # ====================================================================
+# 内部辅助函数 - 包状态检查
+# ====================================================================
+# 检查包是否已添加
     _check_if_package_already_added(${ARGS_NAME} "${ARGS_VERSION}" package_already_added)
     if (package_already_added)
         _export_variables(${ARGS_NAME})

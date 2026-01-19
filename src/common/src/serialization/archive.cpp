@@ -2,11 +2,10 @@
 // Created by boil on 2026/1/15.
 //
 
-#include "common/ecs/archive.h"
+#include "common/serialization/archive.h"
 #include "common/ecs/registry_optimized.h"
 
 BEGIN_NAMESPACE_ECS
-
     // ============================================================================
     // OutputArchive 实现
     // ============================================================================

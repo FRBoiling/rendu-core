@@ -6,7 +6,8 @@
 #ifndef RENDU_ECS_RELATIONSHIPS_H
 #define RENDU_ECS_RELATIONSHIPS_H
 
-#include "common/ecs/entity.h"
+#include "common/define.h"
+#include "entity.h"
 #include <vector>
 #include <unordered_map>
 #include <cstdint>

@@ -5,13 +5,12 @@
 
 #pragma once
 
+#include "common/define.h"
 #include "entity.h"
 #include <vector>
 #include <string>
 #include <unordered_map>
 #include <functional>
-
-#include "common/define.h"
 
 BEGIN_NAMESPACE_ECS
 

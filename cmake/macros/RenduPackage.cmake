@@ -1,8 +1,13 @@
-# =========================
+# ====================================================================
+# 模块: RenduPackage
+# 描述: 项目安装与打包辅助函数,支持 CMake 包配置和 CPack 打包
+# 依赖模块:
+#   - 无
+# ====================================================================
+
+# ====================================================================
 # rendu_package_project
-#
-# 项目安装与打包辅助函数
-# Project install & packaging helper function
+# 项目安装与打包辅助函数 / Project install & packaging helper function
 #
 # 参数说明 / Arguments:
 #   NAME                - 项目名称 / Project name
@@ -26,6 +31,10 @@ function(rendu_package_project)
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
 
+    # ====================================================================
+    # 参数解析与默认值设置
+    # ====================================================================
+
     cmake_parse_arguments(
             ARG
             ""
@@ -34,19 +43,25 @@ function(rendu_package_project)
             ${ARGN}
     )
 
+    # ====================================================================
     # 版本后缀处理
+    # ====================================================================
     if (ARG_DISABLE_VERSION_SUFFIX)
         unset(ARG_VERSION_SUFFIX)
     else ()
         set(ARG_VERSION_SUFFIX -${ARG_VERSION})
     endif ()
 
-    # 版本兼容性
+    # ====================================================================
+    # 版本兼容性设置
+    # ====================================================================
     if (NOT DEFINED ARG_COMPATIBILITY)
         set(ARG_COMPATIBILITY AnyNewerVersion)
     endif ()
 
+    # ====================================================================
     # 命名空间处理
+    # ====================================================================
     if (DEFINED ARG_NAMESPACE)
         if (ARG_CPACK)
             set(CPACK_PACKAGE_NAMESPACE ${ARG_NAMESPACE})
@@ -55,7 +70,9 @@ function(rendu_package_project)
         add_library(${ARG_NAMESPACE}${ARG_NAME} ALIAS ${ARG_NAME})
     endif ()
 
+    # ====================================================================
     # 生成导出头文件和版本头文件
+    # ====================================================================
     if (DEFINED ARG_VERSION_HEADER OR DEFINED ARG_EXPORT_HEADER)
         set(ARG_VERSION_INCLUDE_DIR ${ARG_BINARY_DIR}/PackageProjectInclude)
 
@@ -67,7 +84,9 @@ function(rendu_package_project)
         endif ()
 
         if (DEFINED ARG_VERSION_HEADER)
-            # 解析版本号
+            # ====================================================================
+        # 解析版本号
+        # ====================================================================
             unset(CMAKE_MATCH_1)
             unset(CMAKE_MATCH_3)
             unset(CMAKE_MATCH_5)
@@ -101,7 +120,9 @@ function(rendu_package_project)
             )
         endif ()
 
+        # ====================================================================
         # 设置 include 目录
+        # ====================================================================
         get_target_property(target_type ${ARG_NAME} TYPE)
         if (target_type STREQUAL "INTERFACE_LIBRARY")
             set(VISIBILITY INTERFACE)
@@ -118,7 +139,9 @@ function(rendu_package_project)
         )
     endif ()
 
+    # ====================================================================
     # 架构无关处理
+    # ====================================================================
     set(wbpvf_extra_args "")
     if (NOT DEFINED ARG_ARCH_INDEPENDENT)
         get_target_property(target_type "${ARG_NAME}" TYPE)
@@ -134,19 +157,25 @@ function(rendu_package_project)
         set(INSTALL_DIR_FOR_CMAKE_CONFIGS ${CMAKE_INSTALL_LIBDIR})
     endif ()
 
+    # ====================================================================
     # 生成版本文件
+    # ====================================================================
     write_basic_package_version_file(
             "${ARG_BINARY_DIR}/${ARG_NAME}ConfigVersion.cmake"
             VERSION ${ARG_VERSION}
             COMPATIBILITY ${ARG_COMPATIBILITY} ${wbpvf_extra_args}
     )
 
+    # ====================================================================
     # 设置默认运行时安装目录
+    # ====================================================================
     if (NOT DEFINED ARG_RUNTIME_DESTINATION)
         set(ARG_RUNTIME_DESTINATION ${ARG_NAME}${ARG_VERSION_SUFFIX})
     endif ()
 
+    # ====================================================================
     # 安装目标
+    # ====================================================================
     install(
             TARGETS ${ARG_NAME}
             EXPORT ${ARG_NAME}Targets
@@ -164,7 +193,9 @@ function(rendu_package_project)
             DESTINATION "${ARG_INCLUDE_DESTINATION}"
     )
 
-    # CMake 配置文件安装目录
+    # ====================================================================
+    # CMake 配置文件安装
+    # ====================================================================
     set("${ARG_NAME}_INSTALL_CMAKEDIR"
             "${INSTALL_DIR_FOR_CMAKE_CONFIGS}/cmake/${ARG_NAME}${ARG_VERSION_SUFFIX}"
             CACHE PATH "CMake package config location relative to the install prefix"
@@ -189,7 +220,9 @@ function(rendu_package_project)
             COMPONENT "${ARG_NAME}_Development"
     )
 
+    # ====================================================================
     # 安装头文件
+    # ====================================================================
     if (NOT DEFINED ARG_INCLUDE_HEADER_PATTERN)
         set(ARG_INCLUDE_HEADER_PATTERN "*")
     endif ()
@@ -203,13 +236,17 @@ function(rendu_package_project)
         )
     endif ()
 
+    # ====================================================================
     # 设置版本变量
+    # ====================================================================
     set(${ARG_NAME}_VERSION
             ${ARG_VERSION}
             CACHE INTERNAL ""
     )
 
+    # ====================================================================
     # CPack 打包支持
+    # ====================================================================
     if (ARG_CPACK)
         if (CPACK_PACKAGE_NAMESPACE)
             set(CPACK_PACKAGE_NAME ${CPACK_PACKAGE_NAMESPACE}-${ARG_NAME})

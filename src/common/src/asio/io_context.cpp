@@ -32,6 +32,11 @@ BEGIN_NAMESPACE_COMMON
             {
                 asio::post(ioContext, std::move(handler));
             }
+
+            // 公开访问方法
+            asio::io_context& getNative() {
+                return ioContext;
+            }
         };
 
         // Executor::Impl实现
@@ -128,6 +133,11 @@ BEGIN_NAMESPACE_COMMON
         void IoContext::stop() const { m_pImpl->ioContext.stop(); }
         bool IoContext::stopped() const { return m_pImpl->ioContext.stopped(); }
         void IoContext::restart() const { m_pImpl->ioContext.restart(); }
+
+        void* IoContext::getNative() const
+        {
+            return const_cast<boost::asio::io_context*>(&m_pImpl->ioContext);
+        }
 
         void IoContext::post(const std::function<void()>& handler) const
         {

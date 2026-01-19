@@ -5,8 +5,8 @@
 #ifndef RENDU_ECS_EXAMPLE_H
 #define RENDU_ECS_EXAMPLE_H
 
-#include "common/ecs/entity.h"
-#include "common/ecs/registry.h"
+#include "../../common/include/common/ecs/entity.h"
+#include "../../common/include/common/ecs/registry_base.h"
 #include <string>
 
 // ============================================================================

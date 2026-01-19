@@ -1,8 +1,13 @@
-# RenduCore - CMake settings for MSVC compiler
-# =========================
-# MSVC 编译器相关设置
-# =========================
+# ====================================================================
+# 模块: msvc/settings
+# 描述: MSVC 编译器相关设置
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
 function(rendu_setup_msvc_options)
+    # ====================================================================
+    # 版本检查
+    # ====================================================================
     set(RENDU_MSVC_EXPECTED_VERSION 19.32)
     set(RENDU_MSVC_EXPECTED_VERSION_STRING "Microsoft Visual Studio 2022 17.2")
 
@@ -14,6 +19,9 @@ function(rendu_setup_msvc_options)
         endif ()
     endif ()
 
+    # ====================================================================
+    # 基础编译选项
+    # ====================================================================
     # 移除 CMake 默认警告级别，统一由 interface target 控制
     string(REGEX REPLACE "/W[0-4] " "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     string(REGEX REPLACE "/W[0-4]$" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -29,6 +37,9 @@ function(rendu_setup_msvc_options)
             INTERFACE
             /permissive-)
 
+    # ====================================================================
+    # 平台特定选项
+    # ====================================================================
     if (RENDU_PLATFORM EQUAL 32)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE")
         rendu_log_info("MSVC: Enabled large address awareness")
@@ -42,6 +53,9 @@ function(rendu_setup_msvc_options)
         rendu_log_info("MSVC: Disabled Safe Exception Handlers for debug builds")
     endif ()
 
+    # ====================================================================
+    # 编译优化选项
+    # ====================================================================
     # 多线程编译
     if ("${CMAKE_MAKE_PROGRAM}" MATCHES "MSBuild")
         target_compile_options(rendu-compile-option-interface
@@ -54,13 +68,15 @@ function(rendu_setup_msvc_options)
     endif ()
 
     # 支持大对象文件
-    if ((RENDU_PLATFORM EQUAL 64) OR (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0.23026.0) OR BUILD_SHARED_LIBS)
         target_compile_options(rendu-compile-option-interface
                 INTERFACE
                 /bigobj)
         rendu_log_info("MSVC: Enabled increased number of sections in object files")
     endif ()
 
+    # ====================================================================
+    # C++ 标准相关选项
+    # ====================================================================
     # 优化 new 行为
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         target_compile_options(rendu-compile-option-interface
@@ -68,7 +84,9 @@ function(rendu_setup_msvc_options)
                 /Zc:throwingNew)
     endif ()
 
+    # ====================================================================
     # 安全相关宏定义
+    # ====================================================================
     target_compile_definitions(rendu-compile-option-interface
             INTERFACE
             _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
@@ -78,6 +96,9 @@ function(rendu_setup_msvc_options)
 
     rendu_log_info("MSVC: 安全相关宏定义已设置")
 
+    # ====================================================================
+    # 警告控制
+    # ====================================================================
     # 忽略部分警告
     target_compile_options(rendu-compile-option-interface
             INTERFACE
@@ -132,6 +153,9 @@ function(rendu_setup_msvc_options)
         rendu_log_info("MSVC: Enabled Address Sanitizer ASan")
     endif ()
 
+    # ====================================================================
+    # 链接器优化
+    # ====================================================================
     # 禁用增量链接，防止 debug 链接卡死
     macro(rendu_disable_incremental_linking variable)
         string(REGEX REPLACE "/INCREMENTAL *" "" ${variable} "${${variable}}")

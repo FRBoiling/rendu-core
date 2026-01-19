@@ -1,14 +1,18 @@
-# Rendu 
-# =========================
-# 版本与构建信息生成脚本
-# =========================
+# ====================================================================
+# 模块: genrev
+# 描述: 版本与构建信息生成脚本,自动从 Git 仓库获取版本信息
+# 依赖模块:
+#   - 无
+# ====================================================================
 
 # 处理构建目录变量
 if (NOT RENDU_BUILDDIR)
     set(RENDU_BUILDDIR ${CMAKE_BINARY_DIR})
 endif ()
 
+# ====================================================================
 # GIT 信息处理
+# ====================================================================
 if (RENDU_WITHOUT_GIT)
     set(RENDU_REV_DATE "1970-01-01 00:00:00 +0000")
     set(RENDU_REV_HASH "unknown")
@@ -95,13 +99,17 @@ else ()
     endif ()
 endif ()
 
-# 提取日期信息
+# ====================================================================
+# 日期信息提取
+# ====================================================================
 string(REGEX MATCH "([0-9]+)-([0-9]+)-([0-9]+)" RENDU_REV_DATE_FALLBACK_MATCH ${RENDU_REV_DATE_FALLBACK})
 set(RENDU_REV_YEAR ${CMAKE_MATCH_1})
 set(RENDU_REV_MONTH ${CMAKE_MATCH_2})
 set(RENDU_REV_DAY ${CMAKE_MATCH_3})
 
-# 主机系统信息
+# ====================================================================
+# 主机系统信息获取
+# ====================================================================
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_SYSTEM QUERY OS_NAME)
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_DISTRO QUERY DISTRIB_INFO)
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_SYSTEM_RELEASE QUERY OS_RELEASE)
@@ -119,7 +127,9 @@ if (CMAKE_SCRIPT_MODE_FILE)
     include(${CMAKE_ROOT}/Modules/CMakeDetermineSystem.cmake)
 endif ()
 
-# 生成 revision_data.h
+# ====================================================================
+# 生成版本头文件
+# ====================================================================
 configure_file(
         "${CMAKE_SOURCE_DIR}/revision_data.h.in.cmake"
         "${RENDU_BUILDDIR}/revision_data.h"

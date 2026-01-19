@@ -7,6 +7,10 @@
 
 BEGIN_NAMESPACE_COMMON
 
+// ============================================================================
+// Git 版本信息
+// ============================================================================
+
 char const* GitRevision::GetHash()
 {
     return RENDU_GIT_COMMIT_HASH;
@@ -21,6 +25,10 @@ char const* GitRevision::GetBranch()
 {
     return RENDU_GIT_COMMIT_BRANCH;
 }
+
+// ============================================================================
+// 构建系统信息
+// ============================================================================
 
 char const* GitRevision::GetCMakeCommand()
 {
@@ -42,7 +50,7 @@ char const* GitRevision::GetHostOSVersion()
 #endif
     "; "
 #endif
-    RENDU_BUILD_HOST_SYSTEM     " "    RENDU_BUILD_HOST_SYSTEM_VERSION;
+    RENDU_BUILD_HOST_SYSTEM " " RENDU_BUILD_HOST_SYSTEM_VERSION;
 }
 
 char const* GitRevision::GetBuildDirectory()
@@ -54,6 +62,10 @@ char const* GitRevision::GetSourceDirectory()
 {
     return RENDU_BUILD_CMAKE_SOURCE_DIRECTORY;
 }
+
+// ============================================================================
+// 数据库配置
+// ============================================================================
 
 char const* GitRevision::GetMySQLExecutable()
 {
@@ -70,10 +82,14 @@ char const* GitRevision::GetHotfixesDatabase()
     return DATABASE_HOTFIXES_DATABASE;
 }
 
+// ============================================================================
+// 版本和版权信息
+// ============================================================================
+
 #ifndef RENDU_API_USE_DYNAMIC_LINKING
-#  define RENDU_LINKAGE_TYPE_STR "Static"
+  #define RENDU_LINKAGE_TYPE_STR "Static"
 #else
-#  define RENDU_LINKAGE_TYPE_STR "Dynamic"
+  #define RENDU_LINKAGE_TYPE_STR "Dynamic"
 #endif
 
 char const* GitRevision::GetFullVersion()

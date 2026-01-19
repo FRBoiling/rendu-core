@@ -6,8 +6,8 @@
 #ifndef RENDU_ECS_ARCHIVE_H
 #define RENDU_ECS_ARCHIVE_H
 
-#include "common/ecs/entity.h"
 #include "common/define.h"
+#include "../ecs/entity.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -18,7 +18,6 @@
 #include <iostream>
 
 BEGIN_NAMESPACE_ECS
-
     // ============================================================================
     // 序列化版本
     // ============================================================================
@@ -73,17 +72,17 @@ BEGIN_NAMESPACE_ECS
         explicit OutputArchive(std::ostream& os);
         virtual ~OutputArchive() = default;
 
-    /**
-     * @brief 序列化注册表
-     */
-    void save(const class RegistryOptimized& registry);
+        /**
+         * @brief 序列化注册表
+         */
+        void save(const class RegistryOptimized& registry);
 
-    /**
-     * @brief 保存到文件
-     */
-    static bool saveToFile(
-        const class RegistryOptimized& registry,
-        const std::string& filename);
+        /**
+         * @brief 保存到文件
+         */
+        static bool saveToFile(
+            const class RegistryOptimized& registry,
+            const std::string& filename);
 
     protected:
         /**
@@ -142,17 +141,17 @@ BEGIN_NAMESPACE_ECS
         explicit InputArchive(std::istream& is);
         virtual ~InputArchive() = default;
 
-    /**
-     * @brief 反序列化到注册表
-     */
-    void load(class RegistryOptimized& registry);
+        /**
+         * @brief 反序列化到注册表
+         */
+        void load(class RegistryOptimized& registry);
 
-    /**
-     * @brief 从文件加载
-     */
-    static bool loadFromFile(
-        class RegistryOptimized& registry,
-        const std::string& filename);
+        /**
+         * @brief 从文件加载
+         */
+        static bool loadFromFile(
+            class RegistryOptimized& registry,
+            const std::string& filename);
 
     protected:
         /**

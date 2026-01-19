@@ -1,9 +1,14 @@
 //
-// ECS 性能基准测试
-// 使用 Catch2 框架
+// ECS 性能基准测试单元测试
+//
+// 测试标签说明:
+// [performance][create]   - 创建性能测试
+// [performance][view]      - 遍历性能测试
+// [performance][group]     - 分组性能测试
+// [performance][dynamic]   - 动态组件性能测试
 //
 
-#include "common/ecs/registry_optimized.h"
+#include "../common/include/common/ecs/registry_optimized.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <chrono>

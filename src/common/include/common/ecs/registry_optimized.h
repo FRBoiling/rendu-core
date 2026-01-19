@@ -5,9 +5,10 @@
 #ifndef RENDU_ECS_REGISTRY_OPTIMIZED_H
 #define RENDU_ECS_REGISTRY_OPTIMIZED_H
 
-#include "common/ecs/archetype.h"
-#include "common/ecs/entity.h"
-#include "common/ecs/events.h"
+#include "common/define.h"
+#include "archetype.h"
+#include "entity.h"
+#include "common/events/events.h"
 #include "common/utils/types.h"
 #include <memory>
 #include <vector>
@@ -20,12 +21,13 @@
 #include <functional>
 #include <sstream>
 
-#include "profiler.h"
-#include "cache_analyzer.h"
+#include "../profiling/profiler.h"
+#include "../profiling/cache_analyzer.h"
 
 BEGIN_NAMESPACE_ECS
 
     class CacheAnalyzer;
+    class ArchetypeMigrator;
 
     // ============================================================================
     // 类型擦除组件存储
@@ -83,6 +85,8 @@ BEGIN_NAMESPACE_ECS
      */
     class RC_COMMON_API RegistryOptimized
     {
+        friend class ArchetypeMigrator;
+
     public:
         RegistryOptimized();
         ~RegistryOptimized();
@@ -137,9 +141,6 @@ BEGIN_NAMESPACE_ECS
             auto* archetype = getOrCreateArchetype<ComponentTypes...>();
             archetype->reserve(archetype->size() + count);
 
-            // 记录组件类型
-            std::vector<std::type_index> componentTypes = {std::type_index(typeid(ComponentTypes))...};
-
             for (size_t i = 0; i < count; ++i)
             {
                 auto entity = create();
@@ -149,7 +150,7 @@ BEGIN_NAMESPACE_ECS
                 setEntityArchetype(entity.index(), archetype);
 
                 // 记录实体组件类型
-                m_impl.entityComponentTypes[entity.index()] = componentTypes;
+                recordEntityComponentTypes<ComponentTypes...>(entity.index());
             }
 
             return entities;
@@ -182,7 +183,9 @@ BEGIN_NAMESPACE_ECS
                 auto components = typedArchetype->get(entity.index());
 
                 // 触发 on_destroy 信号
-                emitDestroySignals<ComponentTypes...>(entity, std::get<ComponentTypes&>(components)...);
+                std::apply([this, entity](auto&... comps) {
+                    emitDestroySignals<ComponentTypes...>(entity, comps...);
+                }, components);
 
                 // 从 Archetype 中移除实体
                 typedArchetype->remove(index);
@@ -191,6 +194,9 @@ BEGIN_NAMESPACE_ECS
 
             // 清理动态组件映射
             m_impl.entityComponents.erase(index);
+
+            // 清理实体组件类型映射
+            m_impl.entityComponentTypes.erase(index);
 
             // 增加版本号（使旧的 Entity 引用失效）
             if (index < m_impl.entityVersions.size())
@@ -247,6 +253,7 @@ BEGIN_NAMESPACE_ECS
         template <typename... ComponentTypes, typename... Args>
         void emplace(Entity entity, Args&&... args)
         {
+            fprintf(stderr, "Registry::emplace: entity=%u components=%zu\n", entity.index(), sizeof...(ComponentTypes));
             auto* currentArchetype = getEntityArchetype(entity.index());
 
             if (currentArchetype)
@@ -264,12 +271,16 @@ BEGIN_NAMESPACE_ECS
                     // 记录组件类型
                     recordEntityComponentTypes<ComponentTypes...>(entity.index());
 
-                    // 触发 on_construct 信号
-                    emitConstructSignals<ComponentTypes...>(entity, std::forward<Args>(args)...);
+                    // 获取组件引用并触发 on_construct 信号
+                    auto components = targetArchetype->get(entity.index());
+                    std::apply([this, entity](auto&... comps) {
+                        emitConstructSignals<ComponentTypes...>(entity, comps...);
+                    }, components);
                 }
                 else
                 {
                     // 实体已在正确的 Archetype 中（替换组件）
+                    fprintf(stderr, "Registry::emplace (update) entity=%u\n", entity.index());
                     targetArchetype->emplace(entity.index(), std::forward<Args>(args)...);
 
                     // 记录组件类型
@@ -283,6 +294,7 @@ BEGIN_NAMESPACE_ECS
             else
             {
                 // 新实体，直接添加
+                fprintf(stderr, "Registry::emplace (new) entity=%u\n", entity.index());
                 auto* archetype = getOrCreateArchetype<ComponentTypes...>();
                 archetype->emplace(entity.index(), std::forward<Args>(args)...);
                 setEntityArchetype(entity.index(), archetype);
@@ -293,8 +305,11 @@ BEGIN_NAMESPACE_ECS
                 // 同时将组件添加到动态组件映射中（用于视图查询）
                 addComponentsToDynamicMap<ComponentTypes...>(entity.index(), std::forward<Args>(args)...);
 
-                // 触发 on_construct 信号
-                emitConstructSignals<ComponentTypes...>(entity, std::forward<Args>(args)...);
+                // 获取组件引用并触发 on_construct 信号
+                auto components = archetype->get(entity.index());
+                std::apply([this, entity](auto&... comps) {
+                    emitConstructSignals<ComponentTypes...>(entity, comps...);
+                }, components);
             }
         }
 
@@ -306,11 +321,13 @@ BEGIN_NAMESPACE_ECS
         template <typename ComponentType, typename... Args>
         ComponentType& emplaceSingle(Entity entity, Args&&... args)
         {
+            fprintf(stderr, "Registry::emplaceSingle: entity=%u type=%s\n", entity.index(), typeid(ComponentType).name());
             auto* currentArchetype = getEntityArchetype(entity.index());
 
             if (!currentArchetype)
             {
                 // 新实体，直接添加
+                fprintf(stderr, "Registry::emplaceSingle (new) entity=%u\n", entity.index());
                 auto* archetype = getOrCreateArchetype<ComponentType>();
                 archetype->emplace(entity.index(), std::forward<Args>(args)...);
                 setEntityArchetype(entity.index(), archetype);
@@ -341,11 +358,27 @@ BEGIN_NAMESPACE_ECS
                     // 组件已存在，更新值并返回引用
                     auto& typedComp = static_cast<TypedComponent<ComponentType>*>(comp.get())->get();
                     typedComp = ComponentType(std::forward<Args>(args)...);
+
+                    // 同时更新 Archetype 中的组件数据（如果实体在该 Archetype 中）
+                    if (currentArchetype && currentArchetype->contains(entity.index()))
+                    {
+                        // 尝试从 Archetype 中获取并更新组件
+                        auto* archetypeComp = tryGetFromArchetype<ComponentType>(currentArchetype, entity.index());
+                        if (archetypeComp)
+                        {
+                            *archetypeComp = typedComp;
+                        }
+                    }
+
+                    // 触发 on_update 信号
+                    emitOnUpdate(entity, typedComp);
+
                     return typedComp;
                 }
             }
 
             // 组件不存在，添加到动态组件映射中
+            fprintf(stderr, "Registry::emplaceSingle (dynamic add) entity=%u type=%s\n", entity.index(), typeid(ComponentType).name());
             auto newComp = std::make_unique<TypedComponent<ComponentType>>(
                 ComponentType(std::forward<Args>(args)...)
             );
@@ -642,9 +675,9 @@ BEGIN_NAMESPACE_ECS
         {
             // 先检查动态组件映射
             auto it = m_impl.entityComponents.find(entity.index());
-            if (it != m_impl.entityComponents.end()) {
+            if (it != m_impl.entityComponents.end() && !it->second.empty()) {
                 for (const auto& comp : it->second) {
-                    if (comp->type() == typeid(ComponentType)) {
+                    if (comp && comp->type() == typeid(ComponentType)) {
                         return true;
                     }
                 }
@@ -652,7 +685,7 @@ BEGIN_NAMESPACE_ECS
 
             // 检查实体组件类型映射
             auto typeIt = m_impl.entityComponentTypes.find(entity.index());
-            if (typeIt != m_impl.entityComponentTypes.end()) {
+            if (typeIt != m_impl.entityComponentTypes.end() && !typeIt->second.empty()) {
                 for (const auto& typeIndex : typeIt->second) {
                     if (typeIndex == std::type_index(typeid(ComponentType))) {
                         return true;
@@ -674,8 +707,9 @@ BEGIN_NAMESPACE_ECS
         class View
         {
         public:
-            View(std::vector<Archetype<ComponentTypes...>*>&& archetypes)
+            View(std::vector<Archetype<ComponentTypes...>*>&& archetypes, CacheAnalyzer* cacheAnalyzer = nullptr)
                 : m_archetypes(std::move(archetypes))
+                , m_cacheAnalyzer(cacheAnalyzer)
             {}
 
             /**
@@ -700,6 +734,26 @@ BEGIN_NAMESPACE_ECS
                 for (auto* archetype : m_archetypes)
                 {
                     archetype->each(std::forward<Func>(func));
+
+                    // 记录组件访问到缓存分析器
+                    if (m_cacheAnalyzer && m_cacheAnalyzer->isProfiling())
+                    {
+                        // 假设线性访问（SOA 布局通常是线性的）
+                        (recordComponentAccess<ComponentTypes>(archetype->size(), true), ...);
+                    }
+                }
+            }
+
+        private:
+            template <typename ComponentType>
+            void recordComponentAccess(size_t count, bool isLinear) const
+            {
+                if (m_cacheAnalyzer)
+                {
+                    for (size_t i = 0; i < count; ++i)
+                    {
+                        m_cacheAnalyzer->recordAccess(typeid(ComponentType).name(), true, isLinear);
+                    }
                 }
             }
 
@@ -785,6 +839,7 @@ BEGIN_NAMESPACE_ECS
 
         private:
             std::vector<Archetype<ComponentTypes...>*> m_archetypes;
+            CacheAnalyzer* m_cacheAnalyzer = nullptr;
         };
 
         /**
@@ -796,10 +851,12 @@ BEGIN_NAMESPACE_ECS
         public:
             FilteredView(RegistryOptimized* registry,
                         std::vector<ArchetypeBase*>&& archetypes,
-                        std::function<bool(const ArchetypeBase*)> filter)
+                        std::function<bool(const ArchetypeBase*)> filter,
+                        CacheAnalyzer* cacheAnalyzer = nullptr)
                 : m_registry(registry),
                   m_archetypes(std::move(archetypes)),
-                  m_filter(std::move(filter))
+                  m_filter(std::move(filter)),
+                  m_cacheAnalyzer(cacheAnalyzer)
             {}
 
             /**
@@ -810,11 +867,14 @@ BEGIN_NAMESPACE_ECS
             {
                 // 收集所有已遍历的实体，避免重复
                 std::unordered_set<uint32> visited;
+                size_t totalEntities = 0;
 
                 // 遍历 Archetype 中的实体
                 for (auto* archetype : m_archetypes)
                 {
                     if (!m_filter(archetype)) continue;
+
+                    totalEntities += archetype->size();
 
                     auto* typedArchetype = dynamic_cast<Archetype<ComponentTypes...>*>(archetype);
                     if (typedArchetype)
@@ -950,6 +1010,12 @@ BEGIN_NAMESPACE_ECS
                     auto* typedArchetype = dynamic_cast<Archetype<ComponentTypes...>*>(archetype);
                     if (typedArchetype)
                     {
+                        // 记录组件访问到缓存分析器
+                        if (m_cacheAnalyzer && m_cacheAnalyzer->isProfiling())
+                        {
+                            (recordComponentAccess<ComponentTypes>(typedArchetype->size(), true), ...);
+                        }
+
                         typedArchetype->each(std::forward<Func>(func));
                     }
                 }
@@ -1055,6 +1121,7 @@ BEGIN_NAMESPACE_ECS
 
         private:
             RegistryOptimized* m_registry;
+            CacheAnalyzer* m_cacheAnalyzer = nullptr;
             std::vector<ArchetypeBase*> m_archetypes;
             std::function<bool(const ArchetypeBase*)> m_filter;
 
@@ -1075,6 +1142,18 @@ BEGIN_NAMESPACE_ECS
             auto getComponentRefs(const std::vector<std::unique_ptr<TypeErasedComponent>>& components, std::index_sequence<Is...>)
             {
                 return std::make_tuple(getComponentRef<Ts>(components)...);
+            }
+
+            template <typename ComponentType>
+            void recordComponentAccess(size_t count, bool isLinear) const
+            {
+                if (m_cacheAnalyzer)
+                {
+                    for (size_t i = 0; i < count; ++i)
+                    {
+                        m_cacheAnalyzer->recordAccess(typeid(ComponentType).name(), true, isLinear);
+                    }
+                }
             }
 
             template <typename... Ts>
@@ -1236,6 +1315,7 @@ BEGIN_NAMESPACE_ECS
 
         private:
             RegistryOptimized* m_registry;
+            CacheAnalyzer* m_cacheAnalyzer = nullptr;
             std::vector<ArchetypeBase*> m_archetypes;
             std::function<bool(const ArchetypeBase*)> m_filter;
 
@@ -1256,6 +1336,18 @@ BEGIN_NAMESPACE_ECS
             auto getComponentRefs(const std::vector<std::unique_ptr<TypeErasedComponent>>& components, std::index_sequence<Is...>)
             {
                 return std::make_tuple(getComponentRef<Ts>(components)...);
+            }
+
+            template <typename ComponentType>
+            void recordComponentAccess(size_t count, bool isLinear) const
+            {
+                if (m_cacheAnalyzer)
+                {
+                    for (size_t i = 0; i < count; ++i)
+                    {
+                        m_cacheAnalyzer->recordAccess(typeid(ComponentType).name(), true, isLinear);
+                    }
+                }
             }
 
             template <typename... Ts>
@@ -1334,7 +1426,7 @@ BEGIN_NAMESPACE_ECS
             // 返回 FilteredView，它可以在运行时动态类型转换
             auto filter = [](const ArchetypeBase*) -> bool { return true; };
 
-            return FilteredView<ComponentTypes...>(this, std::move(matchingArchetypes), filter);
+            return FilteredView<ComponentTypes...>(this, std::move(matchingArchetypes), filter, m_impl.cacheAnalyzer);
         }
 
         /**
@@ -1360,7 +1452,7 @@ BEGIN_NAMESPACE_ECS
                 return !hasArchetypeComponents<ExcludeTypes...>(archetype);
             };
 
-            return FilteredView<ComponentTypes...>(std::move(matchingArchetypes), filter);
+            return FilteredView<ComponentTypes...>(std::move(matchingArchetypes), filter, m_impl.cacheAnalyzer);
         }
 
         /**
@@ -1382,7 +1474,7 @@ BEGIN_NAMESPACE_ECS
             // 返回所有匹配的 Archetype，用户需要自行处理类型转换
             auto filter = [](const ArchetypeBase*) -> bool { return true; };
 
-            return FilteredView<ComponentTypes...>(std::move(matchingArchetypes), filter);
+            return FilteredView<ComponentTypes...>(std::move(matchingArchetypes), filter, m_impl.cacheAnalyzer);
         }
 
         /**
@@ -1961,7 +2053,16 @@ BEGIN_NAMESPACE_ECS
         {
             if (auto* signals = getComponentSignals<ComponentType>())
             {
-                signals->onConstruct.publish(entity, component);
+                // 日志帮助定位崩溃来源
+                fprintf(stderr, "emitOnConstruct: entity=%u component_addr=%p\n", entity.index(), (void*)std::addressof(component));
+                try {
+                    signals->onConstruct.publish(entity, component);
+                } catch (const std::exception& e) {
+                    fprintf(stderr, "emitOnConstruct exception: %s\n", e.what());
+                } catch (...) {
+                    fprintf(stderr, "emitOnConstruct unknown exception\n");
+                }
+                fprintf(stderr, "emitOnConstruct done: entity=%u\n", entity.index());
             }
         }
 
@@ -1973,7 +2074,15 @@ BEGIN_NAMESPACE_ECS
         {
             if (auto* signals = getComponentSignals<ComponentType>())
             {
-                signals->onUpdate.publish(entity, component);
+                fprintf(stderr, "emitOnUpdate: entity=%u component_addr=%p\n", entity.index(), (void*)std::addressof(component));
+                try {
+                    signals->onUpdate.publish(entity, component);
+                } catch (const std::exception& e) {
+                    fprintf(stderr, "emitOnUpdate exception: %s\n", e.what());
+                } catch (...) {
+                    fprintf(stderr, "emitOnUpdate unknown exception\n");
+                }
+                fprintf(stderr, "emitOnUpdate done: entity=%u\n", entity.index());
             }
         }
 
@@ -1985,37 +2094,43 @@ BEGIN_NAMESPACE_ECS
         {
             if (auto* signals = getComponentSignals<ComponentType>())
             {
-                signals->onDestroy.publish(entity, component);
+                fprintf(stderr, "emitOnDestroy: entity=%u component_addr=%p\n", entity.index(), (void*)std::addressof(component));
+                try {
+                    signals->onDestroy.publish(entity, component);
+                } catch (const std::exception& e) {
+                    fprintf(stderr, "emitOnDestroy exception: %s\n", e.what());
+                } catch (...) {
+                    fprintf(stderr, "emitOnDestroy unknown exception\n");
+                }
+                fprintf(stderr, "emitOnDestroy done: entity=%u\n", entity.index());
             }
         }
 
         /**
          * @brief 为所有组件触发 on_construct 信号
          */
-        template <typename FirstComponent, typename... RestComponents, typename FirstArg, typename... RestArgs>
-        void emitConstructSignals(Entity entity, FirstArg&& firstArg, RestArgs&&... restArgs)
+        template <typename FirstComponent, typename... RestComponents>
+        void emitConstructSignals(Entity entity, FirstComponent& firstComponent, RestComponents&... restComponents)
         {
-            FirstComponent* componentPtr = &firstArg;
-            emitOnConstruct(entity, *componentPtr);
+            emitOnConstruct(entity, firstComponent);
 
             if constexpr (sizeof...(RestComponents) > 0)
             {
-                emitConstructSignals<RestComponents...>(entity, std::forward<RestArgs>(restArgs)...);
+                emitConstructSignals<RestComponents...>(entity, restComponents...);
             }
         }
 
         /**
          * @brief 为所有组件触发 on_update 信号
          */
-        template <typename FirstComponent, typename... RestComponents, typename FirstArg, typename... RestArgs>
-        void emitUpdateSignals(Entity entity, FirstArg&& firstArg, RestArgs&&... restArgs)
+        template <typename FirstComponent, typename... RestComponents>
+        void emitUpdateSignals(Entity entity, FirstComponent& firstComponent, RestComponents&... restComponents)
         {
-            FirstComponent* componentPtr = &firstArg;
-            emitOnUpdate(entity, *componentPtr);
+            emitOnUpdate(entity, firstComponent);
 
             if constexpr (sizeof...(RestComponents) > 0)
             {
-                emitUpdateSignals<RestComponents...>(entity, std::forward<RestArgs>(restArgs)...);
+                emitUpdateSignals<RestComponents...>(entity, restComponents...);
             }
         }
 

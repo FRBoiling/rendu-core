@@ -6,8 +6,9 @@
 #ifndef RENDU_ECS_EVENTS_H
 #define RENDU_ECS_EVENTS_H
 
-#include "common/ecs/entity.h"
-#include "common/ecs/registry_optimized.h"
+#include "common/define.h"
+#include "../ecs/entity.h"
+#include "../ecs/registry_optimized.h"
 #include <functional>
 #include <vector>
 #include <typeindex>
@@ -112,9 +113,17 @@ BEGIN_NAMESPACE_ECS
         template <typename... Args>
         void publish(Args&&... args) const
         {
+            // 复制回调列表，避免在回调中修改监听器列表导致的迭代器失效（重入安全）
+            std::vector<CallbackType> callbacks;
+            callbacks.reserve(static_cast<size_t>(std::distance(m_listeners.begin(), m_listeners.end())));
             for (const auto& listener : m_listeners)
             {
-                listener.callback(std::forward<Args>(args)...);
+                callbacks.push_back(listener.callback);
+            }
+
+            for (const auto& cb : callbacks)
+            {
+                cb(std::forward<Args>(args)...);
             }
         }
 

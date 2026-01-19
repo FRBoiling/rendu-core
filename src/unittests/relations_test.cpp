@@ -1,6 +1,10 @@
 //
-// 关系系统测试
-// 使用 Catch2 框架
+// ECS 关系系统单元测试
+//
+// 测试标签说明:
+// [relations][parent_child] - 实体父子关系测试
+// [relations][query]       - 关系查询测试
+// [relations][complex]     - 复杂关系结构测试
 //
 
 #include "common/ecs/registry_optimized.h"

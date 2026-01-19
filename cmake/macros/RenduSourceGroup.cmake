@@ -1,71 +1,72 @@
-# 源码组织与智能收集
-include(RenduCollectDirectories)
-include(RenduCollectFiles)
+# ====================================================================
+# 模块: RenduSourceGroup
+# 描述: 智能源文件分组，支持多种 IDE 工程视图模式
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
 
-# =============================================
-# 函数: rendu_source_group
-# 描述: 跨平台增强版 source_group，自动处理分隔符、支持批量文件、空分组名归为根分组
+# ====================================================================
+# 宏: rendu_source_group
+# 描述: 跨平台增强版 source_group，自动处理分隔符
 #
 # 参数:
-#   GROUP_NAME - 分组名（自动处理 / -> \，支持空分组）
-#   FILES      - 文件列表（可变参数）
+#   GROUP_NAME - 分组名 (自动处理 / -> \，支持空分组)
+#   FILES      - 文件列表 (可变参数)
 #
 # 用法示例:
-# rendu_source_group("Core/Utils" ${SRC_LIST})
-# rendu_source_group("" ${ROOT_FILES})
-# =============================================
+#   rendu_source_group("Core/Utils" ${SRC_LIST})
+#   rendu_source_group("" ${ROOT_FILES})
+# ====================================================================
 macro(rendu_source_group GROUP_NAME)
     set(files ${ARGN})
+
     # 兼容 Windows 分组分隔符
     if (WIN32)
         string(REPLACE "/" "\\" group "${GROUP_NAME}")
     else ()
         set(group "${GROUP_NAME}")
     endif ()
+
+    # 空分组名归为根分组
     if (group STREQUAL "")
         set(group "\\")
     endif ()
+
     source_group("${group}" FILES ${files})
 endmacro()
 
 # ====================================================================
-# 增强版智能源文件分组器
-#
 # 宏: rendu_source_groups
-# 描述: 根据目录结构组织源文件，支持多种IDE工程视图模式
+# 描述: 根据目录结构组织源文件，支持多种 IDE 工程视图模式
 #
 # 参数:
-#   dir - 源文件根目录(绝对或相对路径)
-#   [EXCLUDE_DIRS dir1 [dir2...]] - 要排除的目录列表
-#   [EXTENSIONS ext1 [ext2...]] - 自定义文件扩展名(默认包含常见C/C++扩展名)
+#   dir          - 源文件根目录 (绝对或相对路径)
+#   EXCLUDE_DIRS - 要排除的目录列表 (可选)
+#   EXTENSIONS   - 自定义文件扩展名 (可选，默认包含常见 C/C++ 扩展名)
 #
 # 控制变量:
-#   RENDU_SOURCE_GROUPING_MODE - 分组模式 [FLAT|HIERARCHICAL|NONE|FOLDERS]
+#   RENDU_SOURCE_GROUPING_MODE - 分组模式 (可选)
 #       FLAT: 一级目录分组
 #       HIERARCHICAL: 完整目录结构分组
-#       FOLDERS: 启用VS文件夹视图的分层分组
-#       NONE: 不分组(默认)
+#       FOLDERS: 启用 VS 文件夹视图的分层分组
+#       NONE: 不分组 (默认)
 #
-# 功能增强:
-#   1. 支持排除特定目录
-#   2. 支持自定义文件扩展名
-#   3. 改进的路径处理
-#   4. 性能优化
-
-# # 基本用法
-# rendu_source_groups(${CMAKE_CURRENT_SOURCE_DIR}/src)
+# 用法示例:
+#   # 基本用法
+#   rendu_source_groups(${CMAKE_CURRENT_SOURCE_DIR}/src)
 #
-# # 高级用法
-# rendu_source_groups(
-#     ${PROJECT_SOURCE_DIR}/libs
-#     EXCLUDE_DIRS
-#         ${PROJECT_SOURCE_DIR}/libs/thirdparty
-#         ${PROJECT_SOURCE_DIR}/libs/tests
-#     EXTENSIONS h hpp cpp inl
-# )
-# # 启用VS文件夹视图
-# set(RENDU_SOURCE_GROUPING_MODE "FOLDERS")
-# rendu_source_groups(${CMAKE_CURRENT_SOURCE_DIR}/core)
+#   # 高级用法
+#   rendu_source_groups(
+#       ${PROJECT_SOURCE_DIR}/libs
+#       EXCLUDE_DIRS
+#           ${PROJECT_SOURCE_DIR}/libs/thirdparty
+#           ${PROJECT_SOURCE_DIR}/libs/tests
+#       EXTENSIONS h hpp cpp inl
+#   )
+#
+#   # 启用 VS 文件夹视图
+#   set(RENDU_SOURCE_GROUPING_MODE "FOLDERS")
+#   rendu_source_groups(${CMAKE_CURRENT_SOURCE_DIR}/core)
 # ====================================================================
 macro(rendu_source_groups dir)
     # 参数解析
@@ -80,11 +81,11 @@ macro(rendu_source_groups dir)
     endif ()
 
     if (NOT EXISTS "${dir}")
-        rendu_log_warn("Directory does not exist: ${dir}")
+        rendu_log_warn("目录不存在: ${dir}")
         return()
     endif ()
 
-    # 检查分组模式(兼容新旧变量名)
+    # 检查分组模式 (兼容新旧变量名)
     if (DEFINED WITH_SOURCE_TREE AND NOT DEFINED RENDU_SOURCE_GROUPING_MODE)
         set(RENDU_SOURCE_GROUPING_MODE "${WITH_SOURCE_TREE}")
     elseif (NOT DEFINED RENDU_SOURCE_GROUPING_MODE)
@@ -95,15 +96,12 @@ macro(rendu_source_groups dir)
 
     # 设置默认扩展名
     if (NOT ARG_EXTENSIONS)
-        set(ARG_EXTENSIONS
-                h hh hpp hxx
-                c cc cpp cxx
-                inl def)
+        set(ARG_EXTENSIONS h hh hpp hxx c cc cpp cxx inl def)
     endif ()
 
     # 仅在有意义的分组模式下执行
     if (NOT grouping_mode STREQUAL "NONE")
-        # 生成GLOB模式
+        # 生成 GLOB 模式
         set(patterns "")
         foreach (ext IN LISTS ARG_EXTENSIONS)
             list(APPEND patterns "${dir}/*.${ext}")
@@ -111,9 +109,10 @@ macro(rendu_source_groups dir)
 
         # 递归收集所有源文件
         file(GLOB_RECURSE elements
-                LIST_DIRECTORIES false
-                RELATIVE "${dir}"
-                ${patterns})
+            LIST_DIRECTORIES false
+            RELATIVE "${dir}"
+            ${patterns}
+        )
 
         # 过滤排除目录
         set(filtered_elements "")
@@ -135,7 +134,7 @@ macro(rendu_source_groups dir)
             endif ()
         endforeach ()
 
-        # 启用VS文件夹视图(仅Windows)
+        # 启用 VS 文件夹视图 (仅 Windows)
         if ((grouping_mode STREQUAL "FOLDERS" OR grouping_mode STREQUAL "HIERARCHICAL_FOLDERS") AND WIN32)
             set_property(GLOBAL PROPERTY USE_FOLDERS ON)
         endif ()
@@ -166,7 +165,7 @@ macro(rendu_source_groups dir)
                 endif ()
             endif ()
 
-            # 应用分组(处理路径特殊字符)
+            # 应用分组 (处理路径特殊字符)
             file(TO_NATIVE_PATH "${dir}/${element}" native_file_path)
             rendu_source_group("${group_name}" "${native_file_path}")
         endforeach ()

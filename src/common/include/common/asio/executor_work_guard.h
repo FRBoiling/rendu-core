@@ -2,6 +2,10 @@
 // Created by 沸腾 on 2025/12/22.
 //
 
+// ============================================================================
+// executor_work_guard.h - 执行器工作守护（防止 I/O 上下文退出）
+// ============================================================================
+
 #ifndef RENDU_WORK_H
 #define RENDU_WORK_H
 
@@ -9,31 +13,51 @@
 #include <memory>
 
 BEGIN_NAMESPACE_COMMON
-    namespace Asio
-    {
-        class IoContext;
 
-        class ExecutorWorkGuard
-        {
-        public:
-            explicit ExecutorWorkGuard(const IoContext& ioContext);
-            ~ExecutorWorkGuard();
+namespace Asio
+{
 
-            // 禁用复制构造和赋值
-            ExecutorWorkGuard(const ExecutorWorkGuard&) = delete;
-            ExecutorWorkGuard& operator=(const ExecutorWorkGuard&) = delete;
+// 前置声明
+class IoContext;
 
-            // 允许移动构造和赋值
-            ExecutorWorkGuard(ExecutorWorkGuard&&) noexcept;
-            ExecutorWorkGuard& operator=(ExecutorWorkGuard&&) noexcept;
+// ============================================================================
+// ExecutorWorkGuard - 执行器工作守护
+// 用于防止 I/O 上下文在没有待处理任务时退出
+// ============================================================================
 
-        private:
-            friend class IoContext;
-            class Impl;
-            std::unique_ptr<Impl> m_pImpl;
-        };
-    } // namespace Asio
+class ExecutorWorkGuard
+{
+public:
+    /**
+     * @brief 构造函数，从 I/O 上下文创建工作守护
+     * @param ioContext I/O 上下文引用
+     */
+    explicit ExecutorWorkGuard(const IoContext& ioContext);
+
+    /**
+     * @brief 析构函数，自动释放工作守护
+     */
+    ~ExecutorWorkGuard();
+
+    // 禁用复制
+    ExecutorWorkGuard(const ExecutorWorkGuard&) = delete;
+    ExecutorWorkGuard& operator=(const ExecutorWorkGuard&) = delete;
+
+    // 支持移动
+    ExecutorWorkGuard(ExecutorWorkGuard&&) noexcept;
+    ExecutorWorkGuard& operator=(ExecutorWorkGuard&&) noexcept;
+
+private:
+    // 友元类声明
+    friend class IoContext;
+
+    // PIMPL 实现
+    class Impl;
+    std::unique_ptr<Impl> m_pImpl;
+};
+
+} // namespace Asio
 
 END_NAMESPACE_COMMON
 
-#endif //RENDU_WORK_H
+#endif // RENDU_WORK_H

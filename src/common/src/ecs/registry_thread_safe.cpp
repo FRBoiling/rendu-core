@@ -2,8 +2,7 @@
 // Created by boil on 2026/1/15.
 //
 
-#include "common/ecs/thread_safe_registry.h"
-#include "common/ecs/registry_optimized.h"
+#include "common/ecs/registry_thread_safe.h"
 
 BEGIN_NAMESPACE_ECS
 
@@ -64,26 +63,26 @@ BEGIN_NAMESPACE_ECS
     }
 
     // ============================================================================
-    // ThreadSafeRegistry 实现
+    // RegistryThreadSafe 实现
     // ============================================================================
 
-    ThreadSafeRegistry::ThreadSafeRegistry() = default;
+    RegistryThreadSafe::RegistryThreadSafe() = default;
 
-    ThreadSafeRegistry::~ThreadSafeRegistry() = default;
+    RegistryThreadSafe::~RegistryThreadSafe() = default;
 
-    Entity ThreadSafeRegistry::create()
+    Entity RegistryThreadSafe::create()
     {
         WriteLockGuard lock(m_lock);
         return m_registry.create();
     }
 
-    void ThreadSafeRegistry::destroy(Entity entity)
+    void RegistryThreadSafe::destroy(Entity entity)
     {
         WriteLockGuard lock(m_lock);
         m_registry.destroy(entity);
     }
 
-    bool ThreadSafeRegistry::valid(Entity entity) const
+    bool RegistryThreadSafe::valid(Entity entity) const
     {
         ReadLockGuard lock(m_lock);
         return m_registry.valid(entity);

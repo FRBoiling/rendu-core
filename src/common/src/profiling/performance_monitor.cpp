@@ -2,18 +2,16 @@
 // Performance Monitor 实现
 //
 
-#include "common/ecs/performance_monitor.h"
-#include "common/ecs/registry_optimized.h"
-#include "common/ecs/archive.h"
-#include "common/ecs/profiler.h"
+#include "common/profiling/performance_monitor.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 
-BEGIN_NAMESPACE_ECS
+#include "common/ecs/registry_optimized.h"
 
-PerformanceMonitor::PerformanceMonitor()
+BEGIN_NAMESPACE_ECS
+    PerformanceMonitor::PerformanceMonitor()
     : m_config()
     , m_frameCount(0)
     , m_accumulatedTime(0.0f)

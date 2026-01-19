@@ -1,5 +1,13 @@
-# 设置 Clang 编译器相关选项
+# ====================================================================
+# 模块: clang/settings
+# 描述: Clang 编译器相关选项设置
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
 function(rendu_setup_clang_options)
+    # ====================================================================
+    # 版本检查
+    # ====================================================================
     set(RENDU_CLANG_EXPECTED_VERSION 11.0.0)
     if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
         set(RENDU_CLANG_EXPECTED_VERSION 12.0.5)
@@ -11,6 +19,9 @@ function(rendu_setup_clang_options)
         rendu_log_info("Clang: Minimum version required is ${RENDU_CLANG_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
     endif ()
 
+    # ====================================================================
+    # 警告选项
+    # ====================================================================
     if (RENDU_WITH_WARNINGS)
         target_compile_options(rendu-warning-interface
                 INTERFACE
@@ -26,6 +37,9 @@ function(rendu_setup_clang_options)
         rendu_log_info("Clang: All warnings enabled")
     endif ()
 
+    # ====================================================================
+    # 调试选项
+    # ====================================================================
     if (RENDU_WITH_COREDEBUG)
         target_compile_options(rendu-compile-option-interface
                 INTERFACE
@@ -33,6 +47,9 @@ function(rendu_setup_clang_options)
         rendu_log_info("Clang: Debug-flags set (-g3)")
     endif ()
 
+    # ====================================================================
+    # Sanitizer 选项
+    # ====================================================================
     if (RENDU_ASAN)
         target_compile_options(rendu-compile-option-interface
                 INTERFACE
@@ -89,6 +106,9 @@ function(rendu_setup_clang_options)
         rendu_log_info("Clang: Enabled Thread Sanitizer TSan")
     endif ()
 
+    # ====================================================================
+    # 构建时间分析
+    # ====================================================================
     if (RENDU_BUILD_TIME_ANALYSIS)
         target_compile_options(rendu-compile-option-interface
                 INTERFACE
@@ -96,12 +116,18 @@ function(rendu_setup_clang_options)
         rendu_log_info("Clang: Enabled build time analysis (-ftime-trace)")
     endif ()
 
+    # ====================================================================
+    # 基础编译选项
+    # ====================================================================
     target_compile_options(rendu-compile-option-interface
             INTERFACE
             -Wno-narrowing
             -Wno-deprecated-register
             -Wno-undefined-inline)
 
+    # ====================================================================
+    # 动态链接选项
+    # ====================================================================
     if (BUILD_SHARED_LIBS)
         target_compile_options(rendu-compile-option-interface
                 INTERFACE

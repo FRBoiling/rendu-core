@@ -15,7 +15,9 @@ BEGIN_NAMESPACE_COMMON
         APPENDER_FLAGS_PREFIX_LOGLEVEL = 0x02,
         APPENDER_FLAGS_PREFIX_LOGFILTERTYPE = 0x04,
         APPENDER_FLAGS_USE_TIMESTAMP = 0x08, // only used by FileAppender
-        APPENDER_FLAGS_MAKE_FILE_BACKUP = 0x10 // only used by FileAppender
+        APPENDER_FLAGS_MAKE_FILE_BACKUP = 0x10, // only used by FileAppender
+        APPENDER_FLAGS_ASYNC = 0x20, // 异步写入模式（基于 Asio）
+        APPENDER_FLAGS_ASYNC_BATCH_SIZE_MASK = 0xC0 // 批量大小掩码（高2位用于存储批量大小）
     };
 
     // 位运算符重载，支持 enum class 的位操作
