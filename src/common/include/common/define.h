@@ -133,6 +133,44 @@
 // API 导出/导入控制
 // ============================================================================
 
+// Common 层 API 定义
+#if defined(RENDU_COMMON_EXPORT)
+  #if defined(_WIN32) || defined(_WIN64)
+    #define RENDU_COMMON_API __declspec(dllexport)
+  #else
+    #define RENDU_COMMON_API __attribute__((visibility("default")))
+  #endif
+#elif defined(RENDU_COMMON_EXPORT)
+  #if defined(_WIN32) || defined(_WIN64)
+    #define RENDU_COMMON_API __declspec(dllimport)
+  #else
+    #define RENDU_COMMON_API
+  #endif
+#else
+  #define RENDU_COMMON_API
+#endif
+
+// Core 层 API 定义
+#if defined(RENDU_CORE_EXPORT)
+  #if defined(_WIN32) || defined(_WIN64)
+    #define RENDU_CORE_API __declspec(dllexport)
+  #else
+    #define RENDU_CORE_API __attribute__((visibility("default")))
+  #endif
+#elif defined(RENDU_CORE_IMPORT)
+  #if defined(_WIN32) || defined(_WIN64)
+    #define RENDU_CORE_API __declspec(dllimport)
+  #else
+    #define RENDU_CORE_API
+  #endif
+#else
+  #define RENDU_CORE_API
+#endif
+
+// ============================================================================
+// 旧版 API 导出/导入控制（保持兼容性）
+// ============================================================================
+
 #ifdef RENDU_API_USE_DYNAMIC_LINKING
   #if RENDU_COMPILER == RENDU_COMPILER_MICROSOFT
     #define RC_API_EXPORT __declspec(dllexport)
@@ -226,9 +264,5 @@ typedef uint8_t uint8;
 
 #define BEGIN_NAMESPACE_COMMON namespace Rendu {
 #define END_NAMESPACE_COMMON } // namespace Rendu
-
-// ECS 命名空间定义
-#define BEGIN_NAMESPACE_ECS BEGIN_NAMESPACE_COMMON
-#define END_NAMESPACE_ECS END_NAMESPACE_COMMON
 
 #endif // RENDU_COMMON_DEFINE_H

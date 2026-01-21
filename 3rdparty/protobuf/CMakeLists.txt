@@ -6,6 +6,7 @@ rendu_find_package(
         NAME Protobuf
         GITHUB_REPOSITORY protocolbuffers/protobuf
         GIT_TAG v29.1
+        CMAKE_ARGS -Dprotobuf_BUILD_TESTS=OFF
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)

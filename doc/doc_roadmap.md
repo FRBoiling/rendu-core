@@ -4,20 +4,23 @@
 
 ---
 
-## 阶段 0: 环境准备
+## 阶段 0: 环境准备 ✅
 
 ### 目标
 - 确保开发环境配置正确
 - 第三方库引入和验证
 
 ### 任务
-- [ ] 修复 RenduPackageManager.cmake bug
-- [ ] 验证 fmt、boost、entt、spdlog、protobuf 依赖正常
-- [ ] 配置 common 和 core 为动态库
+- [x] 修复 RenduPackageManager.cmake bug
+- [x] 验证 fmt (v12.0.0)、boost (v1.90.0)、entt (v3.16.0)、spdlog (v1.15.0)、protobuf (v29.1)、catch2 (v3.11.0) 依赖正常
+- [x] 配置 common 和 core 为动态库
+- [x] 配置导出宏和符号可见性
+- [x] 创建 tests 目录结构
 
 ### 验收标准
-- CMake 配置成功，无错误
-- 所有第三方库可正常 find_package
+- [x] CMake 配置成功，无错误
+- [x] 所有第三方库可正常 find_package
+- [ ] 构建验证（待执行）
 
 ---
 

@@ -8,6 +8,12 @@
 
 ---
 
+## 阶段 0: 环境准备 ✅
+
+- **[阶段 0: 环境准备](doc_phase0_env.md)** - CMake 配置、第三方库验证、动态库配置
+
+---
+
 ## Common 层文档 (阶段 1-8)
 
 - **[阶段 1: util](doc_phase1_util.md)** - 基础工具 (define/string/time/error/container)
@@ -41,7 +47,7 @@
 ## 开发顺序
 
 ```
-阶段 0: 环境准备
+阶段 0: 环境准备 ✅
     ↓
 阶段 1-8: Common 层 (从底向上)
     ↓

@@ -17,5 +17,6 @@ rendu_add_library(
         PUBLIC_LINK
         RenduCore::common
         DEFINES
+        RENDU_CORE_EXPORT
         ALIAS ON
 )
