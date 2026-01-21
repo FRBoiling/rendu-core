@@ -1244,7 +1244,7 @@ function(rendu_add_package)
                     "${ARGS_OPTIONS}"
             )
         endif ()
-        _get_fetch_properties(${pkgName} sourceDir binaryDir)
+        _get_fetch_properties(${ARGS_NAME} sourceDir binaryDir)
     endif ()
 
     set(${ARGS_NAME}_ADDED YES)

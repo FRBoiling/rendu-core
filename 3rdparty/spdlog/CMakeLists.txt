@@ -1,11 +1,11 @@
 #**********************************
-#  Created by boil on 2026/1/9.
+#  Created by boil on 2026/1/21.
 #**********************************
 
 rendu_find_package(
-        NAME fmt
-        GITHUB_REPOSITORY fmtlib/fmt
-        GIT_TAG 12.0.0
+        NAME spdlog
+        GITHUB_REPOSITORY gabime/spdlog
+        GIT_TAG v1.15.0
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
@@ -15,7 +15,7 @@ rendu_add_library(
         PROJECT ${PROJECT_NAME}
         NAME ${FOLDER_NAME}
         PRIVATE_LINK rendu-dependency-interface
-        PUBLIC_LINK fmt::fmt
+        PUBLIC_LINK spdlog::spdlog
         DEFINES
         INTERFACE
         ALIAS ON
