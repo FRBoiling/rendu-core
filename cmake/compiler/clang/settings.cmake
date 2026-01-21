@@ -1,154 +1,143 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
-# Set build-directive (used in core to tell which buildtype we used)
-target_compile_definitions(rendu-compile-option-interface
-    INTERFACE
-    -D_BUILD_DIRECTIVE= "$<CONFIG>")
+# ====================================================================
+# 模块: clang/settings
+# 描述: Clang 编译器相关选项设置
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
+function(rendu_setup_clang_options)
+    # ====================================================================
+    # 版本检查
+    # ====================================================================
+    set(RENDU_CLANG_EXPECTED_VERSION 11.0.0)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+        set(RENDU_CLANG_EXPECTED_VERSION 12.0.5)
+    endif ()
 
-set(CLANG_EXPECTED_VERSION 7.0.0)
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS RENDU_CLANG_EXPECTED_VERSION)
+        rendu_log_fatal("Clang: RenduCore requires version ${RENDU_CLANG_EXPECTED_VERSION} to build but found ${CMAKE_CXX_COMPILER_VERSION}")
+    else ()
+        rendu_log_info("Clang: Minimum version required is ${RENDU_CLANG_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
+    endif ()
 
-if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS CLANG_EXPECTED_VERSION)
-  message(FATAL_ERROR "Clang: RenduCore requires version ${CLANG_EXPECTED_VERSION} to build but found ${CMAKE_CXX_COMPILER_VERSION}")
-else ()
-  message(STATUS "Clang: Minimum version required is ${CLANG_EXPECTED_VERSION}, found ${CMAKE_CXX_COMPILER_VERSION} - ok!")
-endif ()
+    # ====================================================================
+    # 警告选项
+    # ====================================================================
+    if (RENDU_WITH_WARNINGS)
+        target_compile_options(rendu-warning-interface
+                INTERFACE
+                -W
+                -Wall
+                -Wextra
+                -Wimplicit-fallthrough
+                -Winit-self
+                -Wfatal-errors
+                -Wno-mismatched-tags
+                -Woverloaded-virtual
+                -Wno-missing-field-initializers)
+        rendu_log_info("Clang: All warnings enabled")
+    endif ()
 
-# This tests for a bug in clang-7 that causes linkage to fail for 64-bit from_chars (in some configurations)
-# If the clang requirement is bumped to >= clang-8, you can remove this check, as well as
-# the associated ifdef block in src/common/utils/StringConvert.h
-include(CheckCXXSourceCompiles)
+    # ====================================================================
+    # 调试选项
+    # ====================================================================
+    if (RENDU_WITH_COREDEBUG)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -g3)
+        rendu_log_info("Clang: Debug-flags set (-g3)")
+    endif ()
 
-check_cxx_source_compiles("
-#include <charconv>
-#include <cstdint>
+    # ====================================================================
+    # Sanitizer 选项
+    # ====================================================================
+    if (RENDU_ASAN)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=address
+                -fsanitize-recover=address
+                -fsanitize-address-use-after-scope)
+        target_link_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=address
+                -fsanitize-recover=address
+                -fsanitize-address-use-after-scope)
+        rendu_log_info("Clang: Enabled Address Sanitizer ASan")
+    endif ()
 
-int main()
-{
-    uint64_t n;
-    char const c[] = \"0\";
-    std::from_chars(c, c+1, n);
-    return static_cast<int>(n);
-}
-" CLANG_HAVE_PROPER_CHARCONV)
+    if (RENDU_MSAN)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=memory
+                -fsanitize-memory-track-origins
+                -mllvm
+                -msan-keep-going=1)
+        target_link_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=memory
+                -fsanitize-memory-track-origins)
+        rendu_log_info("Clang: Enabled Memory Sanitizer MSan")
+    endif ()
 
-if (NOT CLANG_HAVE_PROPER_CHARCONV)
-  message(STATUS "Clang: Detected from_chars bug for 64-bit integers, workaround enabled")
-  target_compile_definitions(rendu-compile-option-interface
-      INTERFACE
-      -DRENDU_NEED_CHARCONV_WORKAROUND
-      )
-endif ()
+    if (RENDU_UBSAN)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=undefined)
+        target_link_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=undefined)
+        rendu_log_info("Clang: Enabled Undefined Behavior Sanitizer UBSan")
+    endif ()
 
-if (RD_WITH_WARNINGS)
-  target_compile_options(rendu-warning-interface
-      INTERFACE
-      -W
-      -Wall
-      -Wextra
-      -Wimplicit-fallthrough
-      -Winit-self
-      -Wfatal-errors
-      -Wno-mismatched-tags
-      -Woverloaded-virtual)
+    if (RENDU_TSAN)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=thread)
+        target_link_options(rendu-compile-option-interface
+                INTERFACE
+                -fno-omit-frame-pointer
+                -fsanitize=thread)
+        rendu_log_info("Clang: Enabled Thread Sanitizer TSan")
+    endif ()
 
-  message(STATUS "Clang: All warnings enabled")
-endif ()
+    # ====================================================================
+    # 构建时间分析
+    # ====================================================================
+    if (RENDU_BUILD_TIME_ANALYSIS)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -ftime-trace)
+        rendu_log_info("Clang: Enabled build time analysis (-ftime-trace)")
+    endif ()
 
-if (WITH_COREDEBUG)
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -g3)
+    # ====================================================================
+    # 基础编译选项
+    # ====================================================================
+    target_compile_options(rendu-compile-option-interface
+            INTERFACE
+            -Wno-narrowing
+            -Wno-deprecated-register
+            -Wno-undefined-inline)
 
-  message(STATUS "Clang: Debug-flags set (-g3)")
-endif ()
+    # ====================================================================
+    # 动态链接选项
+    # ====================================================================
+    if (BUILD_SHARED_LIBS)
+        target_compile_options(rendu-compile-option-interface
+                INTERFACE
+                -fPIC)
+        target_compile_options(rendu-hidden-symbols-interface
+                INTERFACE
+                -fvisibility=hidden)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --no-undefined")
+        rendu_log_info("Clang: Disallow undefined symbols")
+    endif ()
+endfunction()
 
-if (ASAN)
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=address
-      -fsanitize-recover=address
-      -fsanitize-address-use-after-scope)
-
-  target_link_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=address
-      -fsanitize-recover=address
-      -fsanitize-address-use-after-scope)
-
-  message(STATUS "Clang: Enabled Address Sanitizer ASan")
-endif ()
-
-if (MSAN)
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=memory
-      -fsanitize-memory-track-origins
-      -mllvm
-      -msan-keep-going=1)
-
-  target_link_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=memory
-      -fsanitize-memory-track-origins)
-
-  message(STATUS "Clang: Enabled Memory Sanitizer MSan")
-endif ()
-
-if (UBSAN)
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=undefined)
-
-  target_link_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=undefined)
-
-  message(STATUS "Clang: Enabled Undefined Behavior Sanitizer UBSan")
-endif ()
-
-if (TSAN)
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=thread)
-
-  target_link_options(rendu-compile-option-interface
-      INTERFACE
-      -fno-omit-frame-pointer
-      -fsanitize=thread)
-
-  message(STATUS "Clang: Enabled Thread Sanitizer TSan")
-endif ()
-
-# -Wno-narrowing needed to suppress a warning in g3d
-# -Wno-deprecated-register is needed to suppress 185 gsoap warnings on Unix systems.
-# -Wno-deprecated-copy needed to suppress a warning in g3d
-target_compile_options(rendu-compile-option-interface
-    INTERFACE
-    -Wno-narrowing
-    -Wno-deprecated-register)
-
-if (RD_BUILD_SHARED_LIBS)
-  # -fPIC is needed to allow static linking in shared libs.
-  # -fvisibility=hidden sets the default visibility to hidden to prevent exporting of all symbols.
-  target_compile_options(rendu-compile-option-interface
-      INTERFACE
-      -fPIC)
-
-  target_compile_options(rendu-hidden-symbols-interface
-      INTERFACE
-      -fvisibility=hidden)
-
-  # --no-undefined to throw errors when there are undefined symbols
-  # (caused through missing RENDU_*_API macros).
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --no-undefined")
-
-  message(STATUS "Clang: Disallow undefined symbols")
-endif ()
+rendu_setup_clang_options()

@@ -1,18 +1,43 @@
-#ifndef __REVISION_DATA_H__
-#define __REVISION_DATA_H__
-#define _HASH                      "@rev_hash@"
-#define _DATE                      "@rev_date@"
-#define _BRANCH                    "@rev_branch@"
-#define _CMAKE_COMMAND             R"(@CMAKE_COMMAND@)"
-#define _CMAKE_VERSION             R"(@CMAKE_VERSION@)"
-#define _CMAKE_HOST_SYSTEM         R"(@CMAKE_HOST_SYSTEM_NAME@ @CMAKE_HOST_SYSTEM_VERSION@)"
-#define _SOURCE_DIRECTORY          R"(@CMAKE_SOURCE_DIR@)"
-#define _BUILD_DIRECTORY           R"(@BUILDDIR@)"
-#define _MYSQL_EXECUTABLE          R"(@MYSQL_EXECUTABLE@)"
-#define VER_COMPANYNAME_STR        "RenduCore Developers"
-#define VER_LEGALCOPYRIGHT_STR     "(c)2022-@rev_year@ RenduCore"
-#define VER_FILEVERSION            0,0,0
-#define VER_FILEVERSION_STR        "@rev_hash@ @rev_date@ (@rev_branch@ branch)"
-#define VER_PRODUCTVERSION         VER_FILEVERSION
-#define VER_PRODUCTVERSION_STR     VER_FILEVERSION_STR
-#endif // __REVISION_DATA_H__
+/* 
+ * 本文件属于 RenduCore 项目
+ *
+ */
+
+#ifndef RENDUCORE_REVISION_DATA_H
+#define RENDUCORE_REVISION_DATA_H
+
+// Git 提交信息
+#define RENDU_GIT_COMMIT_HASH      "@RENDU_REV_HASH@"
+#define RENDU_GIT_COMMIT_DATE      "@RENDU_REV_DATE@"
+#define RENDU_GIT_COMMIT_BRANCH    R"(@RENDU_REV_BRANCH@)"
+
+// 构建主机信息
+#define RENDU_BUILD_HOST_SYSTEM            R"(@RENDU_BUILD_HOST_SYSTEM@)"
+#define RENDU_BUILD_HOST_SYSTEM_VERSION    R"(@RENDU_BUILD_HOST_SYSTEM_RELEASE@)"
+#cmakedefine RENDU_BUILD_HOST_DISTRO_NAME         R"(@RENDU_BUILD_HOST_DISTRO_NAME@)"
+#cmakedefine RENDU_BUILD_HOST_DISTRO_VERSION_ID   R"(@RENDU_BUILD_HOST_DISTRO_VERSION_ID@)"
+
+// 构建目标信息
+#define RENDU_BUILD_PROCESSOR              R"(@CMAKE_SYSTEM_PROCESSOR@)"
+
+// CMake 构建信息
+#define RENDU_BUILD_CMAKE_COMMAND          R"(@CMAKE_COMMAND@)"
+#define RENDU_BUILD_CMAKE_VERSION          R"(@CMAKE_VERSION@)"
+#define RENDU_BUILD_CMAKE_SOURCE_DIRECTORY R"(@CMAKE_SOURCE_DIR@)"
+#define RENDU_BUILD_CMAKE_BUILD_DIRECTORY  R"(@RENDU_BUILDDIR@)"
+
+// Windows 资源定义
+#define RENDU_COMPANYNAME_STR         "RenduCore Developers"
+#define RENDU_LEGALCOPYRIGHT_STR      "(c)2025-@rev_year@ RenduCore"
+#define RENDU_FILEVERSION             0,0,0
+#define RENDU_FILEVERSION_STR         "@rev_hash@ @rev_date@ (@rev_branch@ branch)"
+#define RENDU_PRODUCTVERSION          RENDU_FILEVERSION
+#define RENDU_PRODUCTVERSION_STR      RENDU_FILEVERSION_STR
+
+// Database updater base information
+#define DATABASE_MYSQL_EXECUTABLE   R"(@MYSQL_EXECUTABLE@)"
+#define DATABASE_FULL_DATABASE      "TDB_full_world_1120.25081_2025_08_16.sql"
+#define DATABASE_HOTFIXES_DATABASE  "TDB_full_hotfixes_1120.25081_2025_08_16.sql"
+
+
+#endif // RENDUCORE_REVISION_DATA_H
