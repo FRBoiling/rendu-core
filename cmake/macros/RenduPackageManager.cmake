@@ -1168,8 +1168,8 @@ function(rendu_add_package)
             # 源码目录已缓存/填充，重载 FetchContent 调用
             set(skip_fetch TRUE)
             _override_fetchcontent(
-                    "${lower_case_name}" SOURCE_DIR "${${ARGS_NAME}_SOURCE_DIR}/${ARGS_SOURCE_SUBDIR}"
-                    BINARY_DIR "${${ARGS_NAME}_BINARY_DIR}"
+                    "${lower_case_name}" SOURCE_DIR "${RENDU_PACKAGE_${ARGS_NAME}_SOURCE_DIR}/${ARGS_SOURCE_SUBDIR}"
+                    BINARY_DIR "${RENDU_PACKAGE_${ARGS_NAME}_BINARY_DIR}"
             )
 
         else ()
