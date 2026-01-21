@@ -1,26 +1,34 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
+# ====================================================================
+# 模块: cmake_uninstall
+# 描述: CMake 卸载脚本,用于清理已安装的文件
+# 依赖模块:
+#   - 无
+# ====================================================================
 # from cmake wiki
-IF(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
-  MESSAGE(FATAL_ERROR "Cannot find install manifest: \"@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt\"")
-ENDIF(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+# ====================================================================
+# 检查安装清单文件是否存在
+# ====================================================================
+if (NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+    message(FATAL_ERROR "Cannot find install manifest: \"@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt\"")
+endif ()
 
-FILE(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
-STRING(REGEX REPLACE "\n" ";" files "${files}")
-FOREACH(file ${files})
-  MESSAGE(STATUS "Uninstalling \"${file}\"")
-  IF(EXISTS "${file}")
-    EXEC_PROGRAM(
-      "@CMAKE_COMMAND@" ARGS "-E remove \"${file}\""
-      OUTPUT_VARIABLE rm_out
-      RETURN_VALUE rm_retval
-      )
-    IF("${rm_retval}" STREQUAL 0)
-    ELSE("${rm_retval}" STREQUAL 0)
-      MESSAGE(FATAL_ERROR "Problem when removing \"${file}\"")
-    ENDIF("${rm_retval}" STREQUAL 0)
-  ELSE(EXISTS "${file}")
-    MESSAGE(STATUS "File \"${file}\" does not exist.")
-  ENDIF(EXISTS "${file}")
-ENDFOREACH(file)
+# ====================================================================
+# 读取并卸载已安装的文件
+# ====================================================================
+file(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
+string(REGEX REPLACE "\n" ";" files "${files}")
+foreach (file ${files})
+    message(STATUS "Uninstalling \"${file}\"")
+    if (EXISTS "${file}")
+        execute_process(
+                COMMAND "@CMAKE_COMMAND@" -E remove "${file}"
+                OUTPUT_VARIABLE rm_out
+                RESULT_VARIABLE rm_retval
+        )
+        if (NOT "${rm_retval}" STREQUAL "0")
+            message(FATAL_ERROR "Problem when removing \"${file}\"")
+        endif ()
+    else ()
+        message(STATUS "File \"${file}\" does not exist.")
+    endif ()
+endforeach ()

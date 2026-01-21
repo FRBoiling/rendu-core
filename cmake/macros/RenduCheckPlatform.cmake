@@ -1,25 +1,74 @@
-#**********************************
-#  Created by boil on 2022/8/14.
-#**********************************
+# ====================================================================
+# 模块: RenduCheckPlatform
+# 描述: 平台与编译器检测脚本
+# 依赖模块:
+#   - RenduLogging (日志)
+# ====================================================================
 
-# 检查我们在什么平台上(64位或32位)，并创建一个比CMAKE_SIZEOF_VOID_P更简单的测试
-if(CMAKE_SIZEOF_VOID_P MATCHES 8)
-    set(PLATFORM 64)
-    MESSAGE(STATUS "Detected 64-bit platform")
-else()
-    set(PLATFORM 32)
-    MESSAGE(STATUS "Detected 32-bit platform")
-endif()
+# ====================================================================
+# 函数: rendu_check_platform
+# 描述: 检测平台位数和处理器架构
+# ====================================================================
+function(rendu_check_platform)
+    # 检测 64 位或 32 位平台
+    if (CMAKE_SIZEOF_VOID_P MATCHES 8)
+        set(RENDU_PLATFORM 64)
+    else ()
+        set(RENDU_PLATFORM 32)
+    endif ()
+    set(RENDU_PLATFORM ${RENDU_PLATFORM} PARENT_SCOPE)
+    rendu_log_info("检测到 ${RENDU_PLATFORM}-bit 平台")
 
-IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  MESSAGE(STATUS "current platform: Linux ")
-  include("${CMAKE_SOURCE_DIR}/cmake/platform/linux/settings.cmake")
-ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-  MESSAGE(STATUS "current platform: Windows")
-  include("${CMAKE_SOURCE_DIR}/cmake/platform/win/settings.cmake")
-ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  MESSAGE(STATUS "current platform: Mac OS X")
-  include("${CMAKE_SOURCE_DIR}/cmake/platform/mac/settings.cmake")
-ELSE ()
-  MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
-ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    # 检测处理器架构
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "amd64|x86_64|AMD64")
+        set(RENDU_SYSTEM_PROCESSOR "amd64")
+    elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm|ARM|aarch)64$")
+        set(RENDU_SYSTEM_PROCESSOR "arm64")
+    elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm|ARM)$")
+        set(RENDU_SYSTEM_PROCESSOR "arm")
+    else ()
+        set(RENDU_SYSTEM_PROCESSOR "x86")
+    endif ()
+
+    # 兼容 MSVC 的 -A 平台参数
+    if (CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
+        set(RENDU_SYSTEM_PROCESSOR "x86")
+    elseif (CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
+        set(RENDU_SYSTEM_PROCESSOR "amd64")
+    elseif (CMAKE_GENERATOR_PLATFORM STREQUAL "ARM")
+        set(RENDU_SYSTEM_PROCESSOR "arm")
+    elseif (CMAKE_GENERATOR_PLATFORM STREQUAL "ARM64")
+        set(RENDU_SYSTEM_PROCESSOR "arm64")
+    endif ()
+    set(RENDU_SYSTEM_PROCESSOR ${RENDU_SYSTEM_PROCESSOR} PARENT_SCOPE)
+    rendu_log_info("检测到 ${RENDU_SYSTEM_PROCESSOR} 处理器架构")
+
+    # 平台相关设置
+    if (WIN32)
+        include("${CMAKE_SOURCE_DIR}/cmake/platform/win/settings.cmake")
+    elseif (UNIX)
+        include("${CMAKE_SOURCE_DIR}/cmake/platform/unix/settings.cmake")
+    endif ()
+endfunction()
+
+# ====================================================================
+# 函数: rendu_check_compiler
+# 描述: 检测编译器类型并加载对应配置
+# ====================================================================
+function(rendu_check_compiler)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+        include("${CMAKE_SOURCE_DIR}/cmake/compiler/msvc/settings.cmake")
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        include("${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake")
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        include("${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake")
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+        include("${CMAKE_SOURCE_DIR}/cmake/compiler/icc/settings.cmake")
+    endif ()
+endfunction()
+
+# ====================================================================
+# 自动执行平台和编译器检测
+# ====================================================================
+rendu_check_platform()
+rendu_check_compiler()
