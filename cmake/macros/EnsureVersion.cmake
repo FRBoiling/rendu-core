@@ -1,117 +1,80 @@
-#**********************************
-#  Created by boil on 2022/10/19.
-#**********************************
-# This file defines the following macros for developers to use in ensuring
-# that installed software is of the right version:
+# ====================================================================
+# 模块: EnsureVersion
+# 描述: 版本号检测与比较工具宏,提供版本号标准化、比较和范围检查
+# 依赖模块:
+#   - 无
+# ====================================================================
 #
-# ENSURE_VERSION        - test that a version number is greater than
-#                               or equal to some minimum
-# ENSURE_VERSION_RANGE - test that a version number is greater than
-#                               or equal to some minimum and less than some
-#                               maximum
-# ENSURE_VERSION2       - deprecated, do not use in new code
+# 用法示例:
+# rendu_ensure_version("2.5.31" "flex 2.5.4a" version_ok)
+# rendu_ensure_version_range("0.1.0" ${foocode_version} "0.7.0" foo_version_ok)
 #
 
-# ENSURE_VERSION
-# This macro compares version numbers of the form "x.y.z" or "x.y"
-# ENSURE_VERSION(FOO_MIN_VERSION FOO_VERSION_FOUND FOO_VERSION_OK)
-# will set FOO_VERSION_OK to true if FOO_VERSION_FOUND >= FOO_MIN_VERSION
-# Leading and trailing text is ok, e.g.
-# ENSURE_VERSION("2.5.31" "flex 2.5.4a" VERSION_OK)
-# which means 2.5.31 is required and "flex 2.5.4a" is what was found on the system
-
-# Copyright (c) 2006, David Faure, <faure@kde.org>
-# Copyright (c) 2007, Will Stephenson <wstephenson@kde.org>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-# ENSURE_VERSION_RANGE
-# This macro ensures that a version number of the form
-# "x.y.z" or "x.y" falls within a range defined by
-# min_version <= found_version < max_version.
-# If this expression holds, FOO_VERSION_OK will be set TRUE
-#
-# Example: ENSURE_VERSION_RANGE3("0.1.0" ${FOOCODE_VERSION} "0.7.0" FOO_VERSION_OK)
-#
-# This macro will break silently if any of x,y,z are greater than 100.
-#
-# Copyright (c) 2007, Will Stephenson <wstephenson@kde.org>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-# NORMALIZE_VERSION
-# Helper macro to convert version numbers of the form "x.y.z"
-# to an integer equal to 10^4 * x + 10^2 * y + z
-#
-# This macro will break silently if any of x,y,z are greater than 100.
-#
-# Copyright (c) 2006, David Faure, <faure@kde.org>
-# Copyright (c) 2007, Will Stephenson <wstephenson@kde.org>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-# CHECK_RANGE_INCLUSIVE_LOWER
-# Helper macro to check whether x <= y < z
-#
-# Copyright (c) 2007, Will Stephenson <wstephenson@kde.org>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-MACRO(NORMALIZE_VERSION _requested_version _normalized_version)
-    STRING(REGEX MATCH "[^0-9]*[0-9]+\\.[0-9]+\\.[0-9]+.*" _threePartMatch "${_requested_version}")
-    if(_threePartMatch)
-    # parse the parts of the version string
-        STRING(REGEX REPLACE "[^0-9]*([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" _major_vers "${_requested_version}")
-        STRING(REGEX REPLACE "[^0-9]*[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" _minor_vers "${_requested_version}")
-        STRING(REGEX REPLACE "[^0-9]*[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" _patch_vers "${_requested_version}")
-    else(_threePartMatch)
-        STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+" "\\1" _major_vers "${_requested_version}")
-        STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)" "\\1" _minor_vers "${_requested_version}")
+# ====================================================================
+# 版本号标准化宏
+# 将版本号字符串转换为可比较的数值格式
+# ====================================================================
+macro(rendu_normalize_version _requested_version _normalized_version)
+    string(REGEX MATCH "[^0-9]*[0-9]+\\.[0-9]+\\.[0-9]+.*" _threePartMatch "${_requested_version}")
+    if (_threePartMatch)
+        string(REGEX REPLACE "[^0-9]*([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" _major_vers "${_requested_version}")
+        string(REGEX REPLACE "[^0-9]*[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" _minor_vers "${_requested_version}")
+        string(REGEX REPLACE "[^0-9]*[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" _patch_vers "${_requested_version}")
+    else ()
+        string(REGEX REPLACE "([0-9]+)\\.[0-9]+" "\\1" _major_vers "${_requested_version}")
+        string(REGEX REPLACE "[0-9]+\\.([0-9]+)" "\\1" _minor_vers "${_requested_version}")
         set(_patch_vers "0")
-    endif(_threePartMatch)
+    endif ()
+    math(EXPR ${_normalized_version} "${_major_vers}*10000 + ${_minor_vers}*100 + ${_patch_vers}")
+endmacro()
 
-    # compute an overall version number which can be compared at once
-    MATH(EXPR ${_normalized_version} "${_major_vers}*10000 + ${_minor_vers}*100 + ${_patch_vers}")
-ENDMACRO(NORMALIZE_VERSION)
+# ====================================================================
+# 版本范围检查宏
+# 检查版本是否在指定范围内（包含下限，不包含上限）
+# ====================================================================
+macro(rendu_check_range_inclusive_lower _lower_limit _value _upper_limit _ok)
+    if (${_value} LESS ${_lower_limit})
+        set(${_ok} FALSE)
+    elseif (${_value} EQUAL ${_lower_limit})
+        set(${_ok} TRUE)
+    elseif (${_value} EQUAL ${_upper_limit})
+        set(${_ok} FALSE)
+    elseif (${_value} GREATER ${_upper_limit})
+        set(${_ok} FALSE)
+    else ()
+        set(${_ok} TRUE)
+    endif ()
+endmacro()
 
-MACRO(CHECK_RANGE_INCLUSIVE_LOWER _lower_limit _value _upper_limit _ok)
-   if(${_value} LESS ${_lower_limit})
-      set(${_ok} FALSE)
-  elseif(${_value} EQUAL ${_lower_limit})
-      set(${_ok} TRUE)
-  elseif(${_value} EQUAL ${_upper_limit})
-      set(${_ok} FALSE)
-  elseif(${_value} GREATER ${_upper_limit})
-      set(${_ok} FALSE)
-  else(${_value} LESS ${_lower_limit})
-      set(${_ok} TRUE)
-  endif(${_value} LESS ${_lower_limit})
-ENDMACRO(CHECK_RANGE_INCLUSIVE_LOWER)
+# ====================================================================
+# 版本确保宏
+# 检查 found_version 是否满足 requested_version 的最低要求
+# ====================================================================
+macro(rendu_ensure_version requested_version found_version var_ok)
+    rendu_normalize_version(${requested_version} req_vers_num)
+    rendu_normalize_version(${found_version} found_vers_num)
+    if (found_vers_num LESS req_vers_num)
+        set(${var_ok} FALSE)
+    else ()
+        set(${var_ok} TRUE)
+    endif ()
+endmacro()
 
-MACRO(ENSURE_VERSION requested_version found_version var_too_old)
-    NORMALIZE_VERSION(${requested_version} req_vers_num)
-    NORMALIZE_VERSION(${found_version} found_vers_num)
+# ====================================================================
+# 版本确保宏（别名）
+# rendu_ensure_version 的别名实现，保持向后兼容
+# ====================================================================
+macro(rendu_ensure_version2 requested_version2 found_version2 var_ok2)
+    rendu_ensure_version(${requested_version2} ${found_version2} ${var_ok2})
+endmacro()
 
-    if(found_vers_num LESS req_vers_num)
-        set(${var_too_old} FALSE)
-    else(found_vers_num LESS req_vers_num)
-        set(${var_too_old} TRUE)
-    endif(found_vers_num LESS req_vers_num)
-
-ENDMACRO(ENSURE_VERSION)
-
-MACRO(ENSURE_VERSION2 requested_version2 found_version2 var_too_old2)
-    ENSURE_VERSION(${requested_version2} ${found_version2} ${var_too_old2})
-ENDMACRO(ENSURE_VERSION2)
-
-MACRO(ENSURE_VERSION_RANGE min_version found_version max_version var_ok)
-    NORMALIZE_VERSION(${min_version} req_vers_num)
-    NORMALIZE_VERSION(${found_version} found_vers_num)
-    NORMALIZE_VERSION(${max_version} max_vers_num)
-
-    CHECK_RANGE_INCLUSIVE_LOWER(${req_vers_num} ${found_vers_num} ${max_vers_num} ${var_ok})
-ENDMACRO(ENSURE_VERSION_RANGE)
+# ====================================================================
+# 版本范围确保宏
+# 检查 found_version 是否在 min_version 和 max_version 之间
+# ====================================================================
+macro(rendu_ensure_version_range min_version found_version max_version var_ok)
+    rendu_normalize_version(${min_version} req_vers_num)
+    rendu_normalize_version(${found_version} found_vers_num)
+    rendu_normalize_version(${max_version} max_vers_num)
+    rendu_check_range_inclusive_lower(${req_vers_num} ${found_vers_num} ${max_vers_num} ${var_ok})
+endmacro()

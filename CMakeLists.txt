@@ -1,99 +1,34 @@
-#|--------------------------------
-#| rendu-core rendu project
-#|--------------------------------
-cmake_minimum_required (VERSION 3.21.7)
+cmake_minimum_required(VERSION 3.24)
 
-# add this options before PROJECT keyword
-set(CMAKE_DISABLE_SOURCE_CHANGES ON)
-set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# 打印CMake版本
+message(STATUS "CMake version: ${CMAKE_VERSION}")
 
-# Set project name (must be done AFTER setting configuration types)
-set(RENDU_PROJECT_NAME rendu)
-set(RENDU_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(RENDU_PROJECT_VERSION 2.0.0)
-project(
-    ${RENDU_PROJECT_NAME}
-    DESCRIPTION "Gaming meets modern C++ - a study project"
-    HOMEPAGE_URL "https://github.com/FRBoiling/rendu-core"
-    LANGUAGES C CXX
+# 项目基本信息
+project(RenduCore
+        LANGUAGES CXX
+        VERSION 1.2.3
+        DESCRIPTION "RenduCore C++"
+        HOMEPAGE_URL "https://github.com/xxx/rendu"
 )
-#
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/lib) #默认存放静态库的文件夹位置
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/dll) #默认存放动态库的文件夹位置
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDU_PROJECT_DIR}/bin/exe) #存放可执行软件的目录
-set(LIBRARY_OUTPUT_PATH ${RENDU_PROJECT_DIR}/bin/library)
 
-#|--------------------------------
-#| Set supported build types
-#|--------------------------------
-#set(RENDU_SUPPORTED_BUILD_TYPES Debug Release RelWithDebInfo)
-# build in Release-mode by default if not explicitly set
-if (CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
-  set(CMAKE_DEFAULT_BUILD_TYPE "RelWithDebInfo" CACHE INTERNAL "")
-endif ()
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-endif ()
+# 设置 CMake 宏脚本目录
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/macros")
+include(${CMAKE_SOURCE_DIR}/cmake/RenduCore.cmake)  # 统一入口，自动加载所有模块
 
-## Set RPATH-handing (CMake parameters)
-#set(CMAKE_SKIP_BUILD_RPATH 0)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH 0)
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
-
-
-#|--------------------------------
-#| rendu-core Framework Configuration
-#|--------------------------------
-# set macro-directory
-
-list(APPEND CMAKE_MODULE_PATH
-    "${CMAKE_SOURCE_DIR}/cmake/macros")
-include(ConfigureScripts)
-include(CheckCXXSourceRuns)
-include(CheckIncludeFiles)
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-
-include(RenduGroupSources)
-include(RenduBaseTargets)
-include(RenduCheckPlatform)
-include(RenduAutoCollect)
-include(RenduAddLibrary)
-include(RenduAddExecutable)
-include(RenduAddSubdirectory)
-
-# Find revision ID and hash of the sourcetree
-include(cmake/genrev.cmake)
-# set default buildoptions and print them
-include(cmake/options.cmake)
-# print out the results before continuing
-include(cmake/showoptions.cmake)
-
-find_package(PCHSupport)
-
-set(test_dir ${CMAKE_CURRENT_SOURCE_DIR}/test)
-if (RD_BUILD_TESTING)
-  include(RenduAddTest)
-  include(CTest)
-  enable_testing()
-  # add test project
-  set(test_dir "")
-endif ()
-
-rendu_add_subdirectory(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    # Exclude
-    ${test_dir}
-    ${CMAKE_CURRENT_SOURCE_DIR}/.git
-    ${CMAKE_CURRENT_SOURCE_DIR}/.cache
-    ${CMAKE_CURRENT_SOURCE_DIR}/.vscode
-    ${CMAKE_CURRENT_SOURCE_DIR}/.idea
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/build
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
-    ${CMAKE_CURRENT_SOURCE_DIR}/bin
+# 添加依赖与核心源码（排除 cmake /.git  /build 目录）
+rendu_add_subdirectories(
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        EXCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/.git
+        ${CMAKE_CURRENT_SOURCE_DIR}/.vscode
+        ${CMAKE_CURRENT_SOURCE_DIR}/.idea
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/build
+        ${CMAKE_CURRENT_SOURCE_DIR}/doc
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-release
 )
+
+# 可选：添加统一的 uninstall 目标（跨平台）
+rendu_add_uninstall_target()
