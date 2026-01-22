@@ -632,6 +632,7 @@ function(rendu_fetch_content pkgName download_only populated)
     string(TOLOWER "${pkgName}" lower_case_name)
 
     if (NOT ${lower_case_name}_POPULATED)
+        message(STATUS "正在下载包: ${pkgName}...")
         if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.30.3")
             if (download_only)
                 # 只下载依赖，不加入到构建
@@ -648,7 +649,10 @@ function(rendu_fetch_content pkgName download_only populated)
         else ()
             FetchContent_Populate(${pkgName})
         endif ()
+        message(STATUS "包 ${pkgName} 下载完成")
         set(${populated} ON PARENT_SCOPE)
+    else ()
+        message(STATUS "包 ${pkgName} 已存在缓存，跳过下载")
     endif ()
 
     # 存储源码和二进制目录属性
@@ -1109,8 +1113,8 @@ function(rendu_add_package)
         endif ()
     elseif (NOT ARGS_NO_CACHE)
         string(TOLOWER ${ARGS_NAME} lower_case_name)
-        set(origin_parameters ${ARGS_UNPARSED_ARGUMENTS})
-        list(SORT origin_parameters)
+        # 只使用 NAME 和 GIT_TAG 计算哈希，避免 CMAKE_ARGS 变化导致重新下载源码
+        set(origin_parameters "${ARGS_NAME};${ARGS_GIT_TAG}")
         if (ARGS_CUSTOM_CACHE_KEY)
             # 应用自定义唯一目录名
             set(download_directory ${RENDU_PACKAGES_CACHE}/${lower_case_name}/${ARGS_CUSTOM_CACHE_KEY})
