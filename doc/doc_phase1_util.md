@@ -60,7 +60,7 @@ src/common/
 - [ ] `format_time` - 时间格式化
 - [ ] `parse_time` - 时间解析
 - [ ] `sleep_ms` - 毫秒级休眠
-- [ ] `Timer` 类 - 高精度计时器
+- [ ] `Stopwatch` 类 - 高精度计时器
 
 ### 5. 错误处理 (error.h/cpp)
 - [ ] `ErrorCode` 枚举 - 错误码定义
@@ -164,9 +164,9 @@ std::string format_time(int64_t timestamp_ms, const char* format = "%Y-%m-%d %H:
 int64_t parse_time(const std::string& time_str, const char* format = "%Y-%m-%d %H:%M:%S");
 void sleep_ms(uint32_t ms);
 
-class Timer {
+class Stopwatch {
 public:
-    Timer();
+    Stopwatch();
     void reset();
     int64_t elapsed_ms() const;
     int64_t elapsed_us() const;
@@ -367,10 +367,10 @@ TEST_CASE("time now_ms", "[util][time]") {
     REQUIRE(t2 - t1 >= 10);
 }
 
-TEST_CASE("Timer elapsed", "[util][time]") {
-    Timer timer;
+TEST_CASE("Stopwatch elapsed", "[util][time]") {
+    Stopwatch stopwatch;
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    REQUIRE(timer.elapsed_ms() >= 50);
+    REQUIRE(stopwatch.elapsed_ms() >= 50);
 }
 ```
 
@@ -415,7 +415,7 @@ TEST_CASE("Timer elapsed", "[util][time]") {
 - ✅ `format_time` - 时间格式化
 - ✅ `parse_time` - 时间解析
 - ✅ `sleep_ms` - 毫秒级休眠
-- ✅ `Timer` 类 - 高精度计时器
+- ✅ `Stopwatch` 类 - 高精度计时器
 
 #### 3. 错误处理 (error.h/cpp)
 - ✅ `ErrorCode` 枚举 - 错误码定义

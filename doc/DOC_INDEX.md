@@ -20,7 +20,20 @@
 
 ---
 
-## Common 层文档 (阶段 2-8)
+## 阶段 2: Common 层 - I/O 抽象 (io) ✅
+
+- **[阶段 2: io](doc_phase2_io.md)** - I/O 抽象 (io_context/scheduler/timer)
+
+---
+
+## Common 层文档 (阶段 3-8)
+
+- **[阶段 3: log](doc_phase3_log.md)** - 日志系统 (logger/sink/formatter)
+- **[阶段 4: net](doc_phase4_net.md)** - 网络通信 (socket/channel/codec)
+- **[阶段 5: ser](doc_phase5_ser.md)** - 序列化 (serializer/protobuf/json)
+- **[阶段 6: event](doc_phase6_event.md)** - 事件系统 (event/event_bus/handler)
+- **[阶段 7: config](doc_phase7_config.md)** - 配置管理 (config/loader/watcher)
+- **[阶段 8: ecs](doc_phase8_ecs.md)** - ECS 系统 (registry/system/view)
 
 - **[阶段 2: io](doc_phase2_io.md)** - I/O 抽象 (io_context/scheduler/timer)
 - **[阶段 3: log](doc_phase3_log.md)** - 日志系统 (logger/sink/formatter)
@@ -56,7 +69,9 @@
     ↓
 阶段 1: Common 层 - util ✅
     ↓
-阶段 2-8: Common 层 (从底向上)
+阶段 2: Common 层 - io ✅
+    ↓
+阶段 3-8: Common 层 (从底向上)
     ↓
 阶段 9-12.5: Core 层
     ↓

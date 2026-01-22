@@ -35,7 +35,7 @@
 #       PROJECT       ${PROJECT_NAME}
 #       NAME          my_test
 #       PRIVATE_LINK  rendu-core-interface
-#       PUBLIC_LINK   Catch2::Catch2WithMain
+#       PUBLIC_LINK   3rdparty::catch
 #       TEST_FRAMEWORK CATCH2
 #       LABELS        unit integration
 #       TIMEOUT       120

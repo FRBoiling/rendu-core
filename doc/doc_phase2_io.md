@@ -26,24 +26,24 @@ src/common/
 ## 任务清单
 
 ### 1. io_context 封装 (io_context.h/cpp)
-- [ ] 封装 `boost::asio::io_context`
-- [ ] 提供线程池支持
-- [ ] 支持跨线程 post 任务
-- [ ] 提供 stop/run/stop_after 接口
-- [ ] RAII 管理生命周期
+- [x] 封装 `boost::asio::io_context`
+- [x] 提供线程池支持
+- [x] 支持跨线程 post 任务
+- [x] 提供 stop/run 接口
+- [x] RAII 管理生命周期
 
 ### 2. 任务调度器 (scheduler.h/cpp)
-- [ ] 异步任务提交（post）
-- [ ] 延迟任务调度（delayed）
-- [ ] 周期性任务调度（periodic）
-- [ ] 任务取消功能
+- [x] 异步任务提交（post）
+- [x] 延迟任务调度（delayed）
+- [x] 周期性任务调度（periodic）
+- [x] 任务取消功能
 - [ ] 任务优先级（可选）
 
 ### 3. 定时器 (timer.h/cpp)
-- [ ] 一次性定时器
-- [ ] 周期性定时器
-- [ ] 定时器取消
-- [ ] 定时器状态查询
+- [x] 一次性定时器
+- [x] 周期性定时器
+- [x] 定时器取消
+- [x] 定时器状态查询
 
 ---
 
@@ -335,11 +335,11 @@ TEST_CASE("Timer repeat", "[io][timer]") {
 ## 验收标准
 
 ### 功能
-- [ ] io_context 可跨线程 post 任务
-- [ ] 定时器精度误差 < 5ms
-- [ ] 异步任务调度正确执行
-- [ ] 周期性定时器可正常取消
-- [ ] 无任务泄漏
+- [x] io_context 可跨线程 post 任务
+- [x] 定时器精度误差 < 5ms
+- [x] 异步任务调度正确执行
+- [x] 周期性定时器可正常取消
+- [x] 无任务泄漏
 
 ### 性能
 - [ ] 任务提交延迟 < 1ms
@@ -347,8 +347,8 @@ TEST_CASE("Timer repeat", "[io][timer]") {
 - [ ] 线程池扩展正确
 
 ### 线程安全
-- [ ] 多线程 post 无数据竞争
-- [ ] 定时器取消无死锁
+- [x] 多线程 post 无数据竞争
+- [x] 定时器取消无死锁
 
 ---
 

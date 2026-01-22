@@ -3,6 +3,7 @@
 #include <common/define.h>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 using namespace Rendu::time;
 
@@ -47,30 +48,30 @@ TEST_CASE("time sleep_ms", "[util][time]") {
     REQUIRE(t2 - t1 < 100);
 }
 
-TEST_CASE("Timer elapsed_ms", "[util][time]") {
-    Timer timer;
+TEST_CASE("Stopwatch elapsed_ms", "[util][time]") {
+    Stopwatch stopwatch;
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    REQUIRE(timer.elapsed_ms() >= 45);
-    REQUIRE(timer.elapsed_ms() < 100);
+    REQUIRE(stopwatch.elapsed_ms() >= 45);
+    REQUIRE(stopwatch.elapsed_ms() < 100);
 }
 
-TEST_CASE("Timer elapsed_us", "[util][time]") {
-    Timer timer;
+TEST_CASE("Stopwatch elapsed_us", "[util][time]") {
+    Stopwatch stopwatch;
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    auto elapsed_us = timer.elapsed_us();
+    auto elapsed_us = stopwatch.elapsed_us();
     REQUIRE(elapsed_us >= 45000);
     REQUIRE(elapsed_us < 100000);
 }
 
-TEST_CASE("Timer reset", "[util][time]") {
-    Timer timer;
+TEST_CASE("Stopwatch reset", "[util][time]") {
+    Stopwatch stopwatch;
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    REQUIRE(timer.elapsed_ms() >= 45);
+    REQUIRE(stopwatch.elapsed_ms() >= 45);
 
-    timer.reset();
-    REQUIRE(timer.elapsed_ms() < 10); // Should be close to 0
+    stopwatch.reset();
+    REQUIRE(stopwatch.elapsed_ms() < 10); // Should be close to 0
 
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    REQUIRE(timer.elapsed_ms() >= 15);
-    REQUIRE(timer.elapsed_ms() < 50);
+    REQUIRE(stopwatch.elapsed_ms() >= 15);
+    REQUIRE(stopwatch.elapsed_ms() < 50);
 }

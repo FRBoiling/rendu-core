@@ -8,7 +8,7 @@ rendu_add_test(
     NAME          string_test
     SOURCES       string_test.cpp
     PRIVATE_LINK  rendu-core-interface
-    PUBLIC_LINK   Catch2::Catch2WithMain RenduCore::common
+    PUBLIC_LINK   3rdparty::catch RenduCore::common
     TEST_FRAMEWORK CATCH2
 )
 
@@ -18,7 +18,7 @@ rendu_add_test(
     NAME          time_test
     SOURCES       time_test.cpp
     PRIVATE_LINK  rendu-core-interface
-    PUBLIC_LINK   Catch2::Catch2WithMain RenduCore::common
+    PUBLIC_LINK   3rdparty::catch RenduCore::common
     TEST_FRAMEWORK CATCH2
 )
 
@@ -28,7 +28,7 @@ rendu_add_test(
     NAME          error_test
     SOURCES       error_test.cpp
     PRIVATE_LINK  rendu-core-interface
-    PUBLIC_LINK   Catch2::Catch2WithMain RenduCore::common
+    PUBLIC_LINK   3rdparty::catch RenduCore::common
     TEST_FRAMEWORK CATCH2
 )
 
@@ -38,6 +38,6 @@ rendu_add_test(
     NAME          container_test
     SOURCES       container_test.cpp
     PRIVATE_LINK  rendu-core-interface
-    PUBLIC_LINK   Catch2::Catch2WithMain RenduCore::common
+    PUBLIC_LINK   3rdparty::catch RenduCore::common
     TEST_FRAMEWORK CATCH2
 )

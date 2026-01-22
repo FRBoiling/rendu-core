@@ -45,9 +45,9 @@ void sleep_ms(uint32_t ms);
 /**
  * @brief 高精度计时器
  */
-class Timer {
+class Stopwatch {
 public:
-    Timer();
+    Stopwatch();
 
     /**
      * @brief 重置计时器

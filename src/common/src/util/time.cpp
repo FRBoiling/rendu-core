@@ -46,20 +46,20 @@ void sleep_ms(uint32_t ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
-Timer::Timer()
+Stopwatch::Stopwatch()
     : start_(std::chrono::steady_clock::now()) {}
 
-void Timer::reset() {
+void Stopwatch::reset() {
     start_ = std::chrono::steady_clock::now();
 }
 
-int64_t Timer::elapsed_ms() const {
+int64_t Stopwatch::elapsed_ms() const {
     auto now = std::chrono::steady_clock::now();
     auto duration = now - start_;
     return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 }
 
-int64_t Timer::elapsed_us() const {
+int64_t Stopwatch::elapsed_us() const {
     auto now = std::chrono::steady_clock::now();
     auto duration = now - start_;
     return std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
