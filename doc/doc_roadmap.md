@@ -12,7 +12,7 @@
 
 ### 任务
 - [x] 修复 RenduPackageManager.cmake bug
-- [x] 验证 fmt (v12.0.0)、boost (v1.90.0)、entt (v3.16.0)、spdlog (v1.15.0)、protobuf (v29.1)、catch2 (v3.11.0) 依赖正常
+- [x] 验证 fmt (v12.0.0)、boost (v1.90.0)、entt (v3.16.0)、protobuf (v29.1)、catch2 (v3.11.0) 依赖正常
 - [x] 配置 common 和 core 为动态库
 - [x] 配置导出宏和符号可见性
 - [x] 创建 tests 目录结构

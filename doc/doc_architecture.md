@@ -63,12 +63,12 @@
 │  │   - error: 错误处理                             │ │
 │  │   - container: 容器工具                         │ │
 │  └─────────────────────────────────────────────────┘ │
-│  依赖: fmt, boost, entt, spdlog, protobuf          │
+│  依赖: fmt, boost, entt, protobuf          │
 └────────────────┬────────────────────────────────────┘
                  │
 ┌────────────────▼─────────────────────────────────────┐
 │                3rdparty (第三方库)                     │
-│  fmt, boost, entt, spdlog, protobuf, catch           │
+│  fmt, boost, entt, protobuf, catch           │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -210,7 +210,7 @@ rendu_add_library(
         3rdparty::fmt
         3rdparty::boost
         3rdparty::entt
-        3rdparty::spdlog
+
         3rdparty::protobuf
     ALIAS ON
 )
@@ -238,4 +238,4 @@ rendu_add_library(
 | **Tests** | 单元测试、集成测试、性能测试 |
 | **Core** | 框架核心、引擎、生命周期、状态管理、Actor 系统 |
 | **Common** | 基础设施、I/O、日志、网络、序列化、事件、配置、ECS、工具 |
-| **3rdparty** | fmt, boost, entt, spdlog, protobuf, catch |
+| **3rdparty** | fmt, boost, entt, protobuf, catch |

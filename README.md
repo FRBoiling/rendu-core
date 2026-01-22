@@ -38,7 +38,7 @@
                  │
 ┌────────────────▼─────────────────────────────────────┐
 │                3rdparty (第三方库)                     │
-│  fmt, boost, entt, spdlog, protobuf, catch           │
+│  fmt, boost, entt, protobuf, catch           │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -89,7 +89,6 @@ rendu-core/
 │   ├── fmt/
 │   ├── boost/
 │   ├── entt/
-│   ├── spdlog/
 │   ├── protobuf/
 │   └── catch/
 ├── src/

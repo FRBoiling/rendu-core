@@ -17,7 +17,7 @@
 - [x] fmt (v12.0.0) - 字符串格式化
 - [x] boost (v1.90.0) - 异步 I/O、定时器
 - [x] entt (v3.16.0) - ECS 框架
-- [x] spdlog (v1.15.0) - 日志库
+
 - [x] protobuf (v29.1) - 序列化（已修复测试禁用问题）
 - [x] catch2 (v3.11.0) - 测试框架
 
@@ -33,7 +33,7 @@
 ### 已完成的修改
 
 #### 1. src/common/CMakeLists.txt
-- 添加了 `3rdparty::spdlog` 依赖
+
 - 添加了 `3rdparty::protobuf` 依赖
 - 添加了 `RENDU_COMMON_EXPORT` 宏定义
 
@@ -119,7 +119,7 @@ cmake --build build
 cmake --find-package -DNAME=fmt -DCOMPILER_ID=GNU -DLANGUAGE=CXX
 cmake --find-package -DNAME=Boost -DCOMPILER_ID=GNU -DLANGUAGE=CXX
 cmake --find-package -DNAME=entt -DCOMPILER_ID=GNU -DLANGUAGE=CXX
-cmake --find-package -DNAME=spdlog -DCOMPILER_ID=GNU -DLANGUAGE=CXX
+
 cmake --find-package -DNAME=Protobuf -DCOMPILER_ID=GNU -DLANGUAGE=CXX
 cmake --find-package -DNAME=Catch2 -DCOMPILER_ID=GNU -DLANGUAGE=CXX
 ```
