@@ -33,17 +33,17 @@ src/common/
 ## 任务清单
 
 ### 1. 公共定义 (define.h)
-- [ ] 版本宏定义
-- [ ] 平台检测宏
-- [ ] 编译器检测宏
-- [ ] 类型别名（using）
-- [ ] 常量定义
-- [ ] 调试/断言宏
+- [x] 版本宏定义
+- [x] 平台检测宏
+- [x] 编译器检测宏
+- [x] 类型别名（using）
+- [x] 常量定义
+- [x] 调试/断言宏
 
 ### 2. 启动横幅 (banner.h)
-- [ ] ASCII 艺术横幅
-- [ ] 版本信息显示
-- [ ] Git 版本号（由 CMake 生成）
+- [x] ASCII 艺术横幅
+- [x] 版本信息显示
+- [x] Git 版本号（由 CMake 生成）
 
 ### 3. 字符串工具 (string.h/cpp)
 - [ ] `trim` - 去除首尾空白
@@ -396,11 +396,41 @@ TEST_CASE("Stopwatch elapsed", "[util][time]") {
 
 ## 完成记录
 
-**完成日期**: 2026-01-21
+**完成日期**: 2026-01-22
 
 ### 已实现的功能
 
-#### 1. 字符串工具 (string.h/cpp)
+#### 1. 公共定义 (define.h)
+- ✅ 版本宏定义
+- ✅ 平台检测宏（Windows/Apple/UNIX）
+- ✅ 编译器检测宏（MSVC/GNU/Intel）
+- ✅ 类型别名
+- ✅ 常量定义
+- ✅ 调试/断言宏
+- ✅ API 导出/导入控制
+- ✅ 格式化属性
+- ✅ 整数格式化宏
+- ✅ 命名空间宏（BEGIN_NAMESPACE_COMMON/END_NAMESPACE_COMMON）
+
+#### 2. 启动横幅 (banner.h/cpp)
+- ✅ ASCII 艺术横幅显示
+- ✅ 版本信息显示
+- ✅ Git 版本号获取
+- ✅ 构建信息展示
+- ✅ Banner::Show() 函数
+
+#### 3. Git 版本信息 (git_revision.h/cpp)
+- ✅ Git 提交哈希
+- ✅ Git 提交日期
+- ✅ Git 分支名称
+- ✅ CMake 版本信息
+- ✅ 主机操作系统版本
+- ✅ 构建目录路径
+- ✅ 源代码目录路径
+- ✅ 完整版本字符串
+- ✅ 公司信息和版权信息
+
+#### 4. 字符串工具 (string.h/cpp)
 - ✅ `trim` - 去除首尾空白
 - ✅ `split` - 字符串分割
 - ✅ `join` - 字符串连接
@@ -439,12 +469,17 @@ TEST_CASE("Stopwatch elapsed", "[util][time]") {
 ### 文件清单
 
 **头文件**:
+- `/src/common/include/common/define.h` - 公共定义
+- `/src/common/include/common/banner.h` - 启动横幅
+- `/src/common/include/common/git_revision.h` - Git 版本信息
 - `/src/common/include/common/util/string.h`
 - `/src/common/include/common/util/time.h`
 - `/src/common/include/common/util/error.h`
 - `/src/common/include/common/util/container.h`
 
 **源文件**:
+- `/src/common/src/banner.cpp` - 启动横幅实现
+- `/src/common/src/git_revision.cpp` - Git 版本信息实现
 - `/src/common/src/util/string.cpp`
 - `/src/common/src/util/time.cpp`
 - `/src/common/src/util/error.cpp`
@@ -457,14 +492,13 @@ TEST_CASE("Stopwatch elapsed", "[util][time]") {
 
 **CMake 配置**:
 - `/src/tests/common/util/CMakeLists.txt` - 测试目标配置
+- `/revision_data.h.in.cmake` - Git 版本信息模板（由 CMake 生成）
 
 ### 注意事项
 
-1. **公共定义文件**: `define.h` 和 `banner.h` 在阶段0中已经创建和配置，本阶段未重复创建。
+1. **container.cpp**: 由于 container.h 中所有函数都是模板函数，不需要单独的 .cpp 实现。
 
-2. **编译依赖**: util 模块的代码编译通过，但完整测试由于 protobuf 在 Apple Silicon 上的兼容性问题暂时无法运行。这是第三方依赖的问题，不影响 util 模块本身的质量。
-
-3. **container.cpp**: 由于 container.h 中所有函数都是模板函数，不需要单独的 .cpp 实现。
+2. **Git 版本信息**: `revision_data.h` 由 CMake 在构建时从 `revision_data.h.in.cmake` 模板生成，包含 Git 提交信息、构建配置等动态数据。
 
 ---
 
