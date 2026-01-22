@@ -26,19 +26,20 @@ function(rendu_setup_gcc_options)
     # ====================================================================
     # 平台特定选项
     # ====================================================================
-    if (RENDU_PLATFORM EQUAL 32)
-        # 32位系统需要手动开启 SSE2（x64 默认支持）
-        target_compile_options(rendu-compile-option-interface
-                INTERFACE
-                -msse2
-                -mfpmath=sse)
-    endif ()
-
+    # SSE 指令集只适用于 x86/x64 架构
     if (RENDU_SYSTEM_PROCESSOR MATCHES "x86|amd64")
+        if (RENDU_PLATFORM EQUAL 32)
+            # 32位系统需要手动开启 SSE2（x64 默认支持）
+            target_compile_options(rendu-compile-option-interface
+                            INTERFACE
+                            -msse2
+                            -mfpmath=sse)
+        endif ()
+
         target_compile_definitions(rendu-compile-option-interface
-                INTERFACE
-                HAVE_SSE2
-                __SSE2__)
+                            INTERFACE
+                            HAVE_SSE2
+                            __SSE2__)
         rendu_log_info("GCC: SFMT enabled, SSE2 flags forced")
     endif ()
 

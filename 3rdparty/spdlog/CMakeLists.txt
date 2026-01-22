@@ -5,7 +5,7 @@
 rendu_find_package(
         NAME spdlog
         GITHUB_REPOSITORY gabime/spdlog
-        GIT_TAG v1.15.0
+        GIT_TAG v1.17.0
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)

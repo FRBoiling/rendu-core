@@ -14,9 +14,14 @@
 
 ---
 
-## Common 层文档 (阶段 1-8)
+## 阶段 1: Common 层 - 基础工具 (util) ✅
 
 - **[阶段 1: util](doc_phase1_util.md)** - 基础工具 (define/string/time/error/container)
+
+---
+
+## Common 层文档 (阶段 2-8)
+
 - **[阶段 2: io](doc_phase2_io.md)** - I/O 抽象 (io_context/scheduler/timer)
 - **[阶段 3: log](doc_phase3_log.md)** - 日志系统 (logger/sink/formatter)
 - **[阶段 4: net](doc_phase4_net.md)** - 网络通信 (socket/channel/codec)
@@ -49,7 +54,9 @@
 ```
 阶段 0: 环境准备 ✅
     ↓
-阶段 1-8: Common 层 (从底向上)
+阶段 1: Common 层 - util ✅
+    ↓
+阶段 2-8: Common 层 (从底向上)
     ↓
 阶段 9-12.5: Core 层
     ↓

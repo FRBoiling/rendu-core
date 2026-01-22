@@ -4,7 +4,7 @@
 
 #include "common/banner.h"
 #include "common/git_revision.h"
-#include "common/utils/string_format.h"
+#include "common/util/string.h"
 #include <cstring>
 
 BEGIN_NAMESPACE_COMMON
@@ -20,7 +20,7 @@ void Banner::Show(
     std::string headStr;
     try
     {
-        headStr = Utils::StringFormat("{} ({})",
+        headStr = str::format("{} ({})",
             version ? version : "[Unknown]",
             applicationName ? applicationName : "[Unknown]");
         log(headStr.c_str());

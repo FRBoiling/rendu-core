@@ -5,7 +5,7 @@
 rendu_find_package(
         NAME fmt
         GITHUB_REPOSITORY fmtlib/fmt
-        GIT_TAG 12.0.0
+        GIT_TAG 12.1.0
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
