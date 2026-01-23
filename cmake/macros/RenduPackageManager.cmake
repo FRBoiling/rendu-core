@@ -599,12 +599,6 @@ function(_add_subdirectory pkgName download_only source_dir binary_dir exclude s
             # SYSTEM 属性仅 CMake 3.25+ 支持
             list(APPEND add_subdirectory_extra_args SYSTEM)
         endif ()
-        if (options)
-            foreach (option ${options})
-                _parse_option("${option}")
-                set(${OPTION_KEY} "${OPTION_VALUE}")
-            endforeach ()
-        endif ()
         # rendu_log_set_prefix(${pkgName}:)
         add_subdirectory("${source_dir}" "${binary_dir}" ${add_subdirectory_extra_args})
         # rendu_log_rollback_prefix(${_old_indent}:)
@@ -632,7 +626,7 @@ function(rendu_fetch_content pkgName download_only populated)
     string(TOLOWER "${pkgName}" lower_case_name)
 
     if (NOT ${lower_case_name}_POPULATED)
-        message(STATUS "正在下载包: ${pkgName}...")
+        rendu_log_info("正在下载包: ${pkgName}...")
         if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.30.3")
             if (download_only)
                 # 只下载依赖，不加入到构建
@@ -649,10 +643,10 @@ function(rendu_fetch_content pkgName download_only populated)
         else ()
             FetchContent_Populate(${pkgName})
         endif ()
-        message(STATUS "包 ${pkgName} 下载完成")
+        rendu_log_info("包 ${pkgName} 下载完成")
         set(${populated} ON PARENT_SCOPE)
     else ()
-        message(STATUS "包 ${pkgName} 已存在缓存，跳过下载")
+        rendu_log_info("包 ${pkgName} 已存在缓存，跳过下载")
     endif ()
 
     # 存储源码和二进制目录属性
@@ -960,6 +954,7 @@ function(rendu_add_package)
             NO_CACHE
             SYSTEM
             GIT_SHALLOW
+            GIT_SUBMODULES_RECURSIVE
             EXCLUDE_FROM_ALL
             SOURCE_SUBDIR
             CUSTOM_CACHE_KEY
@@ -1030,6 +1025,10 @@ function(rendu_add_package)
         # 如果显式指定了 GIT_SHALLOW，则使用该值
         if (DEFINED ARGS_GIT_SHALLOW)
             list(APPEND ARGS_UNPARSED_ARGUMENTS GIT_SHALLOW ${ARGS_GIT_SHALLOW})
+        endif ()
+        # 如果显式指定了 GIT_SUBMODULES_RECURSIVE，则使用该值
+        if (DEFINED ARGS_GIT_SUBMODULES_RECURSIVE)
+            list(APPEND ARGS_UNPARSED_ARGUMENTS GIT_SUBMODULES_RECURSIVE ${ARGS_GIT_SUBMODULES_RECURSIVE})
         endif ()
     endif ()
 
@@ -1144,6 +1143,8 @@ function(rendu_add_package)
         if (EXISTS ${download_directory})
             file(LOCK ${download_directory}/../cmake.lock RELEASE)
 
+            rendu_log_info("使用缓存包: ${ARGS_NAME} (来自 ${download_directory})")
+
             _store_fetch_properties(
                     ${ARGS_NAME} "${download_directory}"
                     "${RENDU_FETCHCONTENT_BASE_DIR}/${lower_case_name}-build"
@@ -1223,11 +1224,11 @@ function(rendu_add_package)
             if (DEFINED ARGS_SOURCE_SUBDIR)
                 list(APPEND fetchContentDeclareExtraArgs SOURCE_SUBDIR ${ARGS_SOURCE_SUBDIR})
             endif ()
-            # CMake <3.28 时 OPTIONS 在 _add_subdirectory 解析
-            if (ARGS_OPTIONS AND NOT download_only)
+            # 将 OPTIONS 转换为 CMAKE_ARGS 格式并添加到未解析参数中
+            if (ARGS_OPTIONS)
                 foreach (OPTION ${ARGS_OPTIONS})
-                    _parse_option("${OPTION}")
-                    set(${OPTION_KEY} "${OPTION_VALUE}")
+                    _parse_option("${OPTION}" opt_key opt_value)
+                    list(APPEND ARGS_UNPARSED_ARGUMENTS CMAKE_ARGS "-D${opt_key}=${opt_value}")
                 endforeach ()
             endif ()
         endif ()

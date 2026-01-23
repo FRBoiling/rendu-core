@@ -6,17 +6,21 @@ rendu_find_package(
         NAME Protobuf
         GITHUB_REPOSITORY protocolbuffers/protobuf
         GIT_TAG v33.4
-#        CMAKE_ARGS
-#        -Dprotobuf_BUILD_TESTS=OFF
-#        -Dprotobuf_BUILD_EXAMPLES=OFF
-#        -Dprotobuf_BUILD_SHARED_LIBS=OFF
-#        -Dprotobuf_ABSL_PROVIDER=package
-#        -DCMAKE_POLICY_DEFAULT_CMP0141=NEW
-#        -DABSL_PROPAGATE_CXX_STD=ON
-#        -Dprotobuf_BUILD_CONFORMANCE=OFF
-#        -Dprotobuf_BUILD_LIBPROTOC=ON
-#        -DCMAKE_CXX_FLAGS=
-#        -DCMAKE_C_FLAGS=
+        EXCLUDE_FROM_ALL YES
+        SYSTEM YES
+        OPTIONS
+        "protobuf_BUILD_TESTS OFF"
+        "protobuf_BUILD_EXAMPLES OFF"
+        "protobuf_BUILD_SHARED_LIBS OFF"
+        "protobuf_ABSL_PROVIDER package"
+        "CMAKE_POLICY_DEFAULT_CMP0141 NEW"
+        "ABSL_PROPAGATE_CXX_STD ON"
+        "protobuf_BUILD_CONFORMANCE OFF"
+        "protobuf_BUILD_LIBPROTOC ON"
+        "utf8_range_ENABLE_INSTALL OFF"
+        "protobuf_INSTALL OFF"
+        "CMAKE_CXX_FLAGS "
+        "CMAKE_C_FLAGS "
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
