@@ -1,5 +1,6 @@
 #include <common/log/logger.h>
 #include <common/log/sink.h>
+#include <common/io/io_context.h>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -10,7 +11,7 @@
 BEGIN_NAMESPACE_COMMON
 namespace log {
 
-Logger::Logger(std::string name, IoContext& io)
+Logger::Logger(std::string name, io::IoContext& io)
     : name_(std::move(name))
     , io_(io)
     , level_(Level::Info)
@@ -99,7 +100,7 @@ const std::string& Logger::name() const {
     return name_;
 }
 
-IoContext& Logger::io_context() {
+io::IoContext& Logger::io_context() {
     return io_;
 }
 
@@ -125,13 +126,13 @@ std::string Logger::get_timestamp() {
 
 // 全局 Logger 管理
 namespace {
-    IoContext* g_default_io_context = nullptr;
+    io::IoContext* g_default_io_context = nullptr;
     std::shared_ptr<Logger> g_default_logger;
     std::unordered_map<std::string, std::shared_ptr<Logger>> g_loggers;
     std::mutex g_loggers_mutex;
 }
 
-void init_default_io_context(IoContext& io) {
+void init_default_io_context(io::IoContext& io) {
     std::lock_guard<std::mutex> lock(g_loggers_mutex);
     g_default_io_context = &io;
 }
