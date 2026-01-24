@@ -5,7 +5,9 @@
 #   - 无
 # ====================================================================
 
+# ====================================================================
 # 处理构建目录变量
+# ====================================================================
 if (NOT RENDU_BUILDDIR)
     set(RENDU_BUILDDIR ${CMAKE_BINARY_DIR})
 endif ()
@@ -19,6 +21,10 @@ if (RENDU_WITHOUT_GIT)
     set(RENDU_REV_BRANCH "Archived")
     string(TIMESTAMP RENDU_REV_DATE_FALLBACK "%Y-%m-%d %H:%M:%S" UTC)
 else ()
+    # ====================================================================
+    # 获取 Git 版本信息
+    # 说明: 提取 HEAD 提交哈希、提交日期、分支名等信息
+    # ====================================================================
     # find_package(Git 1.7)
     find_package(Git REQUIRED)
 
@@ -32,6 +38,10 @@ else ()
         )
 
         if (RENDU_REV_HASH)
+            # ====================================================================
+            # 检查工作区是否包含未提交的修改
+            # 说明: 如果有未提交的修改，在哈希后添加 "+" 标记
+            # ====================================================================
             execute_process(
                     COMMAND "${GIT_EXECUTABLE}" diff-index --quiet HEAD --
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
@@ -50,6 +60,10 @@ else ()
                     ERROR_QUIET
             )
 
+            # ====================================================================
+            # 获取分支名称
+            # 说明: 尝试多种方式获取分支名，包括 symbolic-ref 和 for-each-ref
+            # ====================================================================
             execute_process(
                     COMMAND "${GIT_EXECUTABLE}" symbolic-ref -q --short HEAD
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
@@ -86,6 +100,10 @@ else ()
         endif ()
     endif ()
 
+    # ====================================================================
+    # 错误处理
+    # 说明: 如果无法获取 Git 信息，使用默认值并发出警告
+    # ====================================================================
     if (NOT RENDU_REV_HASH)
         message(STATUS "
     Could not find a proper repository signature (hash) - you may need to pull tags with git fetch -t
@@ -113,6 +131,10 @@ set(RENDU_REV_DAY ${CMAKE_MATCH_3})
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_SYSTEM QUERY OS_NAME)
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_DISTRO QUERY DISTRIB_INFO)
 cmake_host_system_information(RESULT RENDU_BUILD_HOST_SYSTEM_RELEASE QUERY OS_RELEASE)
+# ====================================================================
+# Windows 系统版本信息获取
+# 说明: 使用 PowerShell 获取详细的 Windows 版本信息
+# ====================================================================
 if (WIN32)
     execute_process(
             COMMAND powershell -NoProfile -Command "$v=(Get-CimInstance -ClassName Win32_OperatingSystem); '{0} ({1})' -f $v.Caption, $v.Version"

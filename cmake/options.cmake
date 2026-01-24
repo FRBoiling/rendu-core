@@ -20,6 +20,7 @@ option(RENDU_BUILD_EXAMPLES "构建示例程序" ON)
 
 # ====================================================================
 # 脚本构建模式可选项
+# 说明: none=不构建脚本, static=静态链接脚本, dynamic=动态链接脚本, custom=自定义模式
 # ====================================================================
 # 定义 RENDU_SCRIPTS 可选值
 set(RENDU_SCRIPTS_AVAILABLE_OPTIONS "none" "static" "dynamic" "custom" CACHE STRING "RENDU_SCRIPTS 可选值列表" FORCE)
@@ -30,7 +31,9 @@ if (NOT DEFINED RENDU_SCRIPTS)
 endif ()
 set_property(CACHE RENDU_SCRIPTS PROPERTY STRINGS "none" "static" "dynamic" "custom")
 
+# ====================================================================
 # 校验 RENDU_SCRIPTS 变量是否合法
+# ====================================================================
 if (RENDU_SCRIPTS)
     list(FIND RENDU_SCRIPTS_AVAILABLE_OPTIONS "${RENDU_SCRIPTS}" RENDU_SCRIPTS_INDEX)
     if (${RENDU_SCRIPTS_INDEX} EQUAL -1)
@@ -40,6 +43,7 @@ endif ()
 
 # ====================================================================
 # 脚本模块配置
+# 说明: 当 RENDU_SCRIPTS="custom" 时，为每个脚本模块创建独立的配置选项
 # ====================================================================
 include(${CMAKE_SOURCE_DIR}/cmake/macros/ConfigureScripts.cmake)
 # 当 RENDU_SCRIPTS="custom" 时，构建所有脚本模块
@@ -50,11 +54,16 @@ foreach (SCRIPT_MODULE ${RENDU_SCRIPT_MODULE_LIST})
     set_property(CACHE ${RENDU_SCRIPT_MODULE_VARIABLE} PROPERTY STRINGS default disabled static dynamic)
 endforeach ()
 
+# ====================================================================
+# 预编译头选项
+# ====================================================================
+
 option(RENDU_USE_SCRIPTPCH "编译脚本时使用预编译头" ON)
 option(RENDU_USE_COREPCH "编译核心库时使用预编译头" ON)
 
 # ====================================================================
 # 动态链接配置
+# 说明: 启用后所有库将以动态链接方式构建（实验性功能）
 # ====================================================================
 option(RENDU_WITH_DYNAMIC_LINKING "启用动态库链接" OFF)
 rendu_is_dynamic_linking_required(RENDU_WITH_DYNAMIC_LINKING_FORCED)
@@ -83,12 +92,18 @@ option(RENDU_COPY_CONF "将 authserver 和 worldserver 的 .conf.dist 文件复�
 
 # ====================================================================
 # IDE 配置选项
+# 说明: 控制源文件在 IDE 中的组织方式
+#   - no: 不分组，所有源文件在同一层级
+#   - flat: 按文件类型分组（如 Source Files、Header Files）
+#   - hierarchical: 按目录结构分组（树形）
+#   - hierarchical-folders: 按目录结构分组并显示文件夹
 # ====================================================================
 set(RENDU_WITH_SOURCE_TREE "hierarchical" CACHE STRING "为 IDE 构建源码树结构")
 set_property(CACHE RENDU_WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)
 
 # ====================================================================
 # GIT 配置选项
+# 说明: 禁用后将失去官方支持，无法自动获取版本信息
 # ====================================================================
 # GIT 相关选项
 option(RENDU_WITHOUT_GIT "禁用 GIT 测试流程" OFF)

@@ -31,6 +31,11 @@ function(rendu_add_cxx_pch)
         message(FATAL_ERROR "rendu_add_cxx_pch: 必须指定 TARGETS 和 HEADER")
     endif ()
 
+    # 检查头文件是否存在
+    if (NOT EXISTS "${ARG_HEADER}")
+        rendu_log_warn("rendu_add_cxx_pch: 预编译头文件不存在: ${ARG_HEADER}")
+    endif ()
+
     foreach (target IN LISTS ARG_TARGETS)
         target_precompile_headers(${target} PRIVATE ${ARG_HEADER})
     endforeach ()

@@ -25,6 +25,12 @@
 #   )
 # ====================================================================
 function(rendu_collect_source_files output_var root_dir)
+    # 参数验证
+    if (NOT IS_DIRECTORY "${root_dir}")
+        message(WARNING "rendu_collect_source_files: 目录不存在 ${root_dir}")
+        return()
+    endif ()
+
     # 参数解析
     set(options "")
     set(oneValueArgs "")
@@ -39,14 +45,19 @@ function(rendu_collect_source_files output_var root_dir)
         set(ARG_EXTENSIONS .c .cc .cpp .h .hh .hpp .inl .def)
     endif ()
 
+    # ====================================================================
     # 优化：预计算排除目录的绝对路径，避免重复计算
+    # 说明: 确保去除末尾斜杠，提高匹配效率
+    # ====================================================================
     set(EXCLUDE_ABS_DIRS "")
-    foreach (excl_dir IN LISTS ARG_EXCLUDE_DIRS)
-        get_filename_component(excl_dir_abs "${excl_dir}" ABSOLUTE)
-        # 确保以斜杠结尾，提高匹配效率
-        string(REGEX REPLACE "/$" "" excl_dir_abs "${excl_dir_abs}")
-        list(APPEND EXCLUDE_ABS_DIRS "${excl_dir_abs}")
-    endforeach ()
+    if (ARG_EXCLUDE_DIRS)
+        foreach (excl_dir IN LISTS ARG_EXCLUDE_DIRS)
+            get_filename_component(excl_dir_abs "${excl_dir}" ABSOLUTE)
+            # 确保去除末尾斜杠，提高匹配效率
+            string(REGEX REPLACE "/$" "" excl_dir_abs "${excl_dir_abs}")
+            list(APPEND EXCLUDE_ABS_DIRS "${excl_dir_abs}")
+        endforeach ()
+    endif ()
 
     # 生成 GLOB 模式
     set(patterns "")
@@ -60,7 +71,10 @@ function(rendu_collect_source_files output_var root_dir)
             RELATIVE "${root_dir}"
             ${patterns})
 
+    # ====================================================================
     # 优化：过滤排除目录（使用预计算的绝对路径）
+    # 说明: 使用路径前缀匹配而非正则，提高性能
+    # ====================================================================
     set(filtered_files "")
     set(root_dir_abs "${root_dir}")
     foreach (file IN LISTS files)
@@ -70,6 +84,7 @@ function(rendu_collect_source_files output_var root_dir)
         # 检查是否在排除目录中（已优化：使用预计算的绝对路径）
         if (EXCLUDE_ABS_DIRS)
             foreach (excl_dir_abs IN LISTS EXCLUDE_ABS_DIRS)
+                # 使用路径前缀匹配而非正则，提高性能
                 string(FIND "${abs_path}" "${excl_dir_abs}/" pos)
                 if (pos EQUAL 0)
                     set(include_file FALSE)

@@ -9,7 +9,11 @@
 # 输出核心信息和所选构建类型
 # ====================================================================
 rendu_log_info("*****************************************************")
-rendu_log_info("* RenduCore 版本信息   : ${RENDU_REV_HASH} ${RENDU_REV_DATE} (${RENDU_REV_BRANCH} 分支)")
+if (DEFINED RENDU_REV_HASH)
+    rendu_log_info("* RenduCore 版本信息   : ${RENDU_REV_HASH} ${RENDU_REV_DATE} (${RENDU_REV_BRANCH} 分支)")
+else ()
+    rendu_log_info("* RenduCore 版本信息   : 未知")
+endif ()
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if (NOT IS_MULTI_CONFIG)
     rendu_log_info("* RenduCore 构建类型   : ${CMAKE_BUILD_TYPE}")
@@ -20,7 +24,7 @@ endif ()
 # ====================================================================
 rendu_log_info("* 安装核心到           : ${CMAKE_INSTALL_PREFIX}")
 if (RENDU_COPY_CONF)
-    if (UNIX)
+    if (UNIX AND DEFINED RENDU_CONF_DIR)
         rendu_log_info("* 配置文件安装到       : ${RENDU_CONF_DIR}")
     else ()
         rendu_log_info("* 配置文件安装到       : ${CMAKE_INSTALL_PREFIX}")
@@ -78,6 +82,9 @@ else ()
     rendu_log_info("* 警告视为错误         : 否（默认）")
 endif ()
 
+# ====================================================================
+# 核心调试选项（警告：此选项可能影响性能）
+# ====================================================================
 if (RENDU_WITH_COREDEBUG)
     rendu_log_info("*****************************************************")
     rendu_log_info(" *** RENDU_WITH_COREDEBUG - 警告！")
@@ -93,12 +100,15 @@ else ()
     rendu_log_info("* 启用核心调试         : 否（默认）")
 endif ()
 
-if (NOT RENDU_WITH_SOURCE_TREE STREQUAL "no")
+if (DEFINED RENDU_WITH_SOURCE_TREE AND NOT RENDU_WITH_SOURCE_TREE STREQUAL "no")
     rendu_log_info("* 显示源码树           : 是（${RENDU_WITH_SOURCE_TREE}）")
 else ()
     rendu_log_info("* 显示源码树           : 否")
 endif ()
 
+# ====================================================================
+# Git 版本信息选项（警告：禁用将失去官方支持）
+# ====================================================================
 if (RENDU_WITHOUT_GIT)
     rendu_log_info("* 使用 GIT 版本哈希    : 否")
     rendu_log_info("*****************************************************")
@@ -112,6 +122,9 @@ else ()
     rendu_log_info("* 使用 GIT 版本哈希    : 是（默认）")
 endif ()
 
+# ====================================================================
+# Metrics 输出选项
+# ====================================================================
 if (RENDU_WITHOUT_METRICS)
     rendu_log_info("*****************************************************")
     rendu_log_info(" *** RENDU_WITHOUT_METRICS - 警告！")
@@ -128,6 +141,9 @@ elseif (RENDU_WITH_DETAILED_METRICS)
             WITH_DETAILED_METRICS)
 endif ()
 
+# ====================================================================
+# 动态链接选项（实验性功能）
+# ====================================================================
 if (BUILD_SHARED_LIBS)
     rendu_log_info("*****************************************************")
     rendu_log_info(" *** RENDU_WITH_DYNAMIC_LINKING - 信息！")
@@ -141,7 +157,9 @@ if (BUILD_SHARED_LIBS)
             INTERFACE
             RENDU_API_USE_DYNAMIC_LINKING)
 
-    WarnAboutSpacesInBuildPath()
+    if (COMMAND rendu_warn_about_spaces_in_build_path)
+        rendu_warn_about_spaces_in_build_path()
+    endif ()
 endif ()
 
 rendu_log_info("*****************************************************")

@@ -49,27 +49,35 @@ function(rendu_add_executable)
     if (NOT ARG_DIR)
         rendu_log_fatal("rendu_add_executable: 必须指定 DIR")
     endif ()
+    if (NOT IS_DIRECTORY "${ARG_DIR}")
+        rendu_log_fatal("rendu_add_executable: 源码目录不存在: ${ARG_DIR}")
+    endif ()
 
     # 收集源文件
     if (NOT ARG_SOURCES)
-        rendu_collect_source_files(SRC_LIST "${ARG_DIR}")
+        rendu_collect_source_files(src_list "${ARG_DIR}")
     else ()
-        set(SRC_LIST ${ARG_SOURCES})
+        set(src_list ${ARG_SOURCES})
+    endif ()
+
+    # 检查是否有源文件
+    if (NOT src_list)
+        rendu_log_warn("rendu_add_executable: 未找到源文件")
     endif ()
 
     # 生成目标名称
     set(target_name "${ARG_PROJECT}_${ARG_NAME}")
-    add_executable(${target_name} ${SRC_LIST})
+    add_executable(${target_name} ${src_list})
 
     # 自动收集 include 目录
-    rendu_collect_include_directories(INCLUDE_DIRS "${ARG_DIR}"
+    rendu_collect_include_directories(include_dirs "${ARG_DIR}"
             EXCLUDE_DIRS
             "${ARG_DIR}/tests"
             "${CMAKE_BINARY_DIR}"
             EXCLUDE_REGEX ".*/private"
     )
 
-    target_include_directories(${target_name} PUBLIC ${INCLUDE_DIRS})
+    target_include_directories(${target_name} PUBLIC ${include_dirs})
 
     # 设置目标属性
     if (ARG_PROJECT)

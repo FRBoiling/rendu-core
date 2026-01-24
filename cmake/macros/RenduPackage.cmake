@@ -6,8 +6,8 @@
 # ====================================================================
 
 # ====================================================================
-# rendu_package_project
-# 项目安装与打包辅助函数 / Project install & packaging helper function
+# 函数: rendu_package_project
+# 描述: 项目安装与打包辅助函数 / Project install & packaging helper function
 #
 # 参数说明 / Arguments:
 #   NAME                - 项目名称 / Project name
@@ -15,7 +15,7 @@
 #   INCLUDE_DIR         - 头文件目录 / Include directory
 #   INCLUDE_DESTINATION - 头文件安装目标目录 / Install destination for headers
 #   BINARY_DIR          - 构建输出目录 / Build output directory
-#   COMPATIBILITY       - 版本兼容性 / Version compatibility (default: AnyNewerVersion)
+#   COMPATIBILITY       - 版本兼容性 / Version compatibility (默认: AnyNewerVersion)
 #   EXPORT_HEADER       - 导出头文件名 / Export header filename
 #   VERSION_HEADER      - 版本头文件名 / Version header filename
 #   NAMESPACE           - CMake target 命名空间 / CMake target namespace
@@ -25,7 +25,15 @@
 #   CPACK               - 是否启用 CPack 打包 / Enable CPack packaging
 #   RUNTIME_DESTINATION - 运行时目标目录 / Runtime install destination
 #   DEPENDENCIES        - 依赖列表 / Dependencies
-# =========================
+#
+# 用法示例:
+#   rendu_package_project(
+#       NAME myproject
+#       VERSION 1.0.0
+#       INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include
+#       INCLUDE_DESTINATION include
+#   )
+# ====================================================================
 
 function(rendu_package_project)
     include(CMakePackageConfigHelpers)
@@ -66,8 +74,8 @@ function(rendu_package_project)
         if (ARG_CPACK)
             set(CPACK_PACKAGE_NAMESPACE ${ARG_NAMESPACE})
         endif ()
-        set(ARG_NAMESPACE ${ARG_NAMESPACE}::)
-        add_library(${ARG_NAMESPACE}${ARG_NAME} ALIAS ${ARG_NAME})
+        set(namespace ${ARG_NAMESPACE}::)
+        add_library(${namespace}${ARG_NAME} ALIAS ${ARG_NAME})
     endif ()
 
     # ====================================================================
@@ -85,8 +93,8 @@ function(rendu_package_project)
 
         if (DEFINED ARG_VERSION_HEADER)
             # ====================================================================
-        # 解析版本号
-        # ====================================================================
+            # 解析版本号 (提取 Major.Minor.Patch.Tweak 四部分)
+            # ====================================================================
             unset(CMAKE_MATCH_1)
             unset(CMAKE_MATCH_3)
             unset(CMAKE_MATCH_5)
@@ -120,19 +128,19 @@ function(rendu_package_project)
             )
         endif ()
 
-        # ====================================================================
-        # 设置 include 目录
-        # ====================================================================
-        get_target_property(target_type ${ARG_NAME} TYPE)
-        if (target_type STREQUAL "INTERFACE_LIBRARY")
-            set(VISIBILITY INTERFACE)
-        else ()
-            set(VISIBILITY PUBLIC)
-        endif ()
-        target_include_directories(
-                ${ARG_NAME} ${VISIBILITY} "$<BUILD_INTERFACE:${ARG_VERSION_INCLUDE_DIR}>"
+    # ====================================================================
+    # 设置 include 目录
+    # ====================================================================
+    get_target_property(target_type ${ARG_NAME} TYPE)
+    if (target_type STREQUAL "INTERFACE_LIBRARY")
+        set(visibility INTERFACE)
+    else ()
+        set(visibility PUBLIC)
+    endif ()
+    target_include_directories(
+                ${ARG_NAME} ${visibility} "$<BUILD_INTERFACE:${ARG_VERSION_INCLUDE_DIR}>"
         )
-        install(
+    install(
                 DIRECTORY ${ARG_VERSION_INCLUDE_DIR}/
                 DESTINATION ${ARG_INCLUDE_DESTINATION}
                 COMPONENT "${ARG_NAME}_Development"

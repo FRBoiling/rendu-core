@@ -103,9 +103,13 @@ function(rendu_add_custom_target)
     # 收集源文件
     set(source_files "")
     if (ARG_DIR AND NOT ARG_SOURCES)
-        rendu_collect_source_files(SRC_LIST "${ARG_DIR}")
-        set(source_files ${SRC_LIST})
-        rendu_log_debug("自动收集到 ${SRC_LIST} 个源文件")
+        if (NOT IS_DIRECTORY "${ARG_DIR}")
+            rendu_log_warn("rendu_add_custom_target: 源码目录不存在: ${ARG_DIR}")
+        else ()
+            rendu_collect_source_files(src_list "${ARG_DIR}")
+            set(source_files ${src_list})
+            rendu_log_debug("自动收集到 ${src_list} 个源文件")
+        endif ()
     elseif (ARG_SOURCES)
         set(source_files ${ARG_SOURCES})
     endif ()
@@ -163,42 +167,6 @@ function(rendu_add_custom_target)
             set(cmd_executable "")
         endif ()
 
-        # 构建 DEPENDS 列表（如果存在）
-        set(depend_args "")
-        if (ARG_DEPENDS)
-            list(APPEND depend_args DEPENDS ${ARG_DEPENDS})
-        endif ()
-
-        # 构建 BYPRODUCTS 列表（如果存在）
-        set(byproduct_args "")
-        if (ARG_BYPRODUCTS)
-            list(APPEND byproduct_args BYPRODUCTS ${ARG_BYPRODUCTS})
-        endif ()
-
-        # 构建 SOURCES 列表（如果存在）
-        set(source_args "")
-        if (source_files)
-            list(APPEND source_args SOURCES ${source_files})
-        endif ()
-
-        # 构建 COMMENT 列表（如果存在）
-        set(comment_args "")
-        if (ARG_COMMENT)
-            list(APPEND comment_args COMMENT "${ARG_COMMENT}")
-        endif ()
-
-        # 构建 VERBATIM 列表（如果存在）
-        set(verbatim_args "")
-        if (ARG_VERBATIM)
-            list(APPEND verbatim_args VERBATIM)
-        endif ()
-
-        # 构建 JOB_POOL 列表（如果存在）
-        set(jobpool_args "")
-        if (ARG_JOB_POOL)
-            list(APPEND jobpool_args JOB_POOL ${ARG_JOB_POOL})
-        endif ()
-
         # 提取命令参数（跳过第一个元素，因为它是可执行文件）
         if (cmd_length GREATER 1)
             list(SUBLIST full_command 1 -1 cmd_rest)
@@ -206,29 +174,29 @@ function(rendu_add_custom_target)
             set(cmd_rest "")
         endif ()
 
-        # 使用 add_custom_target
+        # 构建 add_custom_target 调用
         if (ARG_ALL)
             if (cmd_rest)
                 add_custom_target(${target_name} ALL
                     COMMAND ${cmd_executable} ${cmd_rest}
                     WORKING_DIRECTORY ${ARG_WORKING_DIR}
-                    ${depend_args}
-                    ${byproduct_args}
-                    ${source_args}
-                    ${comment_args}
-                    ${verbatim_args}
-                    ${jobpool_args}
+                    DEPENDS ${ARG_DEPENDS}
+                    BYPRODUCTS ${ARG_BYPRODUCTS}
+                    SOURCES ${source_files}
+                    COMMENT "${ARG_COMMENT}"
+                    VERBATIM ${ARG_VERBATIM}
+                    JOB_POOL ${ARG_JOB_POOL}
                 )
             else ()
                 add_custom_target(${target_name} ALL
                     COMMAND ${cmd_executable}
                     WORKING_DIRECTORY ${ARG_WORKING_DIR}
-                    ${depend_args}
-                    ${byproduct_args}
-                    ${source_args}
-                    ${comment_args}
-                    ${verbatim_args}
-                    ${jobpool_args}
+                    DEPENDS ${ARG_DEPENDS}
+                    BYPRODUCTS ${ARG_BYPRODUCTS}
+                    SOURCES ${source_files}
+                    COMMENT "${ARG_COMMENT}"
+                    VERBATIM ${ARG_VERBATIM}
+                    JOB_POOL ${ARG_JOB_POOL}
                 )
             endif ()
         else ()
@@ -236,23 +204,23 @@ function(rendu_add_custom_target)
                 add_custom_target(${target_name}
                     COMMAND ${cmd_executable} ${cmd_rest}
                     WORKING_DIRECTORY ${ARG_WORKING_DIR}
-                    ${depend_args}
-                    ${byproduct_args}
-                    ${source_args}
-                    ${comment_args}
-                    ${verbatim_args}
-                    ${jobpool_args}
+                    DEPENDS ${ARG_DEPENDS}
+                    BYPRODUCTS ${ARG_BYPRODUCTS}
+                    SOURCES ${source_files}
+                    COMMENT "${ARG_COMMENT}"
+                    VERBATIM ${ARG_VERBATIM}
+                    JOB_POOL ${ARG_JOB_POOL}
                 )
             else ()
                 add_custom_target(${target_name}
                     COMMAND ${cmd_executable}
                     WORKING_DIRECTORY ${ARG_WORKING_DIR}
-                    ${depend_args}
-                    ${byproduct_args}
-                    ${source_args}
-                    ${comment_args}
-                    ${verbatim_args}
-                    ${jobpool_args}
+                    DEPENDS ${ARG_DEPENDS}
+                    BYPRODUCTS ${ARG_BYPRODUCTS}
+                    SOURCES ${source_files}
+                    COMMENT "${ARG_COMMENT}"
+                    VERBATIM ${ARG_VERBATIM}
+                    JOB_POOL ${ARG_JOB_POOL}
                 )
             endif ()
         endif ()
@@ -338,6 +306,9 @@ function(rendu_add_custom_command)
     if (NOT ARG_COMMAND)
         rendu_log_fatal("rendu_add_custom_command: 必须指定 COMMAND")
     endif ()
+    if ("${ARG_COMMAND}" STREQUAL "")
+        rendu_log_fatal("rendu_add_custom_command: COMMAND 参数为空字符串")
+    endif ()
 
     # 设置默认值
     if (NOT ARG_WORKING_DIR)
@@ -351,8 +322,12 @@ function(rendu_add_custom_command)
     # 收集源文件
     set(source_files "")
     if (ARG_DIR AND NOT ARG_SOURCES)
-        rendu_collect_source_files(SRC_LIST "${ARG_DIR}")
-        set(source_files ${SRC_LIST})
+        if (NOT IS_DIRECTORY "${ARG_DIR}")
+            rendu_log_warn("rendu_add_custom_command: 源码目录不存在: ${ARG_DIR}")
+        else ()
+            rendu_collect_source_files(src_list "${ARG_DIR}")
+            set(source_files ${src_list})
+        endif ()
     elseif (ARG_SOURCES)
         set(source_files ${ARG_SOURCES})
     endif ()

@@ -53,24 +53,27 @@ function(rendu_add_library)
     if (NOT ARG_DIR)
         rendu_log_fatal("rendu_add_library: 必须指定 DIR")
     endif ()
+    if (NOT IS_DIRECTORY "${ARG_DIR}")
+        rendu_log_fatal("rendu_add_library: 源码目录不存在: ${ARG_DIR}")
+    endif ()
 
     # 收集源文件
     if (NOT ARG_SOURCES)
         rendu_collect_source_files(
-                SRC_LIST ${ARG_DIR}
+                src_list "${ARG_DIR}"
                 EXTENSIONS .c .cc .cpp .inl
                 EXCLUDE_DIRS
                 "${ARG_DIR}/precompiled_headers"
         )
     else ()
-        set(SRC_LIST ${ARG_SOURCES})
+        set(src_list ${ARG_SOURCES})
     endif ()
 
     # 生成目标名称
     set(target_name "${ARG_PROJECT}_${ARG_NAME}")
 
     # 创建库，自动判断是否为 header-only
-    if (SRC_LIST)
+    if (src_list)
         if (ARG_STATIC)
             set(lib_type STATIC)
         elseif (ARG_SHARED)
@@ -81,7 +84,7 @@ function(rendu_add_library)
             set(lib_type STATIC)  # 默认静态库
         endif ()
 
-        add_library(${target_name} ${lib_type} ${SRC_LIST})
+        add_library(${target_name} ${lib_type} ${src_list})
         rendu_log_debug("${target_name} ${lib_type} 库")
     else ()
         set(lib_type INTERFACE)
@@ -96,7 +99,7 @@ function(rendu_add_library)
     endif ()
 
     # 自动收集 include 目录
-    rendu_collect_include_directories(INCLUDE_DIRS "${ARG_DIR}"
+    rendu_collect_include_directories(include_dirs "${ARG_DIR}"
             EXCLUDE_DIRS
             "${ARG_DIR}/tests"
             "${CMAKE_BINARY_DIR}"
@@ -110,12 +113,16 @@ function(rendu_add_library)
         set(visibility PUBLIC)
     endif ()
 
-    # 添加包含目录
-    include_directories(${RENDU_BUILDDIR})
+    # 添加包含目录 (使用 target_include_directories 而非全局 include_directories)
+    if (DEFINED RENDU_BUILDDIR)
+        target_include_directories(${target_name}
+                ${visibility}
+                ${RENDU_BUILDDIR}
+        )
+    endif ()
     target_include_directories(${target_name}
             ${visibility}
-            ${RENDU_BUILDDIR}
-            ${INCLUDE_DIRS}
+            ${include_dirs}
     )
 
     # 链接接口库

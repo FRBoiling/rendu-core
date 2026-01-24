@@ -61,15 +61,20 @@ endfunction()
 # ====================================================================
 function(rendu_add_uninstall_target)
     if (NOT TARGET uninstall)
-        configure_file(
-            "${CMAKE_SOURCE_DIR}/cmake/platform/cmake_uninstall.in.cmake"
-            "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-            @ONLY
-        )
-        add_custom_target(uninstall
-            COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
-            COMMENT "卸载所有已安装文件"
-        )
-        rendu_log_info("添加卸载目标")
+        # 检查卸载脚本模板是否存在
+        if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/platform/cmake_uninstall.in.cmake")
+            configure_file(
+                "${CMAKE_SOURCE_DIR}/cmake/platform/cmake_uninstall.in.cmake"
+                "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+                @ONLY
+            )
+            add_custom_target(uninstall
+                COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+                COMMENT "卸载所有已安装文件"
+            )
+            rendu_log_info("添加卸载目标")
+        else ()
+            rendu_log_warn("未找到卸载脚本模板，跳过添加卸载目标")
+        endif ()
     endif ()
 endfunction()

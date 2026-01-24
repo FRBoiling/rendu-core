@@ -8,6 +8,9 @@
 # ====================================================================
 # 函数: rendu_check_platform
 # 描述: 检测平台位数和处理器架构
+#
+# 用法示例:
+#   rendu_check_platform()
 # ====================================================================
 function(rendu_check_platform)
     # 检测 64 位或 32 位平台
@@ -30,7 +33,10 @@ function(rendu_check_platform)
         set(RENDU_SYSTEM_PROCESSOR "x86")
     endif ()
 
-    # 兼容 MSVC 的 -A 平台参数
+# ====================================================================
+# 兼容 MSVC 的 -A 平台参数
+# 说明: 当使用 cmake -A x64 等参数时，覆盖自动检测的处理器架构
+# ====================================================================
     if (CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
         set(RENDU_SYSTEM_PROCESSOR "x86")
     elseif (CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
@@ -43,10 +49,13 @@ function(rendu_check_platform)
     set(RENDU_SYSTEM_PROCESSOR ${RENDU_SYSTEM_PROCESSOR} PARENT_SCOPE)
     rendu_log_info("检测到 ${RENDU_SYSTEM_PROCESSOR} 处理器架构")
 
-    # 平台相关设置
-    if (WIN32)
+# ====================================================================
+# 平台相关设置（仅在配置文件存在时加载）
+# 说明: 加载平台特定的编译器和链接器设置
+# ====================================================================
+    if (WIN32 AND EXISTS "${CMAKE_SOURCE_DIR}/cmake/platform/win/settings.cmake")
         include("${CMAKE_SOURCE_DIR}/cmake/platform/win/settings.cmake")
-    elseif (UNIX)
+    elseif (UNIX AND EXISTS "${CMAKE_SOURCE_DIR}/cmake/platform/unix/settings.cmake")
         include("${CMAKE_SOURCE_DIR}/cmake/platform/unix/settings.cmake")
     endif ()
 endfunction()
@@ -54,16 +63,27 @@ endfunction()
 # ====================================================================
 # 函数: rendu_check_compiler
 # 描述: 检测编译器类型并加载对应配置
+#
+# 用法示例:
+#   rendu_check_compiler()
 # ====================================================================
 function(rendu_check_compiler)
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
-        include("${CMAKE_SOURCE_DIR}/cmake/compiler/msvc/settings.cmake")
+        if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/compiler/msvc/settings.cmake")
+            include("${CMAKE_SOURCE_DIR}/cmake/compiler/msvc/settings.cmake")
+        endif ()
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        include("${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake")
+        if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake")
+            include("${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake")
+        endif ()
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        include("${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake")
+        if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake")
+            include("${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake")
+        endif ()
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-        include("${CMAKE_SOURCE_DIR}/cmake/compiler/icc/settings.cmake")
+        if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/compiler/icc/settings.cmake")
+            include("${CMAKE_SOURCE_DIR}/cmake/compiler/icc/settings.cmake")
+        endif ()
     endif ()
 endfunction()
 

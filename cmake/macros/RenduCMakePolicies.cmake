@@ -18,6 +18,9 @@
 #   CMP0150: 相对 git 仓库路径以父项目 remote 为基准
 #   CMP0167: FindBoost 模块已被移除，使用 CONFIG 模式
 #   CMP0174: 头文件单元测试支持
+#
+# 用法示例:
+#   rendu_set_policies()
 # ====================================================================
 macro(rendu_set_policies)
     # CMP0144: 允许 find_dependency() 继承父项目的参数
@@ -62,5 +65,13 @@ macro(rendu_set_policies)
     if (POLICY CMP0174)
         cmake_policy(SET CMP0174 NEW)
         set(CMAKE_POLICY_DEFAULT_CMP0174 NEW)
+    endif ()
+
+    # CMP0141: MSVC 调试信息格式抽象
+    # 说明: 使用 CMAKE_MSVC_DEBUG_INFORMATION_FORMAT 变量和 MSVC_DEBUG_INFORMATION_FORMAT 目标属性
+    #       来控制 MSVC 调试信息格式，而不是将标志硬编码到 CMAKE_<LANG>_FLAGS_<CONFIG> 缓存条目中
+    if (POLICY CMP0141)
+        cmake_policy(SET CMP0141 NEW)
+        set(CMAKE_POLICY_DEFAULT_CMP0141 NEW)
     endif ()
 endmacro()

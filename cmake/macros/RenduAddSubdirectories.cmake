@@ -38,7 +38,10 @@ function(rendu_add_subdirectories)
         return()
     endif ()
 
-    # 优化：规范化排除目录为绝对路径并去除末尾斜杠（避免重复计算）
+# ====================================================================
+# 优化：规范化排除目录为绝对路径并去除末尾斜杠（避免重复计算）
+# 性能改进: 预处理排除目录，减少运行时计算开销
+# ====================================================================
     set(EXCLUDE_ABS_DIRS "")
     if (ARG_EXCLUDE_DIRS)
         foreach (excl IN LISTS ARG_EXCLUDE_DIRS)
@@ -60,7 +63,10 @@ function(rendu_add_subdirectories)
             get_filename_component(child_abs "${child_path}" ABSOLUTE)
             string(REGEX REPLACE "/$" "" child_abs "${child_abs}")
 
-            # 优化：只有存在排除列表时才进行查找
+# ====================================================================
+# 优化：只有存在排除列表时才进行查找
+# 性能改进: 条件性查找，减少不必要的列表操作
+# ====================================================================
             set(found -1)
             if (EXCLUDE_ABS_DIRS)
                 list(FIND EXCLUDE_ABS_DIRS "${child_abs}" found)
@@ -70,7 +76,10 @@ function(rendu_add_subdirectories)
                 add_subdirectory("${child_path}")
                 rendu_log_info("添加子目录: ${child_path}")
 
-                # 递归添加子目录
+# ====================================================================
+# 递归添加子目录（当 RECURSIVE 选项启用时）
+# 说明: 递归调用当前函数处理子目录，保持相同的排除规则
+# ====================================================================
                 if (ARG_RECURSIVE)
                     rendu_add_subdirectories(DIR "${child_path}" EXCLUDE_DIRS ${ARG_EXCLUDE_DIRS} RECURSIVE)
                 endif ()

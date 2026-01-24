@@ -20,14 +20,20 @@
 macro(rendu_source_group GROUP_NAME)
     set(files ${ARGN})
 
-    # 兼容 Windows 分组分隔符
+# ====================================================================
+# 兼容 Windows 分组分隔符
+# 说明: Windows 使用反斜杠作为路径分隔符，需要转换
+# ====================================================================
     if (WIN32)
         string(REPLACE "/" "\\" group "${GROUP_NAME}")
     else ()
         set(group "${GROUP_NAME}")
     endif ()
 
-    # 空分组名归为根分组
+# ====================================================================
+# 空分组名归为根分组
+# 说明: 在 Visual Studio 中，双反斜杠表示根节点
+# ====================================================================
     if (group STREQUAL "")
         set(group "\\")
     endif ()
@@ -85,7 +91,10 @@ macro(rendu_source_groups dir)
         return()
     endif ()
 
-    # 检查分组模式 (兼容新旧变量名)
+# ====================================================================
+# 检查分组模式（兼容新旧变量名）
+# 说明: 支持新旧两种变量名（WITH_SOURCE_TREE 和 RENDU_SOURCE_GROUPING_MODE）
+# ====================================================================
     if (DEFINED WITH_SOURCE_TREE AND NOT DEFINED RENDU_SOURCE_GROUPING_MODE)
         set(RENDU_SOURCE_GROUPING_MODE "${WITH_SOURCE_TREE}")
     elseif (NOT DEFINED RENDU_SOURCE_GROUPING_MODE)
@@ -114,6 +123,22 @@ macro(rendu_source_groups dir)
             ${patterns}
         )
 
+# ====================================================================
+# 预计算排除目录绝对路径（性能优化）
+# 说明: 避免在循环中重复计算路径，提高性能
+# ====================================================================
+        set(EXCLUDE_ABS_DIRS "")
+        if (ARG_EXCLUDE_DIRS)
+            foreach (excl_dir IN LISTS ARG_EXCLUDE_DIRS)
+                if (IS_ABSOLUTE "${excl_dir}")
+                    set(excl_dir_abs "${excl_dir}")
+                else ()
+                    get_filename_component(excl_dir_abs "${excl_dir}" ABSOLUTE BASE_DIR "${dir}")
+                endif ()
+                list(APPEND EXCLUDE_ABS_DIRS "${excl_dir_abs}")
+            endforeach ()
+        endif ()
+
         # 过滤排除目录
         set(filtered_elements "")
         foreach (element IN LISTS elements)
@@ -121,13 +146,17 @@ macro(rendu_source_groups dir)
 
             # 检查是否在排除目录中
             get_filename_component(element_dir "${element}" DIRECTORY)
-            foreach (excl_dir IN LISTS ARG_EXCLUDE_DIRS)
-                string(FIND "${dir}/${element_dir}" "${excl_dir}" pos)
-                if (pos EQUAL 0)
-                    set(include_file FALSE)
-                    break()
-                endif ()
-            endforeach ()
+            set(element_full_path "${dir}/${element_dir}")
+
+            if (EXCLUDE_ABS_DIRS)
+                foreach (excl_dir_abs IN LISTS EXCLUDE_ABS_DIRS)
+                    string(FIND "${element_full_path}" "${excl_dir_abs}" pos)
+                    if (pos EQUAL 0)
+                        set(include_file FALSE)
+                        break()
+                    endif ()
+                endforeach ()
+            endif ()
 
             if (include_file)
                 list(APPEND filtered_elements "${element}")

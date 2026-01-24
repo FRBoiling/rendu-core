@@ -29,8 +29,14 @@ macro(rendu_normalize_version _requested_version _normalized_version)
 endmacro()
 
 # ====================================================================
-# 版本范围检查宏
-# 检查版本是否在指定范围内（包含下限，不包含上限）
+# 宏: rendu_check_range_inclusive_lower
+# 描述: 检查版本是否在指定范围内（包含下限，不包含上限）
+#
+# 参数:
+#   _lower_limit - 下限值
+#   _value       - 待检查的值
+#   _upper_limit - 上限值
+#   _ok          - 结果变量名 (TRUE/FALSE)
 # ====================================================================
 macro(rendu_check_range_inclusive_lower _lower_limit _value _upper_limit _ok)
     if (${_value} LESS ${_lower_limit})
@@ -47,8 +53,13 @@ macro(rendu_check_range_inclusive_lower _lower_limit _value _upper_limit _ok)
 endmacro()
 
 # ====================================================================
-# 版本确保宏
-# 检查 found_version 是否满足 requested_version 的最低要求
+# 宏: rendu_ensure_version
+# 描述: 检查 found_version 是否满足 requested_version 的最低要求
+#
+# 参数:
+#   requested_version - 要求的最低版本
+#   found_version     - 实际找到的版本
+#   var_ok           - 结果变量名 (TRUE/FALSE)
 # ====================================================================
 macro(rendu_ensure_version requested_version found_version var_ok)
     rendu_normalize_version(${requested_version} req_vers_num)
@@ -61,16 +72,27 @@ macro(rendu_ensure_version requested_version found_version var_ok)
 endmacro()
 
 # ====================================================================
-# 版本确保宏（别名）
-# rendu_ensure_version 的别名实现，保持向后兼容
+# 宏: rendu_ensure_version2
+# 描述: rendu_ensure_version 的别名实现，保持向后兼容
+#
+# 参数:
+#   requested_version2 - 要求的最低版本
+#   found_version2     - 实际找到的版本
+#   var_ok2            - 结果变量名 (TRUE/FALSE)
 # ====================================================================
 macro(rendu_ensure_version2 requested_version2 found_version2 var_ok2)
     rendu_ensure_version(${requested_version2} ${found_version2} ${var_ok2})
 endmacro()
 
 # ====================================================================
-# 版本范围确保宏
-# 检查 found_version 是否在 min_version 和 max_version 之间
+# 宏: rendu_ensure_version_range
+# 描述: 检查 found_version 是否在 min_version 和 max_version 之间
+#
+# 参数:
+#   min_version  - 最低版本
+#   found_version - 实际找到的版本
+#   max_version  - 最高版本
+#   var_ok       - 结果变量名 (TRUE/FALSE)
 # ====================================================================
 macro(rendu_ensure_version_range min_version found_version max_version var_ok)
     rendu_normalize_version(${min_version} req_vers_num)
