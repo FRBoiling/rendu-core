@@ -84,15 +84,15 @@ Logger& get_logger(const std::string& name);
 void set_default_logger(std::shared_ptr<Logger> logger);
 
 // 宏定义
-#define RENDU_LOG_TRACE(msg) ::rendu::log::default_logger().trace(msg)
-#define RENDU_LOG_DEBUG(msg) ::rendu::log::default_logger().debug(msg)
-#define RENDU_LOG_INFO(msg)  ::rendu::log::default_logger().info(msg)
-#define RENDU_LOG_WARN(msg)  ::rendu::log::default_logger().warn(msg)
-#define RENDU_LOG_ERROR(msg) ::rendu::log::default_logger().error(msg)
-#define RENDU_LOG_CRITICAL(msg) ::rendu::log::default_logger().critical(msg)
+#define RENDU_LOG_TRACE(msg) ::Rendu::log::default_logger().trace(msg)
+#define RENDU_LOG_DEBUG(msg) ::Rendu::log::default_logger().debug(msg)
+#define RENDU_LOG_INFO(msg)  ::Rendu::log::default_logger().info(msg)
+#define RENDU_LOG_WARN(msg)  ::Rendu::log::default_logger().warn(msg)
+#define RENDU_LOG_ERROR(msg) ::Rendu::log::default_logger().error(msg)
+#define RENDU_LOG_CRITICAL(msg) ::Rendu::log::default_logger().critical(msg)
 
 #define RENDU_NAMED_LOG(name, level, msg) \
-    ::rendu::log::get_logger(name).log(level, msg)
+    ::Rendu::log::get_logger(name).log(level, msg)
 
 // 流式日志宏
 #define RENDU_LOG_STREAM(logger, level) \

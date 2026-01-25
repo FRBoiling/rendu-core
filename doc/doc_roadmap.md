@@ -99,25 +99,38 @@
 
 ---
 
-## 阶段 4: Common 层 - 网络通信 (net)
+## 阶段 4: Common 层 - 网络通信 (net) ✅
 
 ### 目标
 - 封装网络通信接口
 - 提供统一的通信通道
 
 ### 任务
-- [ ] `socket.h` - Socket 封装（TCP/UDP）
-- [ ] `channel.h` - 通信通道抽象，处理连接、发送、接收
-- [ ] `codec.h` - 编解码器接口
+- [x] `socket.h` - Socket 封装（TCP/UDP）
+- [x] `channel.h` - 通信通道抽象，处理连接、发送、接收
+- [x] `codec.h` - 编解码器接口
 
 ### 验收标准
-- Socket 连接建立/断开正常
-- 数据收发无丢失
-- 支持自定义编解码
+- [x] Socket 连接建立/断开正常
+- [x] 数据收发无丢失
+- [x] 支持自定义编解码
+- [x] 单元测试完成
 
 ### 依赖
 - 阶段 2 (io)
 - 阶段 3 (log)
+
+### 完成日期
+**2026-01-25**
+
+### 实现状态
+- ✅ 设计文档完成
+- ✅ Socket 层实现（TcpSocket、TcpAcceptor）
+- ✅ Codec 层实现（LengthPrefixCodec、DelimiterCodec、LineCodec）
+- ✅ Channel 层实现（Channel、ChannelFactory）
+- ✅ 单元测试完成（codec_test、socket_test、channel_test）
+- ✅ 集成测试完成（Echo 服务器）
+- ✅ 测试修复（命名空间、IoContext 使用）
 
 ---
 
