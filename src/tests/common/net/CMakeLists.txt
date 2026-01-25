@@ -45,3 +45,25 @@ rendu_add_test(
         PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
         TEST_FRAMEWORK CATCH2
 )
+
+# UDP 测试
+rendu_add_test(
+        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT       ${PROJECT_NAME}
+        NAME          udp_test
+        SOURCES       udp_test.cpp
+        PRIVATE_LINK  rendu-core-interface
+        PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+        TEST_FRAMEWORK CATCH2
+)
+
+# KCP 测试（占位，需要集成 KCP 库）
+# rendu_add_test(
+#         DIR           ${CMAKE_CURRENT_SOURCE_DIR}
+#         PROJECT       ${PROJECT_NAME}
+#         NAME          kcp_test
+#         SOURCES       kcp_test.cpp
+#         PRIVATE_LINK  rendu-core-interface
+#         PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+#         TEST_FRAMEWORK CATCH2
+# )

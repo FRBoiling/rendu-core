@@ -285,5 +285,161 @@ boost::asio::ip::tcp::endpoint TcpAcceptor::local_endpoint() const {
     return endpoint;
 }
 
+// ============================================================================
+// UdpSocket 实现
+// ============================================================================
+
+UdpSocket::UdpSocket(io::IoContext& io, uint16_t port)
+    : io_(io)
+    , socket_(io.native())
+{
+    // 打开 socket（IPv4 协议）
+    boost::system::error_code ec;
+    socket_.open(boost::asio::ip::udp::v4(), ec);
+    if (ec) {
+        std::ostringstream oss;
+        oss << "Failed to open UDP socket: " << ec.message();
+        RENDU_LOG_ERROR(oss.str());
+        throw std::runtime_error("Failed to open UDP socket: " + ec.message());
+    }
+
+    // 绑定到指定端口（0 表示自动分配）
+    bind(port);
+}
+
+UdpSocket::~UdpSocket() {
+    close();
+}
+
+void UdpSocket::async_send_to(const std::vector<byte>& data,
+                              const boost::asio::ip::udp::endpoint& endpoint,
+                              SendCallback callback) {
+    if (!is_open()) {
+        boost::system::error_code ec(boost::system::errc::not_connected,
+                                  boost::system::system_category());
+        callback(ec, 0);
+        return;
+    }
+
+    // 异步发送
+    socket_.async_send_to(
+        boost::asio::buffer(data), endpoint,
+        [callback](const boost::system::error_code& ec, size_t bytes_sent) {
+            callback(ec, bytes_sent);
+        }
+    );
+}
+
+void UdpSocket::async_receive_from(size_t size, ReceiveCallback callback) {
+    if (!is_open()) {
+        boost::system::error_code ec(boost::system::errc::not_connected,
+                                  boost::system::system_category());
+        callback(ec, {});
+        return;
+    }
+
+    // 准备接收缓冲区
+    auto buffer = std::make_shared<std::vector<byte>>(size);
+    auto endpoint = std::make_shared<boost::asio::ip::udp::endpoint>();
+
+    // 异步接收
+    socket_.async_receive_from(
+        boost::asio::buffer(*buffer), *endpoint,
+        [callback, buffer, endpoint](const boost::system::error_code& ec, size_t bytes_received) {
+            if (ec || bytes_received == 0) {
+                callback(ec, {});
+            } else {
+                // 调整缓冲区大小到实际接收的字节数
+                buffer->resize(bytes_received);
+                callback(ec, std::move(*buffer));
+            }
+        }
+    );
+}
+
+void UdpSocket::bind(uint16_t port, const std::string& multicast_addr) {
+    boost::system::error_code ec;
+    boost::asio::ip::udp::endpoint endpoint(boost::asio::ip::udp::v4(), port);
+    socket_.bind(endpoint, ec);
+
+    if (ec) {
+        std::ostringstream oss;
+        oss << "Failed to bind UDP socket to port " << port << ": " << ec.message();
+        RENDU_LOG_ERROR(oss.str());
+        throw std::runtime_error("Failed to bind UDP socket: " + ec.message());
+    }
+
+    // 如果指定了多播地址，加入多播组
+    if (!multicast_addr.empty()) {
+        join_multicast(multicast_addr);
+    }
+
+    {
+        std::ostringstream oss;
+        oss << "UDP socket bound to port " << port;
+        RENDU_LOG_INFO(oss.str());
+    }
+}
+
+void UdpSocket::join_multicast(const std::string& multicast_addr) {
+    // TODO: 实现多播支持（需要 Boost.Asio 多播选项）
+    RENDU_LOG_WARN("Multicast not yet implemented");
+}
+
+void UdpSocket::leave_multicast(const std::string& multicast_addr) {
+    // TODO: 实现多播支持
+    RENDU_LOG_WARN("Multicast not yet implemented");
+}
+
+void UdpSocket::set_broadcast(bool enable) {
+    boost::system::error_code ec;
+    socket_.set_option(boost::asio::socket_base::broadcast(enable), ec);
+
+    if (ec) {
+        std::ostringstream oss;
+        oss << "Failed to set broadcast option: " << ec.message();
+        RENDU_LOG_WARN(oss.str());
+    }
+}
+
+void UdpSocket::close() {
+    boost::system::error_code ec;
+    socket_.close(ec);
+
+    if (ec) {
+        RENDU_LOG_WARN("UDP socket close error");
+    }
+}
+
+bool UdpSocket::is_open() const {
+    return socket_.is_open();
+}
+
+boost::asio::ip::udp::endpoint UdpSocket::local_endpoint() const {
+    boost::system::error_code ec;
+    auto endpoint = socket_.local_endpoint(ec);
+
+    if (ec) {
+        RENDU_LOG_ERROR("Get UDP local endpoint failed");
+    }
+
+    return endpoint;
+}
+
+boost::asio::ip::udp::socket& UdpSocket::native_socket() {
+    return socket_;
+}
+
+const boost::asio::ip::udp::socket& UdpSocket::native_socket() const {
+    return socket_;
+}
+
+// ============================================================================
+// KCP Socket 占位实现（需要集成 KCP 库）
+// ============================================================================
+
+// KCP Socket 将在未来版本中实现
+// 需要引入 KCP 库 (https://github.com/skywind3000/kcp)
+
 } // namespace net
 END_NAMESPACE_COMMON

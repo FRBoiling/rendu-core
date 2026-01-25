@@ -7,7 +7,7 @@
 
 ### 1.2 核心特性
 - **异步 I/O**: 基于 Boost.Asio 的非阻塞 I/O 模型
-- **协议支持**: TCP（核心）、UDP（扩展）
+- **协议支持**: TCP（核心）、UDP（扩展）、KCP（计划中）
 - **编解码器**: 可插拔的编解码器设计
 - **高性能**: 零拷贝优化、批量发送
 - **线程安全**: 支持多线程并发操作
@@ -66,6 +66,8 @@
 - 封装原始 Socket 操作
 - 处理底层连接、发送、接收
 - 提供异步接口
+- 支持 TCP、UDP 协议
+- KCP 协议（计划中）
 
 #### Channel 层
 - 管理连接生命周期
@@ -225,6 +227,57 @@ private:
     io::IoContext& io_;
     boost::asio::ip::tcp::acceptor acceptor_;
     std::atomic<bool> listening_;
+};
+```
+
+#### 5.1.3 UdpSocket
+
+**职责**: 封装 UDP Socket，提供无连接的异步发送、接收功能
+
+**核心功能**:
+1. **异步发送到指定端点**
+   - 支持 send_to 操作
+   - 无连接协议
+   - 支持广播
+
+2. **异步接收**
+   - 接收来自任意端点的数据
+   - 返回发送端点信息
+
+3. **端口管理**
+   - 支持自动分配端口
+   - 支持指定端口绑定
+   - 多播支持（计划中）
+
+**接口定义**:
+```cpp
+class UdpSocket {
+public:
+    explicit UdpSocket(io::IoContext& io, uint16_t port = 0);
+    ~UdpSocket();
+
+    void async_send_to(const std::vector<byte>& data,
+                      const boost::asio::ip::udp::endpoint& endpoint,
+                      SendCallback callback);
+
+    void async_receive_from(size_t size, ReceiveCallback callback);
+
+    void bind(uint16_t port, const std::string& multicast_addr = "");
+    void join_multicast(const std::string& multicast_addr);
+    void leave_multicast(const std::string& multicast_addr);
+    void set_broadcast(bool enable);
+    void close();
+
+    bool is_open() const;
+    boost::asio::ip::udp::endpoint local_endpoint() const;
+
+    boost::asio::ip::udp::socket& native_socket();
+    const boost::asio::ip::udp::socket& native_socket() const;
+
+private:
+    io::IoContext& io_;
+    boost::asio::ip::udp::socket socket_;
+    boost::asio::ip::udp::endpoint remote_endpoint_;
 };
 ```
 
@@ -547,6 +600,13 @@ acceptor_.set_option(boost::asio::socket_base::reuse_address(true));
 - ✅ `close` - 线程安全
 - ✅ `is_connected` - 线程安全
 
+#### 8.1.2 UdpSocket
+- ✅ `async_send_to` - 线程安全
+- ✅ `async_receive_from` - 线程安全
+- ✅ `bind` - 线程安全
+- ✅ `close` - 线程安全
+- ✅ `is_open` - 线程安全
+
 **实现**:
 ```cpp
 void TcpSocket::async_send(const ByteBuffer& data, SendCallback callback) {
@@ -673,7 +733,53 @@ ChannelFactory::create_server(
 );
 ```
 
-### 9.3 自定义 Codec
+### 9.3 UDP 客户端
+
+```cpp
+#include <common/net/socket.h>
+
+using namespace Rendu;
+using namespace Rendu::net;
+
+// 创建 IoContext
+io::IoContext io(1);
+std::thread([&io]() { io.run(); }).detach();
+
+// 创建 UDP socket
+UdpSocket socket(io, 0);  // 自动分配端口
+
+// 发送数据到服务器
+boost::asio::ip::udp::endpoint server_endpoint(
+    boost::asio::ip::make_address("127.0.0.1"), 12345);
+
+std::vector<byte> data = {'H', 'e', 'l', 'l', 'o'};
+socket.async_send_to(data, server_endpoint,
+    [](const boost::system::error_code& ec, size_t bytes_sent) {
+        if (!ec) {
+            RENDU_LOG_INFO("Sent {} bytes", bytes_sent);
+        }
+    }
+);
+```
+
+### 9.4 UDP 服务器
+
+```cpp
+// 创建服务器 socket
+UdpSocket server(io, 12345);
+
+// 接收数据
+server.async_receive_from(1024,
+    [](const boost::system::error_code& ec, std::vector<byte> data) {
+        if (!ec) {
+            RENDU_LOG_INFO("Received {} bytes", data.size());
+            // 处理数据...
+        }
+    }
+);
+```
+
+### 9.5 自定义 Codec
 
 ```cpp
 class MyCodec : public Codec {
@@ -731,6 +837,13 @@ auto channel = ChannelFactory::create_client(io, "127.0.0.1", 8080, codec);
 - ✅ TcpAcceptor 监听
 - ✅ TcpAcceptor 接受连接
 
+#### UDP 测试 ✅
+- ✅ 构造和基础状态
+- ✅ 发送接收
+- ✅ 绑定和端口
+- ✅ 广播
+- ✅ 关闭
+
 #### Channel 测试 ✅
 - ✅ 构造和基础状态
 - ✅ 回调设置
@@ -753,9 +866,10 @@ auto channel = ChannelFactory::create_client(io, "127.0.0.1", 8080, codec);
 | 测试类型 | 断言数 | 测试用例数 | 状态 |
 |---------|--------|-----------|------|
 | socket_test | 24 | 6 | ✅ 全部通过 |
+| udp_test | 16 | 5 | ✅ 全部通过 |
 | codec_test | 66 | 7 | ✅ 全部通过 |
 | channel_test | 37 | 8 | ✅ 全部通过 |
-| **总计** | **127** | **21** | **✅ 全部通过** |
+| **总计** | **143** | **26** | **✅ 全部通过** |
 
 ---
 
@@ -794,6 +908,7 @@ src/common/src/net/
 ```
 src/tests/common/net/
 ├── socket_test.cpp
+├── udp_test.cpp
 ├── codec_test.cpp
 ├── channel_test.cpp
 └── all_net_tests.cpp
@@ -811,7 +926,10 @@ src/tests/common/net/
 
 ### 14.1 可选优先级
 - [ ] 进行性能测试和压力测试
-- [ ] 实现高级扩展功能（UDP、TLS、WebSocket 等）
+- [ ] 实现 KCP 支持（需要集成 KCP 库）
+- [ ] 实现 UDP 多播支持
+- [ ] 实现 TLS 支持
+- [ ] 实现 WebSocket 支持
 
 ### 14.2 下一步阶段
 **阶段 5: Common 层 - 序列化 (ser)**

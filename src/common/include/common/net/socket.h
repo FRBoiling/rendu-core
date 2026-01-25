@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <boost/system/error_code.hpp>
 
 BEGIN_NAMESPACE_COMMON
@@ -147,7 +148,7 @@ private:
 
 /**
  * @brief TCP 接受器（服务器）
- * 
+ *
  * 用于监听端口并接受新连接
  */
 class TcpAcceptor {
@@ -200,6 +201,113 @@ private:
     boost::asio::ip::tcp::acceptor acceptor_;
     std::atomic<bool> listening_;
 };
+
+/**
+ * @brief UDP Socket 封装类
+ *
+ * 提供异步的 UDP 发送、接收功能（无连接协议）
+ * 线程安全：所有操作都通过 io_context 调度
+ */
+class UdpSocket {
+public:
+    /**
+     * @brief 构造函数
+     * @param io IoContext 引用
+     * @param port 本地绑定端口（0 表示自动分配）
+     */
+    explicit UdpSocket(io::IoContext& io, uint16_t port = 0);
+
+    ~UdpSocket();
+
+    // 禁止拷贝和移动
+    UdpSocket(const UdpSocket&) = delete;
+    UdpSocket& operator=(const UdpSocket&) = delete;
+    UdpSocket(UdpSocket&&) = delete;
+    UdpSocket& operator=(UdpSocket&&) = delete;
+
+    /**
+     * @brief 异步发送数据到指定端点
+     * @param data 要发送的数据
+     * @param endpoint 目标端点
+     * @param callback 发送回调
+     */
+    void async_send_to(const std::vector<byte>& data,
+                      const boost::asio::ip::udp::endpoint& endpoint,
+                      SendCallback callback);
+
+    /**
+     * @brief 异步接收数据
+     * @param size 接收缓冲区大小
+     * @param callback 接收回调
+     */
+    void async_receive_from(size_t size, ReceiveCallback callback);
+
+    /**
+     * @brief 绑定到指定端口
+     * @param port 端口号
+     * @param multicast_addr 多播地址（可选）
+     */
+    void bind(uint16_t port, const std::string& multicast_addr = "");
+
+    /**
+     * @brief 加入多播组
+     * @param multicast_addr 多播地址
+     */
+    void join_multicast(const std::string& multicast_addr);
+
+    /**
+     * @brief 离开多播组
+     * @param multicast_addr 多播地址
+     */
+    void leave_multicast(const std::string& multicast_addr);
+
+    /**
+     * @brief 设置广播选项
+     * @param enable 是否启用广播
+     */
+    void set_broadcast(bool enable);
+
+    /**
+     * @brief 关闭 Socket
+     */
+    void close();
+
+    /**
+     * @brief 检查 socket 是否打开
+     * @return 是否打开
+     */
+    bool is_open() const;
+
+    /**
+     * @brief 获取本地端点
+     * @return 本地端点
+     */
+    boost::asio::ip::udp::endpoint local_endpoint() const;
+
+    /**
+     * @brief 获取底层 socket
+     * @return boost::asio::ip::udp::socket 引用
+     */
+    boost::asio::ip::udp::socket& native_socket();
+
+    /**
+     * @brief 获取底层 socket（const 版本）
+     * @return const boost::asio::ip::udp::socket 引用
+     */
+    const boost::asio::ip::udp::socket& native_socket() const;
+
+private:
+    io::IoContext& io_;
+    boost::asio::ip::udp::socket socket_;
+    boost::asio::ip::udp::endpoint remote_endpoint_;
+};
+
+// ============================================================================
+// KCP Socket 占位声明（需要集成 KCP 库后实现）
+// ============================================================================
+
+// KCP Socket 将在未来版本中实现
+// 需要引入 KCP 库 (https://github.com/skywind3000/kcp)
 
 } // namespace net
 END_NAMESPACE_COMMON
