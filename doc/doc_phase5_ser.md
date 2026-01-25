@@ -3,7 +3,7 @@
 ## 目标
 - 提供统一的序列化接口
 - 实现 Protobuf 支持
-- 可选实现 JSON 支持
+- ✅ 实现 JSON 支持（simdjson）
 
 ---
 

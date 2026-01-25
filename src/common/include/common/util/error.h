@@ -21,6 +21,7 @@ enum class ErrorCode {
     IOError,
     NetworkError,
     SerializationError,
+    DeserializationError,
     Unknown
 };
 

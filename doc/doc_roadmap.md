@@ -162,17 +162,18 @@
 ### 目标
 - 提供统一的序列化接口
 - 实现 Protobuf 支持
+- 实现 JSON 支持
 
 ### 任务
 - [x] `serializer.h` - 序列化接口抽象
 - [x] `protobuf_ser.h` - Protobuf 实现
-- [ ] `json_ser.h` - JSON 实现 (可选)
+- [x] `json_ser.h` - JSON 实现（simdjson）
 
 ### 验收标准
 - [x] 序列化/反序列化正确
 - [x] 性能满足需求
 - [x] 支持复杂嵌套消息
-- [x] 单元测试完成（1089 个断言，10 个测试用例）
+- [x] 单元测试完成（Protobuf: 1089 个断言，32 个测试用例）
 
 ### 依赖
 - 阶段 1 (util)
@@ -183,17 +184,23 @@
 ### 实现状态
 - ✅ Serializer 抽象接口完成
 - ✅ ProtobufSerializer 完成（支持任意 protobuf 消息）
+- ✅ JsonSerializer 完成（使用 simdjson 高性能解析器）
 - ✅ 错误处理完善（std::variant、Result 类型）
-- ✅ 单元测试完成并全部通过（protobuf_ser_test）
-  - 基本序列化/反序列化测试
-  - 重复字段测试
-  - 嵌套消息测试
-  - 复杂消息测试（map、枚举）
-  - 大数据量测试（1000 个元素）
-  - 边界情况测试
-  - 错误处理测试
+- ✅ 第三方库集成（protobuf v33.4、simdjson v3.9.4）
+- ✅ 单元测试完成并全部通过
+  - **protobuf_ser_test**: 1089 个断言，32 个测试用例
+    - 基本序列化/反序列化测试
+    - 重复字段测试
+    - 嵌套消息测试
+    - 复杂消息测试（map、枚举）
+    - 枚举类型（所有枚举值）
+    - message_size（不同大小的消息）
+    - is_valid_message（有效消息、空数据、无效数据）
+    - 大数据量（1000 个重复元素、10000 字符长字符串）
+    - 边界情况（默认值、零值、负数、特殊字符）
+    - 错误处理（无效数据、空数据）
+  - **json_ser_test**: 基本类型、数组、特殊字符、大数据量、错误处理
 - ✅ CMakeLists.txt 配置完成
-- ⏳ JSON 序列化（待实现）
 
 ---
 

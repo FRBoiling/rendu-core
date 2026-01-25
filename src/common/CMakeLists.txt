@@ -19,6 +19,7 @@ rendu_add_library(
         3rdparty::boost
         3rdparty::entt
         3rdparty::protobuf
+        3rdparty::simdjson
         DEFINES
         RENDU_COMMON_EXPORT
         ALIAS ON
