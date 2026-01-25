@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package test;
+
+// 简单测试消息
+message TestMessage {
+    int32 id = 1;
+    string name = 2;
+    int64 timestamp = 3;
+    repeated int32 values = 4;
+}
+
+// 嵌套消息
+message NestedMessage {
+    string title = 1;
+    TestMessage inner = 2;
+}
+
+// 枚举类型
+enum Status {
+    UNKNOWN = 0;
+    ACTIVE = 1;
+    INACTIVE = 2;
+}
+
+message ComplexMessage {
+    int64 id = 1;
+    string name = 2;
+    Status status = 3;
+    repeated TestMessage messages = 4;
+    map<string, int32> metadata = 5;
+}

@@ -18,7 +18,7 @@ rendu_add_library(
         3rdparty::fmt
         3rdparty::boost
         3rdparty::entt
-#        3rdparty::protobuf
+        3rdparty::protobuf
         DEFINES
         RENDU_COMMON_EXPORT
         ALIAS ON

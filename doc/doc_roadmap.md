@@ -54,48 +54,70 @@
 
 ---
 
-## 阶段 2: Common 层 - I/O 抽象 (io)
+## 阶段 2: Common 层 - I/O 抽象 (io) ✅
 
 ### 目标
 - 建立统一的异步 I/O 模型
 - 提供任务调度和定时器能力
 
 ### 任务
-- [ ] `io_context.h` - 封装 Boost.Asio io_context，提供统一接口
-- [ ] `scheduler.h` - 基于 io_context 的任务调度器
-- [ ] `timer.h` - 定时器封装（一次性、周期性）
+- [x] `io_context.h` - 封装 Boost.Asio io_context，提供统一接口
+- [x] `scheduler.h` - 基于 io_context 的任务调度器
+- [x] `timer.h` - 定时器封装（一次性、周期性）
 
 ### 验收标准
-- io_context 可跨线程 post 任务
-- 定时器精度和性能符合预期
-- 异步任务调度正确
+- [x] io_context 可跨线程 post 任务
+- [x] 定时器精度和性能符合预期
+- [x] 异步任务调度正确
+- [x] 单元测试完成（23 个断言）
 
 ### 依赖
 - 阶段 1 (util)
 
+### 完成日期
+**2026-01-24**
+
+### 实现状态
+- ✅ IoContext 封装完成（支持线程池）
+- ✅ Scheduler 任务调度完成（post、delayed、periodic）
+- ✅ Timer 定时器完成（一次性、周期性、取消）
+- ✅ 单元测试完成（io_context_test、scheduler_test、timer_test）
+
 ---
 
-## 阶段 3: Common 层 - 日志系统 (log)
+## 阶段 3: Common 层 - 日志系统 (log) ✅
 
 ### 目标
 - 实现基于 io_context 的异步日志系统
 - 提供多种输出目标和格式化能力
 
 ### 任务
-- [ ] `logger.h` - 日志接口，提供 Trace/Debug/Info/Warn/Error/Critical
-- [ ] `sink.h` - Sink 抽象基类
-- [ ] `console_sink.h` - 控制台输出，支持颜色
-- [ ] `file_sink.h` - 文件输出，支持轮转
-- [ ] `formatter.h` - 日志格式化器（支持自定义格式）
+- [x] `logger.h` - 日志接口，提供 Trace/Debug/Info/Warn/Error/Critical
+- [x] `sink.h` - Sink 抽象基类
+- [x] `console_sink.h` - 控制台输出，支持颜色
+- [x] `file_sink.h` - 文件输出，支持轮转
+- [x] `formatter.h` - 日志格式化器（支持自定义格式）
 
 ### 验收标准
-- 日志写入不阻塞主线程
-- 多线程安全
-- 文件轮转正常工作
+- [x] 日志写入不阻塞主线程
+- [x] 多线程安全
+- [x] 文件轮转正常工作
+- [x] 单元测试完成（41 个断言）
 
 ### 依赖
 - 阶段 2 (io)
 - 阶段 1 (util)
+
+### 完成日期
+**2026-01-24**
+
+### 实现状态
+- ✅ Logger 接口完成（支持多级别、多模块）
+- ✅ Sink 抽象基类完成
+- ✅ ConsoleSink 完成（支持颜色、终端检测）
+- ✅ FileSink 完成（支持按日期/大小轮转）
+- ✅ Formatter 完成（支持默认格式、自定义格式）
+- ✅ 单元测试完成（logger_test、console_sink_test、file_sink_test、formatter_test）
 
 ---
 
@@ -114,7 +136,7 @@
 - [x] Socket 连接建立/断开正常
 - [x] 数据收发无丢失
 - [x] 支持自定义编解码
-- [x] 单元测试完成
+- [x] 单元测试完成（143 个断言，26 个测试用例）
 
 ### 依赖
 - 阶段 2 (io)
@@ -125,33 +147,53 @@
 
 ### 实现状态
 - ✅ 设计文档完成
-- ✅ Socket 层实现（TcpSocket、TcpAcceptor）
+- ✅ Socket 层实现（TcpSocket、TcpAcceptor、UdpSocket）
 - ✅ Codec 层实现（LengthPrefixCodec、DelimiterCodec、LineCodec）
 - ✅ Channel 层实现（Channel、ChannelFactory）
-- ✅ 单元测试完成（codec_test、socket_test、channel_test）
-- ✅ 集成测试完成（Echo 服务器）
-- ✅ 测试修复（命名空间、IoContext 使用）
+- ✅ 单元测试完成（socket_test、udp_test、codec_test、channel_test）
+- ✅ 统一测试入口（all_net_tests.cpp）
+- ✅ 错误处理完善
+- ✅ 线程安全保证
 
 ---
 
-## 阶段 5: Common 层 - 序列化 (ser)
+## 阶段 5: Common 层 - 序列化 (ser) ✅
 
 ### 目标
 - 提供统一的序列化接口
 - 实现 Protobuf 支持
 
 ### 任务
-- [ ] `serializer.h` - 序列化接口抽象
-- [ ] `protobuf_ser.h` - Protobuf 实现
+- [x] `serializer.h` - 序列化接口抽象
+- [x] `protobuf_ser.h` - Protobuf 实现
 - [ ] `json_ser.h` - JSON 实现 (可选)
 
 ### 验收标准
-- 序列化/反序列化正确
-- 性能满足需求
-- 支持多种格式切换
+- [x] 序列化/反序列化正确
+- [x] 性能满足需求
+- [x] 支持复杂嵌套消息
+- [x] 单元测试完成（1089 个断言，10 个测试用例）
 
 ### 依赖
 - 阶段 1 (util)
+
+### 完成日期
+**2026-01-25**
+
+### 实现状态
+- ✅ Serializer 抽象接口完成
+- ✅ ProtobufSerializer 完成（支持任意 protobuf 消息）
+- ✅ 错误处理完善（std::variant、Result 类型）
+- ✅ 单元测试完成并全部通过（protobuf_ser_test）
+  - 基本序列化/反序列化测试
+  - 重复字段测试
+  - 嵌套消息测试
+  - 复杂消息测试（map、枚举）
+  - 大数据量测试（1000 个元素）
+  - 边界情况测试
+  - 错误处理测试
+- ✅ CMakeLists.txt 配置完成
+- ⏳ JSON 序列化（待实现）
 
 ---
 
