@@ -13,6 +13,7 @@
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <fmt/core.h>
 
 BEGIN_NAMESPACE_COMMON
 namespace log {
@@ -83,13 +84,13 @@ void init_default_io_context(io::IoContext& io);
 Logger& get_logger(const std::string& name);
 void set_default_logger(std::shared_ptr<Logger> logger);
 
-// 宏定义
-#define RENDU_LOG_TRACE(msg) ::Rendu::log::default_logger().trace(msg)
-#define RENDU_LOG_DEBUG(msg) ::Rendu::log::default_logger().debug(msg)
-#define RENDU_LOG_INFO(msg)  ::Rendu::log::default_logger().info(msg)
-#define RENDU_LOG_WARN(msg)  ::Rendu::log::default_logger().warn(msg)
-#define RENDU_LOG_ERROR(msg) ::Rendu::log::default_logger().error(msg)
-#define RENDU_LOG_CRITICAL(msg) ::Rendu::log::default_logger().critical(msg)
+// 日志宏（支持 fmt 风格的格式化）
+#define RENDU_LOG_TRACE(...) ::Rendu::log::default_logger().trace(fmt::format(__VA_ARGS__))
+#define RENDU_LOG_DEBUG(...) ::Rendu::log::default_logger().debug(fmt::format(__VA_ARGS__))
+#define RENDU_LOG_INFO(...) ::Rendu::log::default_logger().info(fmt::format(__VA_ARGS__))
+#define RENDU_LOG_WARN(...) ::Rendu::log::default_logger().warn(fmt::format(__VA_ARGS__))
+#define RENDU_LOG_ERROR(...) ::Rendu::log::default_logger().error(fmt::format(__VA_ARGS__))
+#define RENDU_LOG_CRITICAL(...) ::Rendu::log::default_logger().critical(fmt::format(__VA_ARGS__))
 
 #define RENDU_NAMED_LOG(name, level, msg) \
     ::Rendu::log::get_logger(name).log(level, msg)

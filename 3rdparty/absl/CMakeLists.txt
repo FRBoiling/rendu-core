@@ -6,10 +6,6 @@ rendu_find_package(
         NAME absl
         GITHUB_REPOSITORY abseil/abseil-cpp
         GIT_TAG 20250512.1
-        OPTIONS
-        "ABSL_ENABLE_INSTALL ON"
-        "ABSL_BUILD_TESTING OFF"
-        "ABSL_BUILD_TEST_HELPERS OFF"
 )
 
 get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)

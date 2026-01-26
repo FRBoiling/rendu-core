@@ -6,7 +6,7 @@ message(STATUS "CMake version: ${CMAKE_VERSION}")
 
 # 项目基本信息
 project(RenduCore
-        LANGUAGES CXX
+        LANGUAGES C CXX
         VERSION 1.2.3
         DESCRIPTION "RenduCore C++"
         HOMEPAGE_URL "https://github.com/xxx/rendu"

@@ -22,9 +22,7 @@ LengthPrefixCodec::LengthPrefixCodec(uint32_t max_length)
 ByteBuffer LengthPrefixCodec::encode(const ByteBuffer& data) {
     // 检查消息长度
     if (data.size() > max_length_) {
-        std::ostringstream oss;
-        oss << "Message too large: " << data.size() << " (max: " << max_length_ << ")";
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Message too large: {} (max: {})", data.size(), max_length_);
         throw std::runtime_error("Message too large");
     }
     
@@ -65,9 +63,7 @@ std::vector<ByteBuffer> LengthPrefixCodec::decode(ByteBuffer& buffer) {
             // 检查长度合法性
             // 注意：长度为 0 是合法的空消息
             if (expected_length_ > max_length_) {
-                std::ostringstream oss;
-                oss << "Message length exceeds limit: " << expected_length_ << " (max: " << max_length_ << ")";
-                RENDU_LOG_ERROR(oss.str());
+                RENDU_LOG_ERROR("Message length exceeds limit: {} (max: {})", expected_length_, max_length_);
                 reset();
                 break;
             }

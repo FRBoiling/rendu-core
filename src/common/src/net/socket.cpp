@@ -21,9 +21,7 @@ TcpSocket::TcpSocket(io::IoContext& io)
     boost::system::error_code ec;
     socket_.open(boost::asio::ip::tcp::v4(), ec);
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to open socket: " << ec.message();
-        RENDU_LOG_WARN(oss.str());
+        RENDU_LOG_WARN("Failed to open socket: {}", ec.message());
     }
 }
 
@@ -121,9 +119,7 @@ void TcpSocket::close() {
 
     if (ec) {
         // 记录关闭错误
-        std::ostringstream oss;
-        oss << "Socket close error: " << ec.message();
-        RENDU_LOG_WARN(oss.str());
+        RENDU_LOG_WARN("Socket close error: {}", ec.message());
     }
 
     connected_.store(false);
@@ -155,9 +151,7 @@ boost::asio::ip::tcp::endpoint TcpSocket::local_endpoint() const {
     auto endpoint = socket_.local_endpoint(ec);
 
     if (ec) {
-        std::ostringstream oss;
-        oss << "Get local endpoint failed: " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Get local endpoint failed: {}", ec.message());
     }
 
     return endpoint;
@@ -191,9 +185,7 @@ TcpAcceptor::TcpAcceptor(io::IoContext& io, uint16_t port)
     acceptor_.open(endpoint.protocol(), ec);
     
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to open acceptor: " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Failed to open acceptor: {}", ec.message());
         throw std::runtime_error("Failed to open acceptor: " + ec.message());
     }
     
@@ -204,9 +196,7 @@ TcpAcceptor::TcpAcceptor(io::IoContext& io, uint16_t port)
     acceptor_.bind(endpoint, ec);
     
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to bind to port " << port << ": " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Failed to bind to port {}: {}", port, ec.message());
         throw std::runtime_error("Failed to bind to port " + std::to_string(port) + ": " + ec.message());
     }
     
@@ -214,18 +204,14 @@ TcpAcceptor::TcpAcceptor(io::IoContext& io, uint16_t port)
     acceptor_.listen(boost::asio::socket_base::max_listen_connections, ec);
     
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to listen: " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Failed to listen: {}", ec.message());
         throw std::runtime_error("Failed to listen: " + ec.message());
     }
 
     listening_.store(true);
 
     {
-        std::ostringstream oss;
-        oss << "Acceptor listening on port " << port;
-        RENDU_LOG_INFO(oss.str());
+        RENDU_LOG_INFO("Acceptor listening on port {}", port);
     }
 }
 
@@ -297,9 +283,7 @@ UdpSocket::UdpSocket(io::IoContext& io, uint16_t port)
     boost::system::error_code ec;
     socket_.open(boost::asio::ip::udp::v4(), ec);
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to open UDP socket: " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Failed to open UDP socket: {}", ec.message());
         throw std::runtime_error("Failed to open UDP socket: " + ec.message());
     }
 
@@ -363,9 +347,7 @@ void UdpSocket::bind(uint16_t port, const std::string& multicast_addr) {
     socket_.bind(endpoint, ec);
 
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to bind UDP socket to port " << port << ": " << ec.message();
-        RENDU_LOG_ERROR(oss.str());
+        RENDU_LOG_ERROR("Failed to bind UDP socket to port {}: {}", port, ec.message());
         throw std::runtime_error("Failed to bind UDP socket: " + ec.message());
     }
 
@@ -375,9 +357,7 @@ void UdpSocket::bind(uint16_t port, const std::string& multicast_addr) {
     }
 
     {
-        std::ostringstream oss;
-        oss << "UDP socket bound to port " << port;
-        RENDU_LOG_INFO(oss.str());
+        RENDU_LOG_INFO("UDP socket bound to port {}", port);
     }
 }
 
@@ -396,9 +376,7 @@ void UdpSocket::set_broadcast(bool enable) {
     socket_.set_option(boost::asio::socket_base::broadcast(enable), ec);
 
     if (ec) {
-        std::ostringstream oss;
-        oss << "Failed to set broadcast option: " << ec.message();
-        RENDU_LOG_WARN(oss.str());
+        RENDU_LOG_WARN("Failed to set broadcast option: {}", ec.message());
     }
 }
 

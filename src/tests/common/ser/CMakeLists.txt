@@ -3,11 +3,25 @@
 #**********************************
 
 # 生成 protobuf 文件
-find_package(Protobuf REQUIRED)
 set(PROTO_FILES test_messages.proto)
 
 # 生成 .pb.cc 和 .pb.h
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
+protobuf_generate(
+    LANGUAGE cpp
+    OUT_VAR PROTO_GEN_SRCS
+    PROTOS ${PROTO_FILES}
+)
+
+# 分离 .cc 和 .h 文件
+set(PROTO_SRCS "")
+set(PROTO_HDRS "")
+foreach(FILE ${PROTO_GEN_SRCS})
+    if(FILE MATCHES "\\.cc$")
+        list(APPEND PROTO_SRCS ${FILE})
+    elseif(FILE MATCHES "\\.h$")
+        list(APPEND PROTO_HDRS ${FILE})
+    endif()
+endforeach()
 
 # Protobuf 测试
 rendu_add_test(
