@@ -1,5 +1,28 @@
 #**********************************
-#  Created by boil on 2026/1/21.
+#  Created by boil on 2026/1/26.
 #**********************************
 
-# 阶段 7: config 模块测试将在后续添加
+get_filename_component(FOLDER_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+message(STATUS "正在配置 ${FOLDER_NAME} 的测试")
+
+# Config 测试
+rendu_add_test(
+        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT       ${PROJECT_NAME}
+        NAME          config_test
+        SOURCES       config_test.cpp
+        PRIVATE_LINK  rendu-core-interface
+        PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+        TEST_FRAMEWORK CATCH2
+)
+
+# Loader 测试
+rendu_add_test(
+        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT       ${PROJECT_NAME}
+        NAME          loader_test
+        SOURCES       loader_test.cpp
+        PRIVATE_LINK  rendu-core-interface
+        PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+        TEST_FRAMEWORK CATCH2
+)
