@@ -4,6 +4,7 @@
 
 #include "common/ser/json_ser.h"
 #include <sstream>
+#include <string>
 
 BEGIN_NAMESPACE_COMMON
 namespace ser {
@@ -26,18 +27,18 @@ Result<ByteBuffer> JsonSerializer::deserialize(const ByteBuffer& data) {
 }
 
 Result<ByteBuffer> JsonSerializer::serialize_json(int value) {
-    return ByteBuffer(std::to_string(value).begin(), 
-                     std::to_string(value).end());
+    std::string str = std::to_string(value);
+    return ByteBuffer(str.begin(), str.end());
 }
 
 Result<ByteBuffer> JsonSerializer::serialize_json(int64_t value) {
-    return ByteBuffer(std::to_string(value).begin(), 
-                     std::to_string(value).end());
+    std::string str = std::to_string(value);
+    return ByteBuffer(str.begin(), str.end());
 }
 
 Result<ByteBuffer> JsonSerializer::serialize_json(double value) {
-    return ByteBuffer(std::to_string(value).begin(), 
-                     std::to_string(value).end());
+    std::string str = std::to_string(value);
+    return ByteBuffer(str.begin(), str.end());
 }
 
 Result<ByteBuffer> JsonSerializer::serialize_json(const std::string& value) {

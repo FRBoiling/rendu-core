@@ -4,11 +4,11 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
+#include <variant>
 #include "common/ser/json_ser.h"
 #include "common/define.h"
 
 using namespace Rendu::ser;
-using ByteBuffer = Rendu::net::ByteBuffer;
 
 TEST_CASE("JsonSerializer 基本序列化", "[json][serialize]") {
     SECTION("整数序列化") {
@@ -288,11 +288,18 @@ TEST_CASE("JsonSerializer is_valid_json", "[json][validate]") {
 
     SECTION("无效的 JSON") {
         // 不完整的 JSON
-        ByteBuffer buffer_real_invalid{'{', '"', 'k', 'e', 'y'};
-        REQUIRE_FALSE(JsonSerializer::is_valid_json(buffer_real_invalid));
+        ByteBuffer buffer1{'{', '"', 'k', 'e', 'y', ':', '"', 'v', 'a', 'l', 'u', 'e'};
+        REQUIRE_FALSE(JsonSerializer::is_valid_json(buffer1));
 
         ByteBuffer buffer2{'{', 'i', 'n', 'v', 'a', 'l', 'i', 'd', '}'};
         REQUIRE_FALSE(JsonSerializer::is_valid_json(buffer2));
+
+        // 更明确的无效 JSON
+        ByteBuffer buffer3{'{', '{', '}'};
+        REQUIRE_FALSE(JsonSerializer::is_valid_json(buffer3));
+
+        ByteBuffer buffer4{'n', 'u', 'l', 'l', 'l'};
+        REQUIRE_FALSE(JsonSerializer::is_valid_json(buffer4));
     }
 
     SECTION("空数据") {

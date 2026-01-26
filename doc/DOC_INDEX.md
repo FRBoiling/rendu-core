@@ -64,7 +64,15 @@
     ↓
 阶段 2: Common 层 - io ✅
     ↓
-阶段 3-8: Common 层 (从底向上)
+阶段 3: Common 层 - log ✅
+    ↓
+阶段 4: Common 层 - net ✅
+    ↓
+阶段 5: Common 层 - ser ✅
+    ↓
+阶段 6: Common 层 - event ✅
+    ↓
+阶段 7-8: Common 层 (从底向上)
     ↓
 阶段 9-12.5: Core 层
     ↓
