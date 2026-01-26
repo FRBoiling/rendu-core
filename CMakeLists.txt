@@ -26,8 +26,11 @@ rendu_add_subdirectories(
         ${CMAKE_CURRENT_SOURCE_DIR}/.idea
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake
         ${CMAKE_CURRENT_SOURCE_DIR}/build
+        ${CMAKE_CURRENT_SOURCE_DIR}/build-make
+        ${CMAKE_CURRENT_SOURCE_DIR}/build-test
         ${CMAKE_CURRENT_SOURCE_DIR}/doc
         ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+        ${CMAKE_CURRENT_SOURCE_DIR}/Testing
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-release
 )
