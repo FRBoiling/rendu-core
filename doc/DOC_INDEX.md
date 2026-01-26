@@ -72,9 +72,13 @@
     ↓
 阶段 6: Common 层 - event ✅
     ↓
-阶段 7-8: Common 层 (从底向上)
+阶段 7: Common 层 - config ✅
     ↓
-阶段 9-12.5: Core 层
+阶段 8: Common 层 - ecs ✅
+    ↓
+Common 层完成 ✓
+    ↓
+阶段 10-12.5: Core 层（待开发）
     ↓
 阶段 13-14: Apps 层
 ```
