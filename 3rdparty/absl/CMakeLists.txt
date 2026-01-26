@@ -7,7 +7,7 @@ rendu_find_package(
         GITHUB_REPOSITORY abseil/abseil-cpp
         GIT_TAG 20250512.1
         OPTIONS
-        "ABSL_ENABLE_INSTALL OFF"
+        "ABSL_ENABLE_INSTALL ON"
         "ABSL_BUILD_TESTING OFF"
         "ABSL_BUILD_TEST_HELPERS OFF"
 )
