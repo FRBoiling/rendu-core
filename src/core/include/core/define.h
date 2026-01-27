@@ -6,8 +6,8 @@
 #define RENDU_CORE_DEFINE_H
 
 // 添加命名空间宏定义
-#define BEGIN_NAMESPACE_CORE namespace Rendu {  namespace Core{
-#define END_NAMESPACE_CORE }  }
+#define BEGIN_NAMESPACE_CORE namespace Rendu {
+#define END_NAMESPACE_CORE } // namespace Rendu
 
 // 引用 Common 层的导出宏定义
 #include <common/define.h>
