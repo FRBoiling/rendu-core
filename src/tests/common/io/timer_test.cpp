@@ -1,3 +1,7 @@
+//**********************************
+//  Created by boil on 2026/01/28.
+//**********************************
+
 #include <catch2/catch_test_macros.hpp>
 #include <common/io/timer.h>
 #include <atomic>
@@ -7,7 +11,7 @@
 
 using namespace Rendu::io;
 
-TEST_CASE("Timer one-shot expires_after", "[io][timer]") {
+TEST_CASE("定时器：一次性定时器（expires_after）", "[io][timer]") {
     IoContext io(1);
     Timer timer(io);
 
@@ -25,7 +29,7 @@ TEST_CASE("Timer one-shot expires_after", "[io][timer]") {
     io.stop();
 }
 
-TEST_CASE("Timer one-shot expires_at", "[io][timer]") {
+TEST_CASE("定时器：一次性定时器（expires_at）", "[io][timer]") {
     IoContext io(1);
     Timer timer(io);
 
@@ -44,7 +48,7 @@ TEST_CASE("Timer one-shot expires_at", "[io][timer]") {
     io.stop();
 }
 
-TEST_CASE("Timer repeat", "[io][timer]") {
+TEST_CASE("定时器：重复定时器", "[io][timer]") {
     IoContext io(1);
     Timer timer(io);
 
@@ -65,7 +69,7 @@ TEST_CASE("Timer repeat", "[io][timer]") {
     io.stop();
 }
 
-TEST_CASE("Timer cancel before execution", "[io][timer]") {
+TEST_CASE("定时器：执行前取消", "[io][timer]") {
     IoContext io(1);
     Timer timer(io);
 
@@ -83,7 +87,7 @@ TEST_CASE("Timer cancel before execution", "[io][timer]") {
     io.stop();
 }
 
-TEST_CASE("Timer active status", "[io][timer]") {
+TEST_CASE("定时器：活跃状态检查", "[io][timer]") {
     IoContext io(1);
     Timer timer(io);
 

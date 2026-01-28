@@ -1,3 +1,7 @@
+//**********************************
+//  Created by boil on 2026/01/28.
+//**********************************
+
 #include <catch2/catch_test_macros.hpp>
 #include <common/util/error.h>
 #include <common/define.h>
@@ -6,14 +10,14 @@
 
 using namespace Rendu;
 
-TEST_CASE("Error basic", "[util][error]") {
+TEST_CASE("Error基本功能", "[util][error]") {
     Error err(ErrorCode::Success, "Operation successful");
     REQUIRE(err.code() == ErrorCode::Success);
     REQUIRE(err.message() == "Operation successful");
     REQUIRE(err.is_success() == true);
 }
 
-TEST_CASE("Error is_success", "[util][error]") {
+TEST_CASE("Error is_success 判断", "[util][error]") {
     Error success(ErrorCode::Success, "Success");
     REQUIRE(success.is_success() == true);
 
@@ -24,7 +28,7 @@ TEST_CASE("Error is_success", "[util][error]") {
     REQUIRE(io_error.is_success() == false);
 }
 
-TEST_CASE("Error message", "[util][error]") {
+TEST_CASE("Error 消息", "[util][error]") {
     Error err(ErrorCode::NotFound, "Resource not found");
     REQUIRE(err.message() == "Resource not found");
 
@@ -32,7 +36,7 @@ TEST_CASE("Error message", "[util][error]") {
     REQUIRE(empty.message() == "");
 }
 
-TEST_CASE("Error codes", "[util][error]") {
+TEST_CASE("Error 错误码", "[util][error]") {
     REQUIRE(Error(ErrorCode::Success).code() == ErrorCode::Success);
     REQUIRE(Error(ErrorCode::InvalidArgument).code() == ErrorCode::InvalidArgument);
     REQUIRE(Error(ErrorCode::NotFound).code() == ErrorCode::NotFound);
@@ -44,7 +48,7 @@ TEST_CASE("Error codes", "[util][error]") {
     REQUIRE(Error(ErrorCode::Unknown).code() == ErrorCode::Unknown);
 }
 
-TEST_CASE("Result with success value", "[util][error]") {
+TEST_CASE("Result：成功值", "[util][error]") {
     Result<int> result = 42;
 
     REQUIRE(std::holds_alternative<int>(result) == true);
@@ -52,7 +56,7 @@ TEST_CASE("Result with success value", "[util][error]") {
     REQUIRE(std::get<int>(result) == 42);
 }
 
-TEST_CASE("Result with error", "[util][error]") {
+TEST_CASE("Result：错误", "[util][error]") {
     Result<int> result = Error(ErrorCode::InvalidArgument, "Bad argument");
 
     REQUIRE(std::holds_alternative<Error>(result) == true);
@@ -61,7 +65,7 @@ TEST_CASE("Result with error", "[util][error]") {
     REQUIRE(std::get<Error>(result).message() == "Bad argument");
 }
 
-TEST_CASE("Result with string", "[util][error]") {
+TEST_CASE("Result：字符串类型", "[util][error]") {
     Result<std::string> result = std::string("hello");
 
     REQUIRE(std::holds_alternative<std::string>(result) == true);
@@ -72,7 +76,7 @@ TEST_CASE("Result with string", "[util][error]") {
     REQUIRE(std::get<Error>(error_result).code() == ErrorCode::IOError);
 }
 
-TEST_CASE("Error default construction", "[util][error]") {
+TEST_CASE("Error 默认构造", "[util][error]") {
     Error err;
     REQUIRE(err.code() == ErrorCode::Success);
     REQUIRE(err.message() == "");

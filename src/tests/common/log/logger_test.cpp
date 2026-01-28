@@ -1,3 +1,7 @@
+//**********************************
+//  Created by boil on 2026/01/28.
+//**********************************
+
 #include <catch2/catch_test_macros.hpp>
 #include <common/log/logger.h>
 #include <common/log/console_sink.h>
@@ -11,7 +15,7 @@
 using namespace Rendu::log;
 using namespace Rendu::io;
 
-TEST_CASE("Logger basic", "[log][logger]") {
+TEST_CASE("Logger 基本功能", "[log][logger]") {
     IoContext io(1);
     std::thread([&io]() { io.run(); }).detach();
 
@@ -24,7 +28,7 @@ TEST_CASE("Logger basic", "[log][logger]") {
     io.stop();
 }
 
-TEST_CASE("Logger async logging", "[log][logger]") {
+TEST_CASE("Logger 异步日志", "[log][logger]") {
     IoContext io(1);
     std::thread([&io]() { io.run(); }).detach();
 
@@ -40,7 +44,7 @@ TEST_CASE("Logger async logging", "[log][logger]") {
     io.stop();
 }
 
-TEST_CASE("Logger level filtering", "[log][logger]") {
+TEST_CASE("Logger 级别过滤", "[log][logger]") {
     IoContext io(1);
     std::thread([&io]() { io.run(); }).detach();
 

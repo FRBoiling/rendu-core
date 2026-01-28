@@ -1,3 +1,7 @@
+//**********************************
+//  Created by boil on 2026/01/28.
+//**********************************
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <common/ser/protobuf_ser.h>
@@ -9,7 +13,7 @@ using namespace Rendu::ser;
 using Rendu::net::ByteBuffer;
 
 TEST_CASE("ProtobufSerializer - TestMessage 基本序列化", "[ser][protobuf]") {
-    test::TestMessage msg;
+    TestMessage msg;
     msg.set_id(123);
     msg.set_name("test_message");
     msg.set_timestamp(1234567890);
