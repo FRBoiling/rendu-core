@@ -2,11 +2,11 @@
 #  Created by boil on 2026/1/9.
 #**********************************
 
-#rendu_find_package(
-#        NAME GTest
-#        GITHUB_REPOSITORY google/googletest
-#        GIT_TAG v1.15.2
-#)
+rendu_find_package(
+        NAME GTest
+        GITHUB_REPOSITORY google/googletest
+        GIT_TAG v1.15.2
+)
 #
 #rendu_find_package(
 #        NAME absl

@@ -43,7 +43,7 @@
 ||- **[阶段 9: engine](doc_phase9_engine.md)** - 引擎核心 (engine/context) ✅
 ||- **[阶段 10: loop](doc_phase10_loop.md)** - 主循环 (loop/fixed_loop) ✅
 ||- **[阶段 11: state](doc_phase11_state.md)** - 状态管理 (state_machine/state) ✅
-||- **[阶段 12: lifecycle](doc_phase12_lifecycle.md)** - 生命周期 (lifecycle/manager)
+||- **[阶段 12: lifecycle](doc_phase12_lifecycle.md)** - 生命周期 (lifecycle/manager) ✅
 ||- **[阶段 12.5: actor](doc_phase12_5_actor.md)** - Actor 系统 (actor/actor_system/actor_ref/message)
 
 ---
@@ -84,7 +84,9 @@ Common 层完成 ✓
     ↓
 阶段 11: Core 层 - state ✅
     ↓
-阶段 12-12.5: Core 层（待开发）
+阶段 12: Core 层 - lifecycle ✅
+    ↓
+阶段 12.5: Core 层 - actor（待开发）
     ↓
 阶段 13-14: Apps 层
 ```
