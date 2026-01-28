@@ -515,11 +515,12 @@
 **✅ 阶段 10: 主循环已完成！**
 **✅ 阶段 11: 状态管理已完成！**
 **✅ 阶段 12: 生命周期已完成！**
+**✅ 阶段 12.5: Actor 系统已完成（75%）！**
 
 剩余工作:
 1. 修复 json_ser_test 的 3 个失败断言（P3，1天）
 2. 评估是否实现 ConfigWatcher（P2，可选）
-3. Core 层继续开发（阶段 12.5）
+3. Core 层继续开发（阶段 13+）
 
 ---
 
@@ -551,6 +552,9 @@
 | 2026-01-28 | 更新 doc_phase12_lifecycle.md 标记完成并补充实现细节 | boil |
 | 2026-01-28 | 更新 doc_roadmap.md 标记阶段 12 完成 | boil |
 | 2026-01-28 | 更新 doc_progress_summary.md 反映阶段 12 进度 | boil |
+| 2026-01-28 | 完成阶段 12.5: Actor 系统 (actor) 开发 | boil |
+| 2026-01-28 | 更新 doc_phase12_5_actor.md 标记完成并补充实现细节 | boil |
+| 2026-01-28 | 更新 doc_progress_summary.md 反映阶段 12.5 进度 | boil |
 
 ---
 
