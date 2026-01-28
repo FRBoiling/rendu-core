@@ -6,9 +6,8 @@
 #|--------------------------------
 if (BUILD_TOOLS)
   set(PROJECT_NAME tool)
-  rendu_add_subdirectory(
-      ${CMAKE_CURRENT_SOURCE_DIR}
-      # Exclude
-      ${CMAKE_CURRENT_SOURCE_DIR}/proto_generate
+  rendu_add_subdirectories(
+      DIR ${CMAKE_CURRENT_SOURCE_DIR}
+      EXCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/proto_generate
   )
 endif ()

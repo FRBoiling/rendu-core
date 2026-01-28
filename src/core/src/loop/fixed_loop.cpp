@@ -6,7 +6,7 @@ BEGIN_NAMESPACE_CORE
 FixedLoop::FixedLoop(float fixed_delta_time, io::IoContext& io)
     : fixed_delta_time_(fixed_delta_time)
     , io_(io)
-    , target_fps_(static_cast<int>(1.0f / fixed_delta_time))
+    , target_fps_(static_cast<int>(std::round(1.0f / fixed_delta_time)))
     , last_time_(std::chrono::steady_clock::now()) {
     RENDU_LOG_INFO("FixedLoop created: delta_time={:.3f}s, target_fps={}", fixed_delta_time, target_fps_);
 }

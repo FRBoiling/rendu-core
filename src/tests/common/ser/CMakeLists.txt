@@ -7,30 +7,30 @@ set(PROTO_FILES test_messages.proto)
 
 # 生成 .pb.cc 和 .pb.h
 protobuf_generate(
-    LANGUAGE cpp
-    OUT_VAR PROTO_GEN_SRCS
-    PROTOS ${PROTO_FILES}
+        LANGUAGE cpp
+        OUT_VAR PROTO_GEN_SRCS
+        PROTOS ${PROTO_FILES}
 )
 
 # 分离 .cc 和 .h 文件
 set(PROTO_SRCS "")
 set(PROTO_HDRS "")
-foreach(FILE ${PROTO_GEN_SRCS})
-    if(FILE MATCHES "\\.cc$")
+foreach (FILE ${PROTO_GEN_SRCS})
+    if (FILE MATCHES "\\.cc$")
         list(APPEND PROTO_SRCS ${FILE})
-    elseif(FILE MATCHES "\\.h$")
+    elseif (FILE MATCHES "\\.h$")
         list(APPEND PROTO_HDRS ${FILE})
-    endif()
-endforeach()
+    endif ()
+endforeach ()
 
 # Protobuf 测试
 rendu_add_test(
-        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
-        PROJECT       ${PROJECT_NAME}
-        NAME          protobuf_ser_test
-        SOURCES       protobuf_ser_test.cpp ${PROTO_SRCS} ${PROTO_HDRS}
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common
+        DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT ${PROJECT_NAME}
+        NAME protobuf_ser_test
+        SOURCES protobuf_ser_test.cpp ${PROTO_SRCS} ${PROTO_HDRS}
+        PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -39,11 +39,11 @@ target_include_directories(${PROJECT_NAME}_protobuf_ser_test PRIVATE ${CMAKE_CUR
 
 # JSON 测试
 rendu_add_test(
-        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
-        PROJECT       ${PROJECT_NAME}
-        NAME          json_ser_test
-        SOURCES       json_ser_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common
+        DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT ${PROJECT_NAME}
+        NAME json_ser_test
+        SOURCES json_ser_test.cpp
+        PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK RenduCore::common
         TEST_FRAMEWORK CATCH2
 )

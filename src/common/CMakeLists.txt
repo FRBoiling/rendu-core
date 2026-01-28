@@ -15,11 +15,11 @@ rendu_add_library(
         PRIVATE_LINK
         rendu-core-interface
         PUBLIC_LINK
-        3rdparty::fmt
-        3rdparty::boost
-        3rdparty::entt
-        3rdparty::protobuf
-        3rdparty::simdjson
+        fmt::fmt
+        Boost::asio
+        EnTT::EnTT
+        protobuf::libprotobuf
+        simdjson::simdjson
         DEFINES
         RENDU_COMMON_EXPORT
         ALIAS ON

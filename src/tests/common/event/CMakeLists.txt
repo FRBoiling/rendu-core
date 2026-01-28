@@ -8,8 +8,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          event_test
         SOURCES       event_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -19,8 +19,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          event_bus_test
         SOURCES       event_bus_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common 
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -30,8 +30,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          handler_test
         SOURCES       handler_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common 
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -41,7 +41,7 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          handler_compile_test
         SOURCES       handler_compile_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common 
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )

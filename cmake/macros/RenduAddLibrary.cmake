@@ -43,7 +43,7 @@ function(rendu_add_library)
     # 参数解析
     set(options STATIC SHARED INTERFACE ALIAS)
     set(oneValueArgs DIR PROJECT NAME)
-    set(multiValueArgs PRIVATE_LINK PUBLIC_LINK DEFINES SOURCES)
+    set(multiValueArgs PRIVATE_LINK PUBLIC_LINK DEFINES SOURCES INCLUDES)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     # 检查必需参数
@@ -98,13 +98,18 @@ function(rendu_add_library)
         set_target_properties(${target_name} PROPERTIES FOLDER "${ARG_PROJECT}/${ARG_NAME}")
     endif ()
 
-    # 自动收集 include 目录
-    rendu_collect_include_directories(include_dirs "${ARG_DIR}"
-            EXCLUDE_DIRS
-            "${ARG_DIR}/tests"
-            "${CMAKE_BINARY_DIR}"
-            EXCLUDE_REGEX ".*/private"
-    )
+    # 收集源文件
+    if (NOT ARG_INCLUDES)
+        # 自动收集 include 目录
+        rendu_collect_include_directories(include_dirs "${ARG_DIR}"
+                EXCLUDE_DIRS
+                "${ARG_DIR}/tests"
+                "${CMAKE_BINARY_DIR}"
+                EXCLUDE_REGEX ".*/private"
+        )
+    else ()
+        set(include_dirs ${ARG_INCLUDES})
+    endif ()
 
     # 根据库类型确定包含目录可见性
     if (lib_type STREQUAL "INTERFACE")

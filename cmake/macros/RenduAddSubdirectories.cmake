@@ -74,7 +74,7 @@ function(rendu_add_subdirectories)
 
             if (found EQUAL -1)
                 add_subdirectory("${child_path}")
-                rendu_log_info("添加子目录: ${child_path}")
+                rendu_log_debug("添加子目录: ${child_path}")
 
 # ====================================================================
 # 递归添加子目录（当 RECURSIVE 选项启用时）

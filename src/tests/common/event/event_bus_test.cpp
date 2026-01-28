@@ -59,7 +59,7 @@ public:
 
 TEST_CASE("EventBus: 订阅和发布", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -82,11 +82,14 @@ TEST_CASE("EventBus: 订阅和发布", "[event][bus]") {
     REQUIRE(last_value == 42);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 多个订阅者", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count1{0};
@@ -107,11 +110,14 @@ TEST_CASE("EventBus: 多个订阅者", "[event][bus]") {
     REQUIRE(count3 == 2);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 异步发布", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<bool> executed{false};
@@ -136,11 +142,14 @@ TEST_CASE("EventBus: 异步发布", "[event][bus]") {
     REQUIRE(value == 99);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 延迟发布", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<bool> executed{false};
@@ -170,11 +179,14 @@ TEST_CASE("EventBus: 延迟发布", "[event][bus]") {
     REQUIRE(duration.count() >= 90); // 至少 90ms
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 取消订阅", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -191,11 +203,14 @@ TEST_CASE("EventBus: 取消订阅", "[event][bus]") {
     REQUIRE(count == 1); // 没有增加
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 优先级", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::vector<int> order;
@@ -218,11 +233,14 @@ TEST_CASE("EventBus: 优先级", "[event][bus]") {
     REQUIRE(order[2] == 1);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 不同事件类型", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> int_count{0};
@@ -242,11 +260,14 @@ TEST_CASE("EventBus: 不同事件类型", "[event][bus]") {
     REQUIRE(string_count == 2);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 订阅者计数", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
 
@@ -265,11 +286,14 @@ TEST_CASE("EventBus: 订阅者计数", "[event][bus]") {
     REQUIRE(bus.subscriber_count(IntEvent::static_type()) == 2);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 清空", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -292,11 +316,14 @@ TEST_CASE("EventBus: 清空", "[event][bus]") {
     REQUIRE(count == 0); // 没有处理器执行
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 异常处理", "[event][bus]") {
     IoContext io_ctx(1);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -317,11 +344,14 @@ TEST_CASE("EventBus: 异常处理", "[event][bus]") {
     REQUIRE(count == 2); // 两个处理器都执行了
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 高吞吐量", "[event][bus]") {
     IoContext io_ctx(2);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -338,11 +368,14 @@ TEST_CASE("EventBus: 高吞吐量", "[event][bus]") {
     REQUIRE(count == num_events);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }
 
 TEST_CASE("EventBus: 并发订阅和发布", "[event][bus]") {
     IoContext io_ctx(4);
-    std::thread([&io_ctx]() { io_ctx.run(); }).detach();
+    std::thread io_thread([&io_ctx]() { io_ctx.run(); });
 
     EventBus bus(io_ctx);
     std::atomic<int> count{0};
@@ -383,4 +416,7 @@ TEST_CASE("EventBus: 并发订阅和发布", "[event][bus]") {
     REQUIRE(count == num_events * num_subscribers);
 
     io_ctx.stop();
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 }

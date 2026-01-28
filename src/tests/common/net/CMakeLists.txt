@@ -8,8 +8,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          all_net_tests
         SOURCES       all_net_tests.cpp
-        PRIVATE_LINK  rendu-core-interface RenduCore::common
-        PUBLIC_LINK   3rdparty::catch
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -19,8 +19,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          codec_test
         SOURCES       codec_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -30,8 +30,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          socket_test
         SOURCES       socket_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -41,8 +41,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          channel_test
         SOURCES       channel_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
@@ -52,8 +52,8 @@ rendu_add_test(
         PROJECT       ${PROJECT_NAME}
         NAME          udp_test
         SOURCES       udp_test.cpp
-        PRIVATE_LINK  rendu-core-interface
-        PUBLIC_LINK   3rdparty::catch RenduCore::common 3rdparty::boost
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
         TEST_FRAMEWORK CATCH2
 )
 
