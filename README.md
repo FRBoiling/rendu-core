@@ -213,5 +213,5 @@ cmake --build cmake-build-debug --target coverage
 ---
 
 **版本**: v0.1.0-dev
-**最后更新**: 2026-01-26
-**当前状态**: Common 层已完成，Core 层开发中
+**最后更新**: 2026-01-28
+**当前状态**: Common 层已完成，Core 层开发中（阶段 11 已完成）
