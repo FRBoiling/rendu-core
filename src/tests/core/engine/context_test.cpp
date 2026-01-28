@@ -6,7 +6,7 @@
 #include <core/engine/context.h>
 #include <iostream>
 
-using namespace Rendu::Core;
+using namespace Rendu;
 
 TEST_CASE("Context: 基本功能", "[core][context]") {
     Context ctx;

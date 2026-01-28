@@ -7,7 +7,7 @@
 #include <thread>
 #include <chrono>
 
-using namespace Rendu::Core;
+using namespace Rendu;
 
 // 测试模块
 class TestModule : public IEngineModule {
