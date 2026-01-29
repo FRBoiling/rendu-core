@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package protocol;
+
+// 登录请求
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// 登录响应
+message LoginResponse {
+  bool success = 1;
+  int32 user_id = 2;
+  string message = 3;
+}
+
+// 聊天消息
+message ChatMessage {
+  int32 from_user_id = 1;
+  string from_username = 2;
+  string content = 3;
+  int64 timestamp = 4;
+}
+
+// 客户端消息（统一封装）
+message ClientMessage {
+  oneof msg_type {
+    LoginRequest login = 1;
+    ChatMessage chat = 2;
+  }
+}
+
+// 服务器消息（统一封装）
+message ServerMessage {
+  oneof msg_type {
+    LoginResponse login_response = 1;
+    ChatMessage chat = 2;
+  }
+}
