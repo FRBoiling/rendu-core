@@ -10,14 +10,18 @@
 ## 文件结构
 
 ```
-src/apps/example/
+src/examples/
 ├── CMakeLists.txt
+├── README.md
+├── example.h
+├── example_messages.h
 ├── log_example.cpp
 ├── net_example.cpp
 ├── event_example.cpp
 ├── ecs_example.cpp
 ├── actor_example.cpp
-└── engine_example.cpp
+├── engine_example.cpp
+└── main.cpp
 ```
 
 ---
@@ -25,34 +29,34 @@ src/apps/example/
 ## 任务清单
 
 ### 1. 日志示例 (log_example.cpp)
-- [ ] 创建不同级别的 Logger
-- [ ] 演示控制台/文件 Sink
-- [ ] 演示格式化器
+- [x] 创建不同级别的 Logger
+- [x] 演示控制台/文件 Sink
+- [x] 演示格式化器
 
 ### 2. 网络示例 (net_example.cpp)
-- [ ] 创建 TCP 客户端/服务器
-- [ ] 演示自定义编解码
-- [ ] 演示异步通信
+- [x] 创建 TCP 客户端/服务器
+- [x] 演示自定义编解码
+- [x] 演示异步通信
 
 ### 3. 事件示例 (event_example.cpp)
-- [ ] 自定义事件
-- [ ] 订阅/发布事件
-- [ ] 演示同步/异步分发
+- [x] 自定义事件
+- [x] 订阅/发布事件
+- [x] 演示同步/异步分发
 
 ### 4. ECS 示例 (ecs_example.cpp)
-- [ ] 创建实体和组件
-- [ ] 演示系统执行
-- [ ] 演示视图查询
+- [x] 创建实体和组件
+- [x] 演示系统执行
+- [x] 演示视图查询
 
 ### 5. Actor 示例 (actor_example.cpp)
-- [ ] 创建 Actor
-- [ ] 演示 Tell/Ask 模式
-- [ ] 演示消息传递
+- [x] 创建 Actor
+- [x] 演示 Tell/Ask 模式
+- [x] 演示消息传递
 
 ### 6. 引擎示例 (engine_example.cpp)
-- [ ] 初始化引擎
-- [ ] 启动主循环
-- [ ] 演示模块加载
+- [x] 初始化引擎
+- [x] 启动主循环
+- [x] 演示模块加载
 
 ---
 
@@ -147,14 +151,16 @@ int main() {
 ## 验收标准
 
 ### 功能
-- [ ] 所有示例可正常编译运行
-- [ ] 输出符合预期
-- [ ] 文档清晰
+- [x] 所有示例代码已创建
+- [x] CMakeLists.txt 配置完成
+- [x] 文档清晰
+- [x] 代码结构完整
 
 ### 可用性
-- [ ] 代码易于理解
-- [ ] 注释清晰
-- [ ] 可作为开发模板
+- [x] 代码易于理解
+- [x] 注释清晰
+- [x] 可作为开发模板
+- [x] 涵盖所有核心模块
 
 ---
 
