@@ -158,7 +158,7 @@ function(rendu_add_test)
         rendu_log_debug("配置 GoogleTest 测试")
     endif ()
 
-    # 启用测试
+    # 启用测试支持（必须在 add_test 之前调用）
     enable_testing()
 
     # 构建 CTest 命令

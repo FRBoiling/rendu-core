@@ -33,6 +33,7 @@ rendu_add_subdirectories(
         ${CMAKE_CURRENT_SOURCE_DIR}/Testing
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-release
+        ${CMAKE_CURRENT_SOURCE_DIR}/logs
 )
 
 # 可选：添加统一的 uninstall 目标（跨平台）
