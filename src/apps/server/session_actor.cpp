@@ -1,8 +1,10 @@
 #include "session_actor.h"
 #include "server_actor.h"
 #include "server_messages.h"
+#include "server_stats.h"
 #include "common/log/logger.h"
 #include <ctime>
+#include <chrono>
 
 using namespace Rendu;
 using namespace server;
@@ -16,7 +18,7 @@ SessionActor::SessionActor(const std::string& name,
 }
 
 SessionActor::~SessionActor() {
-    RENDU_LOG_INFO("SessionActor destroyed: {}", name());
+    RENDU_LOG_DEBUG("[SessionActor] destroyed: user_id={}, username={}", user_id_, username_);
 }
 
 void SessionActor::receive(std::shared_ptr<Message> msg) {
@@ -31,13 +33,14 @@ void SessionActor::receive(std::shared_ptr<Message> msg) {
 }
 
 void SessionActor::on_start() {
-    RENDU_LOG_INFO("SessionActor started: {}", name());
+    RENDU_LOG_INFO("[SessionActor] started: user_id={}", user_id_);
     // 开始接收数据
     start_receive();
 }
 
 void SessionActor::on_stop() {
-    RENDU_LOG_INFO("SessionActor stopped: {}", name());
+    RENDU_LOG_INFO("[SessionActor] stopped: user_id={}, username={}, 已登录: {}",
+                   user_id_, username_, logged_in_.load() ? "是" : "否");
 
     // 通知 Server Actor 会话结束
     if (system_) {
@@ -61,14 +64,31 @@ void SessionActor::on_data_received(const std::vector<byte>& data) {
         // 使用解码器提取完整消息
         auto messages = codec_->decode(receive_buffer_);
 
+        RENDU_LOG_DEBUG("[SessionActor] 收到数据: user_id={}, 大小={}, 解析出 {} 条消息",
+                       user_id_, data.size(), messages.size());
+
+        // 更新统计
+        if (stats_) {
+            stats_->increment_bytes_received(data.size());
+        }
+
         // 处理每个完整消息
         for (const auto& message_data : messages) {
             // 解析 protobuf 消息
             protocol::ClientMessage client_msg;
             if (!client_msg.ParseFromArray(message_data.data(),
                                           static_cast<int>(message_data.size()))) {
-                RENDU_LOG_ERROR("Failed to parse client message from user {}", user_id_);
+                RENDU_LOG_ERROR("[SessionActor] Failed to parse client message from user {}, 数据大小: {}",
+                               user_id_, message_data.size());
+                if (stats_) {
+                    stats_->increment_parse_errors();
+                }
                 continue;
+            }
+
+            // 更新统计
+            if (stats_) {
+                stats_->increment_messages_received();
             }
 
             // 根据消息类型处理
@@ -77,16 +97,16 @@ void SessionActor::on_data_received(const std::vector<byte>& data) {
             } else if (client_msg.has_chat()) {
                 on_chat(client_msg.chat());
             } else {
-                RENDU_LOG_WARN("Unknown message type from user {}", user_id_);
+                RENDU_LOG_WARN("[SessionActor] Unknown message type from user {}", user_id_);
             }
         }
     } catch (const std::exception& e) {
-        RENDU_LOG_ERROR("Error processing data from user {}: {}", user_id_, e.what());
+        RENDU_LOG_ERROR("[SessionActor] Error processing data from user {}: {}", user_id_, e.what());
     }
 }
 
 void SessionActor::on_login(const protocol::LoginRequest& request) {
-    RENDU_LOG_INFO("Login request from {}: {}", request.username(), user_id_);
+    RENDU_LOG_INFO("[SessionActor] Login request: user_id={}, username={}", user_id_, request.username());
 
     // 简单验证（实际应用中应该验证密码）
     bool success = true;
@@ -113,11 +133,13 @@ void SessionActor::on_login(const protocol::LoginRequest& request) {
 
 void SessionActor::on_chat(const protocol::ChatMessage& message) {
     if (!logged_in_) {
-        RENDU_LOG_WARN("Chat message from unauthenticated user {}", user_id_);
+        RENDU_LOG_WARN("[SessionActor] Chat message from unauthenticated user {}", user_id_);
         return;
     }
 
-    RENDU_LOG_INFO("Chat from {}: {}", username_, message.content());
+    auto start_time = std::chrono::steady_clock::now();
+
+    RENDU_LOG_DEBUG("[SessionActor] Chat from {}: {}", username_, message.content());
 
     // 设置时间戳和用户信息
     auto* mutable_msg = const_cast<protocol::ChatMessage*>(&message);
@@ -132,17 +154,25 @@ void SessionActor::on_chat(const protocol::ChatMessage& message) {
         );
         system_->tell(server_ref_, broadcast_msg);
     }
+
+    // 更新延迟统计
+    auto end_time = std::chrono::steady_clock::now();
+    auto latency = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    if (stats_) {
+        stats_->update_avg_message_latency(latency);
+    }
 }
 
 void SessionActor::send_to_client(const protocol::ServerMessage& msg) {
     if (!socket_) {
+        RENDU_LOG_WARN("[SessionActor] Attempt to send but socket is null: user_id={}", user_id_);
         return;
     }
 
     // 序列化 protobuf 消息
     std::string serialized;
     if (!msg.SerializeToString(&serialized)) {
-        RENDU_LOG_ERROR("Failed to serialize server message for user {}", user_id_);
+        RENDU_LOG_ERROR("[SessionActor] Failed to serialize server message for user {}", user_id_);
         return;
     }
 
@@ -150,45 +180,68 @@ void SessionActor::send_to_client(const protocol::ServerMessage& msg) {
     std::vector<byte> data(serialized.begin(), serialized.end());
     auto encoded_data = codec_->encode(data);
 
+    RENDU_LOG_DEBUG("[SessionActor] Sending to client: user_id={}, 大小={}",
+                   user_id_, encoded_data.size());
+
     // 发送编码后的数据
     socket_->async_send(encoded_data, [this, user_id = user_id_]
                         (const boost::system::error_code& ec, size_t bytes_sent) {
         if (ec) {
-            RENDU_LOG_ERROR("Send error for user {}: {}", user_id, ec.message());
+            RENDU_LOG_ERROR("[SessionActor] Send error for user {}: {} (发送字节: {})",
+                           user_id, ec.message(), bytes_sent);
+            // 更新统计
+            if (stats_) {
+                stats_->increment_send_errors();
+            }
             // 停止 Actor
             if (system_) {
                 system_->stop_actor(self());
             }
+        } else {
+            RENDU_LOG_DEBUG("[SessionActor] Send success for user {}: {} bytes", user_id, bytes_sent);
         }
     });
 }
 
 void SessionActor::send_raw_data(const std::vector<byte>& data) {
     if (!socket_) {
+        RENDU_LOG_WARN("[SessionActor] Attempt to send raw data but socket is null: user_id={}", user_id_);
         return;
     }
+
+    RENDU_LOG_DEBUG("[SessionActor] Sending raw data: user_id={}, 大小={}", user_id_, data.size());
 
     // 直接发送原始数据（假设已经编码）
     socket_->async_send(data, [this, user_id = user_id_]
                         (const boost::system::error_code& ec, size_t bytes_sent) {
         if (ec) {
-            RENDU_LOG_ERROR("Send error for user {}: {}", user_id, ec.message());
+            RENDU_LOG_ERROR("[SessionActor] Send error for user {}: {} (发送字节: {})",
+                           user_id, ec.message(), bytes_sent);
+            // 更新统计
+            if (stats_) {
+                stats_->increment_send_errors();
+            }
             if (system_) {
                 system_->stop_actor(self());
             }
+        } else {
+            RENDU_LOG_DEBUG("[SessionActor] Raw data send success for user {}: {} bytes",
+                           user_id, bytes_sent);
         }
     });
 }
 
 void SessionActor::start_receive() {
     if (!socket_) {
+        RENDU_LOG_WARN("[SessionActor] Attempt to start receive but socket is null: user_id={}", user_id_);
         return;
     }
 
     socket_->async_receive(4096, [this](const boost::system::error_code& ec, std::vector<byte> data) {
         if (ec) {
             if (ec != boost::asio::error::operation_aborted) {
-                RENDU_LOG_ERROR("Receive error for user {}: {}", user_id_, ec.message());
+                RENDU_LOG_ERROR("[SessionActor] Receive error for user {}: {}",
+                               user_id_, ec.message());
             }
             // 停止 Actor
             if (system_) {

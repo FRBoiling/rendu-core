@@ -18,6 +18,9 @@ END_NAMESPACE_CORE
 
 namespace server {
 
+// 前向声明
+class ServerStats;
+
 /// Session Actor - 管理单个客户端连接
 class SessionActor : public Rendu::Actor {
 public:
@@ -42,6 +45,9 @@ public:
 
     /// 设置 Actor 系统
     void set_system(Rendu::ActorSystem* system) { system_ = system; }
+
+    /// 设置统计对象
+    void set_stats(std::shared_ptr<ServerStats> stats) { stats_ = stats; }
 
     /// 启动时的回调
     void on_start() override;
@@ -75,6 +81,7 @@ private:
     std::atomic<bool> logged_in_{false};
     std::vector<byte> receive_buffer_;
     std::mutex buffer_mutex_;
+    std::shared_ptr<ServerStats> stats_;
 };
 
 } // namespace server

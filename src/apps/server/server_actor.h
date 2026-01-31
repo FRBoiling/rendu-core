@@ -17,6 +17,7 @@ namespace server {
 
 // 前向声明
 class SessionActor;
+class ServerStats;
 
 /// Server Actor - 管理所有会话和全局消息
 class ServerActor : public Rendu::Actor {
@@ -37,6 +38,9 @@ public:
 
     /// 停止时的回调
     void on_stop() override;
+
+    /// 设置统计对象
+    void set_stats(std::shared_ptr<ServerStats> stats) { stats_ = stats; }
 
     /// 添加会话
     void add_session(int32_t user_id, Rendu::ActorRef session_ref);
@@ -70,6 +74,7 @@ private:
     std::unordered_map<int32_t, std::string> usernames_;
     std::mutex sessions_mutex_;
     std::atomic<int32_t> next_user_id_{0};
+    std::shared_ptr<ServerStats> stats_;
 };
 
 } // namespace server
