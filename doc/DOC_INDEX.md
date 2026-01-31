@@ -55,13 +55,20 @@
 
 ---
 
+## 用户文档
+
+|||- **[用户指南](USER_GUIDE.md)** - 快速入门和最佳实践 ✅
+|||- **[常见问题](FAQ.md)** - FAQ 和故障排查 ✅
+
+---
+
 ## 未来阶段文档 (阶段 15-19)
 
-||- **[阶段 15: debt](doc_phase15_debt.md)** - 技术债务清理 ✅
-||- **[阶段 16: documentation](doc_phase16_documentation.md)** - 文档完善 ⏳
-||- **[阶段 17: performance](doc_phase17_performance.md)** - 性能优化 ⏳
-||- **[阶段 18: advanced](doc_phase18_advanced.md)** - 高级特性 ⏳
-||- **[阶段 19: production](doc_phase19_production.md)** - 生产环境 ⏳
+|||- **[阶段 15: debt](doc_phase15_debt.md)** - 技术债务清理 ✅
+|||- **[阶段 16: documentation](doc_phase16_documentation.md)** - 文档完善 ✅
+|||- **[阶段 17: performance](doc_phase17_performance.md)** - 性能优化 ⏳
+|||- **[阶段 18: advanced](doc_phase18_advanced.md)** - 高级特性 ⏳
+|||- **[阶段 19: production](doc_phase19_production.md)** - 生产环境 ⏳
 
 ---
 
@@ -106,7 +113,9 @@ Apps 层完成 ✓
     ↓
 阶段 15: 技术债务清理 ✅
     ↓
-阶段 16-19: 优化与生产部署
+阶段 16: 文档完善 ✅
+    ↓
+阶段 17-19: 优化与生产部署
 ```
 
 ---
