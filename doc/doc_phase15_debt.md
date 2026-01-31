@@ -129,19 +129,24 @@ TEST_CASE("Error Handling - Edge Cases") {
 
 **影响范围**:
 - `src/common/include/common/config/watcher.h`
-- `src/common/src/config/watcher.cpp` (空文件)
+- `src/common/src/config/watcher.cpp`
+- `src/tests/common/config/watcher_test.cpp`
 
 **任务**:
 - [x] 评估 ConfigWatcher 的必要性
-- [x] 标记为"非核心功能",延后实现
+- [x] 设计 ConfigWatcher 接口
+- [x] 实现 ConfigWatcher 类
+- [x] 实现文件修改监控
+- [x] 实现配置热更新回调
+- [x] 编写单元测试
 
-**决策**: 暂时不实现 ConfigWatcher (v0.3.0 版本考虑)
+**决策**: ✅ 已实现 ConfigWatcher (简化轮询方案)
 **理由**:
-- 配置热更新不是核心功能
-- 生产环境可以通过重启服务更新配置
-- 降低项目复杂度,优先完成其他功能
+- 使用定时器轮询文件修改时间,跨平台兼容
+- 实现简单,1天内完成
+- 满足配置热更新需求
 
-**实现方案 (可选)**:
+**实现方案 (已完成)**:
 
 ```cpp
 // config/watcher.h
@@ -149,7 +154,16 @@ class ConfigWatcher {
 public:
     using Callback = std::function<void(const Config&)>;
 
-    ConfigWatcher(IoContext& io, const std::string& file_path);
+    ConfigWatcher(IoContext& io, const std::string& file_path,
+                  std::chrono::milliseconds check_interval = std::chrono::seconds(1));
+
+    ~ConfigWatcher();
+
+    // 禁止拷贝和移动赋值 (引用成员)
+    ConfigWatcher(const ConfigWatcher&) = delete;
+    ConfigWatcher& operator=(const ConfigWatcher&) = delete;
+    ConfigWatcher& operator=(ConfigWatcher&& other) noexcept = delete;
+    ConfigWatcher(ConfigWatcher&& other) noexcept;
 
     // 开始监控
     void start();
@@ -160,32 +174,51 @@ public:
     // 注册变更回调
     void on_change(Callback callback);
 
+    // 手动重载配置
+    Result<Config> reload();
+
+    // 检查是否运行中
+    bool is_running() const;
+
+    // 获取文件路径
+    const std::string& file_path() const;
+
+    // 获取当前配置
+    const Config& config() const;
+
 private:
     void watch_loop();
-    std::string check_file_hash();
+    std::optional<std::filesystem::file_time_type> get_file_modification_time() const;
+    bool file_exists() const;
 
-    IoContext& io_;
+    IoContext& io_context_;
     std::string file_path_;
-    std::string last_hash_;
+    std::chrono::milliseconds check_interval_;
     std::vector<Callback> callbacks_;
     std::atomic<bool> running_;
-    Timer timer_;
+    std::optional<std::filesystem::file_time_type> last_mod_time_;
+    Config current_config_;
+    std::unique_ptr<Timer> timer_;
 };
 ```
 
-**实现平台注意事项**:
-- **Linux/macOS**: 使用 inotify/FSEvents
-- **跨平台**: 使用 Boost.Asio 的文件监控或轮询
-
-**简化方案 (推荐)**:
-- 使用定时器轮询文件修改时间
+**实现特点**:
+- 使用定时器轮询文件修改时间,跨平台兼容
 - 当文件修改时重新加载配置
 - 触发注册的回调函数
+- 支持多个回调注册
+- 线程安全 (使用 atomic)
 
-**验收标准 (如实现)**:
-- [ ] 文件修改后自动重新加载配置
-- [ ] 回调函数正确触发
-- [ ] 单元测试覆盖主要场景
+**验收标准 (已通过)**:
+- [x] 文件修改后自动重新加载配置
+- [x] 回调函数正确触发
+- [x] 单元测试覆盖主要场景
+- [x] 基本启动和停止测试
+- [x] 文件修改监控测试
+- [x] 手动重载配置测试
+- [x] 文件不存在测试
+- [x] 多个回调测试
+- [x] 嵌套配置测试
 
 ---
 
@@ -314,7 +347,9 @@ std::string username = config.get<std::string>("database.credentials.username");
 - [x] `config_test` 所有测试用例通过 (61 断言)
 - [x] `loader_test` 所有测试用例通过 (36 断言)
 - [x] `context_test` 所有测试用例通过 (26 断言)
+- [x] `watcher_test` 所有测试用例通过
 - [x] 嵌套配置功能完成
+- [x] ConfigWatcher 实现 (简化轮询方案)
 - [x] 测试覆盖率 ≥ 80% (核心模块)
 - [x] 无 P0/P1 遗留问题
 - [x] 无严重编译警告
@@ -343,7 +378,7 @@ std::string username = config.get<std::string>("database.credentials.username");
 | 任务 | 负责人 | 状态 | 完成时间 |
 |------|--------|------|----------|
 | json_ser_test 修复 | boil | ✅ | 已完成 (2026-01-26) |
-| ConfigWatcher 评估/实现 | boil | ✅ | 已评估,延后实现 |
+| ConfigWatcher 评估/实现 | boil | ✅ | 已实现 (2026-01-31) |
 | 嵌套配置支持 | boil | ✅ | 2026-01-31 |
 | context_test 编写 | boil | ✅ | 已完成 (2026-01-31) |
 | 静态分析和内存检查 | boil | ⏸️ | 可选任务 |
@@ -371,11 +406,11 @@ std::string username = config.get<std::string>("database.credentials.username");
    - 优点: 节省开发时间
    - 缺点: 功能缺失
 
-**决策**: 选择选项 3 - 暂时不实现 ConfigWatcher
+**决策**: ✅ 已实现 (选项 2 - 简化轮询方案)
 **理由**:
-- 配置热更新不是核心功能
-- 生产环境可以通过重启服务更新配置
-- 降低项目复杂度,优先完成其他功能
+- 配置热提升开发效率,适合开发/测试环境
+- 简化轮询方案实现简单,跨平台兼容
+- 生产环境仍可通过重启服务更新配置
 
 ---
 
@@ -402,7 +437,7 @@ std::string username = config.get<std::string>("database.credentials.username");
 ## 八、备注
 
 - 技术债务清理已完成核心功能修复
-- 配置热更新可延后到 v0.3.0 版本
+- ✅ ConfigWatcher 已实现 (简化轮询方案)
 - 嵌套配置支持已实现,提升易用性
 - 每个修复后已运行完整的测试套件
 
