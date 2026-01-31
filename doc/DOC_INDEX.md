@@ -44,14 +44,24 @@
 ||- **[阶段 10: loop](doc_phase10_loop.md)** - 主循环 (loop/fixed_loop) ✅
 ||- **[阶段 11: state](doc_phase11_state.md)** - 状态管理 (state_machine/state) ✅
 ||- **[阶段 12: lifecycle](doc_phase12_lifecycle.md)** - 生命周期 (lifecycle/manager) ✅
-||- **[阶段 12.5: actor](doc_phase12_5_actor.md)** - Actor 系统 (actor/actor_system/actor_ref/message)
+||- **[阶段 12.5: actor](doc_phase12_5_actor.md)** - Actor 系统 (actor/actor_system/actor_ref/message) ✅
 
 ---
 
 ## Apps 层文档 (阶段 13-14)
 
-||- **[阶段 13: example](doc_phase13_example.md)** - 示例程序
-||- **[阶段 14: server](doc_phase14_server.md)** - 服务器实现
+||- **[阶段 13: example](doc_phase13_example.md)** - 示例程序 ✅
+||- **[阶段 14: server](doc_phase14_server.md)** - 服务器实现 ✅
+
+---
+
+## 未来阶段文档 (阶段 15-19)
+
+||- **[阶段 15: debt](doc_phase15_debt.md)** - 技术债务清理 ⏳
+||- **[阶段 16: documentation](doc_phase16_documentation.md)** - 文档完善 ⏳
+||- **[阶段 17: performance](doc_phase17_performance.md)** - 性能优化 ⏳
+||- **[阶段 18: advanced](doc_phase18_advanced.md)** - 高级特性 ⏳
+||- **[阶段 19: production](doc_phase19_production.md)** - 生产环境 ⏳
 
 ---
 
@@ -86,7 +96,19 @@ Common 层完成 ✓
     ↓
 阶段 12: Core 层 - lifecycle ✅
     ↓
-阶段 12.5: Core 层 - actor（待开发）
+阶段 12.5: Core 层 - actor ✅
     ↓
-阶段 13-14: Apps 层
+阶段 13: Apps 层 - example ✅
+    ↓
+阶段 14: Apps 层 - server ✅
+    ↓
+Apps 层完成 ✓
+    ↓
+阶段 15: 技术债务清理 (可选)
+    ↓
+阶段 16-19: 优化与生产部署
 ```
+
+---
+
+**最后更新**: 2026-01-31

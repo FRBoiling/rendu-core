@@ -13,7 +13,7 @@ using namespace Rendu::ser;
 using Rendu::net::ByteBuffer;
 
 TEST_CASE("ProtobufSerializer - TestMessage 基本序列化", "[ser][protobuf]") {
-    TestMessage msg;
+    test::TestMessage msg;
     msg.set_id(123);
     msg.set_name("test_message");
     msg.set_timestamp(1234567890);

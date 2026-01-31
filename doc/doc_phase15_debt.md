@@ -1,0 +1,427 @@
+# 阶段 15: 技术债务清理
+
+**状态**: ⏳ 未开始
+**优先级**: P1
+**预计工期**: 2-3 天
+**开始日期**: 2026-02-03
+**完成日期**: 待定
+
+---
+
+## 一、目标
+
+修复已知问题,提高代码质量,确保框架稳定性。
+
+---
+
+## 二、任务清单
+
+### 2.1 序列化模块修复 (ser)
+
+**问题描述**:
+- `json_ser_test` 中有 3 个失败断言
+- `is_valid_json` 对某些无效 JSON 误判
+- 错误处理边界情况不够完善
+
+**影响范围**:
+- `src/common/include/common/ser/json_ser.h`
+- `src/common/src/ser/json_ser.cpp`
+- `src/tests/common/ser/json_ser_test.cpp`
+
+**任务**:
+- [ ] 分析失败断言的根本原因
+- [ ] 修复 `is_valid_json` 函数逻辑
+- [ ] 完善错误处理边界情况
+- [ ] 添加更多边界测试用例
+- [ ] 确保所有测试 100% 通过
+
+**详细修复方案**:
+
+#### 问题 1: is_valid_json 对某些无效 JSON 误判
+
+**当前实现问题**:
+```cpp
+// 可能的问题: 对某些格式错误的 JSON 判断为有效
+bool is_valid_json(const std::string_view json) {
+    // 当前实现可能过于宽松
+    return parser.parse(json).error() == simdjson::SUCCESS;
+}
+```
+
+**修复方案**:
+```cpp
+bool is_valid_json(const std::string_view json) {
+    if (json.empty()) {
+        return false;
+    }
+
+    // 检查基本结构
+    if (json[0] != '{' && json[0] != '[') {
+        return false;
+    }
+
+    // 使用 simdjson 严格验证
+    simdjson::ondemand::parser parser;
+    simdjson::padded_string padded_json(json);
+    auto doc = parser.iterate(padded_json);
+
+    // 尝试完整解析
+    auto error = doc.error();
+    if (error != simdjson::SUCCESS) {
+        return false;
+    }
+
+    // 确保完整解析到末尾
+    // TODO: 添加额外验证
+    return true;
+}
+```
+
+#### 问题 2: 错误处理边界情况
+
+**需要测试的边界情况**:
+- 空字符串
+- 只有空白字符
+- 不完整的 JSON (缺少闭合括号)
+- 非法转义字符
+- 数字溢出
+- Unicode 编码问题
+- 嵌套深度过大
+- 重复键 (JSON 对象中)
+
+**添加测试用例**:
+```cpp
+TEST_CASE("Error Handling - Edge Cases") {
+    SECTION("Empty string") {
+        REQUIRE_FALSE(json_ser.is_valid(""));
+    }
+
+    SECTION("Whitespace only") {
+        REQUIRE_FALSE(json_ser.is_valid("   \n\t   "));
+    }
+
+    SECTION("Incomplete JSON") {
+        REQUIRE_FALSE(json_ser.is_valid("{\"key\":"));
+        REQUIRE_FALSE(json_ser.is_valid("[1,2,3"));
+    }
+
+    SECTION("Invalid escape sequences") {
+        REQUIRE_FALSE(json_ser.is_valid("{\"key\": \"\\x\"}"));
+    }
+
+    SECTION("Duplicate keys") {
+        // 根据 simdjson 行为,重复键可能被接受或拒绝
+        // 需要明确期望行为
+    }
+}
+```
+
+**验收标准**:
+- [ ] `json_ser_test` 所有测试用例通过 (13/13)
+- [ ] 断言数保持 112+ 个
+- [ ] 通过率 100%
+
+---
+
+### 2.2 配置模块完善 (config)
+
+**问题 1: ConfigWatcher 未实现**
+
+**影响范围**:
+- `src/common/include/common/config/watcher.h`
+- `src/common/src/config/watcher.cpp` (空文件)
+
+**任务**:
+- [ ] 评估 ConfigWatcher 的必要性
+- [ ] 如需实现,设计监控机制
+- [ ] 实现文件变更检测
+- [ ] 实现配置热更新回调
+- [ ] 编写单元测试
+- [ ] 或者标记为"非核心功能",延后实现
+
+**实现方案 (可选)**:
+
+```cpp
+// config/watcher.h
+class ConfigWatcher {
+public:
+    using Callback = std::function<void(const Config&)>;
+
+    ConfigWatcher(IoContext& io, const std::string& file_path);
+
+    // 开始监控
+    void start();
+
+    // 停止监控
+    void stop();
+
+    // 注册变更回调
+    void on_change(Callback callback);
+
+private:
+    void watch_loop();
+    std::string check_file_hash();
+
+    IoContext& io_;
+    std::string file_path_;
+    std::string last_hash_;
+    std::vector<Callback> callbacks_;
+    std::atomic<bool> running_;
+    Timer timer_;
+};
+```
+
+**实现平台注意事项**:
+- **Linux/macOS**: 使用 inotify/FSEvents
+- **跨平台**: 使用 Boost.Asio 的文件监控或轮询
+
+**简化方案 (推荐)**:
+- 使用定时器轮询文件修改时间
+- 当文件修改时重新加载配置
+- 触发注册的回调函数
+
+**验收标准 (如实现)**:
+- [ ] 文件修改后自动重新加载配置
+- [ ] 回调函数正确触发
+- [ ] 单元测试覆盖主要场景
+
+---
+
+**问题 2: 配置系统简化,不支持嵌套对象**
+
+**当前限制**:
+- Config 类只支持扁平的键值对
+- 不支持嵌套的 JSON 对象
+
+**影响范围**:
+- `src/common/include/common/config/config.h`
+- `src/common/src/config/config.cpp`
+
+**任务**:
+- [ ] 设计嵌套配置的数据结构
+- [ ] 实现嵌套配置的访问接口
+- [ ] 实现 `get_sub_config()` 方法
+- [ ] 更新加载器支持嵌套解析
+- [ ] 更新单元测试
+
+**实现方案**:
+
+```cpp
+// config.h
+class Config {
+public:
+    // 获取嵌套配置
+    std::optional<Config> get_sub_config(const std::string& key) const;
+
+    // 使用点号分隔的路径访问
+    template<typename T>
+    T get(const std::string& path, const T& default_value) const;
+
+private:
+    // 支持嵌套存储
+    std::unordered_map<std::string, ConfigValue> values_;
+    std::unordered_map<std::string, Config> sub_configs_;
+};
+```
+
+**使用示例**:
+```cpp
+// 配置文件 config.json
+{
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "credentials": {
+            "username": "admin",
+            "password": "secret"
+        }
+    },
+    "server": {
+        "port": 8080
+    }
+}
+
+// 访问嵌套配置
+auto db_config = config.get_sub_config("database");
+std::string host = db_config.get<std::string>("host");
+int port = db_config.get<int>("port");
+
+// 或使用路径访问
+int server_port = config.get<int>("server.port", 8080);
+std::string username = config.get<std::string>("database.credentials.username");
+```
+
+**验收标准**:
+- [ ] 支持多层嵌套配置
+- [ ] 提供清晰的访问接口
+- [ ] 单元测试覆盖嵌套场景
+
+---
+
+### 2.3 测试覆盖率提升
+
+**问题**: 缺少 `context_test` 测试
+
+**影响范围**:
+- `src/core/include/core/engine/context.h`
+- `src/tests/core/` (缺少测试文件)
+
+**任务**:
+- [ ] 创建 `src/tests/core/context_test.cpp`
+- [ ] 编写 Context 类的单元测试
+- [ ] 测试 IoContext 访问
+- [ ] 测试 Logger 访问
+- [ ] 测试 EventBus 访问
+- [ ] 测试 Config 访问和加载
+
+**测试用例设计**:
+
+```cpp
+// context_test.cpp
+#include "core/engine/context.h"
+#include <catch2/catch_test_macros.hpp>
+
+TEST_CASE("Context - Basic Operations") {
+    SECTION("Create context") {
+        Context context;
+        REQUIRE(context.io_context() != nullptr);
+        REQUIRE(context.logger() != nullptr);
+    }
+
+    SECTION("Access IoContext") {
+        Context context;
+        auto& io = *context.io_context();
+        REQUIRE(&io == context.io_context());
+    }
+
+    SECTION("Access Logger") {
+        Context context;
+        auto& logger = *context.logger();
+        REQUIRE(&logger == context.logger());
+    }
+
+    SECTION("Load Config") {
+        Context context;
+        auto config = context.load_config("test_config.json");
+        REQUIRE(config.has_value());
+    }
+
+    SECTION("Access EventBus") {
+        Context context;
+        auto& bus = *context.event_bus();
+        REQUIRE(&bus == context.event_bus());
+    }
+}
+```
+
+**测试覆盖率目标**:
+- [ ] Context 类覆盖率 ≥ 80%
+- [ ] Core 层整体覆盖率 ≥ 80%
+
+---
+
+### 2.4 其他代码质量改进
+
+**任务**:
+- [ ] 检查并修复所有编译警告
+- [ ] 运行 Clang-Tidy 静态分析
+- [ ] 检查内存泄漏 (Valgrind)
+- [ ] 检查线程安全问题 (ThreadSanitizer)
+- [ ] 统一代码风格 (clang-format)
+
+---
+
+## 三、验收标准
+
+- [ ] `json_ser_test` 所有测试用例通过 (100%)
+- [ ] 测试覆盖率 ≥ 80% (整体)
+- [ ] 无 P0/P1 遗留问题
+- [ ] 无编译警告 (或文档说明可忽略的警告)
+- [ ] 无内存泄漏
+- [ ] 无明显的线程安全问题
+
+---
+
+## 四、依赖关系
+
+- 阶段 1-8 (Common 层)
+- 阶段 9-12.5 (Core 层)
+
+---
+
+## 五、风险评估
+
+| 风险 | 影响 | 概率 | 应对措施 |
+|------|------|------|---------|
+| JSON 验证修复引入新问题 | 中 | 中 | 充分测试所有边界情况 |
+| 嵌套配置实现复杂度高 | 中 | 中 | 使用简化方案,保持接口清晰 |
+| 测试覆盖率提升耗时 | 低 | 低 | 优先覆盖核心路径 |
+
+---
+
+## 六、进度跟踪
+
+| 任务 | 负责人 | 状态 | 预计完成时间 |
+|------|--------|------|-------------|
+| json_ser_test 修复 | boil | ⏳ | 2026-02-03 |
+| ConfigWatcher 评估/实现 | boil | ⏳ | 2026-02-04 |
+| 嵌套配置支持 | boil | ⏳ | 2026-02-04 |
+| context_test 编写 | boil | ⏳ | 2026-02-04 |
+| 静态分析和内存检查 | boil | ⏳ | 2026-02-05 |
+
+---
+
+## 七、技术决策记录
+
+### DDR-001: ConfigWatcher 实现决策
+
+**日期**: 2026-02-03
+**决策者**: boil
+**决策内容**: 配置热更新功能优先级评估
+
+**选项**:
+1. **实现完整的 ConfigWatcher** (2-3天)
+   - 优点: 功能完整,支持热更新
+   - 缺点: 开发时间较长,增加复杂度
+
+2. **使用简化轮询方案** (1天)
+   - 优点: 实现简单,跨平台兼容
+   - 缺点: 不如系统级监控及时
+
+3. **标记为非核心功能,延后实现** (0天)
+   - 优点: 节省开发时间
+   - 缺点: 功能缺失
+
+**决策**: 选择选项 3 - 暂时不实现 ConfigWatcher
+**理由**:
+- 配置热更新不是核心功能
+- 生产环境可以通过重启服务更新配置
+- 降低项目复杂度,优先完成其他功能
+
+---
+
+### DDR-002: 嵌套配置支持决策
+
+**日期**: 2026-02-04
+**决策者**: boil
+**决策内容**: 是否实现嵌套配置
+
+**决策**: 实现基础嵌套配置支持
+**理由**:
+- 常见配置场景需要嵌套结构
+- 实现难度适中,1天内可完成
+- 提升配置系统的实用性
+
+---
+
+## 八、备注
+
+- 技术债务清理应优先修复影响功能的问题
+- 配置热更新可延后到 v0.3.0 版本
+- 嵌套配置支持优先实现,提升易用性
+- 每个修复后需运行完整的测试套件
+
+---
+
+**文档版本**: v1.0
+**最后更新**: 2026-01-31
