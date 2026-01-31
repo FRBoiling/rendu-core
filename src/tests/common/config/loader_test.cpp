@@ -98,3 +98,87 @@ TEST_CASE("JsonLoader: 复杂嵌套结构", "[config][loader]") {
     REQUIRE(config.has("app"));
     REQUIRE(config.has("ports"));
 }
+
+TEST_CASE("JsonLoader: 嵌套配置 - 数据库配置", "[config][loader]") {
+    std::string json_content = R"({
+        "database": {
+            "host": "localhost",
+            "port": 5432,
+            "credentials": {
+                "username": "admin",
+                "password": "secret",
+                "timeout": 30.0
+            },
+            "connection": {
+                "max_retries": 3,
+                "enabled": true
+            }
+        },
+        "server": {
+            "port": 8080,
+            "host": "0.0.0.0"
+        }
+    })";
+
+    TempFile file(json_content);
+    JsonLoader loader;
+    auto result = loader.load(file.path());
+
+    REQUIRE(std::holds_alternative<Config>(result));
+    const Config& config = std::get<Config>(result);
+
+    // 使用点号路径访问嵌套值
+    REQUIRE(std::get<std::string>(config.get<std::string>("database.host")) == "localhost");
+    REQUIRE(std::get<int64_t>(config.get<int64_t>("database.port")) == 5432);
+    REQUIRE(std::get<std::string>(config.get<std::string>("database.credentials.username")) == "admin");
+    REQUIRE(std::get<std::string>(config.get<std::string>("database.credentials.password")) == "secret");
+    REQUIRE(std::get<double>(config.get<double>("database.credentials.timeout")) == 30.0);
+    REQUIRE(std::get<int64_t>(config.get<int64_t>("database.connection.max_retries")) == 3);
+    REQUIRE(std::get<bool>(config.get<bool>("database.connection.enabled")) == true);
+    REQUIRE(std::get<int64_t>(config.get<int64_t>("server.port")) == 8080);
+
+    // 使用 get_sub_config 获取嵌套配置
+    auto db_config = config.get_sub_config("database");
+    REQUIRE(db_config.has_value());
+    REQUIRE(std::get<std::string>(db_config->get<std::string>("host")) == "localhost");
+
+    auto creds_config = db_config->get_sub_config("credentials");
+    REQUIRE(creds_config.has_value());
+    REQUIRE(std::get<std::string>(creds_config->get<std::string>("username")) == "admin");
+}
+
+TEST_CASE("JsonLoader: 嵌套配置 - 多层嵌套", "[config][loader]") {
+    std::string json_content = R"({
+        "level1": {
+            "level2": {
+                "level3": {
+                    "level4": {
+                        "value": "deep"
+                    }
+                }
+            }
+        }
+    })";
+
+    TempFile file(json_content);
+    JsonLoader loader;
+    auto result = loader.load(file.path());
+
+    REQUIRE(std::holds_alternative<Config>(result));
+    const Config& config = std::get<Config>(result);
+
+    REQUIRE(std::get<std::string>(config.get<std::string>("level1.level2.level3.level4.value")) == "deep");
+
+    auto level1 = config.get_sub_config("level1");
+    REQUIRE(level1.has_value());
+
+    auto level2 = level1->get_sub_config("level2");
+    REQUIRE(level2.has_value());
+
+    auto level3 = level2->get_sub_config("level3");
+    REQUIRE(level3.has_value());
+
+    auto level4 = level3->get_sub_config("level4");
+    REQUIRE(level4.has_value());
+    REQUIRE(std::get<std::string>(level4->get<std::string>("value")) == "deep");
+}

@@ -7,14 +7,18 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <optional>
 
 BEGIN_NAMESPACE_COMMON
 namespace config {
 
+// 前向声明
+class Config;
+
 /**
  * @brief 配置值类型，支持多种数据类型
  *
- * 注意：为了简化实现，数组和对象中的值限制为基本类型
+ * 支持嵌套的 Config 对象
  */
 using ConfigValue = std::variant<
     int64_t,
@@ -28,7 +32,8 @@ using ConfigValue = std::variant<
     std::unordered_map<std::string, int64_t>,
     std::unordered_map<std::string, double>,
     std::unordered_map<std::string, bool>,
-    std::unordered_map<std::string, std::string>
+    std::unordered_map<std::string, std::string>,
+    std::shared_ptr<Config>  // 嵌套配置对象
 >;
 
 /**
@@ -43,7 +48,7 @@ public:
 
     /**
      * @brief 获取配置值（指定类型）
-     * @tparam T 目标类型（int64_t, double, bool, std::string）
+     * @tparam T 目标类型（int64_t, double, bool, std::string, vector等）
      * @param key 配置键，支持点号分隔的嵌套路径（如 "database.port"）
      * @return Result<T> 包含配置值或错误信息
      */
@@ -77,6 +82,13 @@ public:
         }
         return default_value;
     }
+
+    /**
+     * @brief 获取嵌套配置对象
+     * @param key 配置键（支持点号分隔的路径）
+     * @return std::optional<Config> 如果存在则返回配置对象，否则为空
+     */
+    std::optional<Config> get_sub_config(const std::string& key) const;
 
     /**
      * @brief 设置配置值
@@ -131,6 +143,13 @@ public:
 private:
     const ConfigValue* find_value(const std::string& key) const;
     ConfigValue* find_value(const std::string& key);
+
+    /**
+     * @brief 按点号分割路径
+     * @param path 路径字符串（如 "database.credentials.username"）
+     * @return 分割后的键列表
+     */
+    static std::vector<std::string> split_path(const std::string& path);
 
     std::unordered_map<std::string, ConfigValue> data_;
 };

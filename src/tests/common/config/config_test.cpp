@@ -165,3 +165,140 @@ TEST_CASE("Config: 类型错误处理", "[config]") {
         REQUIRE(std::holds_alternative<Error>(result));
     }
 }
+
+TEST_CASE("Config: 嵌套配置 - 点号分隔路径访问", "[config]") {
+    Config config;
+
+    SECTION("设置和获取嵌套值") {
+        config.set("database.port", int64_t(5432));
+        config.set("database.host", std::string("localhost"));
+        config.set("database.timeout", 5.5);
+        config.set("server.port", int64_t(8080));
+
+        REQUIRE(std::get<int64_t>(config.get<int64_t>("database.port")) == 5432);
+        REQUIRE(std::get<std::string>(config.get<std::string>("database.host")) == "localhost");
+        REQUIRE(std::get<double>(config.get<double>("database.timeout")) == 5.5);
+        REQUIRE(std::get<int64_t>(config.get<int64_t>("server.port")) == 8080);
+    }
+
+    SECTION("多层嵌套") {
+        config.set("database.credentials.username", std::string("admin"));
+        config.set("database.credentials.password", std::string("secret"));
+        config.set("database.connection.max_retries", int64_t(3));
+
+        REQUIRE(std::get<std::string>(config.get<std::string>("database.credentials.username")) == "admin");
+        REQUIRE(std::get<std::string>(config.get<std::string>("database.credentials.password")) == "secret");
+        REQUIRE(std::get<int64_t>(config.get<int64_t>("database.connection.max_retries")) == 3);
+    }
+}
+
+TEST_CASE("Config: 嵌套配置 - get_sub_config", "[config]") {
+    Config config;
+
+    SECTION("获取嵌套配置对象") {
+        config.set("database.port", int64_t(5432));
+        config.set("database.host", std::string("localhost"));
+        config.set("database.credentials.username", std::string("admin"));
+        config.set("server.port", int64_t(8080));
+
+        auto db_config = config.get_sub_config("database");
+        REQUIRE(db_config.has_value());
+
+        REQUIRE(std::get<int64_t>(db_config->get<int64_t>("port")) == 5432);
+        REQUIRE(std::get<std::string>(db_config->get<std::string>("host")) == "localhost");
+
+        auto creds_config = db_config->get_sub_config("credentials");
+        REQUIRE(creds_config.has_value());
+        REQUIRE(std::get<std::string>(creds_config->get<std::string>("username")) == "admin");
+    }
+
+    SECTION("不存在的嵌套配置") {
+        auto missing = config.get_sub_config("nonexistent");
+        REQUIRE_FALSE(missing.has_value());
+    }
+
+    SECTION("非 Config 类型的值") {
+        config.set("port", int64_t(8080));
+        auto not_config = config.get_sub_config("port");
+        REQUIRE_FALSE(not_config.has_value());
+    }
+}
+
+TEST_CASE("Config: 嵌套配置 - 合并", "[config]") {
+    Config config1;
+    Config config2;
+
+    SECTION("嵌套配置合并") {
+        config1.set("database.port", int64_t(5432));
+        config1.set("database.host", std::string("localhost"));
+
+        config2.set("database.timeout", 10.0);
+        config2.set("server.port", int64_t(8080));
+
+        config1.merge(config2);
+
+        REQUIRE(std::get<int64_t>(config1.get<int64_t>("database.port")) == 5432);
+        REQUIRE(std::get<std::string>(config1.get<std::string>("database.host")) == "localhost");
+        REQUIRE(std::get<double>(config1.get<double>("database.timeout")) == 10.0);
+        REQUIRE(std::get<int64_t>(config1.get<int64_t>("server.port")) == 8080);
+    }
+
+    SECTION("深层嵌套合并") {
+        config1.set("database.credentials.username", std::string("admin"));
+        config2.set("database.credentials.password", std::string("secret"));
+
+        config1.merge(config2);
+
+        auto db_config = config1.get_sub_config("database");
+        REQUIRE(db_config.has_value());
+
+        auto creds_config = db_config->get_sub_config("credentials");
+        REQUIRE(creds_config.has_value());
+
+        REQUIRE(std::get<std::string>(creds_config->get<std::string>("username")) == "admin");
+        REQUIRE(std::get<std::string>(creds_config->get<std::string>("password")) == "secret");
+    }
+}
+
+TEST_CASE("Config: 嵌套配置 - 存在性检查", "[config]") {
+    Config config;
+
+    SECTION("检查嵌套键存在性") {
+        config.set("database.port", int64_t(5432));
+        config.set("database.host", std::string("localhost"));
+
+        REQUIRE(config.has("database.port"));
+        REQUIRE(config.has("database.host"));
+        REQUIRE_FALSE(config.has("database.timeout"));
+        REQUIRE_FALSE(config.has("server.port"));
+    }
+
+    SECTION("检查多层嵌套键存在性") {
+        config.set("database.credentials.username", std::string("admin"));
+
+        REQUIRE(config.has("database.credentials.username"));
+        REQUIRE_FALSE(config.has("database.credentials.password"));
+        REQUIRE_FALSE(config.has("database.connection.timeout"));
+    }
+}
+
+TEST_CASE("Config: 嵌套配置 - 覆盖行为", "[config]") {
+    Config config;
+
+    SECTION("覆盖嵌套路径上的值") {
+        config.set("database.port", int64_t(5432));
+        config.set("database", int64_t(42));  // 用非 Config 值覆盖
+
+        // 现在 database 不是 Config 类型，无法访问 port
+        REQUIRE_FALSE(config.has("database.port"));
+        REQUIRE(std::get<int64_t>(config.get<int64_t>("database")) == 42);
+    }
+
+    SECTION("用 Config 覆盖非 Config 值") {
+        auto nested = std::make_shared<Config>();
+        nested->set("port", int64_t(8080));
+        config.set("database", ConfigValue(nested));
+
+        REQUIRE(std::get<int64_t>(config.get<int64_t>("database.port")) == 8080);
+    }
+}

@@ -130,22 +130,15 @@ private:
             return std::get<Error>(obj_result);
         }
 
-        // 简化：将嵌套对象转换为字符串映射
+        // 创建嵌套 Config 对象
         const auto& raw_obj = std::get<std::unordered_map<std::string, ConfigValue>>(obj_result);
-        std::unordered_map<std::string, std::string> simple_obj;
+        auto nested_config = std::make_shared<Config>();
+
         for (const auto& [k, v] : raw_obj) {
-            if (std::holds_alternative<std::string>(v)) {
-                simple_obj[k] = std::get<std::string>(v);
-            } else if (std::holds_alternative<int64_t>(v)) {
-                simple_obj[k] = std::to_string(std::get<int64_t>(v));
-            } else if (std::holds_alternative<double>(v)) {
-                simple_obj[k] = std::to_string(std::get<double>(v));
-            } else if (std::holds_alternative<bool>(v)) {
-                simple_obj[k] = std::get<bool>(v) ? "true" : "false";
-            }
+            nested_config->data()[k] = v;
         }
 
-        return ConfigValue(simple_obj);
+        return ConfigValue(nested_config);
     }
 
     Result<ConfigValue> parse_array() {
