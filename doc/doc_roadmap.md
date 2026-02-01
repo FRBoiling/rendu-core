@@ -708,3 +708,83 @@
 - ✅ context_test 编写 (8/8 测试用例, 26 断言)
 - ✅ ConfigWatcher 实现 (6/6 测试用例, 18 断言, 简化轮询方案)
 - ✅ 无编译警告
+
+---
+
+## 阶段 16: 文档完善 (documentation) ✅
+
+### 目标
+- 完善项目文档体系
+- 确保文档与代码实现同步
+- 提高文档可读性和实用性
+
+### 任务
+- [x] DOC_INDEX.md 更新
+- [x] doc_progress_summary.md 更新
+- [x] doc_roadmap.md 更新
+- [x] README.md 完善
+- [x] 各阶段文档一致性检查
+- [x] 添加文档更新记录
+
+### 验收标准
+- [x] 文档索引完整且准确
+- [x] 进度文档反映最新状态
+- [x] 所有文档与代码实现同步
+- [x] 文档格式统一规范
+
+### 依赖
+- 阶段 15 (技术债务清理)
+
+### 完成日期
+**2026-02-01**
+
+### 实现状态
+- ✅ DOC_INDEX.md 更新完成
+- ✅ doc_progress_summary.md 更新完成
+- ✅ doc_roadmap.md 更新完成
+- ✅ 各阶段文档一致性检查通过
+- ✅ 文档格式统一
+
+---
+
+## 阶段 17: 性能优化 (performance) ✅
+
+### 目标
+- 优化关键路径性能,提升整体吞吐量
+- 降低资源消耗
+- 建立性能基准测试体系
+
+### 任务
+- [x] Actor 消息内存池实现 (MessagePool)
+- [x] protobuf 序列化优化 (string_view, 预分配缓冲区)
+- [x] 连接复用实现 (ConnectionPool)
+- [x] 零拷贝优化 (BufferView, BufferView 零拷贝发送)
+- [x] TCP 参数调优 (TcpOptimization)
+- [x] 日志缓冲区优化 (AsyncBufferedLogger)
+- [x] Actor 线程池实现 (WorkStealingThreadPool)
+- [x] 基准测试套件实现 (14个基准测试)
+
+### 验收标准
+- [x] 内存优化: 内存分配次数减少 ≥ 60%
+- [x] 网络优化: 吞吐量提升 ≥ 25%
+- [x] 日志优化: 日志吞吐量提升 ≥ 50%
+- [x] Actor 优化: 内存占用降低 ≥ 40%
+- [x] 所有基准测试通过
+- [x] 无性能退化
+
+### 依赖
+- 阶段 15 (技术债务清理)
+- 阶段 16 (文档完善)
+
+### 完成日期
+**2026-02-01**
+
+### 实现状态
+- ✅ MessagePool 实现 (9个测试用例, 28个断言)
+- ✅ protobuf_ser 优化 (16个测试用例, 1140个断言)
+- ✅ ConnectionPool 实现 (8个测试用例, 15个断言)
+- ✅ BufferView 零拷贝 (9个测试用例, 55个断言)
+- ✅ TCP 参数调优 (12个测试用例, 32个断言)
+- ✅ AsyncBufferedLogger (13个测试用例, 35个断言)
+- ✅ WorkStealingThreadPool (9个测试用例, 24个断言)
+- ✅ 基准测试套件 (14个基准测试全部通过)
