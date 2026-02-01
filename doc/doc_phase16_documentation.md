@@ -513,6 +513,8 @@ for (auto entity : entities) {
 
 ## 6. 性能基准测试
 
+基准测试套件见 **阶段 17**（`doc/doc_phase17_performance.md`）：`src/tests/benchmarks/benchmark_suite.cpp`，使用 Catch2 BENCHMARK；编译目标 `benchmarks`，运行 `./build/src/tests/benchmarks/benchmark_suite`。
+
 ### 6.1 常用性能指标
 
 | 指标 | 目标值 | 测量方法 |
