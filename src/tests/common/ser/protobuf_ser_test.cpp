@@ -7,6 +7,7 @@
 #include <common/ser/protobuf_ser.h>
 #include "test_messages.pb.h"
 #include <random>
+#include <array>
 
 using namespace Rendu;
 using namespace Rendu::ser;
@@ -382,5 +383,253 @@ TEST_CASE("ProtobufSerializer - 错误处理", "[ser][protobuf]") {
         // Protobuf 可以解析空数据为默认消息
         auto result = ProtobufSerializer::deserialize_message<test::TestMessage>(empty_data);
         REQUIRE(std::holds_alternative<test::TestMessage>(result));
+    }
+}
+
+// ==================== 性能优化相关测试 ====================
+
+TEST_CASE("ProtobufSerializer - serialize_to_string 优化", "[ser][protobuf][opt]") {
+    test::TestMessage msg;
+    msg.set_id(123);
+    msg.set_name("test_optimization");
+    msg.set_timestamp(1234567890);
+
+    SECTION("序列化到字符串") {
+        auto result = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(result));
+
+        auto str = std::get<std::string>(result);
+        REQUIRE(str.size() > 0);
+        REQUIRE(str.size() == msg.ByteSizeLong());
+    }
+
+    SECTION("序列化和反序列化字符串") {
+        auto serialize_result = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(serialize_result));
+        auto str = std::get<std::string>(serialize_result);
+
+        // 使用 string_view 反序列化
+        auto deserialize_result = ProtobufSerializer::deserialize_from_string_view<test::TestMessage>(str);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == msg.id());
+        REQUIRE(decoded.name() == msg.name());
+        REQUIRE(decoded.timestamp() == msg.timestamp());
+    }
+}
+
+TEST_CASE("ProtobufSerializer - deserialize_from_string_view 优化", "[ser][protobuf][opt]") {
+    test::TestMessage msg;
+    msg.set_id(456);
+    msg.set_name("string_view_test");
+
+    SECTION("从 string_view 反序列化") {
+        auto serialize_result = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(serialize_result));
+        auto str = std::get<std::string>(serialize_result);
+
+        // 使用 string_view 避免拷贝
+        std::string_view view(str);
+        auto deserialize_result = ProtobufSerializer::deserialize_from_string_view<test::TestMessage>(view);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == msg.id());
+        REQUIRE(decoded.name() == msg.name());
+    }
+
+    SECTION("字符串子串反序列化") {
+        auto serialize_result = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(serialize_result));
+        auto str = std::get<std::string>(serialize_result);
+
+        // 模拟从更大的数据中提取子串
+        std::string full_data = "prefix:" + str + ":suffix";
+        std::string_view view(full_data);
+        std::string_view message_data = view.substr(7, str.size());
+
+        auto deserialize_result = ProtobufSerializer::deserialize_from_string_view<test::TestMessage>(message_data);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == msg.id());
+        REQUIRE(decoded.name() == msg.name());
+    }
+}
+
+TEST_CASE("ProtobufSerializer - serialize_to_buffer 优化", "[ser][protobuf][opt]") {
+    test::TestMessage msg;
+    msg.set_id(789);
+    msg.set_name("buffer_test");
+
+    SECTION("序列化到外部缓冲区") {
+        std::vector<char> buffer;
+
+        auto result = ProtobufSerializer::serialize_to_buffer(msg, buffer);
+        REQUIRE(result.is_success());
+
+        REQUIRE(buffer.size() > 0);
+        REQUIRE(buffer.size() == msg.ByteSizeLong());
+
+        // 验证缓冲区数据正确
+        ByteBuffer byte_buffer(buffer.begin(), buffer.end());
+        auto deserialize_result = ProtobufSerializer::deserialize_message<test::TestMessage>(byte_buffer);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == msg.id());
+        REQUIRE(decoded.name() == msg.name());
+    }
+
+    SECTION("缓冲区重用") {
+        std::vector<char> buffer;
+
+        // 第一次序列化
+        msg.set_id(1);
+        msg.set_name("first");
+        auto result1 = ProtobufSerializer::serialize_to_buffer(msg, buffer);
+        REQUIRE(result1.is_success());
+        size_t size1 = buffer.size();
+
+        // 第二次序列化到同一个缓冲区
+        msg.set_id(2);
+        msg.set_name("second");
+        auto result2 = ProtobufSerializer::serialize_to_buffer(msg, buffer);
+        REQUIRE(result2.is_success());
+        size_t size2 = buffer.size();
+
+        // 缓冲区被正确重用
+        REQUIRE(size2 > 0);
+
+        // 验证第二次序列化的数据
+        ByteBuffer byte_buffer(buffer.begin(), buffer.end());
+        auto deserialize_result = ProtobufSerializer::deserialize_message<test::TestMessage>(byte_buffer);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == 2);
+        REQUIRE(decoded.name() == "second");
+    }
+}
+
+TEST_CASE("ProtobufSerializer - serialize_to_array 优化", "[ser][protobuf][opt]") {
+    test::TestMessage msg;
+    msg.set_id(999);
+    msg.set_name("array_test");
+
+    SECTION("序列化到固定大小数组") {
+        const size_t buffer_size = 1024;
+        std::array<char, buffer_size> buffer;
+
+        auto result = ProtobufSerializer::serialize_to_array(msg, buffer.data(), buffer_size);
+        REQUIRE(std::holds_alternative<size_t>(result));
+
+        auto serialized_size = std::get<size_t>(result);
+        REQUIRE(serialized_size > 0);
+        REQUIRE(serialized_size <= buffer_size);
+        REQUIRE(serialized_size == msg.ByteSizeLong());
+
+        // 验证数据正确
+        ByteBuffer byte_buffer(buffer.data(), buffer.data() + serialized_size);
+        auto deserialize_result = ProtobufSerializer::deserialize_message<test::TestMessage>(byte_buffer);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.id() == msg.id());
+        REQUIRE(decoded.name() == msg.name());
+    }
+
+    SECTION("缓冲区大小不足") {
+        const size_t buffer_size = 10;  // 太小
+        std::array<char, buffer_size> buffer;
+
+        auto result = ProtobufSerializer::serialize_to_array(msg, buffer.data(), buffer_size);
+        REQUIRE(std::holds_alternative<Error>(result));
+
+        auto error = std::get<Error>(result);
+        REQUIRE(error.code() == ErrorCode::InvalidArgument);
+    }
+
+    SECTION("空指针错误") {
+        auto result = ProtobufSerializer::serialize_to_array(msg, nullptr, 1024);
+        REQUIRE(std::holds_alternative<Error>(result));
+
+        auto error = std::get<Error>(result);
+        REQUIRE(error.code() == ErrorCode::InvalidArgument);
+    }
+}
+
+TEST_CASE("ProtobufSerializer - is_valid_message_view 优化", "[ser][protobuf][opt]") {
+    test::TestMessage msg;
+    msg.set_id(111);
+    msg.set_name("validation_view_test");
+
+    SECTION("有效消息 string_view") {
+        auto serialize_result = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(serialize_result));
+        auto str = std::get<std::string>(serialize_result);
+
+        std::string_view view(str);
+        REQUIRE(ProtobufSerializer::is_valid_message_view<test::TestMessage>(view));
+    }
+
+    SECTION("无效数据 string_view") {
+        std::string invalid_data = {0x00, 0x01, 0x02, 0x03};
+        std::string_view view(invalid_data);
+        REQUIRE_FALSE(ProtobufSerializer::is_valid_message_view<test::TestMessage>(view));
+    }
+
+    SECTION("空 string_view") {
+        std::string_view empty_view;
+        // Protobuf 可以解析空数据为默认消息
+        REQUIRE(ProtobufSerializer::is_valid_message_view<test::TestMessage>(empty_view));
+    }
+}
+
+TEST_CASE("ProtobufSerializer - 大数据量性能优化", "[ser][protobuf][opt][large]") {
+    test::TestMessage msg;
+    msg.set_id(1);
+
+    SECTION("大字符串零拷贝") {
+        const int string_length = 100000;
+        std::string long_string(string_length, 'x');
+        msg.set_name(long_string);
+
+        // 使用 string 版本序列化
+        auto serialize_result1 = ProtobufSerializer::serialize_to_string(msg);
+        REQUIRE(std::holds_alternative<std::string>(serialize_result1));
+        auto str = std::get<std::string>(serialize_result1);
+
+        // 使用 string_view 反序列化,避免拷贝
+        std::string_view view(str);
+        auto deserialize_result = ProtobufSerializer::deserialize_from_string_view<test::TestMessage>(view);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.name().size() == string_length);
+        REQUIRE(decoded.name() == long_string);
+    }
+
+    SECTION("大量重复字段外部缓冲区") {
+        const int COUNT = 10000;
+        for (int i = 0; i < COUNT; ++i) {
+            msg.add_values(i);
+        }
+
+        // 使用外部缓冲区序列化,避免额外分配
+        std::vector<char> buffer;
+        auto serialize_result = ProtobufSerializer::serialize_to_buffer(msg, buffer);
+        REQUIRE(serialize_result.is_success());
+
+        REQUIRE(buffer.size() > 0);
+
+        // 反序列化验证
+        ByteBuffer byte_buffer(buffer.begin(), buffer.end());
+        auto deserialize_result = ProtobufSerializer::deserialize_message<test::TestMessage>(byte_buffer);
+        REQUIRE(std::holds_alternative<test::TestMessage>(deserialize_result));
+
+        auto decoded = std::get<test::TestMessage>(deserialize_result);
+        REQUIRE(decoded.values_size() == COUNT);
     }
 }

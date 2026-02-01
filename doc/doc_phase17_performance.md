@@ -192,7 +192,7 @@ msg_ptr->text = "World";
 
 ---
 
-#### 2.1.2 减少 protobuf 消息序列化拷贝
+#### 2.1.2 减少 protobuf 消息序列化拷贝 ✅
 
 **问题描述**:
 - protobuf 序列化时产生中间拷贝
@@ -250,6 +250,29 @@ public:
 **预期收益**:
 - 减少内存拷贝 40%+
 - 大消息序列化性能提升 30%+
+
+**实现状态**:
+- ✅ 预分配缓冲区大小,避免多次重分配
+  - `serialize_message()` - 使用 reserve() 预分配
+- ✅ 支持 string_view 避免拷贝
+  - `serialize_to_string()` - 序列化到 std::string
+  - `deserialize_from_string_view()` - 从 string_view 反序列化
+- ✅ 支持外部缓冲区
+  - `serialize_to_buffer()` - 序列化到 std::vector<char>
+  - `serialize_to_array()` - 序列化到字节数组
+- ✅ 验证方法优化
+  - `is_valid_message_view()` - 使用 string_view 验证
+
+**单元测试**:
+- ✅ 16个测试用例全部通过 (1140个断言)
+  - 基本序列化和反序列化测试 (原有)
+  - 新增性能优化相关测试:
+    - serialize_to_string 优化测试
+    - deserialize_from_string_view 优化测试
+    - serialize_to_buffer 优化测试
+    - serialize_to_array 优化测试
+    - is_valid_message_view 优化测试
+    - 大数据量性能优化测试
 
 ---
 
