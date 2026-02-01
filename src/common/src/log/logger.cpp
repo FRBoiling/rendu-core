@@ -137,6 +137,11 @@ void init_default_io_context(io::IoContext& io) {
     g_default_io_context = &io;
 }
 
+void reset_default_io_context() {
+    std::lock_guard<std::mutex> lock(g_loggers_mutex);
+    g_default_io_context = nullptr;
+}
+
 Logger& default_logger() {
     std::lock_guard<std::mutex> lock(g_loggers_mutex);
     if (!g_default_logger) {

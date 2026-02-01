@@ -80,6 +80,9 @@ Logger& default_logger();
 // 初始化默认 io_context
 void init_default_io_context(io::IoContext& io);
 
+// 重置默认 io_context（主要用于测试）
+void reset_default_io_context();
+
 // 获取/创建命名 Logger
 Logger& get_logger(const std::string& name);
 void set_default_logger(std::shared_ptr<Logger> logger);

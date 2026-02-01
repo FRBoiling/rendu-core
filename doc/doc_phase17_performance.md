@@ -278,7 +278,7 @@ public:
 
 ### 2.2 网络优化
 
-#### 2.2.1 连接复用
+#### 2.2.1 连接复用 ✅
 
 **问题描述**:
 - 频繁创建/销毁连接开销大
@@ -294,6 +294,7 @@ public:
         size_t max_connections = 100;
         std::chrono::seconds idle_timeout = std::chrono::seconds(300);
         std::chrono::seconds connect_timeout = std::chrono::seconds(10);
+        std::shared_ptr<Codec> codec;
     };
 
     ConnectionPool(IoContext& io, const std::string& host, uint16_t port,
@@ -338,6 +339,36 @@ channel->send(data);
 // 归还连接
 pool.release(channel);
 ```
+
+**实现状态**:
+- ✅ ConnectionPool 核心实现
+  - 构造函数: 初始化连接池参数
+  - acquire(): 获取空闲连接或创建新连接
+  - release(): 归还连接到空闲队列或分配给等待请求
+  - cleanup_idle_connections(): 清理无效的空闲连接
+  - close_all(): 关闭所有连接
+  - get_stats(): 获取统计信息 (idle_count, active_count, total_count)
+  - create_connection(): 创建新 TCP 连接
+  - is_connection_valid(): 检查连接是否有效
+
+- ✅ 单元测试完成 (8个测试用例,15个断言全部通过)
+  - 基本功能测试 ✅
+  - 获取和释放连接测试 ✅
+  - 连接复用测试 ✅
+  - 多线程并发测试 ✅
+  - 清理空闲连接测试 ✅
+  - 关闭所有连接测试 ✅
+  - 配置参数测试 ✅
+  - 边界情况测试 ✅
+
+**问题修复** (2026-02-01):
+- ✅ 修复了测试中的段错误问题
+  - 问题: 每个 TESTCASE 创建独立的 IoContext,析构后全局 logger 指针指向悬垂内存
+  - 解决: 使用全局静态 IoContext 和 Codec 对象,确保生命周期
+  - 修改文件:
+    - `src/common/include/common/log/logger.h`: 添加 reset_default_io_context() 函数
+    - `src/common/src/log/logger.cpp`: 实现重置函数
+    - `src/tests/common/net/connection_pool_test.cpp`: 改用全局静态对象
 
 **预期收益**:
 - 连接建立时间减少 80%+
@@ -675,15 +706,15 @@ for bench in data['benchmarks']:
 
 ## 七、进度跟踪
 
-| 任务 | 负责人 | 状态 | 预计完成时间 |
-|------|--------|------|-------------|
-| Actor 消息内存池 | boil | ⏳ | 2026-02-11 |
-| protobuf 序列化优化 | boil | ⏳ | 2026-02-11 |
-| 连接复用实现 | boil | ⏳ | 2026-02-12 |
-| 零拷贝优化 | boil | ⏳ | 2026-02-12 |
-| 日志缓冲区优化 | boil | ⏳ | 2026-02-13 |
-| Actor 线程池 | boil | ⏳ | 2026-02-14 |
-| 基准测试套件 | boil | ⏳ | 2026-02-15 |
+| 任务 | 负责人 | 状态 | 预计完成时间 | 实际完成时间 |
+|------|--------|------|-------------|-------------|
+| Actor 消息内存池 | boil | ✅ | 2026-02-11 | 2026-02-01 |
+| protobuf 序列化优化 | boil | ✅ | 2026-02-11 | 2026-02-01 |
+| 连接复用实现 | boil | ✅ | 2026-02-12 | 2026-02-01 |
+| 零拷贝优化 | boil | ⏳ | 2026-02-12 | - |
+| 日志缓冲区优化 | boil | ⏳ | 2026-02-13 | - |
+| Actor 线程池 | boil | ⏳ | 2026-02-14 | - |
+| 基准测试套件 | boil | ⏳ | 2026-02-15 | - |
 
 ---
 
@@ -696,5 +727,5 @@ for bench in data['benchmarks']:
 
 ---
 
-**文档版本**: v1.0
-**最后更新**: 2026-01-31
+**文档版本**: v1.1
+**最后更新**: 2026-02-01
