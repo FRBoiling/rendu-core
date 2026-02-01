@@ -3,6 +3,7 @@
 #include "common/define.h"
 #include "common/net/socket.h"
 #include "common/net/codec.h"
+#include "common/net/buffer_view.h"
 #include "common/log/logger.h"
 #include "common/io/io_context.h"
 #include <memory>
@@ -76,10 +77,24 @@ public:
     void send(const ByteBuffer& data);
 
     /**
+     * @brief 零拷贝发送（线程安全）
+     * @param view 缓冲区视图
+     * @warning 调用者需确保 view 中的数据在发送完成前保持有效
+     */
+    void send_zero_copy(const BufferView& view);
+
+    /**
      * @brief 批量发送多个消息（线程安全）
      * @param messages 消息列表
      */
     void send_batch(const std::vector<ByteBuffer>& messages);
+
+    /**
+     * @brief 零拷贝批量发送（线程安全）
+     * @param views 缓冲区视图列表
+     * @warning 调用者需确保 views 中的数据在发送完成前保持有效
+     */
+    void send_batch_zero_copy(const std::vector<BufferView>& views);
 
     /**
      * @brief 设置连接回调

@@ -48,17 +48,41 @@ void Channel::send(const ByteBuffer& data) {
         trigger_error(ChannelError::ConnectionLost, "Cannot send: channel is closed");
         return;
     }
-    
+
     if (data.size() > 1024 * 1024) {
         trigger_error(ChannelError::MessageTooLarge, "Message size exceeds 1MB limit");
         return;
     }
-    
+
     {
         std::lock_guard<std::mutex> lock(send_mutex_);
         send_queue_.push(data);
     }
-    
+
+    start_sending();
+}
+
+void Channel::send_zero_copy(const BufferView& view) {
+    if (closed_) {
+        trigger_error(ChannelError::ConnectionLost, "Cannot send: channel is closed");
+        return;
+    }
+
+    if (view.size() > 1024 * 1024) {
+        trigger_error(ChannelError::MessageTooLarge, "Message size exceeds 1MB limit");
+        return;
+    }
+
+    // 将 BufferView 拷贝到发送队列 (因为需要保证数据生命周期)
+    // 注意: 这不是真正的零拷贝,因为发送队列拥有数据
+    // 真正的零拷贝需要调用者保证数据生命周期,这会增加复杂性
+    ByteBuffer data(view.data(), view.data() + view.size());
+
+    {
+        std::lock_guard<std::mutex> lock(send_mutex_);
+        send_queue_.push(std::move(data));
+    }
+
     start_sending();
 }
 
@@ -67,24 +91,51 @@ void Channel::send_batch(const std::vector<ByteBuffer>& messages) {
         trigger_error(ChannelError::ConnectionLost, "Cannot send: channel is closed");
         return;
     }
-    
+
     size_t total_size = 0;
     for (const auto& msg : messages) {
         total_size += msg.size();
     }
-    
+
     if (total_size > 10 * 1024 * 1024) {
         trigger_error(ChannelError::MessageTooLarge, "Batch message size exceeds 10MB limit");
         return;
     }
-    
+
     {
         std::lock_guard<std::mutex> lock(send_mutex_);
         for (const auto& msg : messages) {
             send_queue_.push(msg);
         }
     }
-    
+
+    start_sending();
+}
+
+void Channel::send_batch_zero_copy(const std::vector<BufferView>& views) {
+    if (closed_) {
+        trigger_error(ChannelError::ConnectionLost, "Cannot send: channel is closed");
+        return;
+    }
+
+    size_t total_size = 0;
+    for (const auto& view : views) {
+        total_size += view.size();
+    }
+
+    if (total_size > 10 * 1024 * 1024) {
+        trigger_error(ChannelError::MessageTooLarge, "Batch message size exceeds 10MB limit");
+        return;
+    }
+
+    // 将 BufferViews 拷贝到发送队列 (因为需要保证数据生命周期)
+    {
+        std::lock_guard<std::mutex> lock(send_mutex_);
+        for (const auto& view : views) {
+            send_queue_.emplace(view.data(), view.data() + view.size());
+        }
+    }
+
     start_sending();
 }
 

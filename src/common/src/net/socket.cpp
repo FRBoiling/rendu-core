@@ -75,10 +75,28 @@ void TcpSocket::async_send(const std::vector<byte>& data, SendCallback callback)
         callback(ec, 0);
         return;
     }
-    
+
     // 异步发送
     boost::asio::async_write(
         socket_, boost::asio::buffer(data),
+        [callback](const boost::system::error_code& ec, size_t bytes_sent) {
+            callback(ec, bytes_sent);
+        }
+    );
+}
+
+void TcpSocket::async_send_zero_copy(const void* data, size_t size, SendCallback callback) {
+    // 检查连接状态
+    if (!connected_.load()) {
+        boost::system::error_code ec(boost::system::errc::not_connected,
+                                  boost::system::system_category());
+        callback(ec, 0);
+        return;
+    }
+
+    // 异步发送 (零拷贝: 直接使用原始指针)
+    boost::asio::async_write(
+        socket_, boost::asio::buffer(data, size),
         [callback](const boost::system::error_code& ec, size_t bytes_sent) {
             callback(ec, bytes_sent);
         }

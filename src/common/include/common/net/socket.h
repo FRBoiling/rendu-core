@@ -79,16 +79,27 @@ public:
      * @brief 异步发送数据
      * @param data 要发送的数据
      * @param callback 发送回调
-     * 
+     *
      * 线程安全：可以从任意线程调用
      */
     void async_send(const std::vector<byte>& data, SendCallback callback);
 
     /**
+     * @brief 零拷贝异步发送数据
+     * @param data 数据指针
+     * @param size 数据大小
+     * @param callback 发送回调
+     *
+     * 线程安全：可以从任意线程调用
+     * @warning 调用者需确保数据在发送完成前保持有效
+     */
+    void async_send_zero_copy(const void* data, size_t size, SendCallback callback);
+
+    /**
      * @brief 异步接收指定长度的数据
      * @param size 要接收的字节数
      * @param callback 接收回调
-     * 
+     *
      * 线程安全：可以从任意线程调用
      */
     void async_receive(size_t size, ReceiveCallback callback);

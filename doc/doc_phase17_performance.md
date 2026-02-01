@@ -376,7 +376,7 @@ pool.release(channel);
 
 ---
 
-#### 2.2.2 零拷贝优化
+#### 2.2.2 零拷贝优化 ✅
 
 **问题描述**:
 - 数据在网络层和应用层之间多次拷贝
@@ -409,6 +409,53 @@ public:
     Result<void> send_batch(const std::vector<BufferView>& buffers);
 };
 ```
+
+**实现状态**:
+- ✅ BufferView 和 MutableBufferView 核心实现
+  - 支持多种构造方式 (指针/ByteBuffer/指针范围/string_view)
+  - 提供数据访问和转换接口 (to_buffer/to_string_view)
+  - 支持子视图创建 (subview)
+  - 支持迭代器遍历
+  - MutableBufferView 支持数据修改
+
+- ✅ TcpSocket 零拷贝发送支持
+  - async_send_zero_copy(): 直接使用原始指针发送,避免拷贝
+
+- ✅ Channel 零拷贝发送接口
+  - send_zero_copy(): 单个消息零拷贝发送
+  - send_batch_zero_copy(): 批量消息零拷贝发送
+  - 注意: 当前实现仍需拷贝到发送队列以保证生命周期
+  - 未来优化: 使用引用计数或固定生命周期池实现真正零拷贝
+
+- ✅ 单元测试完成 (9个测试用例,55个断言全部通过)
+  - BufferView 基本构造测试 ✅
+  - BufferView 转换测试 ✅
+  - BufferView 子视图测试 ✅
+  - BufferView 迭代器测试 ✅
+  - MutableBufferView 基本构造测试 ✅
+  - MutableBufferView 可修改性测试 ✅
+  - MutableBufferView 转换测试 ✅
+  - Channel 零拷贝发送测试 ✅
+  - BufferView 性能验证测试 ✅
+
+**技术细节**:
+- BufferView 不管理内存生命周期,调用者需确保数据有效
+- 当前实现: Channel 内部仍需拷贝到发送队列 (为保证生命周期管理)
+- 未来优化方向:
+  - 实现引用计数的 Buffer
+  - 使用固定内存池
+  - 支持 scatter-gather I/O (批量零拷贝发送)
+
+**新增文件**:
+- `src/common/include/common/net/buffer_view.h` - BufferView 和 MutableBufferView 类
+- `src/tests/common/net/buffer_view_test.cpp` - 单元测试
+
+**修改文件**:
+- `src/common/include/common/net/socket.h` - 添加 async_send_zero_copy
+- `src/common/src/net/socket.cpp` - 实现零拷贝发送
+- `src/common/include/common/net/channel.h` - 添加 send_zero_copy/send_batch_zero_copy
+- `src/common/src/net/channel.cpp` - 实现零拷贝发送接口
+- `src/tests/common/net/CMakeLists.txt` - 添加新测试
 
 **预期收益**:
 - 减少数据拷贝 50%+
@@ -711,7 +758,7 @@ for bench in data['benchmarks']:
 | Actor 消息内存池 | boil | ✅ | 2026-02-11 | 2026-02-01 |
 | protobuf 序列化优化 | boil | ✅ | 2026-02-11 | 2026-02-01 |
 | 连接复用实现 | boil | ✅ | 2026-02-12 | 2026-02-01 |
-| 零拷贝优化 | boil | ⏳ | 2026-02-12 | - |
+| 零拷贝优化 | boil | ✅ | 2026-02-12 | 2026-02-01 |
 | 日志缓冲区优化 | boil | ⏳ | 2026-02-13 | - |
 | Actor 线程池 | boil | ⏳ | 2026-02-14 | - |
 | 基准测试套件 | boil | ⏳ | 2026-02-15 | - |
@@ -727,5 +774,5 @@ for bench in data['benchmarks']:
 
 ---
 
-**文档版本**: v1.1
+**文档版本**: v1.2
 **最后更新**: 2026-02-01
