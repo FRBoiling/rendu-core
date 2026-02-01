@@ -792,7 +792,7 @@
 
 ## 阶段 18: 高级特性 (advanced) 🚧
 
-**状态**: 进行中 (30%)
+**状态**: 进行中 (60%)
 **开始日期**: 2026-02-01
 
 ### 目标
@@ -823,9 +823,24 @@
   - 错误处理
   - 相等性测试
   - 批量序列化
-- [ ] 节点发现 (NodeDiscovery)
-- [ ] 负载均衡 (LoadBalancer)
-- [ ] 故障转移 (FailoverManager)
+- [x] 节点发现 (NodeDiscovery)
+  - 节点注册/注销
+  - 服务发现 (静态配置)
+  - 节点状态查询
+  - 心跳检测
+  - 自动清理过期节点
+- [x] 负载均衡 (LoadBalancer)
+  - 多种负载均衡策略 (随机/轮询/最少连接/一致性哈希)
+  - 节点管理 (添加/移除/清空)
+  - 节点权重支持
+  - 健康检查集成
+- [x] 故障转移 (FailoverManager)
+  - 节点健康状态管理
+  - 自动故障检测
+  - 节点恢复机制
+  - 故障事件回调
+  - 自定义健康检查器
+  - 手动健康检查
 - [ ] 跨节点 Actor 通信
 - [ ] 消息路由 (MessageRouter)
 - [ ] 状态持久化 (ActorPersistence)
@@ -850,6 +865,28 @@
   - 错误处理健壮
   - 单元测试通过 (7个测试用例, 55个断言)
   - 示例程序验证通过 (actor_ref_example.cpp)
+- [x] 节点发现功能完整
+  - 节点注册/注销正常
+  - 服务发现工作正常
+  - 节点状态查询准确
+  - 心跳检测稳定
+  - 自动清理过期节点
+  - 单元测试通过 (10个测试用例, 58个断言)
+- [x] 负载均衡功能完整
+  - 所有负载均衡策略正常工作
+  - 节点管理功能完善
+  - 节点权重支持
+  - 健康检查集成
+  - 线程安全
+  - 单元测试通过 (23个测试用例, 162个断言)
+- [x] 故障转移功能完整
+  - 节点健康状态管理正确
+  - 自动故障检测正常
+  - 节点恢复机制工作
+  - 故障事件回调触发
+  - 自定义健康检查器可用
+  - 手动健康检查功能完善
+  - 单元测试通过 (10个测试用例, 68个断言)
 
 ### 依赖
 - 阶段 17 (性能优化)
@@ -908,8 +945,78 @@
   - to_string vs serialize 测试
 - ✅ 示例程序完成（actor_ref_example.cpp）
 
+#### NodeDiscovery 实现
+- ✅ 节点注册/注销
+- ✅ 静态服务发现配置
+- ✅ 节点状态查询（单个、全部、按类型）
+- ✅ 心跳检测机制
+- ✅ 自动清理过期节点（基于心跳超时）
+- ✅ 线程安全（std::mutex + shared_mutex）
+- ✅ 节点类型和标签支持
+- ✅ 单元测试完成（10个测试用例, 58个断言）
+  - 节点注册和注销测试
+  - 节点查询测试
+  - 节点列表获取测试
+  - 心跳检测测试
+  - 过期节点清理测试
+  - 节点状态更新测试
+  - 节点类型和标签测试
+  - 边界情况测试
+  - 线程安全测试
+
+#### LoadBalancer 实现
+- ✅ LoadBalancedNode 节点定义（node_id, address, port, weight, tags）
+- ✅ LoadBalanceStrategy 策略枚举
+- ✅ 四种负载均衡策略
+  - RandomStrategy: 随机选择
+  - RoundRobinStrategy: 轮询选择
+  - LeastConnectionsStrategy: 最少连接
+  - ConsistentHashStrategy: 一致性哈希
+- ✅ 节点管理（add_node, remove_node, clear）
+- ✅ 节点查询（get_node_count, get_all_nodes）
+- ✅ 节点选择（select, select_by_tag）
+- ✅ 连接计数（用于 LeastConnections 策略）
+- ✅ 线程安全（std::shared_mutex）
+- ✅ 单元测试完成（23个测试用例, 162个断言）
+  - 基本功能测试（添加、移除、清空节点）
+  - 负载均衡策略测试（随机、轮询、最少连接、一致性哈希）
+  - 并发测试（多线程添加节点、多线程选择节点）
+  - 边界情况测试（空节点列表、不存在的节点）
+
+#### FailoverManager 实现
+- ✅ NodeState 节点状态（Healthy, Unhealthy, Failed）
+- ✅ NodeHealth 节点健康状态（node_id, state, last_check, consecutive_failures, last_error）
+- ✅ NodeFailureEvent 节点故障事件（node_id, previous_state, new_state, timestamp, reason）
+- ✅ Config 配置
+  - health_check_interval: 健康检查间隔
+  - failure_timeout: 失败超时时间
+  - recovery_timeout: 恢复超时时间
+  - max_consecutive_failures: 最大连续失败次数
+  - auto_failover: 自动故障转移
+- ✅ 节点管理（add_node, remove_node）
+- ✅ 节点状态管理（mark_node_failed, mark_node_recovered）
+- ✅ 节点健康查询（get_node_health, get_healthy_nodes, get_failed_nodes）
+- ✅ 节点计数（get_node_count, get_healthy_node_count）
+- ✅ 故障事件回调（on_node_failure）
+- ✅ 健康检查（perform_health_check, set_health_checker）
+- ✅ 生命周期管理（start, stop）
+- ✅ 自动健康检查循环（health_check_loop）
+- ✅ 超时检测和自动恢复（is_node_timeout, check_node_health）
+- ✅ 线程安全（std::mutex, std::atomic）
+- ✅ 单元测试完成（10个测试用例, 68个断言）
+  - 基本构造测试（默认配置、自定义配置）
+  - 节点管理测试（添加、移除、批量操作）
+  - 节点故障测试（手动标记失败、获取健康/失败节点）
+  - 节点恢复测试（手动恢复节点）
+  - 故障事件回调测试（节点失败事件、节点恢复事件）
+  - 自定义健康检查测试
+  - 启动停止测试（正常启停、重复启动、重复停止）
+  - 连续失败计数测试
+  - 并发操作测试（并发添加节点、并发查询节点）
+  - 手动健康检查测试
+
 ---
 
-**文档版本**: v1.9
+**文档版本**: v2.0
 **最后更新**: 2026-02-01
 

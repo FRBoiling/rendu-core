@@ -6,6 +6,37 @@
 
 ---
 
+## 阶段 18: 高级特性 (advanced) 🚧
+
+**完成度**: 60%
+
+#### 模块开发进度
+- ✅ MetricsCollector - 性能指标收集
+- ✅ HealthChecker - 健康检查
+- ✅ ActorRef 序列化
+- ✅ NodeDiscovery - 节点发现
+- ✅ LoadBalancer - 负载均衡
+- ✅ FailoverManager - 故障转移
+- ⏳ 跨节点 Actor 通信
+- ⏳ 消息路由 (MessageRouter)
+- ⏳ Prometheus 指标导出
+- ⏳ Actor 状态持久化
+- ⏳ 检查点恢复 (CheckpointManager)
+
+#### 测试覆盖率
+- **测试文件数**: 6 个
+- **测试用例数**: 43 个
+- **断言数**: 288 个
+- **通过率**: 100%
+
+#### 文档完善程度
+- ✅ 设计文档: doc_phase18_advanced.md
+
+#### 完成日期
+**2026-02-01** (进行中)
+
+---
+
 ## 一、总体进度概览
 
 ### Common 层开发状态
@@ -606,15 +637,15 @@
 ## 三、整体测试统计
 
 ### 测试汇总
-- **总测试文件数**: 45 个
-- **总测试用例数**: 358 个
-- **总断言数**: 2222 个
+- **总测试文件数**: 49 个
+- **总测试用例数**: 401 个
+- **总断言数**: 2670 个
 - **基准测试**: 14 个
 - **通过率**: 100%
 
 ### 测试文件分布
 - Common 层: 25 个
-- Core 层: 6 个
+- Core 层: 9 个
 - Apps 层: 0 个
 - 技术债务: 4 个
 - 性能优化: 7 个
@@ -697,6 +728,15 @@
 | 2026-02-01 | 创建 FAQ.md 常见问题解答 | boil |
 | 2026-02-01 | 更新 doc_phase16_documentation.md 标记完成 | boil |
 | 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 16 进度 | boil |
+| 2026-02-01 | 完成阶段 17: 性能优化 (performance) | boil |
+| 2026-02-01 | 更新 doc_phase17_performance.md 标记完成 | boil |
+| 2026-02-01 | 更新 doc_roadmap.md 标记阶段 17 完成 | boil |
+| 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 17 进度 | boil |
+| 2026-02-01 | 完成阶段 18 部分任务: MetricsCollector, HealthChecker, ActorRef序列化 | boil |
+| 2026-02-01 | 完成阶段 18 集群模块: NodeDiscovery, LoadBalancer, FailoverManager | boil |
+| 2026-02-01 | 更新 doc_roadmap.md 标记集群模块完成 | boil |
+| 2026-02-01 | 更新 doc_phase18_advanced.md 更新进度跟踪 | boil |
+| 2026-02-01 | 更新 doc_progress_summary.md 添加集群模块测试统计 | boil |
 | 2026-02-01 | 更新 doc_roadmap.md 标记阶段 16 完成 | boil |
 | 2026-02-01 | 完成阶段 17: 性能优化 (performance) | boil |
 | 2026-02-01 | 实现 MessagePool 内存池 (9个测试用例, 28个断言) | boil |

@@ -145,13 +145,18 @@ src/
 │   │   │   ├── actor_ref.h       # Actor 引用
 │   │   │   ├── message.h         # 消息定义
 │   │   │   └── message_queue.h  # 消息队列
+│   │   ├── cluster/               # 集群管理
+│   │   │   ├── node_discovery.h  # 节点发现
+│   │   │   ├── load_balancer.h   # 负载均衡
+│   │   │   └── failover_manager.h # 故障转移
 │   │   └── core.h
 │   └── src/
 │       ├── engine/
 │       ├── loop/
 │       ├── state/
 │       ├── lifecycle/
-│       └── actor/
+│       ├── actor/
+│       └── cluster/
 │
 ├── apps/                            # 应用层
 │   ├── example/                    # 示例程序
