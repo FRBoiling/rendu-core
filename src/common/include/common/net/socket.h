@@ -32,6 +32,95 @@ enum class SocketError {
 };
 
 /**
+ * @brief TCP 参数优化配置
+ *
+ * 用于优化 TCP socket 性能的参数集合
+ */
+struct TcpOptimization {
+    /**
+     * @brief 禁用 Nagle 算法 (低延迟场景)
+     *
+     * - true: 禁用 Nagle,适合实时通信,低延迟
+     * - false: 启用 Nagle,适合吞吐量优化
+     */
+    bool no_delay = true;
+
+    /**
+     * @brief 启用 TCP keepalive
+     *
+     * 用于检测死连接,防止资源泄漏
+     */
+    bool keepalive = true;
+
+    /**
+     * @brief Keepalive 空闲时间 (秒)
+     *
+     * 多长时间无数据后开始发送 keepalive 探测
+     */
+    int keepalive_idle = 60;
+
+    /**
+     * @brief Keepalive 探测间隔 (秒)
+     *
+     * 两次 keepalive 探测之间的间隔
+     */
+    int keepalive_interval = 10;
+
+    /**
+     * @brief Keepalive 探测次数
+     *
+     * 失败多少次后判定连接断开
+     */
+    int keepalive_count = 3;
+
+    /**
+     * @brief 接收缓冲区大小 (字节)
+     *
+     * - 较大缓冲区: 提高吞吐量,但增加内存占用
+     * - 较小缓冲区: 节省内存,但可能降低吞吐量
+     */
+    int recv_buffer_size = 64 * 1024;   // 64KB
+
+    /**
+     * @brief 发送缓冲区大小 (字节)
+     *
+     * - 较大缓冲区: 提高吞吐量,但增加内存占用
+     * - 较小缓冲区: 节省内存,但可能降低吞吐量
+     */
+    int send_buffer_size = 64 * 1024;   // 64KB
+
+    /**
+     * @brief 启用地址重用
+     *
+     * 允许绑定 TIME_WAIT 状态的端口
+     */
+    bool reuse_address = true;
+
+    /**
+     * @brief 启用端口重用
+     *
+     * 允许多个 socket 绑定同一端口
+     */
+    bool reuse_port = false;  // 仅在 Linux/macOS 上有效
+
+    /**
+     * @brief 启用 TCP_NODELAY (别名,与 no_delay 相同)
+     */
+    bool tcp_no_delay = true;
+};
+
+/**
+ * @brief 应用 TCP 优化参数到 socket
+ * @param socket 要优化的 TCP socket
+ * @param opts TCP 优化配置
+ * @return bool 是否应用成功
+ *
+ * @note 该函数会静默处理部分不支持的选项,不影响整体应用
+ */
+bool apply_tcp_optimizations(boost::asio::ip::tcp::socket& socket,
+                             const TcpOptimization& opts);
+
+/**
  * @brief Socket 回调类型
  */
 using SocketCallback = std::function<void(const boost::system::error_code& ec)>;
@@ -49,8 +138,9 @@ public:
     /**
      * @brief 构造函数
      * @param io IoContext 引用
+     * @param opts TCP 优化配置 (可选)
      */
-    explicit TcpSocket(io::IoContext& io);
+    explicit TcpSocket(io::IoContext& io, const TcpOptimization& opts = TcpOptimization{});
     
     ~TcpSocket();
 

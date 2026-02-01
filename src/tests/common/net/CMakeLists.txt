@@ -68,6 +68,17 @@ rendu_add_test(
         TEST_FRAMEWORK CATCH2
 )
 
+# TCP 优化测试
+rendu_add_test(
+        DIR           ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT       ${PROJECT_NAME}
+        NAME          tcp_optimization_test
+        SOURCES       tcp_optimization_test.cpp
+        PRIVATE_LINK  rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK   RenduCore::common
+        TEST_FRAMEWORK CATCH2
+)
+
 # KCP 测试（占位，需要集成 KCP 库）
 # rendu_add_test(
 #         DIR           ${CMAKE_CURRENT_SOURCE_DIR}

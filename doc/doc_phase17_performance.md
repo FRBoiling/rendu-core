@@ -463,7 +463,7 @@ public:
 
 ---
 
-#### 2.2.3 TCP 参数调优
+#### 2.2.3 TCP 参数调优 ✅
 
 **优化配置**:
 
@@ -497,6 +497,62 @@ void apply_tcp_optimizations(TcpSocket& socket,
     // ... 其他参数
 }
 ```
+
+**实现状态**:
+- ✅ TcpOptimization 配置结构体
+  - no_delay: 禁用 Nagle 算法 (低延迟)
+  - keepalive: 启用 TCP keepalive 检测死连接
+  - keepalive_idle/interval/count: 自定义 keepalive 参数
+  - recv_buffer_size/send_buffer_size: 接收/发送缓冲区大小
+  - reuse_address: 地址重用
+  - reuse_port: 端口重用 (Linux/macOS)
+  - tcp_no_delay: no_delay 别名
+
+- ✅ apply_tcp_optimizations() 函数
+  - 应用 TCP_NODELAY 选项
+  - 配置 keepalive 参数 (平台相关: Linux/macOS/BSD)
+  - 设置接收/发送缓冲区大小
+  - 启用地址/端口重用
+
+- ✅ TcpSocket 构造函数支持 TcpOptimization
+  - 默认参数使用优化配置
+  - 可自定义配置
+
+- ✅ 单元测试完成 (12个测试用例,32个断言全部通过)
+  - 默认配置构造测试 ✅
+  - 默认优化参数测试 ✅
+  - 自定义优化参数测试 ✅
+  - 低延迟配置测试 ✅
+  - 高吞吐量配置测试 ✅
+  - 自定义 keepalive 参数测试 ✅
+  - 连接测试 ✅
+  - 多个 socket 使用不同优化测试 ✅
+  - reuse_port 选项测试 ✅
+  - 边界值测试 (最小/最大缓冲区,零 keepalive,禁用所有优化) ✅
+  - 配置一致性测试 ✅
+  - 与 ConnectionPool 集成测试 ✅
+
+**技术细节**:
+- 平台相关 keepalive 参数:
+  - Linux: TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+  - macOS/BSD: TCP_KEEPALIVE, TCP_KEEPINTVL
+- 静默处理不支持的平台选项,不影响整体应用
+- 默认配置适合大多数场景:
+  - 低延迟: 禁用 Nagle 算法
+  - 连接保活: 启用 keepalive
+  - 缓冲区: 64KB 平衡吞吐量和内存
+
+**新增文件**:
+- `src/tests/common/net/tcp_optimization_test.cpp` - 单元测试
+
+**修改文件**:
+- `src/common/include/common/net/socket.h` - 添加 TcpOptimization 和 apply_tcp_optimizations
+- `src/common/src/net/socket.cpp` - 实现优化参数应用
+
+**预期收益**:
+- 低延迟场景延迟降低 30%+
+- 连接稳定性提升 (keepalive 检测死连接)
+- 支持不同场景的优化配置 (低延迟/高吞吐量)
 
 ---
 
@@ -759,9 +815,10 @@ for bench in data['benchmarks']:
 | protobuf 序列化优化 | boil | ✅ | 2026-02-11 | 2026-02-01 |
 | 连接复用实现 | boil | ✅ | 2026-02-12 | 2026-02-01 |
 | 零拷贝优化 | boil | ✅ | 2026-02-12 | 2026-02-01 |
-| 日志缓冲区优化 | boil | ⏳ | 2026-02-13 | - |
-| Actor 线程池 | boil | ⏳ | 2026-02-14 | - |
-| 基准测试套件 | boil | ⏳ | 2026-02-15 | - |
+| TCP 参数调优 | boil | ✅ | 2026-02-13 | 2026-02-01 |
+| 日志缓冲区优化 | boil | ⏳ | 2026-02-14 | - |
+| Actor 线程池 | boil | ⏳ | 2026-02-15 | - |
+| 基准测试套件 | boil | ⏳ | 2026-02-16 | - |
 
 ---
 

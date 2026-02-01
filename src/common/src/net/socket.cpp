@@ -12,7 +12,121 @@ namespace net {
 // TcpSocket 实现
 // ============================================================================
 
-TcpSocket::TcpSocket(io::IoContext& io)
+bool apply_tcp_optimizations(boost::asio::ip::tcp::socket& socket,
+                             const TcpOptimization& opts) {
+    bool all_success = true;
+
+    // 1. 禁用 Nagle 算法
+    if (opts.no_delay || opts.tcp_no_delay) {
+        boost::system::error_code ec;
+        socket.set_option(boost::asio::ip::tcp::no_delay(true), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set TCP_NODELAY: {}", ec.message());
+            all_success = false;
+        }
+    }
+
+    // 2. 启用 TCP keepalive
+    if (opts.keepalive) {
+        boost::system::error_code ec;
+        socket.set_option(boost::asio::socket_base::keep_alive(true), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set SO_KEEPALIVE: {}", ec.message());
+            all_success = false;
+        } else {
+            // 设置 keepalive 参数 (平台相关)
+#ifdef __linux__
+            // Linux: TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+            int idle = opts.keepalive_idle;
+            int interval = opts.keepalive_interval;
+            int count = opts.keepalive_count;
+
+            socket.set_option(boost::asio::detail::socket_option::integer<SOL_TCP, TCP_KEEPIDLE>(idle), ec);
+            if (ec) {
+                RENDU_LOG_WARN("Failed to set TCP_KEEPIDLE: {}", ec.message());
+            }
+
+            socket.set_option(boost::asio::detail::socket_option::integer<SOL_TCP, TCP_KEEPINTVL>(interval), ec);
+            if (ec) {
+                RENDU_LOG_WARN("Failed to set TCP_KEEPINTVL: {}", ec.message());
+            }
+
+            socket.set_option(boost::asio::detail::socket_option::integer<SOL_TCP, TCP_KEEPCNT>(count), ec);
+            if (ec) {
+                RENDU_LOG_WARN("Failed to set TCP_KEEPCNT: {}", ec.message());
+            }
+
+#elif defined(__APPLE__) || defined(__FreeBSD__)
+            // macOS/BSD: TCP_KEEPALIVE, TCP_KEEPINTVL
+            int idle = opts.keepalive_idle;
+            int interval = opts.keepalive_interval;
+
+            socket.set_option(boost::asio::detail::socket_option::integer<IPPROTO_TCP, TCP_KEEPALIVE>(idle), ec);
+            if (ec) {
+                RENDU_LOG_WARN("Failed to set TCP_KEEPALIVE: {}", ec.message());
+            }
+
+            socket.set_option(boost::asio::detail::socket_option::integer<IPPROTO_TCP, TCP_KEEPINTVL>(interval), ec);
+            if (ec) {
+                RENDU_LOG_WARN("Failed to set TCP_KEEPINTVL: {}", ec.message());
+            }
+
+#else
+            // 其他平台: 使用默认 keepalive 设置
+            RENDU_LOG_INFO("Keepalive parameters not fully supported on this platform");
+#endif
+        }
+    }
+
+    // 3. 设置接收缓冲区大小
+    if (opts.recv_buffer_size > 0) {
+        boost::system::error_code ec;
+        socket.set_option(boost::asio::socket_base::receive_buffer_size(opts.recv_buffer_size), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set receive buffer size: {}", ec.message());
+            all_success = false;
+        }
+    }
+
+    // 4. 设置发送缓冲区大小
+    if (opts.send_buffer_size > 0) {
+        boost::system::error_code ec;
+        socket.set_option(boost::asio::socket_base::send_buffer_size(opts.send_buffer_size), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set send buffer size: {}", ec.message());
+            all_success = false;
+        }
+    }
+
+    // 5. 启用地址重用
+    if (opts.reuse_address) {
+        boost::system::error_code ec;
+        socket.set_option(boost::asio::socket_base::reuse_address(true), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set reuse_address: {}", ec.message());
+            all_success = false;
+        }
+    }
+
+    // 6. 启用端口重用 (仅 Linux/macOS)
+    if (opts.reuse_port) {
+#if defined(SO_REUSEPORT)
+        boost::system::error_code ec;
+        int optval = 1;
+        socket.set_option(boost::asio::detail::socket_option::boolean<SOL_SOCKET, SO_REUSEPORT>(optval), ec);
+        if (ec) {
+            RENDU_LOG_WARN("Failed to set SO_REUSEPORT: {}", ec.message());
+            all_success = false;
+        }
+#else
+        RENDU_LOG_WARN("SO_REUSEPORT not supported on this platform");
+#endif
+    }
+
+    return all_success;
+}
+
+TcpSocket::TcpSocket(io::IoContext& io, const TcpOptimization& opts)
     : io_(io)
     , socket_(io.native())
     , connected_(false)
@@ -22,7 +136,11 @@ TcpSocket::TcpSocket(io::IoContext& io)
     socket_.open(boost::asio::ip::tcp::v4(), ec);
     if (ec) {
         RENDU_LOG_WARN("Failed to open socket: {}", ec.message());
+        return;
     }
+
+    // 应用 TCP 优化参数
+    apply_tcp_optimizations(socket_, opts);
 }
 
 TcpSocket::~TcpSocket() {
