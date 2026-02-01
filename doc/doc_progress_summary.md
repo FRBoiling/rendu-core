@@ -721,6 +721,14 @@
 | 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 18 进度 | boil |
 | 2026-02-01 | 更新 doc_roadmap.md 标记阶段 18 进度 | boil |
 | 2026-02-01 | 更新 DOC_INDEX.md 标记阶段 18 进度 | boil |
+| 2026-02-01 | 实现节点发现 (NodeDiscovery) - 11个测试用例, 46个断言 | boil |
+| 2026-02-01 | 创建 node_discovery.h 节点发现器接口 | boil |
+| 2026-02-01 | 创建 node_discovery.cpp 节点发现器实现 | boil |
+| 2026-02-01 | 创建 node_discovery_test.cpp 完整测试套件 | boil |
+| 2026-02-01 | 支持 UDP 广播自动发现节点 | boil |
+| 2026-02-01 | 实现节点超时检测和自动清理 | boil |
+| 2026-02-01 | 实现节点变更事件回调 | boil |
+| 2026-02-01 | 更新 doc_progress_summary.md 添加节点发现进度 | boil |
 
 ---
 
