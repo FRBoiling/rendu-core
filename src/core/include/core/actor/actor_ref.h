@@ -64,12 +64,23 @@ public:
     /// 从字符串反序列化
     static ActorRef deserialize(const std::string& data) {
         size_t pos = data.rfind(':');
-        if (pos == std::string::npos || pos == 0) {
+        if (pos == std::string::npos) {
             return invalid();
         }
 
         std::string path = data.substr(0, pos);
         std::string id_str = data.substr(pos + 1);
+
+        // 验证 ID 部分不为空且全是数字
+        if (id_str.empty()) {
+            return invalid();
+        }
+
+        for (char c : id_str) {
+            if (!std::isdigit(static_cast<unsigned char>(c))) {
+                return invalid();
+            }
+        }
 
         try {
             uint64_t id = std::stoull(id_str);
@@ -82,7 +93,7 @@ public:
     /// 验证序列化字符串格式
     static bool is_valid_serialized(const std::string& data) {
         size_t pos = data.rfind(':');
-        if (pos == std::string::npos || pos == 0) {
+        if (pos == std::string::npos) {
             return false;
         }
 
@@ -93,7 +104,7 @@ public:
 
         // 验证 ID 部分是数字
         for (char c : id_str) {
-            if (!std::isdigit(c)) {
+            if (!std::isdigit(static_cast<unsigned char>(c))) {
                 return false;
             }
         }

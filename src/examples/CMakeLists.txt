@@ -144,3 +144,20 @@ rendu_add_executable(
         SOURCES
         health_example.cpp
 )
+
+# ActorRef 序列化示例程序
+rendu_add_executable(
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        actor_ref_example
+        PRIVATE_LINK
+        rendu-core-interface
+        PUBLIC_LINK RenduCore::core
+        DEFINES
+        ALIAS ON
+        SOURCES
+        actor_ref_example.cpp
+)

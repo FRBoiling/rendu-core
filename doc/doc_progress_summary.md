@@ -542,30 +542,30 @@
 
 ### 阶段 18: 高级特性 (advanced) 🚧
 
-**完成度**: 20% (2/10 任务)
+**完成度**: 30% (3/10 任务)
 
 #### 20.1 模块开发进度
 - ✅ 性能指标收集 (MetricsCollector) - 11个测试用例, 58个断言
 - ✅ 健康检查 (HealthChecker) - 10个测试用例, 92个断言
+- ✅ ActorRef 序列化 - 7个测试用例, 55个断言
 - ⏳ 节点发现 (NodeDiscovery)
 - ⏳ 负载均衡 (LoadBalancer)
 - ⏳ 故障转移 (FailoverManager)
-- ⏳ ActorRef 序列化
 - ⏳ 跨节点 Actor 通信
 - ⏳ 消息路由 (MessageRouter)
 - ⏳ 状态持久化 (ActorPersistence)
 - ⏳ 检查点恢复 (CheckpointManager)
 
 #### 20.2 测试覆盖率
-- **测试文件数**: 2 个
-- **测试用例数**: 21 个
-- **断言数**: 150 个
+- **测试文件数**: 3 个
+- **测试用例数**: 28 个
+- **断言数**: 205 个
 - **通过率**: 100%
 
 #### 20.3 文档完善程度
 - ✅ 设计文档: doc_phase18_advanced.md
 - ✅ API 文档完整
-- ✅ 使用示例完整 (metrics_example.cpp, health_example.cpp)
+- ✅ 使用示例完整 (metrics_example.cpp, health_example.cpp, actor_ref_example.cpp)
 
 #### 20.4 遗留问题
 - 无
@@ -606,20 +606,20 @@
 ## 三、整体测试统计
 
 ### 测试汇总
-- **总测试文件数**: 44 个
-- **总测试用例数**: 351 个
-- **总断言数**: 2167 个
+- **总测试文件数**: 45 个
+- **总测试用例数**: 358 个
+- **总断言数**: 2222 个
 - **基准测试**: 14 个
 - **通过率**: 100%
 
 ### 测试文件分布
 - Common 层: 25 个
-- Core 层: 5 个
+- Core 层: 6 个
 - Apps 层: 0 个
 - 技术债务: 4 个
 - 性能优化: 7 个
 - 基准测试: 1 个
-- 高级特性: 2 个
+- 高级特性: 3 个
 
 ---
 
@@ -715,6 +715,9 @@
 | 2026-02-01 | 创建 metrics_example.cpp 示例程序 | boil |
 | 2026-02-01 | 实现 HealthChecker 健康检查器 (10个测试用例, 92个断言) | boil |
 | 2026-02-01 | 创建 health_example.cpp 示例程序 | boil |
+| 2026-02-01 | 实现 ActorRef 序列化功能 (7个测试用例, 55个断言) | boil |
+| 2026-02-01 | 创建 actor_ref_example.cpp 示例程序 | boil |
+| 2026-02-01 | 修复 ActorRef::deserialize() 空路径和ID验证问题 | boil |
 | 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 18 进度 | boil |
 | 2026-02-01 | 更新 doc_roadmap.md 标记阶段 18 进度 | boil |
 | 2026-02-01 | 更新 DOC_INDEX.md 标记阶段 18 进度 | boil |
