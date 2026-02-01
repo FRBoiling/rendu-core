@@ -788,3 +788,35 @@
 - ✅ AsyncBufferedLogger (13个测试用例, 35个断言)
 - ✅ WorkStealingThreadPool (9个测试用例, 24个断言)
 - ✅ 基准测试套件 (14个基准测试全部通过)
+
+
+## 阶段 18: 高级特性 (advanced) 🚧
+
+**状态**: 进行中 (10%)
+**开始日期**: 2026-02-01
+
+### 实现状态
+- ✅ 性能指标收集 (MetricsCollector)
+  - Counter 计数器
+  - Gauge 测量值
+  - Histogram 直方图
+  - Summary 摘要
+  - 计时功能
+  - Prometheus/纯文本导出
+  - 单元测试完成 (11个测试用例, 58个断言)
+  - 示例程序完成 (metrics_example.cpp)
+- ⏳ 健康检查 (HealthChecker)
+- ⏳ 节点发现 (NodeDiscovery)
+- ⏳ 负载均衡 (LoadBalancer)
+- ⏳ 故障转移 (FailoverManager)
+- ⏳ ActorRef 序列化
+- ⏳ 跨节点 Actor 通信
+- ⏳ 消息路由 (MessageRouter)
+- ⏳ 状态持久化 (ActorPersistence)
+- ⏳ 检查点恢复 (CheckpointManager)
+
+---
+
+**文档版本**: v1.7
+**最后更新**: 2026-02-01
+

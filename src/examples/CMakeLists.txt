@@ -110,3 +110,20 @@ rendu_add_executable(
         SOURCES
         net_example.cpp
 )
+
+# Metrics 示例程序
+rendu_add_executable(
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        metrics_example
+        PRIVATE_LINK
+        rendu-core-interface
+        PUBLIC_LINK RenduCore::common
+        DEFINES
+        ALIAS ON
+        SOURCES
+        metrics_example.cpp
+)

@@ -540,6 +540,38 @@
 
 ---
 
+### 阶段 18: 高级特性 (advanced) 🚧
+
+**完成度**: 10% (1/10 任务)
+
+#### 20.1 模块开发进度
+- ✅ 性能指标收集 (MetricsCollector) - 11个测试用例, 58个断言
+- ⏳ 健康检查 (HealthChecker)
+- ⏳ 节点发现 (NodeDiscovery)
+- ⏳ 负载均衡 (LoadBalancer)
+- ⏳ 故障转移 (FailoverManager)
+- ⏳ ActorRef 序列化
+- ⏳ 跨节点 Actor 通信
+- ⏳ 消息路由 (MessageRouter)
+- ⏳ 状态持久化 (ActorPersistence)
+- ⏳ 检查点恢复 (CheckpointManager)
+
+#### 20.2 测试覆盖率
+- **测试文件数**: 1 个
+- **测试用例数**: 11 个
+- **断言数**: 58 个
+- **通过率**: 100%
+
+#### 20.3 文档完善程度
+- ✅ 设计文档: doc_phase18_advanced.md
+- ✅ API 文档完整
+- ✅ 使用示例完整 (metrics_example.cpp)
+
+#### 20.4 遗留问题
+- 无
+
+---
+
 ### 阶段 17: 性能优化 (performance) ✅
 
 **完成度**: 100%
@@ -574,19 +606,20 @@
 ## 三、整体测试统计
 
 ### 测试汇总
-- **总测试文件数**: 42 个
-- **总测试用例数**: 329 个
-- **总断言数**: 2017 个
+- **总测试文件数**: 43 个
+- **总测试用例数**: 340 个
+- **总断言数**: 2075 个
 - **基准测试**: 14 个
 - **通过率**: 100%
 
 ### 测试文件分布
-- Common 层: 23 个
+- Common 层: 24 个
 - Core 层: 5 个
 - Apps 层: 0 个
 - 技术债务: 4 个
 - 性能优化: 7 个
 - 基准测试: 1 个
+- 高级特性: 1 个
 
 ---
 
@@ -677,6 +710,10 @@
 | 2026-02-01 | 更新 doc_phase17_performance.md 标记完成并补充测试信息 | boil |
 | 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 17 进度 | boil |
 | 2026-02-01 | 更新 doc_roadmap.md 标记阶段 17 完成 | boil |
+| 2026-02-01 | 开始阶段 18: 高级特性 (advanced) | boil |
+| 2026-02-01 | 实现 MetricsCollector 性能指标收集器 (11个测试用例, 58个断言) | boil |
+| 2026-02-01 | 创建 metrics_example.cpp 示例程序 | boil |
+| 2026-02-01 | 更新 doc_progress_summary.md 反映阶段 18 进度 | boil |
 
 ---
 
