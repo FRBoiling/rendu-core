@@ -127,3 +127,20 @@ rendu_add_executable(
         SOURCES
         metrics_example.cpp
 )
+
+# Health 示例程序
+rendu_add_executable(
+        DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT
+        ${PROJECT_NAME}
+        NAME
+        health_example
+        PRIVATE_LINK
+        rendu-core-interface
+        PUBLIC_LINK RenduCore::common
+        DEFINES
+        ALIAS ON
+        SOURCES
+        health_example.cpp
+)

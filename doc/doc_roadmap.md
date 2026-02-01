@@ -792,31 +792,91 @@
 
 ## 阶段 18: 高级特性 (advanced) 🚧
 
-**状态**: 进行中 (10%)
+**状态**: 进行中 (20%)
 **开始日期**: 2026-02-01
 
-### 实现状态
-- ✅ 性能指标收集 (MetricsCollector)
+### 目标
+- 实现分布式系统所需的高级特性
+- 提供生产环境监控能力
+- 增强系统可靠性和可扩展性
+
+### 任务
+- [x] 性能指标收集 (MetricsCollector)
   - Counter 计数器
   - Gauge 测量值
   - Histogram 直方图
   - Summary 摘要
   - 计时功能
   - Prometheus/纯文本导出
-  - 单元测试完成 (11个测试用例, 58个断言)
-  - 示例程序完成 (metrics_example.cpp)
-- ⏳ 健康检查 (HealthChecker)
-- ⏳ 节点发现 (NodeDiscovery)
-- ⏳ 负载均衡 (LoadBalancer)
-- ⏳ 故障转移 (FailoverManager)
-- ⏳ ActorRef 序列化
-- ⏳ 跨节点 Actor 通信
-- ⏳ 消息路由 (MessageRouter)
-- ⏳ 状态持久化 (ActorPersistence)
-- ⏳ 检查点恢复 (CheckpointManager)
+- [x] 健康检查 (HealthChecker)
+  - 注册/注销检查项
+  - 单个/批量健康检查
+  - 部分失败允许
+  - JSON/文本格式输出
+  - 内置检查函数 (内存/磁盘/CPU/延迟)
+  - 异常处理
+  - 线程安全
+- [ ] 节点发现 (NodeDiscovery)
+- [ ] 负载均衡 (LoadBalancer)
+- [ ] 故障转移 (FailoverManager)
+- [ ] ActorRef 序列化
+- [ ] 跨节点 Actor 通信
+- [ ] 消息路由 (MessageRouter)
+- [ ] 状态持久化 (ActorPersistence)
+- [ ] 检查点恢复 (CheckpointManager)
+
+### 验收标准
+- [x] 性能指标收集功能完整
+  - 所有指标类型正常工作
+  - 导出格式正确
+  - 单元测试通过 (11个测试用例, 58个断言)
+  - 示例程序验证通过 (metrics_example.cpp)
+- [x] 健康检查功能完整
+  - 支持多种检查项
+  - 线程安全
+  - 异常处理完善
+  - 单元测试通过 (10个测试用例, 92个断言)
+  - 示例程序验证通过 (health_example.cpp)
+
+### 依赖
+- 阶段 17 (性能优化)
+- 阶段 12.5 (Actor 系统)
+
+### 实现状态
+#### MetricsCollector 实现
+- ✅ Counter 实现（递增、递减、重置）
+- ✅ Gauge 实现（设置、递增、递减）
+- ✅ Histogram 实现（桶分布、百分位）
+- ✅ Summary 实现（分位数统计）
+- ✅ 计时功能（ScopedTimer）
+- ✅ Prometheus 格式导出
+- ✅ 纯文本格式导出
+- ✅ 单元测试完成（11个测试用例, 58个断言）
+- ✅ 示例程序完成（metrics_example.cpp）
+
+#### HealthChecker 实现
+- ✅ 注册/注销检查项
+- ✅ 全部/单个健康检查
+- ✅ 部分失败支持
+- ✅ JSON/文本格式输出
+- ✅ 内置检查函数（always_pass, always_fail, check_latency, check_memory_usage, check_cpu_usage, check_disk_usage）
+- ✅ 异常处理（检查函数异常捕获）
+- ✅ 线程安全（std::mutex 保护）
+- ✅ 单元测试完成（10个测试用例, 92个断言）
+  - 基础功能测试
+  - 多检查项测试
+  - 部分失败允许测试
+  - 异常处理测试
+  - 单个检查项测试
+  - 注册/注销测试
+  - 输出格式测试
+  - 内置检查函数测试
+  - 线程安全测试
+  - 综合场景测试
+- ✅ 示例程序完成（health_example.cpp）
 
 ---
 
-**文档版本**: v1.7
+**文档版本**: v1.9
 **最后更新**: 2026-02-01
 

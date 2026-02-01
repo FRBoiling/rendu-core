@@ -66,8 +66,8 @@
 
 |||- **[阶段 15: debt](doc_phase15_debt.md)** - 技术债务清理 ✅
 |||- **[阶段 16: documentation](doc_phase16_documentation.md)** - 文档完善 ✅
-|||- **[阶段 17: performance](doc_phase17_performance.md)** - 性能优化 ⏳
-|||- **[阶段 18: advanced](doc_phase18_advanced.md)** - 高级特性 ⏳
+|||- **[阶段 17: performance](doc_phase17_performance.md)** - 性能优化 ✅
+|||- **[阶段 18: advanced](doc_phase18_advanced.md)** - 高级特性 🚧
 |||- **[阶段 19: production](doc_phase19_production.md)** - 生产环境 ⏳
 
 ---
