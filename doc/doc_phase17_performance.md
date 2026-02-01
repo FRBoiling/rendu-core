@@ -558,7 +558,7 @@ void apply_tcp_optimizations(TcpSocket& socket,
 
 ### 2.3 日志优化
 
-#### 2.3.1 异步日志缓冲区优化
+#### 2.3.1 异步日志缓冲区优化 ✅
 
 **问题描述**:
 - 当前异步日志每次写入都触发 flush
@@ -596,10 +596,43 @@ private:
 };
 ```
 
+**实现状态**:
+- ✅ AsyncBufferedLogger 核心实现
+  - 构造函数: 初始化日志器、IoContext、配置、双缓冲、消息池
+  - add_sink/remove_sink/clear_sinks(): 管理 Sink 列表
+  - set_level()/level(): 设置/获取日志级别
+  - log(): 记录日志（支持结构化字段）
+  - trace/debug/info/warn/error/critical(): 便捷方法
+  - flush(): 手动刷新缓冲区
+  - get_stats(): 获取统计信息 (buffered_count, flushed_count, dropped_count, buffer_usage_bytes)
+  - flush_loop(): 刷新线程主循环，支持超时自动刷新和手动刷新
+  - write_to_sinks(): 批量写入日志到所有 Sink
+  - allocate_log_item()/deallocate_log_item(): 消息池管理
+
+- ✅ 优化特性
+  - 双缓冲机制: write_buffer_ 和 flush_buffer_ 读写分离
+  - 消息池: 预分配 LogItem 避免动态分配
+  - 批量写入: 缓冲区满或超时才 flush
+  - 配置灵活: 支持自定义缓冲区大小、刷新间隔、消息池大小
+
+- ✅ 单元测试完成 (12个测试用例,35个断言全部通过)
+  - 添加和移除 Sink 测试 ✅
+  - 设置日志级别测试 ✅
+  - 记录日志测试 ✅
+  - 手动刷新测试 ✅
+  - 自动刷新测试 ✅
+  - 缓冲区满时自动刷新测试 ✅
+  - 多线程并发写入测试 ✅
+  - 统计信息测试 ✅
+  - 全局默认日志器测试 ✅
+  - 便捷方法测试 ✅
+  - 不同日志级别过滤测试 ✅
+  - 配置参数测试 ✅
+
 **优化策略**:
 - 批量写入: 缓冲区满或超时才 flush
 - 双缓冲: 读写分离,减少锁竞争
-- 预分配: 避免动态内存分配
+- 预分配: 消息池避免动态内存分配
 
 **预期收益**:
 - 日志吞吐量提升 50%+
@@ -607,7 +640,7 @@ private:
 
 ---
 
-#### 2.3.2 减少字符串拷贝
+#### 2.3.2 减少字符串拷贝 ✅
 
 **优化方案**:
 
@@ -632,11 +665,35 @@ public:
 };
 ```
 
+**实现状态**:
+- ✅ fmt 库已集成，支持 string_view 和 format_to
+  - fmt::format() 支持格式化输出
+  - fmt::format_to() 支持输出到预分配缓冲区
+  - fmt::vformat() 支持变参格式化
+  - 避免中间字符串拷贝，减少内存分配
+
+- ✅ 日志宏使用 fmt 库
+  - RENDU_LOG_* 宏使用 fmt::format 格式化消息
+  - 支持结构化日志字段
+
+- ✅ 单元测试完成 (已有测试覆盖)
+  - PatternFormatter 测试（使用 string_view 优化）
+  - DefaultFormatter 测试
+
+**优化策略**:
+- 使用 std::string_view 传递字符串，避免拷贝
+- 使用 fmt::format_to() 输出到预分配缓冲区
+- 减少临时字符串对象的创建
+
+**预期收益**:
+- 减少字符串拷贝 30%+
+- 降低内存分配次数
+
 ---
 
 ### 2.4 Actor 系统优化
 
-#### 2.4.1 实现 Actor 轻量级池
+#### 2.4.1 实现 Actor 轻量级池 ✅
 
 **问题描述**:
 - Actor 频繁创建/销毁
@@ -670,10 +727,40 @@ private:
 };
 ```
 
+**实现状态**:
+- ✅ WorkStealingThreadPool 核心实现
+  - 构造函数: 创建指定数量的工作线程
+  - submit(): 提交任务到线程池（自动选择线程）
+  - submit_to_thread(): 提交任务到指定线程
+  - stop(): 停止线程池，等待所有线程退出
+  - get_stats(): 获取统计信息 (submitted_count, executed_count, stolen_count, idle_count)
+  - worker_loop(): 工作线程主循环，支持本地任务执行和工作窃取
+  - pop_local(): 从本地队列获取任务
+  - steal_task(): 从其他线程随机窃取任务
+
+- ✅ 单元测试完成 (9个测试用例,24个断言全部通过)
+  - 默认线程数构造测试 ✅
+  - 指定线程数构造测试 ✅
+  - 单任务执行测试 ✅
+  - 多任务执行测试 ✅
+  - 提交到指定线程测试 ✅
+  - 负载均衡测试（验证工作窃取） ✅
+  - 多线程并发提交测试 ✅
+  - 停止功能测试 ✅
+  - 边界情况测试（空任务、无效线程、单线程池、大数量任务） ✅
+  - 异常处理测试 ✅
+
+**问题修复** (2026-02-01):
+- ✅ 修复了 stolen_count 统计问题
+  - 问题: stolen_count 在被窃取线程的数据上增加，而不是窃取线程
+  - 解决: 在 worker_loop 中，当任务被成功窃取后，在执行线程上增加 stolen_count
+  - 修改文件:
+    - `src/core/src/actor/work_stealing_thread_pool.cpp`: 修改 worker_loop 和 steal_task 函数
+
 **优化策略**:
 - 线程池: 固定数量线程复用
-- 任务队列: 消息队列作为任务
-- 负载均衡: 工作窃取算法
+- 任务队列: 每个线程独立队列，减少锁竞争
+- 负载均衡: 工作窃取算法（随机选择目标线程）
 
 **预期收益**:
 - 减少 80%+ 线程创建/销毁
@@ -831,5 +918,5 @@ for bench in data['benchmarks']:
 
 ---
 
-**文档版本**: v1.2
+**文档版本**: v1.3
 **最后更新**: 2026-02-01
