@@ -149,6 +149,8 @@ src/
 │   │   │   ├── node_discovery.h  # 节点发现
 │   │   │   ├── load_balancer.h   # 负载均衡
 │   │   │   └── failover_manager.h # 故障转移
+│   │   ├── metrics/              # 指标导出
+│   │   │   └── prometheus_exporter.h # Prometheus 导出器
 │   │   └── core.h
 │   └── src/
 │       ├── engine/
@@ -156,7 +158,8 @@ src/
 │       ├── state/
 │       ├── lifecycle/
 │       ├── actor/
-│       └── cluster/
+│       ├── cluster/
+│       └── metrics/
 │
 ├── apps/                            # 应用层
 │   ├── example/                    # 示例程序
@@ -177,7 +180,9 @@ src/
         ├── loop/
         ├── state/
         ├── lifecycle/
-        └── actor/
+        ├── actor/
+        ├── cluster/
+        └── metrics/
 ```
 
 ## 三、核心设计理念

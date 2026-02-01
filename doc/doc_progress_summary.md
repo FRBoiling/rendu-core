@@ -8,7 +8,7 @@
 
 ## 阶段 18: 高级特性 (advanced) 🚧
 
-**完成度**: 60%
+**完成度**: 70%
 
 #### 模块开发进度
 - ✅ MetricsCollector - 性能指标收集
@@ -17,16 +17,16 @@
 - ✅ NodeDiscovery - 节点发现
 - ✅ LoadBalancer - 负载均衡
 - ✅ FailoverManager - 故障转移
+- ✅ PrometheusExporter - Prometheus 指标导出
 - ⏳ 跨节点 Actor 通信
 - ⏳ 消息路由 (MessageRouter)
-- ⏳ Prometheus 指标导出
 - ⏳ Actor 状态持久化
 - ⏳ 检查点恢复 (CheckpointManager)
 
 #### 测试覆盖率
-- **测试文件数**: 6 个
-- **测试用例数**: 43 个
-- **断言数**: 288 个
+- **测试文件数**: 7 个
+- **测试用例数**: 48 个
+- **断言数**: 306 个
 - **通过率**: 100%
 
 #### 文档完善程度
@@ -579,18 +579,19 @@
 - ✅ 性能指标收集 (MetricsCollector) - 11个测试用例, 58个断言
 - ✅ 健康检查 (HealthChecker) - 10个测试用例, 92个断言
 - ✅ ActorRef 序列化 - 7个测试用例, 55个断言
-- ⏳ 节点发现 (NodeDiscovery)
-- ⏳ 负载均衡 (LoadBalancer)
-- ⏳ 故障转移 (FailoverManager)
+- ✅ 节点发现 (NodeDiscovery) - 11个测试用例, 46个断言
+- ✅ 负载均衡 (LoadBalancer) - 23个测试用例, 162个断言
+- ✅ 故障转移 (FailoverManager) - 10个测试用例, 68个断言
+- ✅ Prometheus 指标导出 (PrometheusExporter) - 5个测试用例, 18个断言
 - ⏳ 跨节点 Actor 通信
 - ⏳ 消息路由 (MessageRouter)
 - ⏳ 状态持久化 (ActorPersistence)
 - ⏳ 检查点恢复 (CheckpointManager)
 
 #### 20.2 测试覆盖率
-- **测试文件数**: 3 个
-- **测试用例数**: 28 个
-- **断言数**: 205 个
+- **测试文件数**: 7 个
+- **测试用例数**: 76 个
+- **断言数**: 499 个
 - **通过率**: 100%
 
 #### 20.3 文档完善程度
@@ -637,20 +638,20 @@
 ## 三、整体测试统计
 
 ### 测试汇总
-- **总测试文件数**: 49 个
-- **总测试用例数**: 401 个
-- **总断言数**: 2670 个
+- **总测试文件数**: 53 个
+- **总测试用例数**: 449 个
+- **总断言数**: 2964 个
 - **基准测试**: 14 个
 - **通过率**: 100%
 
 ### 测试文件分布
 - Common 层: 25 个
-- Core 层: 9 个
+- Core 层: 16 个
 - Apps 层: 0 个
 - 技术债务: 4 个
 - 性能优化: 7 个
 - 基准测试: 1 个
-- 高级特性: 3 个
+- 高级特性: 7 个
 
 ---
 
@@ -769,6 +770,15 @@
 | 2026-02-01 | 实现节点超时检测和自动清理 | boil |
 | 2026-02-01 | 实现节点变更事件回调 | boil |
 | 2026-02-01 | 更新 doc_progress_summary.md 添加节点发现进度 | boil |
+| 2026-02-01 | 实现 PrometheusExporter 指标导出器 (5个测试用例, 18个断言) | boil |
+| 2026-02-01 | 创建 prometheus_exporter.h 指标导出器接口 | boil |
+| 2026-02-01 | 创建 prometheus_exporter.cpp 指标导出器实现 | boil |
+| 2026-02-01 | 创建 prometheus_exporter_test.cpp 完整测试套件 | boil |
+| 2026-02-01 | 支持 HTTP 服务器监听和 /metrics 端点 | boil |
+| 2026-02-01 | 实现线程池支持 | boil |
+| 2026-02-01 | 更新 doc_progress_summary.md 添加 Prometheus 导出进度 | boil |
+| 2026-02-01 | 更新 doc_roadmap.md 标记 Prometheus 导出完成 | boil |
+| 2026-02-01 | 更新 doc_phase18_advanced.md 更新进度跟踪 | boil |
 
 ---
 
