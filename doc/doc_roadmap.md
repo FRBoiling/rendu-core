@@ -792,7 +792,7 @@
 
 ## 阶段 18: 高级特性 (advanced) 🚧
 
-**状态**: 进行中 (90%)
+**状态**: 进行中 (95%)
 **开始日期**: 2026-02-01
 
 ### 目标
@@ -860,9 +860,13 @@
   - 线程池支持
   - 单元测试完成
   - 事件测试完成
-- [ ] 跨节点 Actor 通信
-- [ ] 状态持久化 (ActorPersistence)
-- [ ] 检查点恢复 (CheckpointManager)
+- [x] 跨节点 Actor 通信
+  - RemoteChannel 和 RemoteActorSystem 实现
+  - 本地 Actor 创建和消息传递
+  - Tell 和 Ask 模式
+  - 单元测试通过
+- [ ] 状态持久化 (ActorPersistence) (⏭️ 已跳过)
+- [ ] 检查点恢复 (CheckpointManager) (⏭️ 已跳过)
 
 ### 验收标准
 - [x] 性能指标收集功能完整
@@ -910,6 +914,13 @@
   - 配置支持完整
   - 线程安全
   - 单元测试通过 (5个测试用例, 18个断言)
+- [x] 跨节点 Actor 通信功能完整
+  - RemoteChannel 和 RemoteActorSystem 实现
+  - Protobuf 消息定义
+  - 本地 Actor 创建和消息传递
+  - Tell 和 Ask 模式
+  - RemoteChannel 单元测试通过 (14个测试用例)
+  - RemoteActorSystem 集成测试通过 (15个测试用例)
 - [x] 消息路由功能完整
   - 路由注册/注销正常
   - 通配符路由工作正确

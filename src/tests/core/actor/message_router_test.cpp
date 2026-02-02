@@ -8,9 +8,31 @@
 #include "core/actor/message_router.h"
 #include "core/actor/actor_ref.h"
 #include "common/io/io_context.h"
+#include "common/log/logger.h"
 
 
 using namespace Rendu;
+
+// 全局 Logger 初始化
+struct LoggerSetup {
+    Rendu::io::IoContext io;
+    std::thread io_thread;
+
+    LoggerSetup() : io(1) {
+        Rendu::log::init_default_io_context(io);
+        io_thread = std::thread([this]() { io.run(); });
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ~LoggerSetup() {
+        io.stop();
+        if (io_thread.joinable()) {
+            io_thread.join();
+        }
+    }
+};
+
+static LoggerSetup g_logger_setup;
 
 TEST_CASE("MessageRouter 基本构造", "[actor][message_router]") {
     Rendu::io::IoContext io(1);

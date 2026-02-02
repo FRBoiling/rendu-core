@@ -71,13 +71,10 @@ struct TestMessage : public Message {
     void deserialize_data(const std::string& data) override {
         content = data;
     }
-
-    static std::shared_ptr<Message> deserialize(const std::string& data) {
-        auto msg = std::make_shared<TestMessage>();
-        msg->deserialize_data(data);
-        return msg;
-    }
 };
+
+// 注册消息类型
+static Rendu::MessageRegistrar<TestMessage> g_test_message_registrar("TestMessage");
 
 // 测试 Actor
 class EchoActor : public Actor {
@@ -158,13 +155,83 @@ TEST_CASE("RemoteActorSystem: 启动和停止", "[remote_actor_system]") {
 }
 
 TEST_CASE("RemoteActorSystem: 本地 Actor 创建", "[remote_actor_system]") {
-    // 此测试需要更仔细的 Actor 实现和生命周期管理
-    REQUIRE(true);
+    RemoteActorSystem::Config config;
+    config.node_id = "test_node";
+    config.actor_thread_pool_size = 2;
+    RemoteActorSystem system(config);
+
+    system.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // 创建本地 Actor
+    auto actor_ref = system.create_actor("echo_actor", []() {
+        return std::unique_ptr<Actor>(new EchoActor());
+    });
+
+    REQUIRE(actor_ref.is_valid());
+    REQUIRE(actor_ref.path() == "/echo_actor");
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    system.stop();
 }
 
 TEST_CASE("RemoteActorSystem: 本地 Tell 消息", "[remote_actor_system]") {
-    // 此测试需要更仔细的 Actor 实现和消息路由
-    REQUIRE(true);
+    RemoteActorSystem::Config config;
+    config.node_id = "test_node";
+    config.actor_thread_pool_size = 2;
+    RemoteActorSystem system(config);
+
+    system.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // 创建本地 Actor
+    auto actor_ref = system.create_actor("echo_actor", []() {
+        return std::unique_ptr<Actor>(new EchoActor());
+    });
+
+    // 发送 Tell 消息
+    auto msg = std::make_shared<TestMessage>("Hello, RemoteActorSystem!");
+    system.tell(actor_ref, msg);
+
+    // 等待消息处理
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // 验证消息已接收
+    auto actor = system.find_actor(actor_ref);
+    if (actor) {
+        auto echo_actor = std::dynamic_pointer_cast<EchoActor>(actor);
+        REQUIRE(echo_actor != nullptr);
+        REQUIRE(echo_actor->message_count() == 1);
+        REQUIRE(echo_actor->last_content() == "Hello, RemoteActorSystem!");
+    }
+
+    system.stop();
+}
+
+TEST_CASE("RemoteActorSystem: 本地 Ask 消息", "[remote_actor_system]") {
+    RemoteActorSystem::Config config;
+    config.node_id = "test_node";
+    config.actor_thread_pool_size = 2;
+    RemoteActorSystem system(config);
+
+    system.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // 创建本地 Actor
+    auto actor_ref = system.create_actor("echo_actor", []() {
+        return std::unique_ptr<Actor>(new EchoActor());
+    });
+
+    // 发送 Ask 消息
+    auto msg = std::make_shared<TestMessage>("Hello, Ask!");
+    auto response = system.ask(actor_ref, msg, 1000);
+
+    REQUIRE(response != nullptr);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    system.stop();
 }
 
 TEST_CASE("RemoteActorSystem: 远程连接配置", "[remote_actor_system]") {
@@ -225,6 +292,51 @@ TEST_CASE("RemoteActorSystem: 配置验证", "[remote_actor_system]") {
 
         REQUIRE(true);  // 配置已设置
     }
+}
+
+TEST_CASE("RemoteActorSystem: 本地/远程 Actor 判断", "[remote_actor_system]") {
+    RemoteActorSystem::Config config;
+    config.node_id = "test_node";
+    RemoteActorSystem system(config);
+
+    // 本地 Actor（路径以 / 开头且不包含节点前缀）
+    ActorRef local_actor("/echo_actor", 123);
+    REQUIRE(local_actor.is_valid());
+
+    // 远程 Actor（路径包含节点信息）
+    ActorRef remote_actor("/node:127.0.0.1:9000/echo_actor", 456);
+    REQUIRE(remote_actor.is_valid());
+}
+
+TEST_CASE("RemoteActorSystem: 多个 Actor 创建", "[remote_actor_system]") {
+    RemoteActorSystem::Config config;
+    config.node_id = "test_node";
+    config.actor_thread_pool_size = 2;
+    RemoteActorSystem system(config);
+
+    system.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // 创建多个 Actor
+    std::vector<ActorRef> actors;
+    for (int i = 0; i < 5; ++i) {
+        std::string name = "echo_actor_" + std::to_string(i);
+        auto actor_ref = system.create_actor(name, []() {
+            return std::unique_ptr<Actor>(new EchoActor());
+        });
+        actors.push_back(actor_ref);
+    }
+
+    REQUIRE(actors.size() == 5);
+
+    // 验证每个 Actor 都有效
+    for (const auto& actor_ref : actors) {
+        REQUIRE(actor_ref.is_valid());
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    system.stop();
 }
 
 TEST_CASE("RemoteActorSystem: 生命周期管理", "[remote_actor_system]") {

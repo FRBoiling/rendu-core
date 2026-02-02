@@ -97,6 +97,11 @@ public:
             return false;
         }
 
+        // 路径部分不能为空（pos 必须大于 0，至少有 "/:123" 这种格式）
+        if (pos == 0) {
+            return false;
+        }
+
         std::string id_str = data.substr(pos + 1);
         if (id_str.empty()) {
             return false;

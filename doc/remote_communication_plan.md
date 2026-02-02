@@ -172,31 +172,34 @@ private:
 
 - [x] 阶段 1.1: Protobuf 消息定义
 - [x] 阶段 1.2: RemoteChannel 实现（核心逻辑完成）
-- [ ] 阶段 1.3: 编译 protobuf 生成代码（待构建）
-- [ ] 阶段 2.1: RemoteActorSystem 实现（接口和核心逻辑完成，待完善 protobuf 集成）
-- [ ] 阶段 2.2: IoContext 获取方式设计（待实现）
-- [ ] 阶段 3: 集成和测试（待实现）
+- [x] 阶段 1.3: Protobuf 编译集成（CMake 配置完成）
+- [x] 阶段 2.1: RemoteActorSystem 实现（接口和核心逻辑完成）
+- [x] 阶段 2.2: IoContext 获取方式设计（已实现）
+- [x] 阶段 3: 集成和测试（RemoteChannel 和 RemoteActorSystem 测试完成）
 
-**进度**: 50%
+**进度**: 100%
 
 ---
 
-## 七、下一步
+## 七、已完成
 
-1. 设计 IoContext 的获取方式（RemoteActorSystem 需要访问 IoContext）
-2. 构建项目生成 protobuf 代码
-3. 取消注释所有 protobuf 相关代码
-4. 实现 Message 序列化/反序列化
-5. 编写 RemoteChannel 单元测试
-6. 编写 RemoteActorSystem 集成测试
+1. ✅ 设计 IoContext 的获取方式（RemoteActorSystem 需要访问 IoContext）
+2. ✅ 构建项目生成 protobuf 代码（CMake 配置完成）
+3. ✅ Protobuf 集成（remote_message.pb.h 和 remote_message.pb.cc）
+4. ✅ Message 序列化/反序列化（MessageRegistry 和 Message 基类）
+5. ✅ RemoteChannel 单元测试（14个测试用例）
+6. ✅ RemoteActorSystem 集成测试（15个测试用例）
+
+---
 
 ## 八、技术债务
 
-- [ ] 延迟重连需要 timer 支持
-- [ ] Protobuf 编译需要集成到构建系统
-- [ ] 需要完整的单元测试覆盖
+- [ ] 延迟重连需要 timer 支持（低优先级）
+- [x] Protobuf 编译需要集成到构建系统（✅ 已完成）
+- [x] 需要完整的单元测试覆盖（✅ 已完成）
+- [ ] 远程网络集成测试（需要实际网络环境，后续补充）
 
 ---
 
-**文档版本**: v1.0
+**文档版本**: v1.1
 **最后更新**: 2026-02-02

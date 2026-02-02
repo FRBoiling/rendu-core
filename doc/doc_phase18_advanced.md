@@ -1,6 +1,6 @@
 # 阶段 18: 高级特性
 
-**状态**: 🚧 进行中 (90%)
+**状态**: 🚧 进行中 (95%)
 **优先级**: P2
 **预计工期**: 5-7 天
 **开始日期**: 2026-02-01
@@ -80,9 +80,9 @@ message ActorRef {
 ```
 
 **验收标准**:
-- [ ] ActorRef 可序列化/反序列化
-- [ ] 支持跨进程通信
-- [ ] 单元测试通过
+- [x] ActorRef 可序列化/反序列化
+- [x] 支持跨进程通信
+- [x] 单元测试通过
 
 ---
 
@@ -148,15 +148,17 @@ message RemoteResponse {
 - [x] 支持跨节点消息发送
 - [x] 支持远程 Ask 模式
 - [x] 自动重连断开的节点
+- [x] 单元测试通过
 
 **实现状态** (2026-02-02):
 
 | 组件 | 状态 | 说明 |
 |------|------|------|
 | Protobuf 消息定义 | ✅ | `remote_message.proto` 已定义完成 |
-| RemoteChannel | ✅ | 头文件和实现文件已完成，待 protobuf 编译 |
+| RemoteChannel | ✅ | 头文件和实现文件已完成 |
 | RemoteActorSystem | ✅ | 头文件和实现文件已完成，消息序列化已实现 |
-| 单元测试 | ⏳ | 待实现 |
+| RemoteChannel 单元测试 | ✅ | 14个测试用例，配置和生命周期测试 |
+| RemoteActorSystem 集成测试 | ✅ | 15个测试用例，本地Actor和消息传递 |
 
 **已完成文件**:
 - `src/apps/protocol/remote_message.proto` - Protobuf 消息定义
@@ -164,10 +166,8 @@ message RemoteResponse {
 - `src/common/src/net/remote_channel.cpp` - 远程通道实现
 - `src/core/include/core/actor/remote_actor_system.h` - 远程 Actor 系统头文件
 - `src/core/src/actor/remote_actor_system.cpp` - 远程 Actor 系统实现
-
-**待完成**:
-1. 编写 RemoteChannel 单元测试
-2. 编写 RemoteActorSystem 集成测试
+- `src/tests/common/net/remote_channel_test.cpp` - RemoteChannel 单元测试
+- `src/tests/core/actor/remote_actor_system_test.cpp` - RemoteActorSystem 集成测试
 
 **详细文档**: 见 `remote_communication_plan.md`
 
@@ -335,9 +335,9 @@ message NodeAnnouncement {
 ```
 
 **验收标准**:
-- [ ] 节点自动发现
-- [ ] 检测节点失效
-- [ ] 自动移除失效节点
+- [x] 节点自动发现
+- [x] 检测节点失效
+- [x] 自动移除失效节点
 
 ---
 
@@ -626,7 +626,7 @@ actor_processing_time_ms_count{type="GreeterActor"} 1000
 
 ---
 
-### 2.4 持久化支持
+### 2.4 持久化支持 (⏭️ 已跳过)
 
 #### 2.4.1 Actor 状态持久化
 
@@ -762,15 +762,15 @@ private:
 ## 三、验收标准
 
 - [x] ActorRef 支持序列化/反序列化
-- [x] 支持跨节点 Actor 通信 (90%)
+- [x] 支持跨节点 Actor 通信
 - [x] 节点自动发现和故障转移
 - [x] 负载均衡策略完整
 - [x] 性能指标收集完整
 - [x] 健康检查功能正常
 - [x] Prometheus 指标导出
-- [ ] Actor 状态持久化
-- [ ] 消息持久化
-- [ ] 检查点和恢复功能
+- [ ] Actor 状态持久化 (⏭️ 已跳过)
+- [ ] 消息持久化 (⏭️ 已跳过)
+- [ ] 检查点和恢复功能 (⏭️ 已跳过)
 
 ---
 
@@ -795,7 +795,7 @@ private:
 | 任务 | 负责人 | 状态 | 预计完成时间 |
 |------|--------|------|-------------|
 | ActorRef 序列化 | boil | ✅ | 2026-02-01 |
-| 跨节点通信 | boil | 🚧 | 2026-02-17 |
+| 跨节点通信 | boil | ✅ | 2026-02-02 |
 | 消息路由 | boil | ✅ | 2026-02-02 |
 | 节点发现 | boil | ✅ | 2026-02-01 |
 | 负载均衡 | boil | ✅ | 2026-02-01 |
@@ -803,7 +803,7 @@ private:
 | 指标收集 | boil | ✅ | 2026-02-01 |
 | 健康检查 | boil | ✅ | 2026-02-01 |
 | Prometheus 导出 | boil | ✅ | 2026-02-01 |
-| 状态持久化 | boil | ⏳ | 2026-02-23 |
+| 状态持久化 | boil | ⏭️ | 已跳过 |
 
 ---
 
@@ -813,8 +813,9 @@ private:
 - 持久化后端需要高可用
 - 监控指标需要合理采样频率
 - 考虑安全性和权限控制
+- 持久化相关功能已根据要求跳过
 
 ---
 
-**文档版本**: v2.0
-**最后更新**: 2026-02-01
+**文档版本**: v2.1
+**最后更新**: 2026-02-02

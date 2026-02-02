@@ -7,11 +7,33 @@
 #include "core/actor/message_router_events.h"
 #include "core/actor/actor_ref.h"
 #include "common/io/io_context.h"
+#include "common/log/logger.h"
 
 using namespace Rendu;
 
+// 全局 Logger 初始化
+struct LoggerSetup {
+    Rendu::io::IoContext io;
+    std::thread io_thread;
+
+    LoggerSetup() : io(1) {
+        Rendu::log::init_default_io_context(io);
+        io_thread = std::thread([this]() { io.run(); });
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ~LoggerSetup() {
+        io.stop();
+        if (io_thread.joinable()) {
+            io_thread.join();
+        }
+    }
+};
+
+static LoggerSetup g_logger_setup;
+
 TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
-    IoContext io(1);
+    io::IoContext io(1);
     std::thread([&io]() { io.run(); }).detach();
 
     MessageRouter router(io);
@@ -23,10 +45,13 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::RouteAddedEvent>(
-            [&](const actor::RouteAddedEvent& e) {
-                REQUIRE(e.rule_name == "test_route");
-                REQUIRE(e.priority == 10);
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::RouteAddedEvent* ae = dynamic_cast<const actor::RouteAddedEvent*>(&e);
+                if (ae) {
+                    REQUIRE(ae->rule_name == "test_route");
+                    REQUIRE(ae->priority == 10);
+                    event_count++;
+                }
             }
         );
 
@@ -43,11 +68,14 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::MessageRoutedEvent>(
-            [&](const actor::MessageRoutedEvent& e) {
-                REQUIRE(e.message_type == "test_message");
-                REQUIRE(e.success);
-                REQUIRE(e.duration_ms >= 0);
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::MessageRoutedEvent* me = dynamic_cast<const actor::MessageRoutedEvent*>(&e);
+                if (me) {
+                    REQUIRE(me->message_type == "test_message");
+                    REQUIRE(me->success);
+                    REQUIRE(me->duration_ms >= 0);
+                    event_count++;
+                }
             }
         );
 
@@ -68,9 +96,12 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::RouteExceptionEvent>(
-            [&](const actor::RouteExceptionEvent& e) {
-                REQUIRE(e.error_message == "test exception");
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::RouteExceptionEvent* re = dynamic_cast<const actor::RouteExceptionEvent*>(&e);
+                if (re) {
+                    REQUIRE(re->error_message == "test exception");
+                    event_count++;
+                }
             }
         );
 
@@ -92,10 +123,13 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::BatchRoutedEvent>(
-            [&](const actor::BatchRoutedEvent& e) {
-                REQUIRE(e.message_type == "test");
-                REQUIRE(e.matched_count > 0);
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::BatchRoutedEvent* be = dynamic_cast<const actor::BatchRoutedEvent*>(&e);
+                if (be) {
+                    REQUIRE(be->message_type == "test");
+                    REQUIRE(be->matched_count > 0);
+                    event_count++;
+                }
             }
         );
 
@@ -113,10 +147,13 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::BroadcastEvent>(
-            [&](const actor::BroadcastEvent& e) {
-                REQUIRE(e.message_type == "broadcast_msg");
-                REQUIRE(e.target_count == 3);
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::BroadcastEvent* be = dynamic_cast<const actor::BroadcastEvent*>(&e);
+                if (be) {
+                    REQUIRE(be->message_type == "broadcast_msg");
+                    REQUIRE(be->target_count == 3);
+                    event_count++;
+                }
             }
         );
 
@@ -135,8 +172,11 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         std::atomic<int> event_count{0};
 
         auto sub_id = router.event_bus().subscribe<actor::RouteAddedEvent>(
-            [&](const actor::RouteAddedEvent& e) {
-                event_count++;
+            [&](const Rendu::event::Event& e) {
+                const actor::RouteAddedEvent* ae = dynamic_cast<const actor::RouteAddedEvent*>(&e);
+                if (ae) {
+                    event_count++;
+                }
             }
         );
 
@@ -154,11 +194,14 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
         auto start = std::chrono::steady_clock::now();
 
         auto sub_id = router.event_bus().subscribe<actor::RouteAddedEvent>(
-            [&](const actor::RouteAddedEvent& e) {
-                event_count++;
-                auto end = std::chrono::steady_clock::now();
-                auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-                REQUIRE(elapsed >= 50);  // 至少延迟了50ms
+            [&](const Rendu::event::Event& e) {
+                const actor::RouteAddedEvent* ae = dynamic_cast<const actor::RouteAddedEvent*>(&e);
+                if (ae) {
+                    event_count++;
+                    auto end = std::chrono::steady_clock::now();
+                    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                    REQUIRE(elapsed >= 50);  // 至少延迟了50ms
+                }
             }
         );
 
@@ -175,7 +218,7 @@ TEST_CASE("MessageRouter 事件系统", "[actor][message_router][events]") {
 }
 
 TEST_CASE("MessageRouter 指标收集", "[actor][message_router][metrics]") {
-    IoContext io(1);
+    Rendu::io::IoContext io(1);
     std::thread([&io]() { io.run(); }).detach();
 
     SECTION("启用指标收集") {
