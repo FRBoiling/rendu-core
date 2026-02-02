@@ -3,8 +3,10 @@
 #include "common/log/logger.h"
 #include <filesystem>
 
+#include "common/config/json_loader.h"
+
 BEGIN_NAMESPACE_COMMON
-namespace config {
+    namespace config {
 
 ConfigWatcher::ConfigWatcher(
     IoContext& io_context,

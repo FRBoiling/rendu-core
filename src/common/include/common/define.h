@@ -268,7 +268,10 @@ typedef unsigned char byte;
 // 命名空间宏定义
 // ============================================================================
 
-#define BEGIN_NAMESPACE_COMMON namespace Rendu {
-#define END_NAMESPACE_COMMON } // namespace Rendu
+// Common 层命名空间引用
+#define COMMON_NAMESPACE Rendu
+
+#define BEGIN_NAMESPACE_COMMON namespace COMMON_NAMESPACE {
+#define END_NAMESPACE_COMMON } // namespace COMMON_NAMESPACE
 
 #endif // RENDU_COMMON_DEFINE_H

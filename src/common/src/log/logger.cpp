@@ -8,8 +8,10 @@
 #include <ctime>
 #include <unordered_map>
 
+#include "common/log/console_sink.h"
+
 BEGIN_NAMESPACE_COMMON
-namespace log {
+    namespace log {
 
 Logger::Logger(std::string name, io::IoContext& io)
     : name_(std::move(name))
@@ -48,6 +50,37 @@ Level Logger::level() const {
 
 void Logger::log(Level level, const std::string& msg) {
     async_log(level, msg);
+}
+
+void Logger::safe_log(Level level, const std::string& msg) {
+    if (static_cast<uint8_t>(level) < static_cast<uint8_t>(level_)) {
+        return;
+    }
+
+    // 检查 IoContext 是否在运行
+    if (!io_.running()) {
+        // 降级：直接同步写入，避免阻塞
+        LogMessage log_msg;
+        log_msg.level = level;
+        log_msg.logger_name = name_;
+        log_msg.message = msg;
+        log_msg.timestamp = get_timestamp();
+        log_msg.thread_id = std::this_thread::get_id();
+
+        std::vector<std::shared_ptr<Sink>> sinks_copy;
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            sinks_copy = sinks_;
+        }
+
+        for (auto& sink : sinks_copy) {
+            sink->log(log_msg);
+        }
+        return;
+    }
+
+    // 正常异步路径
+    log(level, msg);
 }
 
 void Logger::async_log(Level level, const std::string& msg, const std::map<std::string, std::string>& fields) {

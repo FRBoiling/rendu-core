@@ -55,6 +55,26 @@
 
 ---
 
+## 文档管理
+
+||- **[文档编写规范](DOC_STANDARD.md)** - 文档分类、结构和格式标准 ✅
+
+---
+
+## 技术改进文档
+
+||- **[Message Router 改进方案](message_router_improvements.md)** - 测试中断问题分析和修复 🚧
+||- **[Metrics Collector 重构总结](metrics_collector_refactoring.md)** - 指标收集器重构过程 ✅
+
+---
+
+## Protobuf 指南
+
+||- **[Protobuf CMake 集成指南](protobuf_cmake_guide.md)** - Protobuf 与 CMake 集成方法
+||- **[Protobuf 源码指南](protobuf_source_guide.md)** - Protobuf 源码使用方法
+
+---
+
 ## 用户文档
 
 |||- **[用户指南](USER_GUIDE.md)** - 快速入门和最佳实践 ✅

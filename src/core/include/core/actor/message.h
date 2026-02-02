@@ -19,6 +19,9 @@ public:
     /// 获取消息类型标识
     virtual const char* get_type() const = 0;
 
+    /// 获取消息类型（用于远程通信）
+    std::string type() const { return std::string(get_type()); }
+
     // ========== 序列化支持 ==========
 
     /// 序列化消息为字符串

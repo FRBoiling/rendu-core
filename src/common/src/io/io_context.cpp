@@ -75,7 +75,7 @@ const boost::asio::io_context& IoContext::native() const
 
 bool IoContext::running() const
 {
-    return running_;
+    return running_.load(std::memory_order_acquire);
 }
 
 } // namespace io

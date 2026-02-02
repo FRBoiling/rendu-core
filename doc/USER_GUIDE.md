@@ -709,61 +709,31 @@ logger.debug("Processing item: {}", item_id);
 
 ## 常见问题
 
-### Q1: 如何处理连接失败？
+### Q1: 编译时出现 boost 相关错误怎么办？
 
-**A**: 检查返回的 Error 类型：
+**A**: 确保正确安装了 boost 库。详见 [FAQ - 编译和构建](FAQ.md#编译和构建)
 
-```cpp
-auto result = socket.connect(host, port);
-if (std::holds_alternative<Error>(result)) {
-    auto error = std::get<Error>(result);
-    if (error.code() == ErrorCode::ConnectionRefused) {
-        // 处理连接被拒绝
-    }
-}
-```
+---
 
-### Q2: 如何调试日志问题？
+### Q2: 如何配置日志级别？
 
-**A**: 检查以下几点：
-1. 确认 `init_default_io_context()` 已调用
-2. 确认 IoContext 正在运行
-3. 确认已添加至少一个 Sink
-4. 检查日志级别设置
+**A**: 使用 `set_level()` 方法。详见 [FAQ - 使用和配置](FAQ.md#使用和配置)
 
-### Q3: 如何提高性能？
+---
 
-**A**:
-1. 使用 Release 构建模式
-2. 减少日志输出（调整日志级别）
-3. 使用对象池减少内存分配
-4. 避免不必要的拷贝（使用移动语义）
+### Q3: 如何调试日志问题？
 
-### Q4: 如何处理高并发？
+**A**: 检查 IoContext 运行状态、Sink 配置和日志级别。
 
-**A**:
-1. 使用多线程 IoContext
-2. 使用 Actor 模型隔离逻辑
-3. 使用异步 I/O 避免阻塞
-4. 合理设置线程池大小
+---
 
-### Q5: 如何测试代码？
+### Q4: 如何提高性能？
 
-**A**: 参考现有测试文件：
+**A**: 使用 Release 模式、减少日志输出、使用对象池、避免不必要拷贝。
 
-```cpp
-#include <catch2/catch_test_macros.hpp>
+---
 
-TEST_CASE("My test case", "[module]") {
-    // 准备测试数据
-    int value = 42;
-
-    // 执行测试
-    SECTION("test scenario") {
-        REQUIRE(value == 42);
-    }
-}
-```
+**更多问题请参考 [常见问题 (FAQ)](FAQ.md)**
 
 ---
 

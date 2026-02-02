@@ -1,13 +1,21 @@
 #include "common/metrics/metrics_collector.h"
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
 
-namespace rendu {
+BEGIN_NAMESPACE_COMMON
 namespace metrics {
 
 MetricsCollector& MetricsCollector::instance() {
     static MetricsCollector instance;
     return instance;
+}
+
+void MetricsCollector::set_metadata(const std::string& name,
+                                     const std::string& help,
+                                     const std::string& type) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    metadata_[name] = MetricMetadata{ name, help, type, {} };
 }
 
 std::string MetricsCollector::make_key(const std::string& name,
@@ -37,6 +45,11 @@ std::string MetricsCollector::format_tags(const std::map<std::string, std::strin
     return oss.str();
 }
 
+std::string MetricsCollector::extract_metric_name(const std::string& key) const {
+    size_t brace_pos = key.find('{');
+    return (brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key;
+}
+
 void MetricsCollector::increment_counter(const std::string& name, double delta,
                                         const std::map<std::string, std::string>& tags) {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -50,7 +63,7 @@ double MetricsCollector::get_counter(const std::string& name,
     auto key = make_key(name, tags);
     auto it = counters_.find(key);
     if (it != counters_.end()) {
-        return it->second.value;
+        return it->second.get();
     }
     return 0.0;
 }
@@ -68,7 +81,7 @@ double MetricsCollector::get_gauge(const std::string& name,
     auto key = make_key(name, tags);
     auto it = gauges_.find(key);
     if (it != gauges_.end()) {
-        return it->second.value;
+        return it->second.get();
     }
     return 0.0;
 }
@@ -82,15 +95,9 @@ void MetricsCollector::record_histogram(const std::string& name, double value,
     if (custom_buckets.empty()) {
         histograms_[key].observe(value);
     } else {
-        // 如果有自定义桶，检查是否已存在，如果不存在则创建
-        auto it = histograms_.find(key);
-        if (it == histograms_.end()) {
-            Histogram hist(custom_buckets);
-            hist.observe(value);
-            histograms_[key] = hist;
-        } else {
-            it->second.observe(value);
-        }
+        // 如果有自定义桶，使用 try_emplace 避免移动 mutex
+        auto [it, inserted] = histograms_.try_emplace(key, custom_buckets);
+        it->second.observe(value);
     }
 }
 
@@ -102,8 +109,8 @@ std::map<std::string, double> MetricsCollector::get_histogram_stats(
     auto it = histograms_.find(key);
     if (it != histograms_.end()) {
         return {
-            {"sum", it->second.sum},
-            {"count", static_cast<double>(it->second.count)}
+            {"sum", it->second.sum.load(std::memory_order_relaxed)},
+            {"count", static_cast<double>(it->second.count.load(std::memory_order_relaxed))}
         };
     }
     return {};
@@ -141,58 +148,71 @@ std::string MetricsCollector::export_prometheus() const {
 
     // 导出计数器
     for (const auto& [key, counter] : counters_) {
-        // 提取指标名称（去掉标签部分）
-        size_t brace_pos = key.find('{');
-        std::string name = (brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key;
-        std::string labels = (brace_pos != std::string::npos) ? key.substr(brace_pos) : "";
+        std::string name = extract_metric_name(key);
+        std::string labels = (key.find('{') != std::string::npos) ? key.substr(key.find('{')) : "";
 
-        oss << "# HELP " << name << " Counter metric\n";
+        // 使用元数据（如果存在）
+        auto meta_it = metadata_.find(name);
+        if (meta_it != metadata_.end() && !meta_it->second.help.empty()) {
+            oss << "# HELP " << name << " " << meta_it->second.help << "\n";
+        }
         oss << "# TYPE " << name << " counter\n";
-        oss << name << labels << " " << counter.value << "\n\n";
+        oss << name << labels << " " << counter.get() << "\n\n";
     }
 
     // 导出测量值
     for (const auto& [key, gauge] : gauges_) {
-        size_t brace_pos = key.find('{');
-        std::string name = (brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key;
-        std::string labels = (brace_pos != std::string::npos) ? key.substr(brace_pos) : "";
+        std::string name = extract_metric_name(key);
+        std::string labels = (key.find('{') != std::string::npos) ? key.substr(key.find('{')) : "";
 
-        oss << "# HELP " << name << " Gauge metric\n";
+        auto meta_it = metadata_.find(name);
+        if (meta_it != metadata_.end() && !meta_it->second.help.empty()) {
+            oss << "# HELP " << name << " " << meta_it->second.help << "\n";
+        }
         oss << "# TYPE " << name << " gauge\n";
-        oss << name << labels << " " << gauge.value << "\n\n";
+        oss << name << labels << " " << gauge.get() << "\n\n";
     }
 
     // 导出直方图
     for (const auto& [key, hist] : histograms_) {
-        size_t brace_pos = key.find('{');
-        std::string name = (brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key;
-        std::string labels = (brace_pos != std::string::npos) ? key.substr(brace_pos) : "";
-        std::string labels_suffix = (brace_pos != std::string::npos) ? ",le" : "{le";
+        std::string name = extract_metric_name(key);
+        std::string labels = (key.find('{') != std::string::npos) ? key.substr(key.find('{')) : "";
+        std::string labels_suffix = (key.find('{') != std::string::npos) ? ",le" : "{le";
 
-        oss << "# HELP " << name << " Histogram metric\n";
+        auto meta_it = metadata_.find(name);
+        if (meta_it != metadata_.end() && !meta_it->second.help.empty()) {
+            oss << "# HELP " << name << " " << meta_it->second.help << "\n";
+        }
         oss << "# TYPE " << name << " histogram\n";
 
         // 导出分桶
+        auto bucket_counts = hist.get_bucket_counts();
+        uint64_t cumulative = 0;
         for (size_t i = 0; i < hist.buckets.size(); ++i) {
             double bucket = hist.buckets[i];
             std::string bucket_str = (std::isinf(bucket)) ? "+Inf" : std::to_string(bucket);
-            oss << name << labels_suffix << "=\"" << bucket_str << "\"} " << i + 1 << "\n";
+            cumulative += bucket_counts[i];
+            oss << name << labels_suffix << "=\"" << bucket_str << "\"} " << cumulative << "\n";
         }
 
         // 导出 sum 和 count
-        oss << name << labels_suffix << "=\"+Inf\"} " << hist.count << "\n";
-        oss << name << "_sum" << labels << " " << hist.sum << "\n";
-        oss << name << "_count" << labels << " " << hist.count << "\n\n";
+        uint64_t count = hist.count.load(std::memory_order_relaxed);
+        double sum = hist.sum.load(std::memory_order_relaxed);
+        oss << name << labels_suffix << "=\"+Inf\"} " << count << "\n";
+        oss << name << "_sum" << labels << " " << sum << "\n";
+        oss << name << "_count" << labels << " " << count << "\n\n";
     }
 
     // 导出摘要
     for (const auto& [key, summary] : summaries_) {
-        size_t brace_pos = key.find('{');
-        std::string name = (brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key;
-        std::string labels = (brace_pos != std::string::npos) ? key.substr(brace_pos) : "";
-        std::string labels_suffix = (brace_pos != std::string::npos) ? ",quantile" : "{quantile";
+        std::string name = extract_metric_name(key);
+        std::string labels = (key.find('{') != std::string::npos) ? key.substr(key.find('{')) : "";
+        std::string labels_suffix = (key.find('{') != std::string::npos) ? ",quantile" : "{quantile";
 
-        oss << "# HELP " << name << " Summary metric\n";
+        auto meta_it = metadata_.find(name);
+        if (meta_it != metadata_.end() && !meta_it->second.help.empty()) {
+            oss << "# HELP " << name << " " << meta_it->second.help << "\n";
+        }
         oss << "# TYPE " << name << " summary\n";
 
         // 导出常用分位数
@@ -203,7 +223,7 @@ std::string MetricsCollector::export_prometheus() const {
         }
 
         oss << name << "_sum" << labels << " " << 0.0 << "\n";
-        oss << name << "_count" << labels << " " << summary.values.size() << "\n\n";
+        oss << name << "_count" << labels << " " << summary.size() << "\n\n";
     }
 
     return oss.str();
@@ -215,22 +235,23 @@ std::string MetricsCollector::export_plain() const {
 
     oss << "=== Counters ===\n";
     for (const auto& [key, counter] : counters_) {
-        oss << key << ": " << counter.value << "\n";
+        oss << key << ": " << counter.get() << "\n";
     }
 
     oss << "\n=== Gauges ===\n";
     for (const auto& [key, gauge] : gauges_) {
-        oss << key << ": " << gauge.value << "\n";
+        oss << key << ": " << gauge.get() << "\n";
     }
 
     oss << "\n=== Histograms ===\n";
     for (const auto& [key, hist] : histograms_) {
-        oss << key << ": count=" << hist.count << ", sum=" << hist.sum << "\n";
+        oss << key << ": count=" << hist.count.load(std::memory_order_relaxed)
+            << ", sum=" << hist.sum.load(std::memory_order_relaxed) << "\n";
     }
 
     oss << "\n=== Summaries ===\n";
     for (const auto& [key, summary] : summaries_) {
-        oss << key << ": count=" << summary.values.size()
+        oss << key << ": count=" << summary.size()
             << ", p50=" << summary.quantile(0.5)
             << ", p95=" << summary.quantile(0.95)
             << ", p99=" << summary.quantile(0.99) << "\n";
@@ -245,6 +266,8 @@ void MetricsCollector::reset() {
     gauges_.clear();
     histograms_.clear();
     summaries_.clear();
+    // 保留元数据
+    // metadata_.clear();
 }
 
 std::vector<std::string> MetricsCollector::get_all_metric_names() const {
@@ -253,28 +276,29 @@ std::vector<std::string> MetricsCollector::get_all_metric_names() const {
 
     // 收集所有指标名称（去标签）
     for (const auto& [key, _] : counters_) {
-        size_t brace_pos = key.find('{');
-        names.push_back((brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key);
+        names.push_back(extract_metric_name(key));
     }
     for (const auto& [key, _] : gauges_) {
-        size_t brace_pos = key.find('{');
-        names.push_back((brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key);
+        names.push_back(extract_metric_name(key));
     }
     for (const auto& [key, _] : histograms_) {
-        size_t brace_pos = key.find('{');
-        names.push_back((brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key);
+        names.push_back(extract_metric_name(key));
     }
     for (const auto& [key, _] : summaries_) {
-        size_t brace_pos = key.find('{');
-        names.push_back((brace_pos != std::string::npos) ? key.substr(0, brace_pos) : key);
+        names.push_back(extract_metric_name(key));
     }
 
-    // 去重
+    // 去重并排序
     std::sort(names.begin(), names.end());
     names.erase(std::unique(names.begin(), names.end()), names.end());
 
     return names;
 }
 
+size_t MetricsCollector::get_total_metric_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return counters_.size() + gauges_.size() + histograms_.size() + summaries_.size();
+}
+
 } // namespace metrics
-} // namespace rendu
+END_NAMESPACE_COMMON

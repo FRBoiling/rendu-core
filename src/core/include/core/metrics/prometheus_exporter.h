@@ -4,11 +4,8 @@
 #include <memory>
 #include <atomic>
 
+#include "common/metrics/metrics_collector.h"
 #include "core/define.h"
-
-namespace rendu::metrics {
-    class MetricsCollector;
-}
 
 BEGIN_NAMESPACE_CORE
 
@@ -23,8 +20,8 @@ public:
         size_t thread_pool_size{4};                  // 线程池大小
     };
 
-    explicit PrometheusExporter(rendu::metrics::MetricsCollector& collector);
-    PrometheusExporter(rendu::metrics::MetricsCollector& collector, const Config& config);
+    explicit PrometheusExporter(metrics::MetricsCollector& collector);
+    PrometheusExporter(metrics::MetricsCollector& collector, const Config& config);
     ~PrometheusExporter();
 
     /// 启动 HTTP 服务器

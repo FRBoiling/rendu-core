@@ -15,6 +15,7 @@ file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
 
 set(PROTO_FILES
     ${PROTO_SRC_DIR}/messages.proto
+    ${PROTO_SRC_DIR}/remote_message.proto
 )
 
 # 生成 Protobuf 源文件和头文件
@@ -49,6 +50,11 @@ set_source_files_properties(${PROTO_SRCS} ${PROTO_HDRS} PROPERTIES
     GENERATED TRUE
     SKIP_PRECOMPILE_HEADERS ON
 )
+
+# 创建 protobuf 静态库
+add_library(remote_message_proto STATIC ${PROTO_SRCS})
+target_include_directories(remote_message_proto PUBLIC ${PROTO_GEN_DIR})
+target_link_libraries(remote_message_proto PUBLIC protobuf::libprotobuf)
 
 # 导出变量供其他项目使用(设置到 apps 级别作用域)
 set(PROTO_SRCS ${PROTO_SRCS} PARENT_SCOPE)

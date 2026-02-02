@@ -20,3 +20,8 @@ rendu_add_library(
         RENDU_CORE_EXPORT
         ALIAS ON
 )
+
+# 添加 protobuf 生成目录到包含路径
+target_include_directories(${PROJECT_NAME}_${FOLDER_NAME} PUBLIC
+        ${CMAKE_BINARY_DIR}/src/apps/protocol/proto_gen
+)

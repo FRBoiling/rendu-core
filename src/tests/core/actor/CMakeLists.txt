@@ -56,3 +56,36 @@ rendu_add_test(
         PUBLIC_LINK RenduCore::core
         TEST_FRAMEWORK CATCH2
 )
+
+# MessageRouter 测试
+rendu_add_test(
+        DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT ${PROJECT_NAME}
+        NAME message_router_test
+        SOURCES message_router_test.cpp
+        PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK RenduCore::core RenduCore::common
+        TEST_FRAMEWORK CATCH2
+)
+
+# MessageRouter 事件和指标测试
+rendu_add_test(
+        DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT ${PROJECT_NAME}
+        NAME message_router_event_test
+        SOURCES message_router_event_test.cpp
+        PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK RenduCore::core RenduCore::common
+        TEST_FRAMEWORK CATCH2
+)
+
+# RemoteActorSystem 集成测试（待完善）
+# rendu_add_test(
+#         DIR ${CMAKE_CURRENT_SOURCE_DIR}
+#         PROJECT ${PROJECT_NAME}
+#         NAME remote_actor_system_test
+#         SOURCES remote_actor_system_test.cpp
+#         PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+#         PUBLIC_LINK RenduCore::core RenduCore::common protobuf::libprotobuf remote_message_proto
+#         TEST_FRAMEWORK CATCH2
+# )

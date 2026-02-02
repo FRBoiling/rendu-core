@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common/define.h"
 #include <string>
 #include <map>
 #include <unordered_map>
@@ -9,24 +10,32 @@
 #include <vector>
 #include <variant>
 #include <cmath>
+#include <atomic>
+#include <sstream>
+#include <iomanip>
 
-namespace rendu {
+BEGIN_NAMESPACE_COMMON
 namespace metrics {
 
 /**
  * @brief 计数器类型
  *
  * 只能增加，适合记录请求总数、错误数等累计指标
+ * 使用原子操作保证线程安全
  */
 struct Counter {
-    double value{0.0};
+    std::atomic<double> value{0.0};
 
     void increment(double delta = 1.0) {
-        value += delta;
+        value.fetch_add(delta, std::memory_order_relaxed);
+    }
+
+    double get() const {
+        return value.load(std::memory_order_relaxed);
     }
 
     void reset() {
-        value = 0.0;
+        value.store(0.0, std::memory_order_relaxed);
     }
 };
 
@@ -34,20 +43,29 @@ struct Counter {
  * @brief 测量值类型
  *
  * 可以增减，适合记录当前连接数、内存使用等瞬时值
+ * 使用原子操作保证线程安全
  */
 struct Gauge {
-    double value{0.0};
+    std::atomic<double> value{0.0};
 
     void set(double new_value) {
-        value = new_value;
+        value.store(new_value, std::memory_order_relaxed);
     }
 
     void increment(double delta = 1.0) {
-        value += delta;
+        value.fetch_add(delta, std::memory_order_relaxed);
     }
 
     void decrement(double delta = 1.0) {
-        value -= delta;
+        value.fetch_sub(delta, std::memory_order_relaxed);
+    }
+
+    double get() const {
+        return value.load(std::memory_order_relaxed);
+    }
+
+    void reset() {
+        value.store(0.0, std::memory_order_relaxed);
     }
 };
 
@@ -55,42 +73,55 @@ struct Gauge {
  * @brief 直方图类型
  *
  * 记录值分布，适合记录请求耗时、消息大小等
+ * 线程安全实现
  */
 struct Histogram {
     // 默认分桶边界 (毫秒)
-    std::vector<double> default_buckets{
+    static inline const std::vector<double> default_buckets{
         0.001, 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0,
-        2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, 100.0, 250.0, 500.0, 750.0, 1000.0, std::numeric_limits<double>::infinity()
+        2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, 100.0, 250.0, 500.0, 750.0, 1000.0,
+        std::numeric_limits<double>::infinity()
     };
 
     std::vector<double> buckets;
-    double sum{0.0};
-    uint64_t count{0};
+    std::atomic<double> sum{0.0};
+    std::atomic<uint64_t> count{0};
+    mutable std::mutex bucket_mutex_;  // 保护桶计数
+    std::vector<uint64_t> bucket_counts_;
 
     explicit Histogram(const std::vector<double>& bucket_bounds = {})
-        : buckets(bucket_bounds.empty() ? default_buckets : bucket_bounds) {
-        // 确保桶是排好序的
+        : buckets(bucket_bounds.empty() ? default_buckets : bucket_bounds)
+        , bucket_counts_(buckets.size(), 0) {
         std::sort(this->buckets.begin(), this->buckets.end());
     }
 
     void observe(double value) {
-        sum += value;
-        count++;
+        sum.fetch_add(value, std::memory_order_relaxed);
+        count.fetch_add(1, std::memory_order_relaxed);
 
-        // 找到合适的桶
-        for (size_t i = 0; i < buckets.size(); ++i) {
-            if (value <= buckets[i]) {
-                // bucket_counts[i]++;
-                break;
+        // 找到合适的桶并增加计数
+        {
+            std::lock_guard<std::mutex> lock(bucket_mutex_);
+            for (size_t i = 0; i < buckets.size(); ++i) {
+                if (value <= buckets[i]) {
+                    bucket_counts_[i]++;
+                    break;
+                }
             }
         }
     }
 
     void reset() {
-        sum = 0.0;
-        count = 0;
-        // bucket_counts.clear();
-        // bucket_counts.resize(buckets.size(), 0);
+        sum.store(0.0, std::memory_order_relaxed);
+        count.store(0, std::memory_order_relaxed);
+        std::lock_guard<std::mutex> lock(bucket_mutex_);
+        std::fill(bucket_counts_.begin(), bucket_counts_.end(), 0);
+    }
+
+    // 获取桶计数（用于导出）
+    std::vector<uint64_t> get_bucket_counts() const {
+        std::lock_guard<std::mutex> lock(bucket_mutex_);
+        return bucket_counts_;
     }
 };
 
@@ -98,22 +129,24 @@ struct Histogram {
  * @brief 摘要类型
  *
  * 计算分位数，适合记录 P95、P99 等
+ * 线程安全实现
  */
 struct Summary {
+    mutable std::mutex values_mutex_;
     std::vector<double> values;
 
     void observe(double value) {
+        std::lock_guard<std::mutex> lock(values_mutex_);
         values.push_back(value);
     }
 
-    // 计算分位数
     double quantile(double q) const {
+        std::lock_guard<std::mutex> lock(values_mutex_);
         if (values.empty()) return 0.0;
 
         std::vector<double> sorted_values = values;
         std::sort(sorted_values.begin(), sorted_values.end());
 
-        // 线性插值计算分位数
         double pos = q * (sorted_values.size() - 1);
         size_t lower = static_cast<size_t>(std::floor(pos));
         size_t upper = static_cast<size_t>(std::ceil(pos));
@@ -128,8 +161,24 @@ struct Summary {
     }
 
     void reset() {
+        std::lock_guard<std::mutex> lock(values_mutex_);
         values.clear();
     }
+
+    size_t size() const {
+        std::lock_guard<std::mutex> lock(values_mutex_);
+        return values.size();
+    }
+};
+
+/**
+ * @brief 指标元数据
+ */
+struct MetricMetadata {
+    std::string name;
+    std::string help;
+    std::string type;  // "counter", "gauge", "histogram", "summary"
+    std::map<std::string, std::string> labels;
 };
 
 /**
@@ -157,6 +206,16 @@ public:
     MetricsCollector& operator=(const MetricsCollector&) = delete;
     MetricsCollector(MetricsCollector&&) = delete;
     MetricsCollector& operator=(MetricsCollector&&) = delete;
+
+    /**
+     * @brief 设置指标元数据
+     * @param name 指标名称
+     * @param help 帮助信息
+     * @param type 指标类型
+     */
+    void set_metadata(const std::string& name,
+                    const std::string& help,
+                    const std::string& type);
 
     /**
      * @brief 记录计数器
@@ -199,6 +258,7 @@ public:
      * @param name 指标名称
      * @param value 观测值
      * @param tags 标签
+     * @param custom_buckets 自定义桶边界
      */
     void record_histogram(const std::string& name, double value,
                           const std::map<std::string, std::string>& tags = {},
@@ -237,6 +297,7 @@ public:
      * @brief 计时函数执行时间
      * @param name 指标名称
      * @param func 要计时的函数
+     * @param tags 标签
      * @tparam F 函数类型
      * @return auto 函数返回值
      */
@@ -277,6 +338,12 @@ public:
      */
     std::vector<std::string> get_all_metric_names() const;
 
+    /**
+     * @brief 获取指标总数
+     * @return size_t 指标总数
+     */
+    size_t get_total_metric_count() const;
+
 private:
     MetricsCollector() = default;
     ~MetricsCollector() = default;
@@ -294,6 +361,9 @@ private:
     // 导出纯文本格式
     std::string export_plain() const;
 
+    // 获取指标名称（去掉标签）
+    std::string extract_metric_name(const std::string& key) const;
+
     mutable std::mutex mutex_;
 
     // 指标存储: key -> metric
@@ -302,7 +372,10 @@ private:
     std::unordered_map<std::string, Gauge> gauges_;
     std::unordered_map<std::string, Histogram> histograms_;
     std::unordered_map<std::string, Summary> summaries_;
+
+    // 指标元数据: name -> metadata
+    std::unordered_map<std::string, MetricMetadata> metadata_;
 };
 
 } // namespace metrics
-} // namespace rendu
+END_NAMESPACE_COMMON

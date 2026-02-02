@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package rendu.remote;
+
+// 远程 Actor 消息封装
+
+// ActorRef 的 protobuf 表示
+message RemoteActorRef {
+    string path = 1;      // Actor 路径
+    uint64 actor_id = 2;   // Actor ID
+}
+
+// 远程消息主体
+message RemoteMessageBody {
+    string type = 1;       // 消息类型（用于区分不同消息）
+    bytes payload = 2;      // 消息 payload（序列化的实际消息）
+}
+
+// 远程消息（Tell 模式）
+message RemoteMessage {
+    RemoteActorRef sender = 1;      // 发送者
+    RemoteActorRef receiver = 2;    // 接收者
+    RemoteMessageBody body = 3;      // 消息体
+}
+
+// 远程请求（Ask 模式）
+message RemoteRequest {
+    RemoteActorRef sender = 1;      // 发送者
+    RemoteActorRef receiver = 2;    // 接收者
+    RemoteMessageBody body = 3;      // 请求体
+    uint64 request_id = 4;        // 请求 ID（用于匹配响应）
+}
+
+// 远程响应（Ask 模式）
+message RemoteResponse {
+    RemoteActorRef sender = 1;      // 发送者（响应者）
+    RemoteActorRef receiver = 2;    // 接收者（请求者）
+    RemoteMessageBody body = 3;      // 响应体
+    uint64 request_id = 4;        // 原始请求 ID
+}
+
+// 远程消息统一封装
+message RemotePacket {
+    oneof packet_type {
+        RemoteMessage message = 1;         // 普通消息
+        RemoteRequest request = 2;         // 请求消息
+        RemoteResponse response = 3;       // 响应消息
+    }
+}

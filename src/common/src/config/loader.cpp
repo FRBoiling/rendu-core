@@ -3,8 +3,10 @@
 #include <sstream>
 #include <algorithm>
 
+#include "common/config/json_loader.h"
+
 BEGIN_NAMESPACE_COMMON
-namespace config {
+    namespace config {
 
 // 简化的 JSON 解析器
 class SimpleJsonParser {

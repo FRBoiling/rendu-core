@@ -9,7 +9,7 @@ BEGIN_NAMESPACE_CORE
 
 class PrometheusExporter::Impl {
 public:
-    Impl(rendu::metrics::MetricsCollector& collector, const PrometheusExporter::Config& config)
+    Impl(metrics::MetricsCollector& collector, const PrometheusExporter::Config& config)
         : collector_(collector)
         , config_(config)
         , running_(false) {
@@ -73,17 +73,17 @@ private:
         return collector_.export_metrics("prometheus");
     }
 
-    rendu::metrics::MetricsCollector& collector_;
-    PrometheusExporter::Config config_;
+    metrics::MetricsCollector& collector_;
+    Config config_;
     std::atomic<bool> running_;
     std::thread server_thread_;
 };
 
-PrometheusExporter::PrometheusExporter(rendu::metrics::MetricsCollector& collector)
+PrometheusExporter::PrometheusExporter(metrics::MetricsCollector& collector)
     : PrometheusExporter(collector, Config{}) {
 }
 
-PrometheusExporter::PrometheusExporter(rendu::metrics::MetricsCollector& collector, const Config& config)
+PrometheusExporter::PrometheusExporter(metrics::MetricsCollector& collector, const Config& config)
     : impl_(std::make_unique<Impl>(collector, config)) {
 }
 

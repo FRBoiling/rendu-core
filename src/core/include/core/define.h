@@ -9,6 +9,7 @@
 #define BEGIN_NAMESPACE_CORE namespace Rendu {
 #define END_NAMESPACE_CORE } // namespace Rendu
 
+
 // 引用 Common 层的导出宏定义
 #include <common/define.h>
 

@@ -792,7 +792,7 @@
 
 ## 阶段 18: 高级特性 (advanced) 🚧
 
-**状态**: 进行中 (70%)
+**状态**: 进行中 (90%)
 **开始日期**: 2026-02-01
 
 ### 目标
@@ -846,9 +846,21 @@
   - /metrics 端点
   - 配置支持 (地址、端口、端点路径)
   - 启动/停止控制
+- [x] 消息路由 (MessageRouter)
+  - 路由注册/注销
+  - 通配符路由支持
+  - 路由优先级
+  - 路由统计
+  - 日志记录
+  - 线程安全
+  - 事件发布
+  - 配置支持
+  - 路由验证
+  - 路由导出
   - 线程池支持
+  - 单元测试完成
+  - 事件测试完成
 - [ ] 跨节点 Actor 通信
-- [ ] 消息路由 (MessageRouter)
 - [ ] 状态持久化 (ActorPersistence)
 - [ ] 检查点恢复 (CheckpointManager)
 
@@ -898,6 +910,19 @@
   - 配置支持完整
   - 线程安全
   - 单元测试通过 (5个测试用例, 18个断言)
+- [x] 消息路由功能完整
+  - 路由注册/注销正常
+  - 通配符路由工作正确
+  - 路由优先级有效
+  - 路由统计准确
+  - 日志记录完整
+  - 线程安全
+  - 事件发布/订阅工作
+  - 配置支持灵活
+  - 路由验证准确
+  - 路由导出格式正确
+  - 单元测试通过 (30个测试用例, 约200个断言)
+  - 事件测试通过 (15个测试用例, 约80个断言)
 
 ### 依赖
 - 阶段 17 (性能优化)
@@ -1044,7 +1069,53 @@
   - 多个指标类型混合导出测试
   - 线程安全测试（并发导出指标）
 
+#### MessageRouter 实现
+- ✅ Route 路由结构（name, pattern, matcher, target, priority, enabled）
+- ✅ RoutePattern 路由模式（exact: 精确匹配, wildcard: 通配符匹配）
+- ✅ RouteStatistics 路由统计（name, total_matched, total_failed, success_rate）
+- ✅ Config 配置
+  - enable_logging: 启用日志
+  - enable_statistics: 启用统计
+  - max_routes: 最大路由数
+  - default_priority: 默认优先级
+  - thread_pool_size: 线程池大小
+- ✅ 路由管理（add_route, remove_route, get_route, list_routes, clear_routes, enable_route, disable_route）
+- ✅ 路由匹配（route_message, route_message_async）
+- ✅ 通配符支持（* 匹配任意字符序列）
+- ✅ 路由优先级（数字越小优先级越高）
+- ✅ 路由统计（get_statistics, reset_statistics, get_all_statistics）
+- ✅ 日志记录（通过 IoContext 和 Logger）
+- ✅ 线程安全（std::mutex 保护路由和统计）
+- ✅ 配置接口（set_config, get_config）
+- ✅ 路由验证（is_valid_pattern, validate_route）
+- ✅ 路由导出（export_routes_json, export_routes_text）
+- ✅ 生命周期管理（start, stop, is_running）
+- ✅ 线程池支持（可选的异步路由）
+- ✅ 单元测试完成（30个测试用例, 约200个断言）
+  - 基本路由功能测试
+  - 通配符路由测试
+  - 路由优先级测试
+  - 路由统计测试
+  - 路由管理测试
+  - 路由验证测试
+  - 路由导出测试
+  - 线程安全测试（并发添加路由、并发路由消息）
+  - 带日志的线程安全测试（并发添加路由、并发路由消息、带日志）
+- ✅ 事件测试完成（15个测试用例, 约80个断言）
+  - RouteAddedEvent 测试
+  - RouteRemovedEvent 测试
+  - RouteEnabledEvent 测试
+  - RouteDisabledEvent 测试
+  - RouteMatchedEvent 测试
+  - RouteFailedEvent 测试
+  - RouteStatisticsUpdatedEvent 测试
+  - 批量事件发布测试
+  - 事件订阅取消测试
+
 ---
+
+**文档版本**: v2.1
+**最后更新**: 2026-02-02
 
 **文档版本**: v2.0
 **最后更新**: 2026-02-01
