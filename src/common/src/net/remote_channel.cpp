@@ -33,6 +33,12 @@ void RemoteChannel::connect(const std::string& address, uint16_t port)
         return;
     }
 
+    if (connecting_.load())
+    {
+        RENDU_LOG_INFO("Already connecting to {}:{}", address, port);
+        return;
+    }
+
     if (connected_.load())
     {
         RENDU_LOG_INFO("Already connected to {}:{}", address, port);
@@ -41,6 +47,7 @@ void RemoteChannel::connect(const std::string& address, uint16_t port)
 
     remote_address_ = address;
     remote_port_ = port;
+    connecting_.store(true);
 
     RENDU_LOG_INFO("Connecting to remote node {}:{}...", address, port);
     create_connection();
@@ -48,6 +55,9 @@ void RemoteChannel::connect(const std::string& address, uint16_t port)
 
 void RemoteChannel::disconnect()
 {
+    stopped_.store(true);
+    connecting_.store(false);
+
     std::lock_guard<std::mutex> lock(mutex_);
 
     RENDU_LOG_INFO("Disconnecting from {}:{}", remote_address_, remote_port_);
@@ -65,7 +75,6 @@ void RemoteChannel::disconnect()
     }
 
     connected_.store(false);
-    connecting_.store(false);
 }
 
 void RemoteChannel::send_message(const rendu::remote::RemoteMessage& message)
@@ -223,9 +232,18 @@ void RemoteChannel::create_connection()
     apply_tcp_optimizations(socket_->native_socket(), tcp_opt);
 
     // 异步连接到远程节点
+    // 使用 weak_ptr 避免对象销毁后的悬空指针
+    auto self = shared_from_this();
     socket_->async_connect(remote_address_, remote_port_,
-        [this, codec](const boost::system::error_code& ec)
+        [this, codec, self](const boost::system::error_code& ec)
         {
+            // 检查是否已停止
+            if (stopped_.load())
+            {
+                RENDU_LOG_DEBUG("Connection callback ignored: RemoteChannel is stopped");
+                return;
+            }
+
             if (ec)
             {
                 RENDU_LOG_ERROR("Failed to connect to {}:{}: {}", remote_address_, remote_port_,
@@ -243,39 +261,66 @@ void RemoteChannel::create_connection()
 
             RENDU_LOG_DEBUG("TCP socket connected to {}:{}", remote_address_, remote_port_);
 
+            std::lock_guard<std::mutex> lock(mutex_);
+
+            // 二次检查，避免竞态条件
+            if (stopped_.load())
+            {
+                RENDU_LOG_DEBUG("Connected but RemoteChannel is stopped, closing connection");
+                if (socket_)
+                {
+                    socket_->close();
+                }
+                return;
+            }
+
             // 创建 Channel
             channel_ = std::make_shared<Channel>(socket_, codec);
 
-            // 设置回调
-            channel_->set_connect_callback([this]()
-            {
-                on_connected();
-            });
+            // 设置回调 - 使用 weak_ptr 保护生命周期
+            auto weak_self = std::weak_ptr<RemoteChannel>(self);
 
-            channel_->set_close_callback([this](const boost::system::error_code& ec)
+            channel_->set_connect_callback([weak_self]()
             {
-                if (ec)
+                if (auto self = weak_self.lock())
                 {
-                    RENDU_LOG_WARN("Channel closed with error: {}", ec.message());
-                    if (error_callback_)
-                    {
-                        error_callback_("Channel closed: " + ec.message());
-                    }
+                    self->on_connected();
                 }
-                on_disconnected();
             });
 
-            channel_->set_message_callback([this](const ByteBuffer& data)
+            channel_->set_close_callback([weak_self](const boost::system::error_code& ec)
             {
-                on_data_received(data);
-            });
-
-            channel_->set_error_callback([this](ChannelError err, const std::string& msg)
-            {
-                RENDU_LOG_ERROR("Channel error: {} - {}", static_cast<int>(err), msg);
-                if (error_callback_)
+                if (auto self = weak_self.lock())
                 {
-                    error_callback_("Channel error: " + msg);
+                    if (ec)
+                    {
+                        RENDU_LOG_WARN("Channel closed with error: {}", ec.message());
+                        if (self->error_callback_)
+                        {
+                            self->error_callback_("Channel closed: " + ec.message());
+                        }
+                    }
+                    self->on_disconnected();
+                }
+            });
+
+            channel_->set_message_callback([weak_self](const ByteBuffer& data)
+            {
+                if (auto self = weak_self.lock())
+                {
+                    self->on_data_received(data);
+                }
+            });
+
+            channel_->set_error_callback([weak_self](ChannelError err, const std::string& msg)
+            {
+                if (auto self = weak_self.lock())
+                {
+                    RENDU_LOG_ERROR("Channel error: {} - {}", static_cast<int>(err), msg);
+                    if (self->error_callback_)
+                    {
+                        self->error_callback_("Channel error: " + msg);
+                    }
                 }
             });
 
@@ -286,6 +331,12 @@ void RemoteChannel::create_connection()
 
 void RemoteChannel::on_connected()
 {
+    if (stopped_.load())
+    {
+        RENDU_LOG_DEBUG("on_connected ignored: RemoteChannel is stopped");
+        return;
+    }
+
     connected_.store(true);
     connecting_.store(false);
     reconnect_count_.store(0);
@@ -300,6 +351,12 @@ void RemoteChannel::on_connected()
 
 void RemoteChannel::on_disconnected()
 {
+    if (stopped_.load())
+    {
+        RENDU_LOG_DEBUG("on_disconnected ignored: RemoteChannel is stopped");
+        return;
+    }
+
     connected_.store(false);
     connecting_.store(false);
 
@@ -319,6 +376,13 @@ void RemoteChannel::on_disconnected()
 
 void RemoteChannel::start_reconnect()
 {
+    // 检查是否已停止
+    if (stopped_.load())
+    {
+        RENDU_LOG_DEBUG("Reconnect cancelled: RemoteChannel is stopped");
+        return;
+    }
+
     uint32_t max_attempts = config_.max_reconnect_attempts;
     uint32_t current_attempts = reconnect_count_.load();
 
@@ -342,6 +406,13 @@ void RemoteChannel::start_reconnect()
 
 void RemoteChannel::on_data_received(const ByteBuffer& data)
 {
+    // 检查是否已停止
+    if (stopped_.load())
+    {
+        RENDU_LOG_DEBUG("Data received but RemoteChannel is stopped, ignoring");
+        return;
+    }
+
     RENDU_LOG_DEBUG("Received {} bytes from {}:{}", data.size(), remote_address_, remote_port_);
 
     // 反序列化 RemotePacket

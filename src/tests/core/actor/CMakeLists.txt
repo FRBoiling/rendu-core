@@ -79,13 +79,13 @@ rendu_add_test(
         TEST_FRAMEWORK CATCH2
 )
 
-# RemoteActorSystem 集成测试（待完善）
-# rendu_add_test(
-#         DIR ${CMAKE_CURRENT_SOURCE_DIR}
-#         PROJECT ${PROJECT_NAME}
-#         NAME remote_actor_system_test
-#         SOURCES remote_actor_system_test.cpp
-#         PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
-#         PUBLIC_LINK RenduCore::core RenduCore::common protobuf::libprotobuf remote_message_proto
-#         TEST_FRAMEWORK CATCH2
-# )
+# RemoteActorSystem 集成测试
+rendu_add_test(
+        DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        PROJECT ${PROJECT_NAME}
+        NAME remote_actor_system_test
+        SOURCES remote_actor_system_test.cpp
+        PRIVATE_LINK rendu-core-interface Catch2::Catch2 Catch2::Catch2WithMain
+        PUBLIC_LINK RenduCore::core RenduCore::common protobuf::libprotobuf remote_message_proto
+        TEST_FRAMEWORK CATCH2
+)

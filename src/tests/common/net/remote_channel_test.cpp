@@ -100,7 +100,7 @@ TEST_CASE("RemoteChannel: 构造函数", "[remote_channel]") {
         config.max_reconnect_attempts = 5;
 
         REQUIRE(config.node_id == "node1");
-        REQUIRE(config.auto_reconnect == true);
+        REQUIRE(config.auto_reconnect == false);  // 已设置为 false
         REQUIRE(config.reconnect_interval == 3000);
         REQUIRE(config.max_reconnect_attempts == 5);
     }
